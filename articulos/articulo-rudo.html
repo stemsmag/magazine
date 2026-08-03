@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STEMS — La música que nos une</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;600;700&family=Barlow+Condensed:wght@700&family=Permanent+Marker&family=Righteous&family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#00192E;
+    --paper:#042538;
+    --card:#062C42;
+    --cream:#F4E8D3;
+    --cream-dim:#A89A80;
+    --muted:#B49A7A;
+    --magenta:#E8236B;
+    --orange:#FF7A2E;
+    --amber:#F2A93C;
+    --teal:#2FB6A8;
+    --brown:#8B5A34;
+    --brown-light:#052A3D;
+    --line:rgba(244,232,211,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:
+      radial-gradient(ellipse 130% 60% at 50% 0%, #01415C 0%, #013246 28%, var(--bg) 60%, #001220 100%);
+    background-attachment:fixed;
+    color:var(--cream);
+    font-family:'Inter', sans-serif;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--magenta); color:var(--cream);}
+  a{color:inherit; text-decoration:none;}
+  img{display:block; max-width:100%;}
+
+  .display{font-family:'Anton', sans-serif; font-weight:400; text-transform:uppercase;}
+  .script{font-family:'Permanent Marker', cursive;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+
+  /* ============ GLOBAL TAPE OVERLAY ============ */
+  .grain{
+    position:fixed; inset:0; z-index:998; pointer-events:none;
+    opacity:0.07; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    animation:grain .4s steps(2) infinite;
+  }
+  @keyframes grain{0%{transform:translate(0,0)}50%{transform:translate(-1%,1%)}100%{transform:translate(1%,-1%)}}
+  .timecode{position:fixed; bottom:20px; right:28px; z-index:150; font-size:12px; color:var(--amber);
+    text-shadow:0 0 6px rgba(242,169,60,0.4); letter-spacing:1px;}
+  @media (max-width:640px){.timecode{bottom:14px; right:14px; font-size:10px;}}
+
+  /* ============ NAV ============ */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:120;
+    padding:0;
+    background:var(--brown-light);
+    border-bottom:1px solid var(--line);
+    overflow:hidden;
+  }
+  .header-inner{
+    width:100%; max-width:1200px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 24px;
+  }
+  header::before{
+    content:'';
+    position:absolute; inset:0; z-index:-1;
+    background-image:
+      radial-gradient(circle at 8% 15%, rgba(0,0,0,0.35), transparent 40%),
+      radial-gradient(circle at 92% 85%, rgba(0,0,0,0.3), transparent 45%),
+      radial-gradient(circle at 55% 50%, rgba(244,232,211,0.05), transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:auto, auto, auto, 160px 160px;
+    opacity:0.5;
+    mix-blend-mode:overlay;
+    pointer-events:none;
+  }
+  .logo-block{display:flex; flex-direction:column; gap:0; text-decoration:none; color:inherit;}
+  .logo{
+    font-family:'Anton', sans-serif; font-weight:400;
+    font-size:32px; letter-spacing:0; line-height:0.85;
+    color:var(--cream); white-space:nowrap; text-transform:uppercase;
+    display:flex; align-items:baseline;
+  }
+  .logo-stems span:nth-child(1){color:var(--magenta);}
+  .logo-stems span:nth-child(2){color:var(--orange);}
+  .logo-stems span:nth-child(3){color:var(--amber);}
+  .logo-stems span:nth-child(4){color:var(--teal);}
+  .logo-stems span:nth-child(5){color:var(--cream);}
+  .logo-stems span:nth-child(6){color:var(--magenta);}
+  .logo-stems span:nth-child(7){color:var(--orange);}
+  .logo-stems span:nth-child(8){color:var(--amber);}
+  .logo-slash{color:var(--muted);}
+  .logo-stems{display:inline-block;}
+  .logo-stems span{transition:color .12s linear;}
+  .logo-tag{
+    font-family:'Barlow Condensed', sans-serif; font-weight:700;
+    font-size:13px; letter-spacing:1.5px; color:var(--cream-dim);
+    text-transform:uppercase; margin-top:-2px;
+  }
+  @media (max-width:640px){
+    .logo{font-size:22px;}
+    .logo-tag{font-size:10px;}
+  }
+  nav ul{list-style:none; display:flex; gap:28px;}
+  nav a{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); transition:color .2s;}
+  nav a:hover{color:var(--cream);}
+
+  .hamburger{
+    display:none; flex-direction:column; justify-content:center; gap:5px;
+    width:36px; height:32px; background:none; border:1px solid var(--line); cursor:pointer; padding:0;
+  }
+  .hamburger span{display:block; width:18px; height:2px; background:var(--cream); margin:0 auto; transition:transform .2s, opacity .2s;}
+  .hamburger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .hamburger[aria-expanded="true"] span:nth-child(2){opacity:0;}
+  .hamburger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+  @media (max-width:760px){
+    nav{
+      display:none; position:fixed; top:73px; left:0; right:0; z-index:119;
+      background:var(--brown-light); border-bottom:1px solid var(--line); padding:20px 24px;
+    }
+    nav.nav-open{display:block;}
+    nav ul{flex-direction:column; gap:18px;}
+    .hamburger{display:flex;}
+  }
+
+  /* ============ COVER (HERO) ============ */
+  .cover{
+    position:relative;
+    padding:88px 24px 24px;
+    display:flex;
+    align-items:flex-start;
+  }
+  .cover-frame{
+    position:relative;
+    width:100%;
+    aspect-ratio:5/4;
+    border:1px solid var(--brown);
+    overflow:hidden;
+  }
+  .cover-media{position:absolute; inset:0; z-index:0; background:#000;}
+  .cover-media canvas{width:100%; height:100%; display:block;}
+  .cover-scrim{
+    position:absolute; inset:0; z-index:1;
+    background:linear-gradient(180deg, rgba(0,25,46,0.55) 0%, rgba(0,25,46,0.05) 30%, rgba(0,25,46,0.15) 55%, rgba(0,25,46,0.85) 100%),
+               linear-gradient(90deg, rgba(0,25,46,0.55) 0%, rgba(0,25,46,0) 35%);
+  }
+  .cover-content{position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; justify-content:space-between; padding:28px;}
+
+  .cover-topbar{display:flex; align-items:flex-start; justify-content:space-between; gap:16px;}
+  .eyebrow-pill{display:flex; align-items:center; gap:10px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--cream);}
+  .eyebrow-pill .pill{background:var(--magenta); color:var(--cream); padding:3px 9px; font-size:10px; letter-spacing:1.5px;}
+  .year-block{text-align:right; font-family:'Anton',sans-serif; font-size:26px; color:var(--amber); line-height:1;}
+  .year-block span{display:block; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1.5px; color:var(--muted); text-transform:uppercase; margin-top:6px; max-width:150px;}
+
+  .cover-title{max-width:680px; margin-top:auto; margin-bottom:auto;}
+  .stack{line-height:0.82; margin-bottom:14px;}
+  .stack .line{display:block; font-size:clamp(48px, 10vw, 108px);}
+  .stack .line-1{color:var(--magenta); text-shadow:3px 3px 0 rgba(0,0,0,0.4);}
+  .stack .line-2{color:var(--cream); -webkit-text-stroke:1.5px var(--cream); text-shadow:3px 3px 0 rgba(0,0,0,0.4);}
+  .stack .line-3{color:var(--bg); -webkit-text-stroke:2px var(--cream);}
+  .dek{font-family:'Inter',sans-serif; font-size:clamp(14px,1.6vw,17px); font-weight:400; line-height:1.5; color:var(--cream); max-width:520px; margin-bottom:10px; opacity:0.9;}
+  .script-sub{font-family:'Permanent Marker',cursive; font-size:clamp(20px,3vw,30px); color:var(--teal); margin-bottom:8px;}
+  .location{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1px; color:var(--muted);}
+
+  .cover-bottom-row{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap;}
+  .widget-row{display:flex; gap:10px; flex-wrap:wrap;}
+  .widget{
+    border:1px solid var(--brown);
+    background:rgba(43,26,12,0.55);
+    backdrop-filter:blur(2px);
+    padding:9px 12px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    line-height:1.5;
+    color:var(--cream);
+  }
+  .wave-widget{min-width:190px;}
+  .widget-tag{display:block; background:var(--magenta); padding:2px 6px; font-size:9px; margin-bottom:6px; width:fit-content;}
+  .wave-widget canvas{width:100%; height:34px; display:block; margin:4px 0;}
+  .widget-tags{display:block; color:var(--muted); font-size:9px; margin-top:2px;}
+  .play-indicator{font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:2px; color:var(--cream); border:1px solid var(--cream); padding:8px 14px; white-space:nowrap;}
+
+  .cover-side-right{
+    position:absolute; right:28px; top:110px; bottom:100px;
+    display:flex; flex-direction:column; align-items:flex-end; justify-content:space-between;
+    gap:14px;
+  }
+  .bpm-block{font-family:'Anton',sans-serif; font-size:44px; color:var(--cream); text-align:right; line-height:0.9;}
+  .bpm-block span{display:block; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--muted); margin-top:4px;}
+  .stamp{
+    width:88px; height:88px; border-radius:50%;
+    border:1.5px dashed var(--cream);
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:1px; text-transform:uppercase;
+    color:var(--cream); padding:8px;
+  }
+  .barcode-box{
+    border:1px solid var(--magenta); padding:8px 10px;
+    font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--magenta);
+    letter-spacing:1px; text-align:right; text-transform:uppercase;
+  }
+  .barcode{display:flex; gap:1px; height:20px; margin-top:6px; justify-content:flex-end;}
+  .barcode div{background:var(--magenta); width:2px;}
+  .tracklist-box{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); text-align:right; line-height:1.6;}
+  .tracklist-box b{color:var(--cream); font-weight:500;}
+  .signature{font-family:'Permanent Marker',cursive; font-size:20px; color:var(--cream); text-align:right;}
+  .signature span{color:var(--orange);}
+
+  @media (max-width:900px){
+    .cover-content{position:relative; min-height:100%;}
+    .cover-frame{aspect-ratio:auto;}
+    .cover-media{position:relative; height:60vh;}
+    .cover-content{padding:20px;}
+  }
+  @media (max-width:600px){
+    .cover{padding:76px 12px 12px;}
+    .cover-content{padding:16px;}
+    .stack .line{font-size:15vw;}
+  }
+
+  /* ============ MAIN WRAP (contenido no toca los bordes en PC) ============ */
+  .main-wrap{width:100%; max-width:1200px; margin:0 auto;}
+
+  /* ============ SECTION HEAD — tratamiento retro ============ */
+  .section-head{
+    position:relative;
+    display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    padding:56px 28px 22px; border-top:1px solid var(--line);
+  }
+  .section-head::before{
+    content:''; position:absolute; top:-1px; left:28px; width:64px; height:4px;
+    background:linear-gradient(90deg, var(--magenta), var(--orange), var(--amber), var(--teal));
+  }
+  .head-title{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;}
+  .head-index{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--accent, var(--magenta)); border:1px solid var(--accent, var(--magenta)); padding:3px 7px; white-space:nowrap;}
+  .section-head h2{
+    font-family:'Righteous', 'Playfair Display', serif; font-size:clamp(28px,3.8vw,42px); letter-spacing:-0.5px;
+    text-transform:uppercase; line-height:0.98; color:var(--accent, var(--magenta));
+  }
+  .section-head .sub{display:block; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); margin-top:8px; letter-spacing:0.5px; text-transform:none;}
+  .section-head .count{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted);}
+
+  /* ============ CONTENT SPLIT — 70 / 30 ============ */
+  .content-split{display:grid; grid-template-columns:7fr 3fr; align-items:start;}
+  .col-main{border-right:1px solid var(--line);}
+  .col-side{padding-top:88px;}
+  .col-side .section-head{padding:56px 24px 20px;}
+  .col-side > div:first-child .section-head{padding-top:0;}
+  .col-side .section-head::before{left:24px;}
+  @media (max-width:980px){
+    .content-split{grid-template-columns:1fr;}
+    .col-main{border-right:none; border-bottom:1px solid var(--line);}
+    .col-side{padding-top:0;}
+  }
+
+  /* ============ GRID (artículos) ============ */
+  .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px; padding:0 28px 28px;}
+  @media (max-width:1300px){.grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:620px){.grid{grid-template-columns:1fr; padding:0 16px 16px;}}
+
+  .art-card{
+    position:relative;
+    aspect-ratio:5/4;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#000;
+  }
+  .art-card canvas{position:absolute; inset:0; width:100%; height:100%;}
+  .art-scrim{position:absolute; inset:0; z-index:1;
+    background:linear-gradient(180deg, rgba(0,25,46,0.2) 0%, rgba(0,25,46,0.15) 40%, rgba(0,25,46,0.95) 100%);}
+  .art-inner{position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; justify-content:space-between; padding:14px;}
+
+  .art-top{display:flex; justify-content:space-between; align-items:flex-start;}
+  .art-tag{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; padding:3px 7px; color:var(--bg);}
+  .art-num{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted);}
+
+  .art-bottom h3{font-family:'Oswald',sans-serif; font-weight:600; font-size:16px; line-height:1.25; margin-bottom:8px;}
+  .art-meta-row{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+  .art-meta{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--muted); text-transform:uppercase;}
+  .art-barcode{display:flex; gap:1px; height:14px;}
+  .art-barcode div{width:1.5px; background:var(--cream); opacity:0.7;}
+
+  /* ============ EVENTOS Y LANZAMIENTOS (sidebar, 2 sub-columnas) ============ */
+  .events-columns{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:0 20px; padding:0 24px 8px;}
+  .events-col h3{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--accent, var(--teal)); text-transform:uppercase; padding-bottom:8px; border-bottom:2px solid var(--accent, var(--teal)); margin-bottom:4px;}
+  .event-item{display:flex; gap:12px; padding:14px 0; border-top:1px solid var(--line);}
+  .event-thumb{width:52px; height:52px; flex:0 0 52px; border:1px solid var(--line); overflow:hidden; background:#000;}
+  .event-thumb img{width:100%; height:100%; object-fit:cover; filter:sepia(0.4) saturate(1.4) contrast(1.05) brightness(0.8);}
+  .event-body{min-width:0;}
+  .event-chip{display:block; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--muted); margin-bottom:4px; text-transform:uppercase;}
+  .event-body h4{font-family:'Oswald',sans-serif; font-weight:600; font-size:12.5px; line-height:1.3; margin-bottom:3px;}
+  .event-body .meta-line{font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--muted); letter-spacing:0.3px;}
+
+  .calendar-cta{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:16px 24px 8px; padding:14px 16px; border:1px dashed var(--muted); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--cream); transition:.2s;}
+  .calendar-cta:hover{border-color:var(--cream); background:rgba(244,232,211,0.04);}
+
+  /* ============ PLAYLIST DE STEMS — embed de Spotify ============ */
+  .playlist{padding:0 28px 28px;}
+  .col-side .playlist{padding:0 24px 24px;}
+  .spotify-frame{border:1px solid var(--brown); background:var(--paper);}
+  .spotify-frame-head{padding:11px 14px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--teal); border-bottom:1px solid var(--line); text-transform:uppercase;}
+  .spotify-frame iframe{display:block; width:100%;}
+
+  /* ============ ARTIFACTS ============ */
+  .artifacts-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px; padding:0 28px 28px;}
+  @media (max-width:760px){.artifacts-grid{grid-template-columns:1fr; padding:0 16px 16px;}}
+  .col-side .artifacts-grid{grid-template-columns:1fr; padding:0 24px 24px;}
+
+  /* ============ NEWSLETTER ============ */
+  .newsletter{padding:0 24px 40px;}
+  .newsletter-box{border:1px solid var(--brown); background:var(--paper); padding:22px;}
+  .newsletter-box p{font-family:'Inter',sans-serif; font-size:12px; color:var(--muted); line-height:1.55; margin-bottom:16px;}
+  .newsletter-form{display:flex; flex-direction:column; gap:10px;}
+  .newsletter-form input{background:transparent; border:1px solid var(--line); padding:11px 12px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--cream);}
+  .newsletter-form input::placeholder{color:var(--muted);}
+  .newsletter-form input:focus{outline:none; border-color:var(--amber);}
+  .newsletter-form button{background:var(--magenta); border:none; padding:12px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--cream); cursor:pointer; transition:.2s;}
+  .newsletter-form button:hover{background:var(--orange);}
+  .newsletter-note{display:block; margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--muted); text-transform:uppercase;}
+  .artifact-card{border:1px solid var(--line); background:var(--card); padding:24px; position:relative; overflow:hidden;}
+  .artifact-card::before{content:''; position:absolute; top:0; left:0; right:0; height:2px;}
+  .artifact-card.status-live::before{background:var(--teal);}
+  .artifact-card.status-soon::before{background:var(--muted);}
+  .artifact-preview{width:100%; aspect-ratio:16/9; border:1px solid var(--line); background:#001624; margin-bottom:18px; overflow:hidden;}
+  .artifact-preview canvas{width:100%; height:100%; display:block;}
+  .artifact-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;}
+  .artifact-status{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1.5px; padding:3px 8px; text-transform:uppercase;}
+  .status-live .artifact-status{background:var(--teal); color:var(--bg);}
+  .status-soon .artifact-status{border:1px solid var(--muted); color:var(--muted);}
+  .artifact-id{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted);}
+  .artifact-name{font-family:'Anton',sans-serif; font-size:22px; letter-spacing:1px; margin-bottom:8px;}
+  .artifact-desc{font-family:'Inter',sans-serif; font-size:13px; color:var(--muted); line-height:1.55; margin-bottom:18px;}
+  .artifact-specs{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:20px;}
+  .artifact-specs span{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; border:1px solid var(--line); padding:3px 8px; color:var(--cream); text-transform:uppercase;}
+  .artifact-cta{display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--cream); border-bottom:1px solid var(--magenta); padding-bottom:2px;}
+  .status-soon .artifact-cta{color:var(--muted); border-bottom-color:var(--muted);}
+
+  /* ============ FOOTER ============ */
+  footer{
+    border-top:1px solid var(--line);
+    padding:36px 28px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; color:var(--muted);
+  }
+
+  /* ============ ARTÍCULO ============ */
+  .article-wrap{max-width:760px; margin:0 auto; padding:104px 24px 20px;}
+  .back-link{display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:24px; transition:color .2s;}
+  .back-link:hover{color:var(--cream);}
+
+  .article-tag{display:inline-block; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--bg); background:var(--magenta); padding:4px 10px; margin-bottom:18px;}
+  .article-title{font-family:'Righteous','Playfair Display',serif; font-size:clamp(32px,6vw,56px); line-height:1.02; letter-spacing:-0.5px; color:var(--cream); margin-bottom:18px;}
+  .article-dek{font-family:'Inter',sans-serif; font-size:clamp(15px,2vw,19px); line-height:1.55; color:var(--cream-dim); max-width:640px; margin-bottom:26px;}
+  .article-byline{display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:18px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); margin-bottom:32px;}
+  .article-avatar{width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--magenta),var(--amber)); flex:0 0 34px;}
+  .article-byline-text{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; color:var(--muted); text-transform:uppercase; line-height:1.6;}
+  .article-byline-text b{color:var(--cream); font-weight:500;}
+
+  .article-hero-media{position:relative; width:100%; aspect-ratio:16/9; border:1px solid var(--brown); overflow:hidden; background:#000; margin-bottom:8px;}
+  .article-hero-media img{width:100%; height:100%; display:block; object-fit:cover; object-position:top;}
+  .article-caption{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--muted); text-transform:uppercase; margin-bottom:40px;}
+
+  .article-body{font-family:'Inter',sans-serif; font-size:17px; line-height:1.85; color:var(--cream);}
+  .article-body p{margin-bottom:22px;}
+  .article-body p:first-of-type::first-letter{
+    font-family:'Righteous','Playfair Display',serif; font-size:64px; line-height:0.75; float:left;
+    padding:6px 10px 0 0; color:var(--magenta);
+  }
+  .article-body h2{font-family:'Righteous','Playfair Display',serif; font-size:clamp(22px,3vw,30px); color:var(--teal); letter-spacing:-0.3px; margin:44px 0 18px;}
+  .article-body blockquote{
+    font-family:'Permanent Marker',cursive; font-size:clamp(20px,2.6vw,26px); line-height:1.4; color:var(--amber);
+    border-left:3px solid var(--amber); padding:6px 0 6px 22px; margin:36px 0;
+  }
+  .article-closing{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-top:40px; padding-top:24px; border-top:1px solid var(--line);}
+
+  .recommended{padding:56px 0 20px;}
+
+  @media (prefers-reduced-motion: reduce){
+    .grain{animation:none;}
+  }
+</style>
+<script type="application/json" id="article-meta">
+{
+  "date": "2026-08-01",
+  "category": "Perfil",
+  "categoryPill": "Techno Melódico",
+  "titleLines": ["RUDO", "LA MÁSCARA", "QUE HABLA"],
+  "title": "RUDO: la máscara que esconde el rostro para que hable el mensaje",
+  "artistLine": "RUDO — Techno Melódico",
+  "dek": "Detrás del techno melódico y la máscara roja hay una convicción que no cambia: la música puede levantar a alguien cuando siente que ya no puede más.",
+  "tag": "Perfil",
+  "tagColor": "magenta",
+  "meta": "Perfil · 9 min",
+  "image": "articulos/images/rudo01.jpg",
+  "seed": 44
+}
+</script>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="timecode" id="timecode">00:00:00:00</div>
+
+<header>
+  <div class="header-inner">
+    <a href="../index.html" class="logo-block">
+      <div class="logo">
+        <span class="logo-stems"><span>S</span><span>T</span><span>E</span><span>M</span><span>S</span><span>M</span><span>A</span><span>G</span></span><span class="logo-slash">//</span>
+      </div>
+      <div class="logo-tag">La música que nos une</div>
+    </a>
+    <nav id="mainNav">
+      <ul>
+        <li><a href="#">Reviews</a></li>
+        <li><a href="#eventos">Eventos</a></li>
+        <li><a href="#playlist">Playlist</a></li>
+        <li><a href="#artifacts">Artifacts</a></li>
+      </ul>
+    </nav>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú" aria-expanded="false" aria-controls="mainNav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+<script>
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mainNav = document.getElementById('mainNav');
+  hamburgerBtn.addEventListener('click', () => {
+    const isOpen = mainNav.classList.toggle('nav-open');
+    hamburgerBtn.setAttribute('aria-expanded', isOpen);
+  });
+  mainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    mainNav.classList.remove('nav-open');
+    hamburgerBtn.setAttribute('aria-expanded', 'false');
+  }));
+
+  const logoEl = document.querySelector('.logo');
+  const stemsLetters = document.querySelectorAll('.logo-stems span');
+  const logoPalette = ['--magenta','--orange','--amber','--teal','--cream'];
+  let colorLoopId = null;
+
+  function randomizeLetterColors(){
+    stemsLetters.forEach(span => {
+      const v = logoPalette[Math.floor(Math.random() * logoPalette.length)];
+      span.style.color = `var(${v})`;
+    });
+  }
+  function startColorLoop(){
+    if(colorLoopId) return;
+    colorLoopId = setInterval(randomizeLetterColors, 140);
+  }
+  function stopColorLoop(){
+    clearInterval(colorLoopId);
+    colorLoopId = null;
+    stemsLetters.forEach(span => { span.style.color = ''; });
+  }
+  logoEl.addEventListener('mouseenter', startColorLoop);
+  logoEl.addEventListener('mouseleave', stopColorLoop);
+
+  function autoColorBurst(){
+    startColorLoop();
+    setTimeout(stopColorLoop, 1600);
+  }
+  autoColorBurst();
+  setInterval(autoColorBurst, 90000);
+</script>
+
+<div class="main-wrap">
+
+
+  <div class="article-wrap">
+
+    <a href="../index.html" class="back-link">← Volver a portada</a>
+
+    <span class="article-tag">Perfil</span>
+    <h1 class="article-title">RUDO: la máscara que esconde el rostro para que hable el mensaje</h1>
+    <p class="article-dek">Detrás del techno melódico y la máscara roja hay una convicción que no cambia: la música puede levantar a alguien cuando siente que ya no puede más.</p>
+
+    <div class="article-byline">
+      <div class="article-avatar"></div>
+      <div class="article-byline-text">
+        Por <b>Redacción STEMS</b><br>
+        01 AGO 2026 · 9 min de lectura
+      </div>
+    </div>
+
+    <div class="article-hero-media">
+      <img src="images/rudo01.jpg" alt="RUDO">
+    </div>
+    <span class="article-caption">RUDO · Techno melódico en español</span>
+
+    <div class="article-body">
+
+      <p>Hay proyectos que nacen de una idea de sonido. RUDO nació de una convicción distinta: que la música puede ser una herramienta para levantar a alguien cuando siente que ya no puede más. Esa certeza es el punto de partida de todo lo demás —la máscara, el techno melódico, el rojo que hoy domina su estética— y también la razón por la que, hablando con él, cuesta encontrar una sola respuesta que no vuelva a esa misma idea.</p>
+
+      <h2>Una máscara que no esconde, que recuerda</h2>
+
+      <p>Lo primero que llama la atención de RUDO es, precisamente, lo que no se ve: su rostro. La máscara es la imagen central del proyecto, pero él es tajante en aclarar que no se trata de un disfraz. "No se trata de quién está detrás, sino del mensaje que se transmite", explica. En una escena donde con frecuencia se idolatra a la persona detrás del nombre, RUDO eligió quitarse del centro: "Quiero que la atención esté en la música y en lo que puede provocar en el corazón de quien la escucha".</p>
+
+      <p>Esa decisión, dice, no es solo estética sino también funcional. La máscara le da permiso para decir cosas que quizás no diría sin ella, porque le recuerda constantemente que el protagonista no es él. "Me permite dejar el ego a un lado y enfocarme en decir lo que realmente importa", cuenta. "Es un símbolo para recordar que el mensaje siempre debe estar por encima del artista".</p>
+
+      <h2>Sanar, tocar fondo y volver a levantarse</h2>
+
+      <p>Detrás del nombre hay una historia personal que RUDO no oculta, aunque tampoco la convierte en el centro de la conversación. Habla de haber atravesado momentos de incertidumbre, de sentirse perdido, de preguntarse si quedaba algo de esperanza. Fue en ese lugar, dice, donde encontró que hasta los momentos más oscuros pueden transformarse en algo con propósito. "No porque tenga una vida perfecta", aclara, "sino porque he experimentado que siempre es posible volver a levantarse".</p>
+
+      <p>Esa idea atraviesa buena parte de su catálogo. En "Cicatrices" trabaja la noción de que las heridas no restan valor a nadie: son parte de una historia y pueden convertirse en testimonio de que se sobrevivió y se siguió adelante. "Caminando Solo", en cambio, habla de esos tramos donde parece que nadie entiende lo que uno está viviendo, aunque —insiste RUDO— "incluso cuando sentimos que caminamos solos, nunca estamos realmente abandonados".</p>
+
+      <h2>Techno en español, para hablarle a una comunidad</h2>
+
+      <p>RUDO se mueve entre el techno y el techno melódico, pero su decisión más deliberada quizás no sea sonora sino idiomática: cantar y producir en español. Creció, dice, "hablando español y soñando en español", y notaba un vacío en un género donde la mayor parte de la música que lo marcó llegaba en inglés. "Sentía que hacía falta alguien que hablara directamente a nuestra comunidad, a la gente que piensa, siente y lucha en español".</p>
+
+      <p>Detrás de esa apuesta hay también una convicción sobre el género: que el techno en español puede cargar el mismo peso emocional que cualquier otro. Describe su sonido como "un viaje entre la oscuridad y la esperanza", con la energía suficiente para hacer bailar pero también con melodías y letras pensadas para dejar algo después de que termine la canción. Ese propósito ordena incluso su proceso creativo: antes de abrir el DAW, se pregunta qué quiere que alguien sienta al escuchar el track, y solo entonces empieza a construir la producción a su servicio. Las atmósferas, explica, representan la incertidumbre y la tensión; los drops, el momento de decidir levantarse. "No los hago solo para generar impacto en una pista de baile; quiero que también transmitan emoción y esperanza".</p>
+
+      <h2>De host a productor, y una comunidad que responde</h2>
+
+      <p>RUDO no solo produce: también es host en LATAM Electrónica, un rol que describe como una escuela paralela a su carrera como artista. Conocer a otros productores, dice, lo empuja a seguir creciendo, pero también le recuerda algo que considera central: "la escena no se construye solo pensando en uno mismo. Se construye apoyando a otros, creando comunidad y abriendo espacios para que más talento pueda ser escuchado".</p>
+
+      <p>Esa filosofía se refleja en cómo describe a quienes lo siguen: una comunidad que busca "algo más que música", personas que quieren salir adelante y encontrar esperanza incluso en los momentos difíciles. Los mensajes que recibe de oyentes que dicen haber encontrado fuerzas en una canción, asegura, valen más que cualquier cifra de reproducciones.</p>
+
+      <h2>La fase roja</h2>
+
+      <p>En los últimos meses, el rojo se volvió el color dominante de la estética de RUDO, y él mismo lo explica como una etapa con nombre propio. "La fase roja representa el momento en el que dejas de sobrevivir y decides pelear", dice. No es un color de violencia ni de enojo, aclara, sino de valentía, pasión y determinación: el punto en que se elige enfrentar el miedo en lugar de seguir cargándolo.</p>
+
+      <blockquote>"Las batallas más importantes no se libran contra otras personas, sino dentro de uno mismo".</blockquote>
+
+      <p>Y cierra con la frase que, de algún modo, resume todo el proyecto: si alguien logra vencer esas batallas internas, "ya ganó la más difícil".</p>
+
+      <p>Para quien apenas descubre su música en un mal momento, RUDO tiene una sola aspiración: que por unos minutos sienta que no está solo, y que su historia no termina en el dolor que está viviendo hoy. Si una canción logra eso, dice, "ya cumplió su propósito". Porque, al final, eso es RUDO: un recordatorio de que siempre vale la pena seguir adelante.</p>
+
+      <div class="article-closing">— Fin del artículo</div>
+
+    </div>
+
+    <!-- ============ ARTÍCULOS RECOMENDADOS (mock-up) ============ -->
+    <div class="recommended">
+      <div class="section-head" style="--accent:var(--teal)">
+        <div class="head-title">
+          <span class="head-index">N.02</span>
+          <h2>Recomendados<span class="sub">Para seguir leyendo</span></h2>
+        </div>
+      </div>
+      <div class="grid" id="recommended-grid"></div>
+    </div>
+
+  </div>
+
+  <footer>
+    <span>STEMS © 2026 — La música que nos une</span>
+    <span>Fotografía vía Unsplash · Distorsión VHS con Three.js</span>
+  </footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* =========================================================
+   TIMECODE tipo cinta Betamax
+   ========================================================= */
+(function(){
+  const el = document.getElementById('timecode');
+  let frames = 0;
+  const fmt = n => n.toString().padStart(2,'0');
+  setInterval(()=>{
+    frames++;
+    const totalSec = Math.floor(frames/30);
+    const f = frames % 30;
+    const h = Math.floor(totalSec/3600), m = Math.floor((totalSec%3600)/60), s = totalSec%60;
+    el.textContent = `${fmt(h)}:${fmt(m)}:${fmt(s)}:${fmt(f)}`;
+  }, 1000/30);
+})();
+
+/* =========================================================
+   SHADER VHS — aberración cromática + tracking glitch + scanlines
+   Se aplica sobre fotografías reales vía Three.js
+   ========================================================= */
+const VHS_VERT = `
+  varying vec2 vUv;
+  void main(){
+    vUv = uv;
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+  }
+`;
+const VHS_FRAG = `
+  precision mediump float;
+  uniform sampler2D uTex;
+  uniform float uTime;
+  uniform vec2 uMouse;
+  uniform vec2 uResolution;
+  uniform float uIntensity;
+  uniform vec2 uUvRepeat;
+  uniform vec2 uUvOffset;
+  varying vec2 vUv;
+
+  float rand(vec2 co){ return fract(sin(dot(co.xy, vec2(12.9898,78.233))) * 43758.5453); }
+
+  void main(){
+    vec2 uv = vUv * uUvRepeat + uUvOffset;
+
+    // banda de tracking (glitch horizontal esporádico, como una cinta desalineada)
+    float bandSeed = rand(vec2(floor(uv.y*36.0), floor(uTime*1.6)));
+    float band = step(0.975, bandSeed) * (0.4 + uIntensity);
+    uv.x += (rand(vec2(uTime, uv.y)) - 0.5) * band * 0.05;
+
+    // parallax sutil con el mouse
+    uv += uMouse * 0.012 * (0.3 + uIntensity);
+
+    // aberracion cromatica
+    float aberr = 0.0022 + uIntensity * 0.0035;
+    float r = texture2D(uTex, uv + vec2(aberr, 0.0)).r;
+    float g = texture2D(uTex, uv).g;
+    float b = texture2D(uTex, uv - vec2(aberr, 0.0)).b;
+    vec3 col = vec3(r, g, b);
+
+    // scanlines
+    col -= sin(uv.y * uResolution.y) * 0.035;
+
+    // viñeta
+    float vig = smoothstep(0.95, 0.25, length(uv - 0.5));
+    col *= mix(0.5, 1.0, vig);
+
+    // grano
+    col += (rand(uv * uResolution.xy + uTime) - 0.5) * 0.05;
+
+    // tinte cálido, atardecer
+    col = mix(col, col * vec3(1.08, 0.95, 0.86), 0.3);
+
+    gl_FragColor = vec4(col, 1.0);
+  }
+`;
+
+function mountVHS(canvas, imgUrl, opts){
+  opts = opts || {};
+  const hoverBoost = opts.hoverBoost !== undefined ? opts.hoverBoost : 1.0;
+  const base = opts.base !== undefined ? opts.base : 0.12;
+
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+  const geo = new THREE.PlaneGeometry(2,2);
+
+  const loader = new THREE.TextureLoader();
+  loader.crossOrigin = 'anonymous';
+  const tex = loader.load(imgUrl, fitCover);
+  tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
+  tex.minFilter = THREE.LinearFilter;
+
+  const uniforms = {
+    uTex: {value: tex},
+    uTime: {value: 0},
+    uMouse: {value: new THREE.Vector2(0,0)},
+    uResolution: {value: new THREE.Vector2(1,1)},
+    uIntensity: {value: base},
+    uUvRepeat: {value: new THREE.Vector2(1,1)},
+    uUvOffset: {value: new THREE.Vector2(0,0)}
+  };
+  const mat = new THREE.ShaderMaterial({uniforms, vertexShader:VHS_VERT, fragmentShader:VHS_FRAG});
+  scene.add(new THREE.Mesh(geo, mat));
+
+  function fitCover(){
+    if(!tex.image) return;
+    const imgAspect = tex.image.width / tex.image.height;
+    const w = canvas.clientWidth || 1, h = canvas.clientHeight || 1;
+    const canvasAspect = w / h;
+    let rx, ry, ox, oy;
+    if(canvasAspect > imgAspect){
+      rx = 1; ry = imgAspect / canvasAspect;
+      ox = 0; oy = 1 - ry; // ancla arriba, recorta por abajo
+    } else {
+      rx = canvasAspect / imgAspect; ry = 1;
+      ox = (1 - rx) / 2; oy = 0;
+    }
+    uniforms.uUvRepeat.value.set(rx, ry);
+    uniforms.uUvOffset.value.set(ox, oy);
+  }
+
+  function resize(){
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    renderer.setSize(w, h, false);
+    uniforms.uResolution.value.set(w, h);
+    fitCover();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const host = canvas.parentElement;
+  let targetHover = 0, hover = 0;
+  host.addEventListener('mouseenter', ()=> targetHover = hoverBoost);
+  host.addEventListener('mouseleave', ()=> targetHover = 0);
+  host.addEventListener('mousemove', (e)=>{
+    const rect = canvas.getBoundingClientRect();
+    const mx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const my = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+    uniforms.uMouse.value.set(mx * 0.5, -my * 0.5);
+  });
+
+  const clock = new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    hover += (targetHover - hover) * 0.08;
+    uniforms.uIntensity.value = base + hover;
+    uniforms.uTime.value = clock.getElapsedTime();
+    renderer.render(scene, camera);
+  }
+  animate();
+}
+
+/* =========================================================
+   BARCODE decorativo
+   ========================================================= */
+function drawBarcode(container, seed, count){
+  const rand = seededRandom(seed);
+  for(let i=0;i<count;i++){
+    const bar = document.createElement('div');
+    bar.style.height = (30 + rand()*70) + '%';
+    bar.style.alignSelf = 'flex-end';
+    bar.style.opacity = 0.5 + rand()*0.5;
+    container.appendChild(bar);
+  }
+}
+function seededRandom(seed){
+  let s = seed;
+  return function(){ s = (s*9301+49297)%233280; return s/233280; };
+}
+
+/* =========================================================
+   MINI WAVEFORM (canvas 2D) para el widget de portada
+   ========================================================= */
+const TRACE_COLORS = ['#E8236B', '#FF7A2E', '#F2A93C', '#2FB6A8', '#8B5A34'];
+function drawWaveThumb(canvas, seed){
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio, 2);
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = w*dpr; canvas.height = h*dpr; ctx.scale(dpr,dpr);
+  const rand = seededRandom(seed);
+  const freq1 = 2+rand()*6, freq2 = 8+rand()*14, amp = 0.3+rand()*0.5, phase = rand()*Math.PI*2;
+  const color = TRACE_COLORS[Math.floor(rand()*TRACE_COLORS.length)];
+  ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle = color; ctx.lineWidth = 1.4; ctx.globalAlpha = 0.95;
+  ctx.beginPath();
+  for(let x=0;x<=w;x++){
+    const nx = x/w;
+    const y = h/2 + Math.sin(nx*Math.PI*freq1+phase)*amp*(h*0.32) + Math.sin(nx*Math.PI*freq2+phase*1.3)*amp*0.3*(h*0.32);
+    x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+}
+
+/* =========================================================
+   PREVIEW de Artifacts (canvas 2D) — mock visual del instrumento
+   ========================================================= */
+function drawArtifactPreview(canvas, kind, seed){
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio, 2);
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = w*dpr; canvas.height = h*dpr; ctx.scale(dpr,dpr);
+  const rand = seededRandom(seed);
+
+  ctx.fillStyle = '#042538';
+  ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle = 'rgba(244,232,211,0.05)';
+  for(let y=0;y<h;y+=3){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+
+  if(kind === 'synth'){
+    const freq1 = 2+rand()*4, freq2 = 10+rand()*10, amp = 0.35, phase = rand()*Math.PI*2;
+    ctx.strokeStyle = '#2FB6A8'; ctx.lineWidth = 2; ctx.beginPath();
+    for(let x=0;x<=w;x++){
+      const nx = x/w;
+      const y = h*0.4 + Math.sin(nx*Math.PI*freq1+phase)*amp*(h*0.3) + Math.sin(nx*Math.PI*freq2)*amp*0.3*(h*0.3);
+      x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    const knobs = 4, ky = h*0.8, kr = Math.min(18, h*0.12);
+    for(let i=0;i<knobs;i++){
+      const kx = w*(0.15 + i*0.23);
+      ctx.strokeStyle = 'rgba(244,232,211,0.5)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(kx, ky, kr, 0, Math.PI*2); ctx.stroke();
+      const ang = -Math.PI*0.75 + rand()*Math.PI*1.5;
+      ctx.beginPath(); ctx.moveTo(kx, ky); ctx.lineTo(kx+Math.cos(ang)*kr, ky+Math.sin(ang)*kr);
+      ctx.strokeStyle = '#F2A93C'; ctx.stroke();
+    }
+  } else {
+    const bars = 24;
+    for(let i=0;i<bars;i++){
+      const bh = (0.15 + rand()*0.75) * h * 0.7;
+      const bx = (i/bars) * w;
+      const bw = (w/bars) * 0.6;
+      ctx.fillStyle = i % 5 === 0 ? '#FF7A2E' : 'rgba(244,232,211,0.55)';
+      ctx.fillRect(bx, h*0.75 - bh, bw, bh);
+    }
+    ctx.strokeStyle = 'rgba(242,169,60,0.6)'; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(0, h*0.75); ctx.lineTo(w, h*0.75); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+}
+
+/* =========================================================
+   ARTÍCULOS RECOMENDADOS (mock-up)
+   ========================================================= */
+const recommended = [
+  {tag:'Reseña', tagColor:'var(--magenta)', title:'«Óxido (Remixes)»: Ferro Nocturno reescribe su propio álbum', meta:'IDM · 7 min', seed:23,
+    img:'https://images.unsplash.com/photo-1743705948277-84ec41bf81c1?auto=format&fit=crop&w=900&q=70'},
+  {tag:'Comunidad', tagColor:'var(--teal)', title:'El techno en español gana terreno en LATAM Electrónica', meta:'Comunidad · 6 min', seed:65,
+    img:'https://images.unsplash.com/photo-1759763494484-f20114b8451d?auto=format&fit=crop&w=900&q=70'},
+  {tag:'Perfil', tagColor:'var(--amber)', title:'Detrás de la máscara: por qué el anonimato vuelve a la electrónica', meta:'Perfil · 8 min', seed:31,
+    img:'https://images.unsplash.com/photo-1535406208535-1429839cfd13?auto=format&fit=crop&w=900&q=70'},
+];
+
+const recommendedGrid = document.getElementById('recommended-grid');
+recommended.forEach((a, i)=>{
+  const card = document.createElement('div');
+  card.className = 'art-card';
+  card.innerHTML = `
+    <canvas></canvas>
+    <div class="art-scrim"></div>
+    <div class="art-inner">
+      <div class="art-top">
+        <span class="art-tag" style="background:${a.tagColor}">${a.tag}</span>
+        <span class="art-num mono">0${i+1}</span>
+      </div>
+      <div class="art-bottom">
+        <h3>${a.title}</h3>
+        <div class="art-meta-row">
+          <span class="art-meta">${a.meta}</span>
+          <div class="art-barcode" id="rec-bc-${i}"></div>
+        </div>
+      </div>
+    </div>
+  `;
+  recommendedGrid.appendChild(card);
+  mountVHS(card.querySelector('canvas'), a.img, {base:0.09, hoverBoost:0.6});
+  drawBarcode(document.getElementById('rec-bc-'+i), a.seed, 10);
+});
+</script>
+</body>
+</html>
