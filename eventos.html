@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eventos — STEMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Permanent+Marker&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#00192E;
+    --paper:#042538;
+    --card:#062C42;
+    --cream:#F4E8D3;
+    --cream-dim:#A89A80;
+    --muted:#B49A7A;
+    --magenta:#E8236B;
+    --orange:#FF7A2E;
+    --amber:#F2A93C;
+    --teal:#2FB6A8;
+    --brown:#8B5A34;
+    --brown-light:#052A3D;
+    --line:rgba(244,232,211,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 130% 60% at 50% 0%, #01415C 0%, #013246 28%, var(--bg) 60%, #001220 100%);
+    background-attachment:fixed;
+    color:var(--cream);
+    font-family:'Inter', sans-serif;
+    overflow-x:hidden;
+  }
+  a{color:inherit; text-decoration:none;}
+  img{display:block; max-width:100%;}
+  .display{font-family:'Anton', sans-serif; font-weight:400; text-transform:uppercase;}
+  .script{font-family:'Permanent Marker', cursive;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+
+  .t-toque{--accent:var(--magenta);}
+  .t-single{--accent:var(--teal);}
+  .t-album{--accent:var(--amber);}
+  .t-video{--accent:var(--orange);}
+  .t-promo{--accent:var(--cream-dim);}
+
+  .wrap{max-width:1080px; margin:0 auto; padding:56px 24px 100px;}
+
+  .back-link{
+    display:inline-block; margin-bottom:28px;
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+  }
+  .back-link:hover{color:var(--cream);}
+
+  .banner{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:36px 32px;
+    margin-bottom:36px;
+    position:relative;
+    overflow:hidden;
+  }
+  .banner::before{
+    content:'';
+    position:absolute; inset:0;
+    background-image:radial-gradient(circle at 92% 20%, rgba(232,35,107,0.18), transparent 55%),
+                      radial-gradient(circle at 4% 90%, rgba(47,182,168,0.14), transparent 50%);
+    pointer-events:none;
+  }
+  .banner .eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:3px;
+    color:var(--amber); margin-bottom:10px;
+  }
+  .banner h1{
+    font-size:clamp(38px,7vw,64px); line-height:.92; letter-spacing:.5px;
+  }
+  .banner h1 .script{
+    font-family:'Permanent Marker',cursive; text-transform:none; font-size:.5em;
+    color:var(--teal); display:inline-block; margin-left:8px;
+  }
+  .banner p{
+    color:var(--cream-dim); font-size:14px; margin-top:14px; max-width:480px; line-height:1.5;
+  }
+
+  .filters{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:28px;}
+  .chip{
+    font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.05em;
+    padding:8px 14px; border-radius:20px; border:1px solid var(--line);
+    background:transparent; color:var(--cream-dim); cursor:pointer;
+  }
+  .chip.active{background:var(--card); color:var(--cream); border-color:var(--cream-dim);}
+
+  .month-label{
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+    text-transform:uppercase; letter-spacing:.1em; margin:0 0 18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .month-label::after{content:''; flex:1; height:1px; background:var(--line);}
+
+  .poster-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:18px;
+  }
+  @media (max-width:680px){.poster-grid{grid-template-columns:1fr;}}
+
+  .poster-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:22px 22px 24px;
+    position:relative;
+    border-left:3px solid var(--accent);
+    display:flex;
+    flex-direction:column;
+    cursor:pointer;
+  }
+  .poster-card:hover{border-color:var(--accent);}
+  .poster-top{
+    display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:14px;
+  }
+  .poster-day{
+    font-family:'Anton',sans-serif; font-size:56px; line-height:.85; color:var(--cream);
+  }
+  .poster-day .month{
+    display:block; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px;
+    color:var(--accent); margin-top:4px; text-transform:uppercase;
+  }
+  .time-pill{
+    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
+    background:var(--brown-light); color:var(--cream);
+    border:1px solid var(--line);
+    padding:6px 10px; border-radius:6px; white-space:nowrap;
+  }
+  .poster-thumb{
+    width:100%; height:150px; object-fit:cover; border-radius:8px; margin-bottom:14px;
+    background:var(--brown-light); border:1px solid var(--line);
+  }
+  .poster-tag{
+    font-family:'Permanent Marker',cursive; color:var(--accent); font-size:14px; margin-bottom:4px;
+  }
+  .poster-title{font-size:19px; font-weight:700; line-height:1.2; margin-bottom:8px;}
+  .poster-venue{
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); margin-bottom:10px;
+  }
+  .poster-desc{font-size:13px; color:var(--cream-dim); line-height:1.55;}
+  .poster-status{
+    margin-top:14px; font-family:'JetBrains Mono',monospace; font-size:10px;
+    text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
+  }
+
+  .empty{
+    grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--muted);
+    font-family:'JetBrains Mono',monospace; font-size:13px; border:1px dashed var(--line); border-radius:12px;
+  }
+
+  .overlay{
+    position:fixed; inset:0; background:rgba(0,10,20,.75);
+    display:none; align-items:center; justify-content:center; padding:24px; z-index:50;
+  }
+  .overlay.open{display:flex;}
+  .modal{
+    background:var(--paper); border:1px solid var(--line); border-radius:14px;
+    max-width:480px; width:100%; overflow:hidden; border-top:4px solid var(--accent);
+  }
+  .modal img{width:100%; height:220px; object-fit:cover; background:var(--brown-light);}
+  .modal-body{padding:24px;}
+  .modal-body h3{font-size:22px; margin-bottom:8px;}
+  .modal-body p{color:var(--cream-dim); font-size:14px; line-height:1.55; margin-bottom:16px;}
+  .modal-close{
+    background:none; border:1px solid var(--line); color:var(--cream);
+    padding:8px 16px; border-radius:6px; cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:12px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="index.html" class="back-link mono">← Volver a portada</a>
+
+  <div class="banner">
+    <p class="eyebrow">// calendario stems</p>
+    <h1 class="display">Eventos<span class="script">próximamente</span></h1>
+    <p>Toques, sencillos, álbumes y videos oficiales — todo lo que se viene, en un solo lugar.</p>
+  </div>
+
+  <div class="filters mono" id="filters">
+    <button class="chip active" data-type="all">Todos</button>
+    <button class="chip" data-type="toque">Toques</button>
+    <button class="chip" data-type="single">Sencillos</button>
+    <button class="chip" data-type="album">Álbumes</button>
+    <button class="chip" data-type="video">Videos</button>
+    <button class="chip" data-type="promo">Promo</button>
+  </div>
+
+  <p class="month-label" id="monthLabel"></p>
+  <div class="poster-grid" id="grid"></div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal">
+    <img id="modalImg" src="" alt="">
+    <div class="modal-body">
+      <p class="poster-tag script" id="modalTag"></p>
+      <h3 class="display" id="modalTitle" style="text-transform:none;"></h3>
+      <p id="modalDesc"></p>
+      <p class="mono" id="modalDate" style="color:var(--muted); font-size:12px; margin-bottom:16px;"></p>
+      <button class="modal-close" id="modalClose">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const TYPE_LABEL = {toque:'Toque', single:'Sencillo', album:'Álbum', video:'Video oficial', promo:'Promo'};
+const MONTHS = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+
+let allEvents = [];
+let activeFilter = 'all';
+
+async function loadEvents(){
+  try{
+    const res = await fetch('events.json?_=' + Date.now());
+    const data = await res.json();
+    allEvents = (data.events || []).map(e => ({...e, dateObj:new Date(e.date+'T00:00:00')}))
+      .sort((a,b) => a.dateObj - b.dateObj);
+  }catch(err){
+    console.error('No se pudo cargar events.json', err);
+    allEvents = [];
+  }
+  render();
+}
+
+function render(){
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  let events = activeFilter === 'all' ? allEvents : allEvents.filter(e => e.type === activeFilter);
+
+  const now = new Date();
+  document.getElementById('monthLabel').textContent =
+    (events[0] ? MONTHS[events[0].dateObj.getMonth()] + ' ' + events[0].dateObj.getFullYear() : MONTHS[now.getMonth()] + ' ' + now.getFullYear());
+
+  if(!events.length){
+    grid.innerHTML = '<div class="empty">No hay eventos para este filtro por ahora.</div>';
+    return;
+  }
+
+  events.forEach(e => {
+    const card = document.createElement('div');
+    card.className = `poster-card t-${e.type}`;
+    const day = e.dateObj.getDate();
+    const monthShort = MONTHS[e.dateObj.getMonth()].slice(0,3);
+    const timeStr = e.time || '';
+
+    card.innerHTML = `
+      <div class="poster-top">
+        <div class="poster-day">${day}<span class="month">${monthShort}</span></div>
+        ${timeStr ? `<div class="time-pill">${timeStr}</div>` : ''}
+      </div>
+      ${e.image ? `<img class="poster-thumb" src="${e.image}" alt="" onerror="this.style.display='none'">` : ''}
+      <p class="poster-tag script">${TYPE_LABEL[e.type] || e.type}</p>
+      <p class="poster-title">${escapeHtml(e.title)}</p>
+      ${e.venue ? `<p class="poster-venue">${escapeHtml(e.venue)}</p>` : ''}
+      <p class="poster-desc">${escapeHtml(e.description || '')}</p>
+      ${e.status === 'pendiente' ? '<p class="poster-status">Pendiente de confirmar</p>' : ''}
+    `;
+    card.addEventListener('click', () => openModal(e));
+    grid.appendChild(card);
+  });
+}
+
+function openModal(e){
+  const accentMap = {toque:'magenta', single:'teal', album:'amber', video:'orange', promo:'cream-dim'};
+  document.getElementById('modal').style.setProperty('--accent', `var(--${accentMap[e.type] || 'cream-dim'})`);
+  document.getElementById('modalImg').src = e.image || '';
+  document.getElementById('modalImg').style.display = e.image ? 'block' : 'none';
+  document.getElementById('modalTag').textContent = TYPE_LABEL[e.type] || e.type;
+  document.getElementById('modalTitle').textContent = e.title;
+  document.getElementById('modalDesc').textContent = e.description || '';
+  const fmt = new Intl.DateTimeFormat('es-ES', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  document.getElementById('modalDate').textContent = fmt.format(e.dateObj) + (e.venue ? ' · ' + e.venue : '');
+  document.getElementById('overlay').classList.add('open');
+}
+document.getElementById('modalClose').addEventListener('click', () => document.getElementById('overlay').classList.remove('open'));
+document.getElementById('overlay').addEventListener('click', ev => { if(ev.target.id==='overlay') ev.currentTarget.classList.remove('open'); });
+
+document.getElementById('filters').addEventListener('click', ev => {
+  const btn = ev.target.closest('.chip');
+  if(!btn) return;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilter = btn.dataset.type;
+  render();
+});
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+loadEvents();
+</script>
+</body>
+</html>

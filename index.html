@@ -519,7 +519,7 @@
           <div class="events-col" id="events-col"><h3>Eventos</h3></div>
           <div class="events-col" id="releases-col"><h3>Lanzamientos</h3></div>
         </div>
-        <a class="calendar-cta" href="#">Ver calendario completo →</a>
+        <a class="calendar-cta" href="eventos.html">Ver calendario completo →</a>
       </div>
 
       <!-- Playlist de Stems -->
@@ -947,29 +947,21 @@ fetch('articles.json')
 /* =========================================================
    EVENTOS Y LANZAMIENTOS — dos sub-columnas
    ========================================================= */
-const eventos = [
-  {day:'15 AGO', title:'Ferro Nocturno en vivo', meta:'Teatro Luna · San Salvador',
-    img:'https://images.unsplash.com/photo-1741802869522-3b4245d8aec9?auto=format&fit=crop&w=300&q=60'},
-  {day:'29 AGO', title:'Yara Solís b2b DJ Marlén', meta:'Terraza Sur · Antiguo Cuscatlán',
-    img:'https://images.unsplash.com/photo-1743705948277-84ec41bf81c1?auto=format&fit=crop&w=300&q=60'},
-  {day:'05 SEP', title:'Kaito Reyes — Sesión Ambient en Vivo', meta:'Casa Cultural · Santa Tecla',
-    img:'https://images.unsplash.com/photo-1535406208535-1429839cfd13?auto=format&fit=crop&w=300&q=60'},
-];
-const lanzamientos = [
-  {day:'08 AGO', title:'Nadia Voss — «Zócalo Night Session» Vol. 02', meta:'Álbum · Deep Techno',
-    img:'https://images.unsplash.com/photo-1612868921948-9548c244c2db?auto=format&fit=crop&w=300&q=60'},
-  {day:'22 AGO', title:'«Óxido (Remixes)» — Ferro Nocturno', meta:'EP · IDM',
-    img:'https://images.unsplash.com/photo-1759763494484-f20114b8451d?auto=format&fit=crop&w=300&q=60'},
-  {day:'12 SEP', title:'Compilado STEMS Vol. 01', meta:'Varios Artistas',
-    img:'https://images.unsplash.com/photo-1765813126650-309d21417131?auto=format&fit=crop&w=300&q=60'},
-];
+const RELEASE_TYPE_LABEL = {single:'Sencillo', album:'Álbum', video:'Video oficial', promo:'Próximamente'};
+const EVENTOS_JSON_PATH = 'events.json'; // ajusta la ruta si eventos.html/events.json viven en otra carpeta
+const MONTHS_SHORT = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+
 function renderEventItems(containerId, items){
   const el = document.getElementById(containerId);
+  if(!items.length){
+    el.insertAdjacentHTML('beforeend', `<p class="meta-line" style="padding:14px 0; border-top:1px solid var(--line);">Sin fechas por ahora.</p>`);
+    return;
+  }
   items.forEach(it=>{
     const row = document.createElement('div');
     row.className = 'event-item';
     row.innerHTML = `
-      <div class="event-thumb"><img src="${it.img}" alt=""></div>
+      <div class="event-thumb"><img src="${it.img}" alt="" onerror="this.parentElement.style.visibility='hidden'"></div>
       <div class="event-body">
         <span class="event-chip mono">${it.day}</span>
         <h4>${it.title}</h4>
@@ -979,8 +971,33 @@ function renderEventItems(containerId, items){
     el.appendChild(row);
   });
 }
-renderEventItems('events-col', eventos);
-renderEventItems('releases-col', lanzamientos);
+
+fetch(EVENTOS_JSON_PATH + '?_=' + Date.now())
+  .then(res => res.json())
+  .then(data => {
+    const all = (data.events || []).map(e => ({...e, dateObj:new Date(e.date+'T00:00:00')}))
+      .sort((a,b) => a.dateObj - b.dateObj);
+
+    const toDayLabel = d => `${String(d.getDate()).padStart(2,'0')} ${MONTHS_SHORT[d.getMonth()]}`;
+
+    // "Eventos" = toques en vivo. "Lanzamientos" = sencillos/álbumes/videos/promo.
+    const eventos = all
+      .filter(e => e.type === 'toque')
+      .slice(0, 3)
+      .map(e => ({day:toDayLabel(e.dateObj), title:e.title, meta:e.venue || '', img:e.image || ''}));
+
+    const lanzamientos = all
+      .filter(e => e.type !== 'toque')
+      .slice(0, 3)
+      .map(e => ({day:toDayLabel(e.dateObj), title:e.title, meta:RELEASE_TYPE_LABEL[e.type] || e.type, img:e.image || ''}));
+
+    renderEventItems('events-col', eventos);
+    renderEventItems('releases-col', lanzamientos);
+  })
+  .catch(err => {
+    console.error('No se pudo cargar events.json', err);
+    document.getElementById('events-col').insertAdjacentHTML('beforeend', `<p class="meta-line" style="padding:14px 0;">No se pudieron cargar los eventos.</p>`);
+  });
 
 /* =========================================================
    ARTIFACTS — instrumentos y herramientas propias
