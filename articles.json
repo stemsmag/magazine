@@ -20,68 +20,32 @@
     "comingSoon": false
   },
   {
-    "slug": "#",
-    "date": "2026-07-20",
-    "title": "Kaito Reyes construye ambient desde el ruido de una fábrica",
-    "tag": "Ambient",
-    "tagColor": "teal",
-    "meta": "72 BPM · 8 min",
-    "image": "https://images.unsplash.com/photo-1535406208535-1429839cfd13?auto=format&fit=crop&w=900&q=70",
+   
     "seed": 12,
     "comingSoon": true
   },
   {
-    "slug": "#",
-    "date": "2026-07-15",
-    "title": "El regreso del breakbeat: entrevista con DJ Marlén",
-    "tag": "Entrevista",
-    "tagColor": "orange",
-    "meta": "140 BPM · 5 min",
-    "image": "https://images.unsplash.com/photo-1741802869522-3b4245d8aec9?auto=format&fit=crop&w=900&q=70",
+
     "seed": 47,
     "comingSoon": true
   },
   {
-    "slug": "#",
-    "date": "2026-07-10",
-    "title": "Reseña: «Óxido», el álbum debut de Ferro Nocturno",
-    "tag": "IDM",
-    "tagColor": "magenta",
-    "meta": "95 BPM · 7 min",
-    "image": "https://images.unsplash.com/photo-1743705948277-84ec41bf81c1?auto=format&fit=crop&w=900&q=70",
+   
     "seed": 23,
     "comingSoon": true
   },
   {
-    "slug": "#",
-    "date": "2026-07-05",
-    "title": "Guía: cinco sintetizadores modulares para empezar",
-    "tag": "Equipo",
-    "tagColor": "brown",
-    "meta": "Guía · 10 min",
-    "image": "https://images.unsplash.com/photo-1612868921948-9548c244c2db?auto=format&fit=crop&w=900&q=70",
+,
     "seed": 8,
     "comingSoon": true
   },
   {
-    "slug": "#",
-    "date": "2026-07-01",
-    "title": "Charts de la semana: lo que suena en los clubes de Berlín",
-    "tag": "Charts",
-    "tagColor": "teal",
-    "meta": "Actualizado hoy",
-    "image": "https://images.unsplash.com/photo-1759763494484-f20114b8451d?auto=format&fit=crop&w=900&q=70",
+   
     "seed": 65,
     "comingSoon": true
   },
   {
-    "slug": "#",
-    "date": "2026-06-28",
-    "title": "Yara Solís y la electro-cumbia que rompe pistas",
-    "tag": "Electro",
-    "tagColor": "magenta",
-    "meta": "118 BPM · 6 min",
-    "image": "https://images.unsplash.com/photo-1765813126650-309d21417131?auto=format&fit=crop&w=900&q=70",
+   
     "seed": 31,
     "comingSoon": true
   }
