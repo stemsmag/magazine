@@ -4,9 +4,9 @@
     "category": "Comunidad",
     "categoryPill": "Sobre Nosotros",
     "titleLines": [
-      "VOLVIMOS",
-      "COMO",
-      "MEMORIA"
+      "UN REGRESO MÁS:",
+      "LA HISTORIA",
+      "DE STEMS"
     ],
     "title": "Volvimos: la historia detrás de STEMS",
     "artistLine": "STEMS — Sobre Nosotros",
@@ -14,7 +14,7 @@
     "tag": "Comunidad",
     "tagColor": "teal",
     "meta": "Comunidad · 6 min",
-    "image": "images/nacimos01.jpg",
+    "image": "images/midesk.jpg",
     "seed": 12,
     "slug": "articulos/nacimos.html",
     "comingSoon": false
