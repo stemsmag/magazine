@@ -1180,8 +1180,12 @@ fetch('articles.json')
   .then(r => r.json())
   .then(articles => {
     articles.sort((a, b) => new Date(b.date) - new Date(a.date));
-    // El hero rota entre los 3 artículos reales (no "próximamente") más nuevos
-    const heroPool = articles.filter(a => !a.comingSoon).slice(0, 3);
+    // El hero muestra los artículos marcados "featured": true (no "próximamente").
+    // Si no hay ninguno marcado, se usa como respaldo los 3 reales más nuevos.
+    let heroPool = articles.filter(a => !a.comingSoon && a.featured === true).slice(0, 3);
+    if (heroPool.length === 0) {
+      heroPool = articles.filter(a => !a.comingSoon).slice(0, 3);
+    }
     const rest = articles.filter(a => !heroPool.includes(a));
     initHeroRotator(heroPool);
     renderGrid(rest);
