@@ -375,6 +375,7 @@
   /* ============ CONTENT SPLIT — 70 / 30 ============ */
   .content-split{display:grid; grid-template-columns:7fr 3fr; align-items:start;}
   .col-main{border-right:1px solid var(--line);}
+  .col-main--no-cover{padding-top:calc(var(--stack-h) + 14px);}
   .col-side{padding-top:calc(var(--stack-h) + 14px);}
   .col-side .section-head{padding:56px 24px 20px;}
   .col-side > div:first-child .section-head{padding-top:0;}
@@ -1190,17 +1191,29 @@ fetch('articles.json')
   .then(articles => {
     articles.sort((a, b) => new Date(b.date) - new Date(a.date));
     // El hero muestra los artículos marcados "featured": true (no "próximamente").
-    // Si no hay ninguno marcado, se usa como respaldo los 3 reales más nuevos.
+    // Si NINGÚN artículo usa el campo "featured" (todos undefined), se usa como
+    // respaldo los 3 reales más nuevos. Si alguno SÍ lo usa (p. ej. featured:false
+    // en todos) y ninguno quedó en true, el hero se oculta por completo.
+    const usesFeaturedField = articles.some(a => typeof a.featured !== 'undefined');
     let heroPool = articles.filter(a => !a.comingSoon && a.featured === true).slice(0, 3);
-    if (heroPool.length === 0) {
+    if (heroPool.length === 0 && !usesFeaturedField) {
       heroPool = articles.filter(a => !a.comingSoon).slice(0, 3);
+    }
+    const coverSection = document.querySelector('.cover');
+    const colMainEl = document.querySelector('.col-main');
+    if (heroPool.length === 0) {
+      if (coverSection) coverSection.style.display = 'none';
+      if (colMainEl) colMainEl.classList.add('col-main--no-cover');
+    } else {
+      if (coverSection) coverSection.style.display = '';
+      if (colMainEl) colMainEl.classList.remove('col-main--no-cover');
+      initHeroRotator(heroPool);
     }
     const rest = articles.filter(a => !heroPool.includes(a));
     // En la grilla, los artículos "pinned": true van primero (entre sí, por fecha),
     // y luego el resto en orden normal por fecha.
     const pinned = rest.filter(a => a.pinned === true);
     const unpinned = rest.filter(a => a.pinned !== true);
-    initHeroRotator(heroPool);
     renderGrid([...pinned, ...unpinned]);
   })
   .catch(err => console.error('No se pudo cargar articles.json', err));
