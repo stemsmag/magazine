@@ -40,61 +40,6 @@
     "seed": 44,
     "slug": "articulos/articulo-rudo.html",
     "comingSoon": false
-  },
-  {
-        "slug": "#",
-    "featured": false,
-    "date": "0000-00-00",
-    "title": "//**XX\\--00//",
-    "tag": "Entrevista",
-    "tagColor": "orange",
-    "meta": "45454 · 0000 min",
-    "image": "",
-    "seed": 47,
-     "comingSoon": false
-  },
-  {
-     "slug": "#",
-    "featured": false,
-    "date": "0000-00-00",
-    "title": "//**XX\\--00//",
-    "tag": "Entrevista",
-    "tagColor": "orange",
-    "meta": "45454 · 0000 min",
-    "image": "",
-    "seed": 5,
-     "comingSoon": false
-  },
-  {
-         "slug": "#",
-    "featured": false,
-    "date": "0000-00-00",
-    "title": "//**XX\\--00//",
-    "tag": "Entrevista",
-    "tagColor": "orange",
-    "meta": "45454 · 0000 min",
-    "image": "",
-    "seed": 23,
-    "comingSoon": true
-  },
-  {
-         "slug": "#",
-    "featured": false,
-    "date": "0000-00-00",
-    "title": "//**XX\\--00//",
-    "tag": "Entrevista",
-    "tagColor": "orange",
-    "meta": "45454 · 0000 min",
-    "image": "",
-    "seed": 8,
-    "comingSoon": true
-  },
-  {
-    "seed": 65,
-    "comingSoon": true
-  },
-  {
-    "seed": 31,
-    "comingSoon": true
+  
   }
 ]
