@@ -1,6 +1,6 @@
 [
   {
-    
+    "pinned": true,
     "date": "2026-08-07",
       "featured": false,
     "category": "Comunidad",
@@ -22,7 +22,7 @@
     "comingSoon": false
   },
   {
-    
+    "pinned": true,
     "date": "2026-08-01",
     "featured": true,
     "category": "Perfil",
