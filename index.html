@@ -436,12 +436,13 @@
   .events-columns{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:0 20px; padding:0 24px 8px;}
   .events-col h3{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--accent, var(--teal)); text-transform:uppercase; padding-bottom:8px; border-bottom:2px solid var(--accent, var(--teal)); margin-bottom:4px;}
   .event-item{display:flex; gap:12px; padding:14px 0; border-top:1px solid var(--line);}
-  .event-thumb{width:52px; height:52px; flex:0 0 52px; border:1px solid var(--line); overflow:hidden; background:#000;}
+  .event-thumb{width:80px; height:80px; flex:0 0 80px; border:1px solid var(--line); overflow:hidden; background:#000;}
   .event-thumb img{width:100%; height:100%; object-fit:cover; filter:sepia(0.4) saturate(1.4) contrast(1.05) brightness(0.8);}
   .event-body{min-width:0;}
   .event-chip{display:block; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--muted); margin-bottom:4px; text-transform:uppercase;}
   .event-body h4{font-family:'Oswald',sans-serif; font-weight:600; font-size:12.5px; line-height:1.3; margin-bottom:3px;}
   .event-body .meta-line{font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--muted); letter-spacing:0.3px;}
+  .event-body .event-who{display:block; margin-top:2px; color:var(--text); opacity:0.75;}
 
   .calendar-cta{display:flex; align-items:center; justify-content:center; gap:10px; margin:16px 24px 8px; padding:14px 18px; background:var(--teal); border:1px solid var(--teal); font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--bg); transition:.2s;}
   .calendar-cta:hover{background:var(--amber); border-color:var(--amber); transform:translateY(-1px);}
@@ -1242,6 +1243,7 @@ function renderEventItems(containerId, items){
         <span class="event-chip mono">${it.day}</span>
         <h4>${it.title}</h4>
         <span class="meta-line">${it.meta}</span>
+        ${it.who ? `<span class="meta-line event-who">${it.who}</span>` : ''}
       </div>
     `;
     el.appendChild(row);
@@ -1260,12 +1262,12 @@ fetch(EVENTOS_JSON_PATH + '?_=' + Date.now())
     const eventos = all
       .filter(e => e.type === 'toque')
       .slice(0, 3)
-      .map(e => ({day:toDayLabel(e.dateObj), title:e.title, meta:e.venue || '', img:e.image || ''}));
+      .map(e => ({day:toDayLabel(e.dateObj), title:e.title, meta:e.venue || '', who:e.dj ? `DJ ${e.dj}` : '', img:e.image || ''}));
 
     const lanzamientos = all
       .filter(e => e.type !== 'toque')
       .slice(0, 3)
-      .map(e => ({day:toDayLabel(e.dateObj), title:e.title, meta:RELEASE_TYPE_LABEL[e.type] || e.type, img:e.image || ''}));
+      .map(e => ({day:toDayLabel(e.dateObj), title:e.title, meta:RELEASE_TYPE_LABEL[e.type] || e.type, who:e.productor ? `Prod. ${e.productor}` : '', img:e.image || ''}));
 
     renderEventItems('events-col', eventos);
     renderEventItems('releases-col', lanzamientos);
