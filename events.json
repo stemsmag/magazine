@@ -1,7 +1,7 @@
 {
   "events": [
     {
-      "id": "toque-warehouse-ago",
+      "id": "slecta-lattice-rudo",
       "type": "toque",
       "title": "Selecta Lattice",
       "date": "2026-08-28",
@@ -13,18 +13,17 @@
       "time": "2:00 PM"
     },
    
-    {
-      "id": "toque-proximamente-1",
-      "type": "album",
-      "title": "Próximamente",
-      "date": "2026-09-19",
-      "description": "",
-      "image": "",
-      "venue": "",
-      "link": "",
-      "status": "pendiente",
-      "time": ""
-    },
+{
+  "id": "single-dia-a-dia-caminamos",
+  "type": "single",
+  "title": "Día a Día Caminamos",
+  "date": "2026-08-31",
+  "time": "",
+  "description": "Día a Día Caminamos (basado en Di-Ba-Ya Di-Ba-Yo) es una reinterpretación contemporánea inspirada en un canto tradicional de una comunidad indígena de Papúa Nueva Guinea. La canción combina la fuerza hipnótica del Afro-Latin House y el Organic House con una letra que habla del camino que recorremos como humanidad, de la memoria que permanece en la tierra y del vínculo que nos une con quienes nos precedieron.\n\nA través de versos que evocan el viento, los pasos compartidos y la Madre Tierra como fuente de vida, la canción invita a recordar nuestras raíces y a reconocer que cada generación deja una huella en el mundo. Su mensaje es una celebración de la naturaleza, la gratitud y la conexión espiritual con el entorno.\n\nCon percusión orgánica, bajos profundos, atmósferas envolventes y una energía que crece desde la introspección hasta un clímax emocional, Día a Día Caminamos une tradición e innovación en una experiencia sonora pensada tanto para la pista de baile como para la contemplación.\n\nEsta obra busca honrar el espíritu del canto que la inspira, transformándolo en un lenguaje musical contemporáneo que habla de identidad, comunidad y esperanza.",
+  "image": "images/img-ev/tributo.jpg",
+  "link": "",
+  "status": "pendiente"
+},
     {
       "id": "toque-proximamente-2",
       "type": "video",
