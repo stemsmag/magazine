@@ -41,12 +41,26 @@
     "comingSoon": false
   },
   {
-    "seed": 12,
-    "comingSoon": true
+        "slug": "#",
+    "featured": false,
+    "date": "0000-00-00,
+    "title": "//**XX\\--00//",
+    "tag": "Entrevista",
+    "tagColor": "orange",
+    "meta": "45454 · 0000 min",
+    "image": "",
+    "seed": 47
   },
   {
-    "seed": 47,
-    "comingSoon": true
+     "slug": "#",
+    "featured": false,
+    "date": "0000-00-00,
+    "title": "//**XX\\--00//",
+    "tag": "Entrevista",
+    "tagColor": "orange",
+    "meta": "45454 · 0000 min",
+    "image": "",
+    "seed": 47
   },
   {
     "seed": 23,
