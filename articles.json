@@ -1,14 +1,12 @@
 [
   {
-    "pinned": true,
     "date": "2026-08-07",
-      "featured": false,
     "category": "Comunidad",
     "categoryPill": "Sobre Nosotros",
     "titleLines": [
-      "UN REGRESO MÁS:",
-      "LA HISTORIA",
-      "DE STEMS"
+      "VOLVIMOS",
+      "COMO",
+      "MEMORIA"
     ],
     "title": "Volvimos: la historia detrás de STEMS",
     "artistLine": "STEMS — Sobre Nosotros",
@@ -16,15 +14,33 @@
     "tag": "Comunidad",
     "tagColor": "teal",
     "meta": "Comunidad · 6 min",
-    "image": "articulos/images/midesk.jpg",
+    "image": "images/nacimos01.jpg",
     "seed": 12,
     "slug": "articulos/nacimos.html",
     "comingSoon": false
   },
   {
-    "pinned": true,
     "date": "2026-08-01",
-    "featured": false,
+    "category": "Perfil",
+    "categoryPill": "Techno Melódico",
+    "titleLines": [
+      "RUDO",
+      "LA MÁSCARA",
+      "QUE HABLA"
+    ],
+    "title": "RUDO: la máscara que esconde el rostro para que hable el mensaje",
+    "artistLine": "RUDO — Techno Melódico",
+    "dek": "Detrás del techno melódico y la máscara roja hay una convicción que no cambia: la música puede levantar a alguien cuando siente que ya no puede más.",
+    "tag": "Perfil",
+    "tagColor": "magenta",
+    "meta": "Perfil · 9 min",
+    "image": "articulos/images/rudo01.jpg",
+    "seed": 44,
+    "slug": "articulos/articulo-ijgatu.html",
+    "comingSoon": false
+  },
+  {
+    "date": "2026-08-01",
     "category": "Perfil",
     "categoryPill": "Techno Melódico",
     "titleLines": [
@@ -42,6 +58,5 @@
     "seed": 44,
     "slug": "articulos/articulo-rudo.html",
     "comingSoon": false
-  
   }
 ]
