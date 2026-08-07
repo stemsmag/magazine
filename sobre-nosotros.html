@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sobre nosotros — STEMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Righteous&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&family=Mr+Dafoe&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#00192E;
+    --paper:#042538;
+    --card:#062C42;
+    --cream:#F4E8D3;
+    --cream-dim:#A89A80;
+    --muted:#B49A7A;
+    --magenta:#E8236B;
+    --orange:#FF7A2E;
+    --amber:#F2A93C;
+    --teal:#2FB6A8;
+    --brown:#8B5A34;
+    --brown-light:#052A3D;
+    --line:rgba(244,232,211,0.14);
+    --font-logo:'Mr Dafoe', cursive;
+    --header-h:64px;
+    --top-band-h:24px;
+    --navbar-h:34px;
+    --header-overlay-color:0,25,46;
+    --header-overlay-opacity:0.55;
+    --band-overlay-opacity:0.8;
+    --stack-h:calc(var(--top-band-h) + var(--header-h) + var(--navbar-h));
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:
+      radial-gradient(ellipse 130% 60% at 50% 0%, #01415C 0%, #013246 28%, var(--bg) 60%, #001220 100%);
+    background-attachment:fixed;
+    color:var(--cream);
+    font-family:'Inter', sans-serif;
+    overflow-x:hidden;
+  }
+  a{color:inherit; text-decoration:none;}
+  img{display:block; max-width:100%;}
+  .display{font-family:'Anton', sans-serif; font-weight:400; text-transform:uppercase;}
+  .script{font-family:'Righteous', sans-serif;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+
+  /* ============ GLOBAL TAPE OVERLAY ============ */
+  .grain{
+    position:fixed; inset:0; z-index:998; pointer-events:none;
+    opacity:0.07; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    animation:grain .4s steps(2) infinite;
+  }
+  @keyframes grain{0%{transform:translate(0,0)}50%{transform:translate(-1%,1%)}100%{transform:translate(1%,-1%)}}
+  @media (prefers-reduced-motion: reduce){.grain{animation:none;}}
+
+  /* ============ NAV ============ */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    height:var(--stack-h);
+    padding-top:var(--top-band-h);
+    background:var(--brown-light);
+    overflow:hidden;
+  }
+  .header-hitbox{position:absolute; inset:0; z-index:1;}
+  .top-band{
+    position:fixed; top:0; left:0; right:0; z-index:130;
+    height:var(--top-band-h);
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(90deg,
+      rgba(232,35,107, var(--band-overlay-opacity)) 0%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 18%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 82%,
+      rgba(242,169,60, var(--band-overlay-opacity)) 100%);
+    border-bottom:1px solid var(--line);
+    font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:2px;
+    text-transform:uppercase; color:var(--amber);
+  }
+  .site-navbar{
+    position:fixed; top:calc(var(--top-band-h) + var(--header-h)); left:0; right:0; z-index:125;
+    height:var(--navbar-h);
+    background:linear-gradient(90deg,
+      rgba(232,35,107, var(--band-overlay-opacity)) 0%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 18%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 82%,
+      rgba(242,169,60, var(--band-overlay-opacity)) 100%);
+    border-bottom:1px solid var(--line);
+    overflow-x:auto;
+  }
+  .site-navbar .navbar-inner{
+    max-width:1200px; margin:0 auto; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    padding:0 24px; white-space:nowrap;
+  }
+  .navbar-links{display:flex; align-items:center; gap:36px;}
+  .site-navbar a{
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--cream); transition:color .2s;
+  }
+  .site-navbar a:hover{color:var(--amber);}
+  .nav-toggle{
+    display:none; flex-direction:column; justify-content:center; align-items:center; gap:5px;
+    width:32px; height:32px; padding:0; margin-left:auto;
+    background:transparent; border:none; cursor:pointer;
+  }
+  .nav-toggle-bar{
+    display:block; width:20px; height:2px; background:var(--cream);
+    transition:transform .25s ease, opacity .2s ease;
+  }
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(2){opacity:0;}
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  @media (max-width:640px){
+    .site-navbar .navbar-inner{justify-content:space-between;}
+    .nav-toggle{display:flex;}
+    .navbar-links{
+      display:none;
+      position:fixed; top:var(--stack-h); left:0; right:0; z-index:124;
+      flex-direction:column; align-items:stretch; gap:0;
+      max-height:calc(100vh - var(--stack-h)); overflow-y:auto;
+      background:rgba(4,37,56,0.97);
+      border-bottom:1px solid var(--line);
+      padding:6px 24px 14px;
+    }
+    .navbar-links a{padding:13px 0; border-bottom:1px solid var(--line); white-space:normal;}
+    .navbar-links a:last-child{border-bottom:none;}
+    .site-navbar.nav-open .navbar-links{display:flex;}
+  }
+  .header-bg{
+    position:absolute; left:0; top:0; z-index:-3;
+    width:100%; height:300%;
+    object-fit:cover;
+    transform:translateY(-33.3333%);
+    transition:transform .15s ease-out;
+    will-change:transform;
+  }
+  .header-overlay{
+    position:absolute; inset:0; z-index:-2;
+    background:rgba(var(--header-overlay-color), var(--header-overlay-opacity));
+    pointer-events:none;
+  }
+  .header-inner{
+    position:relative; z-index:2;
+    width:100%; max-width:1200px; margin:0 auto;
+    min-height:var(--header-h);
+    display:flex; align-items:center; justify-content:flex-end;
+    padding:0 24px;
+    pointer-events:none;
+  }
+  header::before{
+    content:'';
+    position:absolute; inset:0; z-index:-1;
+    background-image:
+      radial-gradient(circle at 8% 15%, rgba(0,0,0,0.35), transparent 40%),
+      radial-gradient(circle at 92% 85%, rgba(0,0,0,0.3), transparent 45%),
+      radial-gradient(circle at 55% 50%, rgba(244,232,211,0.05), transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:auto, auto, auto, 160px 160px;
+    opacity:0.5;
+    mix-blend-mode:overlay;
+    pointer-events:none;
+  }
+  /* Firma grande como fondo del header, tipo watermark */
+  /* Firma grande como fondo del header, tipo watermark — confinada al mismo ancho que .main-wrap */
+  .header-signature{
+    position:absolute; inset:0; z-index:-1;
+    max-width:1200px; margin:0 auto;
+    overflow:hidden;
+    pointer-events:none;
+  }
+  .header-signature::after{
+    content:'Stemsmag';
+    position:absolute; inset:0;
+    display:flex; align-items:center;
+    font-family:var(--font-logo); font-weight:400;
+    font-size:clamp(67px, 10.8vw, 108px); line-height:1;
+    letter-spacing:0; white-space:nowrap;
+    opacity:1;
+    color:var(--amber);
+    text-shadow:0 6px 24px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.35);
+    padding-left:24px;
+    transform:rotate(-3.5deg); transform-origin:left center;
+  }
+  .logo-block{
+    position:relative; z-index:1;
+    display:flex; flex-direction:column; gap:0; text-decoration:none; color:inherit;
+    transform:rotate(-3.5deg); transform-origin:left center;
+  }
+  .logo{
+    font-family:var(--font-logo); font-weight:400;
+    font-size:66px; letter-spacing:0; line-height:1;
+    color:var(--cream); white-space:nowrap;
+    display:flex; align-items:baseline;
+  }
+  .logo-stems{
+    display:inline-block;
+    background:linear-gradient(100deg, var(--amber) 42%, #FFF6E0 50%, var(--amber) 58%);
+    background-size:300% 100%;
+    background-position:100% 0;
+    -webkit-background-clip:text; background-clip:text;
+    color:transparent; -webkit-text-fill-color:transparent;
+    animation:logoShine 4.5s ease-in-out infinite;
+  }
+  @keyframes logoShine{
+    0%{background-position:160% 0;}
+    50%{background-position:-60% 0;}
+    100%{background-position:-60% 0;}
+  }
+  .logo-tag{
+    font-family:'JetBrains Mono', monospace; font-weight:500;
+    font-size:8.5px; letter-spacing:1.2px; color:var(--cream-dim);
+    text-transform:uppercase; margin-top:-16px;
+  }
+  @media (max-width:640px){
+    .logo{font-size:52px;}
+    .logo-tag{font-size:7.5px;}
+  }
+
+  #eventos, #playlist, #artifacts{scroll-margin-top:var(--stack-h);}
+
+
+
+  .wrap{max-width:1080px; margin:0 auto; padding:calc(var(--stack-h) + 32px) 24px 100px;}
+
+  .back-link{
+    display:inline-block; margin-bottom:28px;
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+  }
+  .back-link:hover{color:var(--cream);}
+
+  .banner{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:36px 32px;
+    margin-bottom:36px;
+    position:relative;
+    overflow:hidden;
+  }
+  .banner::before{
+    content:'';
+    position:absolute; inset:0;
+    background-image:radial-gradient(circle at 92% 20%, rgba(232,35,107,0.18), transparent 55%),
+                      radial-gradient(circle at 4% 90%, rgba(47,182,168,0.14), transparent 50%);
+    pointer-events:none;
+  }
+  .banner .eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:3px;
+    color:var(--amber); margin-bottom:10px;
+  }
+  .banner h1{
+    font-size:clamp(38px,7vw,64px); line-height:.92; letter-spacing:.5px;
+  }
+  .banner h1 .script{
+    font-family:'Righteous',sans-serif; text-transform:none; font-size:.5em;
+    color:var(--teal); display:inline-block; margin-left:8px;
+  }
+  .banner p{
+    color:var(--cream-dim); font-size:14px; margin-top:14px; max-width:480px; line-height:1.5;
+  }
+
+  /* ============ FOOTER ============ */
+  .site-footer{border-top:1px solid var(--line); margin-top:20px;}
+  .footer-top{
+    max-width:1200px; margin:0 auto;
+    display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:32px;
+    padding:52px 28px 40px;
+  }
+  @media (max-width:900px){.footer-top{grid-template-columns:1fr 1fr; row-gap:36px;}}
+  @media (max-width:560px){.footer-top{grid-template-columns:1fr; padding:44px 20px 32px;}}
+
+  .footer-brand .footer-logo{font-family:'Anton',sans-serif; font-size:26px; letter-spacing:0; color:var(--cream); text-transform:uppercase; margin-bottom:12px;}
+  .footer-brand .footer-logo span{color:var(--muted); font-weight:400;}
+  .footer-tagline-script{font-family:'JetBrains Mono',monospace; font-weight:500; font-size:9.5px; letter-spacing:1.5px; color:var(--amber); text-transform:uppercase; margin-bottom:10px;}
+  .footer-tagline{font-family:'Inter',sans-serif; font-size:12.5px; line-height:1.6; color:var(--muted); max-width:280px; margin-bottom:18px;}
+  .footer-social{display:flex; gap:8px;}
+  .footer-social a{
+    display:flex; align-items:center; justify-content:center;
+    width:32px; height:32px; border:1px solid var(--line);
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.5px;
+    color:var(--muted); transition:.2s;
+  }
+  .footer-social a:hover{border-color:var(--magenta); color:var(--magenta);}
+  .footer-social svg{width:16px; height:16px;}
+
+  .footer-col h4{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--amber); margin-bottom:16px;}
+  .footer-col ul{list-style:none; display:flex; flex-direction:column; gap:10px;}
+  .footer-col a{font-family:'Inter',sans-serif; font-size:13px; color:var(--muted); transition:.2s;}
+  .footer-col a:hover{color:var(--cream);}
+
+  .footer-bottom{
+    border-top:1px solid var(--line);
+    max-width:1200px; margin:0 auto;
+    padding:20px 28px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; color:var(--muted);
+  }
+  @media (max-width:560px){.footer-bottom{padding:18px 20px;}}
+
+  /* ============ INSTITUTIONAL PAGES ============ */
+  .content-page{max-width:760px;}
+  .updated-note{
+    display:inline-block; font-family:'JetBrains Mono',monospace; font-size:10.5px;
+    letter-spacing:1.5px; text-transform:uppercase; color:var(--muted);
+    margin-bottom:32px; padding:6px 12px; border:1px solid var(--line); border-radius:20px;
+  }
+  .content-page h2{
+    font-family:'Anton',sans-serif; text-transform:uppercase; letter-spacing:.3px;
+    font-size:21px; margin:38px 0 14px; color:var(--cream);
+  }
+  .content-page h2:first-of-type{margin-top:4px;}
+  .content-page h3{
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--amber); margin:22px 0 10px;
+  }
+  .content-page p{font-size:14px; line-height:1.75; color:var(--cream-dim); margin-bottom:14px;}
+  .content-page ul{margin:0 0 16px 20px; color:var(--cream-dim); font-size:14px; line-height:1.75;}
+  .content-page li{margin-bottom:7px;}
+  .content-page strong{color:var(--cream); font-weight:600;}
+  .content-page a.inline-link{color:var(--amber); text-decoration:underline; text-underline-offset:2px;}
+  .content-page a.inline-link:hover{color:var(--orange);}
+  .content-page .divider{height:1px; background:var(--line); margin:36px 0;}
+
+  /* ---- Sobre nosotros ---- */
+  .stats-row{
+    display:flex; gap:36px; flex-wrap:wrap; margin:26px 0 8px;
+    padding:26px 28px; background:var(--paper); border:1px solid var(--line); border-radius:14px;
+  }
+  .stat-item .num{font-family:'Anton',sans-serif; font-size:36px; color:var(--amber); line-height:1;}
+  .stat-item .label{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:1.2px; text-transform:uppercase; margin-top:6px;}
+  .team-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:18px; margin:22px 0 12px;}
+  .team-card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px; border-left:3px solid var(--magenta);}
+  .team-card:nth-child(2){border-left-color:var(--teal);}
+  .team-card:nth-child(3){border-left-color:var(--amber);}
+  .team-card:nth-child(4){border-left-color:var(--orange);}
+  .team-card .t-role{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--amber); letter-spacing:1.2px; text-transform:uppercase; margin-bottom:6px;}
+  .team-card .t-name{font-family:'Anton',sans-serif; font-size:18px; text-transform:uppercase; margin-bottom:8px;}
+  .team-card .t-desc{font-size:12.5px; color:var(--muted); line-height:1.55;}
+  .team-card .t-person{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--cream); letter-spacing:.5px; margin-top:12px; padding-top:12px; border-top:1px solid var(--line);}
+  .values-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin:22px 0 10px;}
+  .value-card{background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:20px;}
+  .value-card .v-tag{font-family:'Righteous',sans-serif; color:var(--teal); font-size:15px; margin-bottom:8px;}
+  .value-card p{font-size:12.5px; margin-bottom:0; color:var(--cream-dim); line-height:1.6;}
+
+  /* ---- Contacto ---- */
+  .contact-grid{display:grid; grid-template-columns:1.2fr 1fr; gap:48px; align-items:start;}
+  @media (max-width:760px){.contact-grid{grid-template-columns:1fr; gap:36px;}}
+  .contact-form{display:flex; flex-direction:column; gap:16px;}
+  .form-row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media (max-width:480px){.form-row{grid-template-columns:1fr;}}
+  .form-group{display:flex; flex-direction:column; gap:7px;}
+  .form-group label{
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--amber);
+  }
+  .form-group input, .form-group select, .form-group textarea{
+    background:var(--paper); border:1px solid var(--line); border-radius:8px;
+    padding:12px 14px; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--cream);
+  }
+  .form-group input::placeholder, .form-group textarea::placeholder{color:var(--muted);}
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus{outline:none; border-color:var(--amber);}
+  .form-group textarea{resize:vertical; min-height:150px; font-family:'Inter',sans-serif;}
+  .form-submit{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--magenta); border:none; border-radius:8px; padding:14px;
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px;
+    text-transform:uppercase; color:var(--cream); cursor:pointer; transition:.2s; margin-top:4px;
+  }
+  .form-submit:hover{background:var(--orange);}
+  .form-submit:disabled{opacity:.6; cursor:default;}
+  .form-honeypot{position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;}
+  .form-status{
+    font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.6;
+    margin-top:4px; padding:13px 14px; border-radius:8px; display:none;
+  }
+  .form-status.visible{display:block;}
+  .form-status.success{background:rgba(47,182,168,0.12); border:1px solid var(--teal); color:var(--teal);}
+  .form-status.error{background:rgba(232,35,107,0.12); border:1px solid var(--magenta); color:var(--magenta);}
+  .contact-side{display:flex; flex-direction:column; gap:22px;}
+  .contact-info-card{background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:22px;}
+  .contact-info-card h3{
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--amber); margin-bottom:10px;
+  }
+  .contact-info-card p{font-size:13px; color:var(--cream-dim); line-height:1.6; margin-bottom:0;}
+  .contact-info-card a{color:var(--cream); transition:.2s;}
+  .contact-info-card a:hover{color:var(--amber);}
+  .contact-social-row{display:flex; gap:8px; margin-top:14px;}
+  .contact-social-row a{
+    display:flex; align-items:center; justify-content:center;
+    width:34px; height:34px; border:1px solid var(--line); border-radius:8px;
+    color:var(--muted); transition:.2s;
+  }
+  .contact-social-row a:hover{border-color:var(--magenta); color:var(--magenta);}
+  .contact-social-row svg{width:16px; height:16px;}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<div class="top-band">La música que nos une</div>
+
+<header>
+  <img class="header-bg" src="img/fondo-head.jpg" alt="">
+  <div class="header-overlay"></div>
+  <div class="header-signature"></div>
+  <a href="index.html" class="header-hitbox" aria-label="Ir al inicio"></a>
+  <div class="header-inner"></div>
+</header>
+
+<nav class="site-navbar">
+  <div class="navbar-inner">
+    <div class="navbar-links">
+      <a href="index.html#reviews">Reviews</a>
+      <a href="eventos.html">Eventos</a>
+      <a href="index.html#playlist">Playlist</a>
+      <a href="index.html#artifacts">Artifacts</a>
+    </div>
+    <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+    </button>
+  </div>
+</nav>
+
+<script>
+  /* Parallax de la imagen de fondo del header: mouse en desktop, dedo en mobile */
+  (function(){
+    const headerBg = document.querySelector('.header-bg');
+    if(!headerBg) return;
+    let ratio = 0.5, ticking = false;
+    function apply(){
+      headerBg.style.transform = `translateY(${-(ratio * 66.6667)}%)`;
+      ticking = false;
+    }
+    function onMove(clientY){
+      ratio = Math.min(1, Math.max(0, clientY / window.innerHeight));
+      if(!ticking){ requestAnimationFrame(apply); ticking = true; }
+    }
+    window.addEventListener('mousemove', e => onMove(e.clientY));
+    window.addEventListener('touchmove', e => {
+      if(e.touches && e.touches[0]) onMove(e.touches[0].clientY);
+    }, {passive:true});
+  })();
+
+  /* Menú hamburguesa del navbar en móvil */
+  (function(){
+    document.querySelectorAll('.site-navbar').forEach(nav => {
+      const toggle = nav.querySelector('.nav-toggle');
+      if(!toggle) return;
+      toggle.addEventListener('click', () => {
+        const open = nav.classList.toggle('nav-open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      nav.querySelectorAll('.navbar-links a').forEach(a => {
+        a.addEventListener('click', () => {
+          nav.classList.remove('nav-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+    });
+    window.addEventListener('resize', () => {
+      if(window.innerWidth > 640){
+        document.querySelectorAll('.site-navbar.nav-open').forEach(nav => {
+          nav.classList.remove('nav-open');
+          const t = nav.querySelector('.nav-toggle');
+          if(t) t.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
+  })();
+</script>
+
+<div class="wrap">
+  <a href="index.html" class="back-link mono">← Volver a portada</a>
+
+  <div class="banner">
+    <p class="eyebrow">// quiénes somos</p>
+    <h1 class="display">Sobre<span class="script">nosotros</span></h1>
+    <p>Una revista independiente sobre música electrónica en español, hecha por y para la escena.</p>
+  </div>
+
+  <div class="content-page">
+    <p>Hace 20 años cubrimos los eventos de la escena electrónica bajo el nombre de <strong>HU</strong>. Ahora somos <strong>STEMS</strong>, un nombre que nace del buen espíritu de la cultura electrónica: los stems son los filamentos que forman el núcleo de la producción musical moderna. Nuestra comunidad se forma por referentes que, por separado, desde su localidad aporta diferentes estilos y formas musicales asi como diferentes puntos de vista de la música electrónica. Pero unidos son el tallo de un género que se deriva en muchas ramas y subgéneros.</p>
+    <p>La producción de música electrónica <em>studio-desk</em> —que en su mayoría es independiente— merece una cobertura tan cuidada como la que reciben los grandes artistas y las grandes compañías, pues de aquí es de donde estos se alimentan. Nada de listas genéricas ni notas de prensa recicladas, sino artículos, perfiles y reseñas hechas por gente que vive la producción independiente desde adentro.</p>
+    <p>También tenemos los <strong>Artifacts</strong>, herramientas propias que construimos para la comunidad.</p>
+
+    <div class="stats-row">
+      <div class="stat-item"><div class="num">20+</div><div class="label">Años cubriendo la escena</div></div>
+      <div class="stat-item"><div class="num">SV</div><div class="label">Con base en</div></div>
+      <div class="stat-item"><div class="num">2026</div><div class="label">Renacidos como STEMS</div></div>
+    </div>
+
+    <h2>Qué hacemos</h2>
+    <ul>
+      <li><strong>Reseñas</strong> de sencillos, álbumes y sets, sin filtros publicitarios.</li>
+      <li><strong>Perfiles</strong> de artistas y colectivos que están moviendo la escena.</li>
+      <li><strong>Artifacts</strong>: instrumentos y herramientas digitales propias, hechas para productores y DJs.</li>
+    </ul>
+
+    <h2>Nuestra línea editorial</h2>
+    <div class="values-grid">
+      <div class="value-card">
+        <p class="v-tag">Criterio firme</p>
+        <p>No nos cerramos a publicidad, pero nuestra línea editorial es firme: no respondemos a ningún interés que no sea el de sacar a la luz a artistas emergentes con una propuesta sólida del genero.</p>
+      </div>
+      <div class="value-card">
+        <p class="v-tag">Comunidad primero</p>
+        <p>Escribimos para quienes producen y viven esta música desde adentro, no para el algoritmo.</p>
+      </div>
+      <div class="value-card">
+        <p class="v-tag">Curiosidad real</p>
+        <p>Nos interesa el proceso creativo tanto como el resultado: cómo se construye un set, un track, una escena.</p>
+      </div>
+    </div>
+
+    <h2>El equipo</h2>
+    <div class="team-grid">
+      <div class="team-card">
+        <p class="t-role">Dirección editorial</p>
+        <p class="t-name">Redacción STEMS</p>
+        <p class="t-desc">Curaduría de contenido, estrategia y planificación.</p>
+        <p class="t-person">Gerardo Ventura</p>
+      </div>
+      <div class="team-card">
+        <p class="t-role">Edición</p>
+        <p class="t-name">Corrección de estilo</p>
+        <p class="t-desc">Ajuste y revisión de material y línea editorial de la revista.</p>
+        <p class="t-person">Grace Aguilar</p>
+      </div>
+      <div class="team-card">
+        <p class="t-role">Producto</p>
+        <p class="t-name">Artifacts Lab</p>
+        <p class="t-desc">Diseño y desarrollo de las herramientas e instrumentos propias de STEMS.</p>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <p>¿Quieres proponer un artista, un lanzamiento o colaborar con STEMS? Escríbenos en <a href="contacto.html" class="inline-link">nuestra página de contacto</a>.</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo">STEMS<span>//</span>MAGAZINE</div>
+      <p class="footer-tagline-script">La música que nos une</p>
+      <p class="footer-tagline">Reseñas, perfiles y cultura de la música electrónica en español.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <rect x="3" y="3" width="18" height="18" rx="5"/>
+            <circle cx="12" cy="12" r="4.2"/>
+            <circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="#" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <rect x="2.5" y="5.5" width="19" height="13" rx="3.5"/>
+            <path d="M10 9.2 L15.5 12 L10 14.8 Z" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="#" aria-label="Spotify">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <circle cx="12" cy="12" r="9.5"/>
+            <path d="M7 9.5c3.5-1 7-1 10 .6" stroke-linecap="round"/>
+            <path d="M7.3 12.5c3-.8 6-.8 8.6.5" stroke-linecap="round"/>
+            <path d="M7.6 15.3c2.3-.6 4.8-.6 6.9.5" stroke-linecap="round"/>
+          </svg>
+        </a>
+        <a href="#" aria-label="TikTok">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M14 3v10.2a3.6 3.6 0 1 1-3-3.55" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14 3c.3 2.4 2 4.2 4.4 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Secciones</h4>
+      <ul>
+   
+        <li><a href="eventos.html">Eventos</a></li>
+        <li><a href="index.html#playlist">Playlist</a></li>
+      
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>STEMS</h4>
+      <ul>
+        <li><a href="sobre-nosotros.html">Sobre nosotros</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+     
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="terminos.html">Términos y condiciones</a></li>
+        <li><a href="privacidad.html">Política de privacidad</a></li>
+        <li><a href="cookies.html">Aviso de cookies</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>STEMS © 2026 — La música que nos une</span>
+  </div>
+</footer>
+
+</body>
+</html>

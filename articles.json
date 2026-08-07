@@ -4,12 +4,12 @@
     "category": "Perfil",
     "categoryPill": "Techno Melódico",
     "titleLines": [
-      "RUDO",
-      "LA MÁSCARA",
-      "QUE HABLA"
+      "EL MENSAJE ",
+      "DETRAS DE",
+      "LA MÁSCARA"
     ],
     "title": "RUDO: la máscara que esconde el rostro para que hable el mensaje",
-    "artistLine": "RUDO — Techno Melódico",
+    "artistLine": "Techno — Techno Melódico",
     "dek": "Detrás del techno melódico y la máscara roja hay una convicción que no cambia: la música puede levantar a alguien cuando siente que ya no puede más.",
     "tag": "Perfil",
     "tagColor": "magenta",
@@ -20,27 +20,32 @@
     "comingSoon": false
   },
   {
-  
+   
+    "seed": 12,
     "comingSoon": true
   },
   {
 
-    "comingSoon": true
-  },
-  {
-  
-    "comingSoon": true
-  },
-  {
-  
+    "seed": 47,
     "comingSoon": true
   },
   {
    
-   "comingSoon": true
+    "seed": 23,
+    "comingSoon": true
   },
   {
    
+    "seed": 8,
+    "comingSoon": true
+  },
+  {
+   
+    "seed": 65,
+    "comingSoon": true
+  },
+  {
+    
     "seed": 31,
     "comingSoon": true
   }

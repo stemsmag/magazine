@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · Generar evento</title>
+<style>
+  :root{
+    --bg:#0B0B12; --surface:#15151F; --surface-2:#1D1D2A; --line:#2A2A3A;
+    --text:#F1F0F5; --muted:#8A8A9E; --accent:#35E6A0;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:'Inter',system-ui,sans-serif; padding:40px 24px 80px;
+  }
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace;}
+  .wrap{max-width:640px; margin:0 auto;}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--muted); margin:0 0 10px;
+  }
+  h1{
+    font-family:'Arial Narrow',Helvetica,sans-serif; font-weight:900; text-transform:uppercase;
+    font-size:32px; margin:0 0 6px;
+  }
+  .sub{color:var(--muted); font-size:14px; margin:0 0 32px; line-height:1.5;}
+  .sub strong{color:var(--text);}
+
+  label{
+    display:block; font-family:'JetBrains Mono',monospace; font-size:11px;
+    text-transform:uppercase; letter-spacing:.06em; color:var(--muted);
+    margin:20px 0 6px;
+  }
+  input, textarea, select{
+    width:100%; background:var(--surface); border:1px solid var(--line);
+    color:var(--text); padding:11px 12px; border-radius:7px; font-size:14px;
+    font-family:'Inter',sans-serif;
+  }
+  input:focus, textarea:focus, select:focus{outline:1px solid var(--accent);}
+  textarea{resize:vertical; min-height:70px;}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+
+  button.generate{
+    margin-top:28px; width:100%;
+    background:var(--accent); color:#08130E; border:none;
+    padding:14px; border-radius:8px; font-weight:700; font-size:14px;
+    cursor:pointer; text-transform:uppercase; letter-spacing:.04em;
+  }
+  button.generate:hover{filter:brightness(1.08);}
+
+  .output{
+    margin-top:32px; display:none;
+  }
+  .output.show{display:block;}
+  .output h2{
+    font-family:'JetBrains Mono',monospace; font-size:13px; text-transform:uppercase;
+    color:var(--muted); margin:0 0 10px;
+  }
+  pre{
+    background:var(--surface); border:1px solid var(--line); border-radius:8px;
+    padding:16px; font-size:12.5px; overflow-x:auto; white-space:pre-wrap; word-break:break-word;
+    font-family:'JetBrains Mono',monospace; line-height:1.5;
+  }
+  .btns{display:flex; gap:10px; margin-top:12px;}
+  .btns button{
+    background:var(--surface-2); border:1px solid var(--line); color:var(--text);
+    padding:9px 14px; border-radius:6px; cursor:pointer; font-size:13px;
+  }
+  .btns button:hover{background:#242433;}
+
+  .steps{
+    margin-top:36px; padding:18px 20px; background:var(--surface);
+    border:1px solid var(--line); border-radius:10px;
+  }
+  .steps h2{
+    font-family:'JetBrains Mono',monospace; font-size:12px; text-transform:uppercase;
+    color:var(--muted); margin:0 0 12px;
+  }
+  .steps ol{margin:0; padding-left:18px; font-size:13px; color:var(--muted); line-height:1.9;}
+  .steps code{background:var(--surface-2); padding:2px 6px; border-radius:4px; color:var(--text);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">// admin_v1 — sin backend</p>
+  <h1>Nuevo evento</h1>
+  <p class="sub">Este formulario <strong>no se conecta a GitHub</strong>. Genera el bloque JSON del evento
+    para que lo copies dentro de <code class="mono">events.json</code> y hagas <code class="mono">git push</code> manualmente.</p>
+
+  <label for="type">Tipo de evento</label>
+  <select id="type">
+    <option value="toque">Toque (evento en vivo)</option>
+    <option value="single">Sencillo</option>
+    <option value="album">Álbum / EP</option>
+    <option value="video">Video oficial</option>
+    <option value="promo">Promo / Teaser</option>
+  </select>
+
+  <label for="title">Título</label>
+  <input id="title" type="text" placeholder="Ej: Nocturno, Sesión en Almacén 7...">
+
+  <div class="row2">
+    <div>
+      <label for="date">Fecha</label>
+      <input id="date" type="date">
+    </div>
+    <div>
+      <label for="time">Hora</label>
+      <input id="time" type="text" placeholder="Ej: 9:00 PM">
+    </div>
+  </div>
+
+  <label for="status">Estado</label>
+  <select id="status">
+    <option value="confirmado">Confirmado</option>
+    <option value="pendiente">Pendiente</option>
+  </select>
+
+  <label for="venue">Venue (solo si es toque)</label>
+  <input id="venue" type="text" placeholder="Ej: Almacén 7, San Salvador">
+
+  <label for="description">Descripción</label>
+  <textarea id="description" placeholder="Detalles cortos del evento o lanzamiento"></textarea>
+
+  <label for="image">Nombre del archivo de imagen</label>
+  <input id="image" type="text" placeholder="Ej: nocturno-cover.jpg">
+  <p class="sub" style="margin:6px 0 0; font-size:12px;">Sube tú mismo la imagen a <code class="mono">/images/</code> en el repo con este nombre exacto.</p>
+
+  <label for="link">Link (opcional — Spotify, boletos, YouTube...)</label>
+  <input id="link" type="text" placeholder="https://...">
+
+  <button class="generate" id="genBtn">Generar JSON</button>
+
+  <div class="output" id="output">
+    <h2>Bloque generado</h2>
+    <pre id="jsonOut"></pre>
+    <div class="btns">
+      <button id="copyBtn">Copiar</button>
+      <button id="downloadBtn">Descargar .json</button>
+    </div>
+  </div>
+
+  <div class="steps">
+    <h2>Cómo subirlo al repo</h2>
+    <ol>
+      <li>Copia el bloque generado arriba.</li>
+      <li>Abre <code>events.json</code> en el repo y pégalo dentro del arreglo <code>"events": [ ... ]</code> (agrega una coma antes si no es el primer elemento).</li>
+      <li>Sube la imagen referenciada a la carpeta <code>/images</code> con el mismo nombre de archivo.</li>
+      <li>Haz commit y push: <code>git add . && git commit -m "nuevo evento" && git push</code></li>
+    </ol>
+  </div>
+</div>
+
+<script>
+function slugify(str){
+  return str.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/(^-|-$)/g,'')
+    .slice(0,40);
+}
+
+document.getElementById('genBtn').addEventListener('click', () => {
+  const type = document.getElementById('type').value;
+  const title = document.getElementById('title').value.trim();
+  const date = document.getElementById('date').value;
+  const time = document.getElementById('time').value.trim();
+  const status = document.getElementById('status').value;
+  const venue = document.getElementById('venue').value.trim();
+  const description = document.getElementById('description').value.trim();
+  const imageFile = document.getElementById('image').value.trim();
+  const link = document.getElementById('link').value.trim();
+
+  if(!title || !date){
+    alert('Título y fecha son obligatorios.');
+    return;
+  }
+
+  const id = `${type}-${slugify(title)}`;
+  const obj = {
+    id,
+    type,
+    title,
+    date,
+    time: time || '',
+    description: description || '',
+    image: imageFile ? `images/${imageFile}` : '',
+    link: link || '',
+    status
+  };
+  if(type === 'toque' && venue) obj.venue = venue;
+
+  const jsonStr = JSON.stringify(obj, null, 2) + ',';
+  document.getElementById('jsonOut').textContent = jsonStr;
+  document.getElementById('output').classList.add('show');
+});
+
+document.getElementById('copyBtn').addEventListener('click', () => {
+  const text = document.getElementById('jsonOut').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyBtn');
+    const original = btn.textContent;
+    btn.textContent = 'Copiado ✓';
+    setTimeout(() => btn.textContent = original, 1500);
+  });
+});
+
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  const text = document.getElementById('jsonOut').textContent.replace(/,\s*$/, '');
+  const blob = new Blob([text], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const idMatch = text.match(/"id":\s*"([^"]+)"/);
+  a.href = url;
+  a.download = (idMatch ? idMatch[1] : 'evento') + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>

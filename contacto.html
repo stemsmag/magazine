@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Eventos — STEMS</title>
+<title>Contacto — STEMS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Righteous&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&family=Mr+Dafoe&display=swap" rel="stylesheet">
@@ -223,50 +223,6 @@
 
 
 
-  /* ============ FOOTER ============ */
-  .site-footer{border-top:1px solid var(--line); margin-top:20px;}
-  .footer-top{
-    max-width:1200px; margin:0 auto;
-    display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:32px;
-    padding:52px 28px 40px;
-  }
-  @media (max-width:900px){.footer-top{grid-template-columns:1fr 1fr; row-gap:36px;}}
-  @media (max-width:560px){.footer-top{grid-template-columns:1fr; padding:44px 20px 32px;}}
-
-  .footer-brand .footer-logo{font-family:'Anton',sans-serif; font-size:26px; letter-spacing:0; color:var(--cream); text-transform:uppercase; margin-bottom:12px;}
-  .footer-brand .footer-logo span{color:var(--muted); font-weight:400;}
-  .footer-tagline-script{font-family:'JetBrains Mono',monospace; font-weight:500; font-size:9.5px; letter-spacing:1.5px; color:var(--amber); text-transform:uppercase; margin-bottom:10px;}
-  .footer-tagline{font-family:'Inter',sans-serif; font-size:12.5px; line-height:1.6; color:var(--muted); max-width:280px; margin-bottom:18px;}
-  .footer-social{display:flex; gap:8px;}
-  .footer-social a{
-    display:flex; align-items:center; justify-content:center;
-    width:32px; height:32px; border:1px solid var(--line);
-    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.5px;
-    color:var(--muted); transition:.2s;
-  }
-  .footer-social a:hover{border-color:var(--magenta); color:var(--magenta);}
-  .footer-social svg{width:16px; height:16px;}
-
-  .footer-col h4{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--amber); margin-bottom:16px;}
-  .footer-col ul{list-style:none; display:flex; flex-direction:column; gap:10px;}
-  .footer-col a{font-family:'Inter',sans-serif; font-size:13px; color:var(--muted); transition:.2s;}
-  .footer-col a:hover{color:var(--cream);}
-
-  .footer-bottom{
-    border-top:1px solid var(--line);
-    max-width:1200px; margin:0 auto;
-    padding:20px 28px;
-    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
-    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; color:var(--muted);
-  }
-  @media (max-width:560px){.footer-bottom{padding:18px 20px;}}
-
-  .t-toque{--accent:var(--magenta);}
-  .t-single{--accent:var(--teal);}
-  .t-album{--accent:var(--amber);}
-  .t-video{--accent:var(--orange);}
-  .t-promo{--accent:var(--cream-dim);}
-
   .wrap{max-width:1080px; margin:0 auto; padding:calc(var(--stack-h) + 32px) 24px 100px;}
 
   .back-link{
@@ -306,106 +262,139 @@
     color:var(--cream-dim); font-size:14px; margin-top:14px; max-width:480px; line-height:1.5;
   }
 
-  .filters{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:28px;}
-  .chip{
-    font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.05em;
-    padding:8px 14px; border-radius:20px; border:1px solid var(--line);
-    background:transparent; color:var(--cream-dim); cursor:pointer;
+  /* ============ FOOTER ============ */
+  .site-footer{border-top:1px solid var(--line); margin-top:20px;}
+  .footer-top{
+    max-width:1200px; margin:0 auto;
+    display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:32px;
+    padding:52px 28px 40px;
   }
-  .chip.active{background:var(--card); color:var(--cream); border-color:var(--cream-dim);}
+  @media (max-width:900px){.footer-top{grid-template-columns:1fr 1fr; row-gap:36px;}}
+  @media (max-width:560px){.footer-top{grid-template-columns:1fr; padding:44px 20px 32px;}}
 
-  .month-label{
-    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
-    text-transform:uppercase; letter-spacing:.1em; margin:0 0 18px;
-    display:flex; align-items:center; gap:10px;
+  .footer-brand .footer-logo{font-family:'Anton',sans-serif; font-size:26px; letter-spacing:0; color:var(--cream); text-transform:uppercase; margin-bottom:12px;}
+  .footer-brand .footer-logo span{color:var(--muted); font-weight:400;}
+  .footer-tagline-script{font-family:'JetBrains Mono',monospace; font-weight:500; font-size:9.5px; letter-spacing:1.5px; color:var(--amber); text-transform:uppercase; margin-bottom:10px;}
+  .footer-tagline{font-family:'Inter',sans-serif; font-size:12.5px; line-height:1.6; color:var(--muted); max-width:280px; margin-bottom:18px;}
+  .footer-social{display:flex; gap:8px;}
+  .footer-social a{
+    display:flex; align-items:center; justify-content:center;
+    width:32px; height:32px; border:1px solid var(--line);
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.5px;
+    color:var(--muted); transition:.2s;
   }
-  .month-label::after{content:''; flex:1; height:1px; background:var(--line);}
+  .footer-social a:hover{border-color:var(--magenta); color:var(--magenta);}
+  .footer-social svg{width:16px; height:16px;}
 
-  .poster-grid{
-    display:grid;
-    grid-template-columns:repeat(2, 1fr);
-    gap:18px;
-  }
-  @media (max-width:680px){.poster-grid{grid-template-columns:1fr;}}
+  .footer-col h4{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--amber); margin-bottom:16px;}
+  .footer-col ul{list-style:none; display:flex; flex-direction:column; gap:10px;}
+  .footer-col a{font-family:'Inter',sans-serif; font-size:13px; color:var(--muted); transition:.2s;}
+  .footer-col a:hover{color:var(--cream);}
 
-  .poster-card{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:12px;
-    padding:22px 22px 24px;
-    position:relative;
-    border-left:3px solid var(--accent);
-    display:flex;
-    flex-direction:column;
-    cursor:pointer;
+  .footer-bottom{
+    border-top:1px solid var(--line);
+    max-width:1200px; margin:0 auto;
+    padding:20px 28px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; color:var(--muted);
   }
-  .poster-card:hover{border-color:var(--accent);}
-  .poster-top{
-    display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:14px;
-  }
-  .poster-day{
-    font-family:'Anton',sans-serif; font-size:56px; line-height:.85; color:var(--cream);
-  }
-  .poster-day .month{
-    display:block; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px;
-    color:var(--accent); margin-top:4px; text-transform:uppercase;
-  }
-  .time-pill{
-    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
-    background:var(--brown-light); color:var(--cream);
-    border:1px solid var(--line);
-    padding:6px 10px; border-radius:6px; white-space:nowrap;
-  }
-  .poster-thumb{
-    width:100%; height:150px; object-fit:cover; border-radius:8px; margin-bottom:14px;
-    background:var(--brown-light); border:1px solid var(--line);
-  }
-  .poster-tag{
-    font-family:'Righteous',sans-serif; color:var(--accent); font-size:14px; margin-bottom:4px;
-  }
-  .poster-title{font-size:19px; font-weight:700; line-height:1.2; margin-bottom:8px;}
-  .poster-venue{
-    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); margin-bottom:10px;
-  }
-  .poster-desc{font-size:13px; color:var(--cream-dim); line-height:1.55;}
-  .poster-status{
-    margin-top:14px; font-family:'JetBrains Mono',monospace; font-size:10px;
-    text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
-  }
+  @media (max-width:560px){.footer-bottom{padding:18px 20px;}}
 
-  .empty{
-    grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--muted);
-    font-family:'JetBrains Mono',monospace; font-size:13px; border:1px dashed var(--line); border-radius:12px;
+  /* ============ INSTITUTIONAL PAGES ============ */
+  .content-page{max-width:760px;}
+  .updated-note{
+    display:inline-block; font-family:'JetBrains Mono',monospace; font-size:10.5px;
+    letter-spacing:1.5px; text-transform:uppercase; color:var(--muted);
+    margin-bottom:32px; padding:6px 12px; border:1px solid var(--line); border-radius:20px;
   }
+  .content-page h2{
+    font-family:'Anton',sans-serif; text-transform:uppercase; letter-spacing:.3px;
+    font-size:21px; margin:38px 0 14px; color:var(--cream);
+  }
+  .content-page h2:first-of-type{margin-top:4px;}
+  .content-page h3{
+    font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--amber); margin:22px 0 10px;
+  }
+  .content-page p{font-size:14px; line-height:1.75; color:var(--cream-dim); margin-bottom:14px;}
+  .content-page ul{margin:0 0 16px 20px; color:var(--cream-dim); font-size:14px; line-height:1.75;}
+  .content-page li{margin-bottom:7px;}
+  .content-page strong{color:var(--cream); font-weight:600;}
+  .content-page a.inline-link{color:var(--amber); text-decoration:underline; text-underline-offset:2px;}
+  .content-page a.inline-link:hover{color:var(--orange);}
+  .content-page .divider{height:1px; background:var(--line); margin:36px 0;}
 
-  .overlay{
-    position:fixed; inset:0; background:rgba(0,10,20,.75);
-    display:none; align-items:center; justify-content:center; padding:24px; z-index:50;
+  /* ---- Sobre nosotros ---- */
+  .stats-row{
+    display:flex; gap:36px; flex-wrap:wrap; margin:26px 0 8px;
+    padding:26px 28px; background:var(--paper); border:1px solid var(--line); border-radius:14px;
   }
-  .overlay.open{display:flex;}
-  .modal{
-    background:var(--paper); border:1px solid var(--line); border-radius:14px;
-    max-width:820px; width:100%; max-height:85vh; border-top:4px solid var(--accent);
-    display:flex; flex-direction:row; overflow:hidden;
+  .stat-item .num{font-family:'Anton',sans-serif; font-size:36px; color:var(--amber); line-height:1;}
+  .stat-item .label{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:1.2px; text-transform:uppercase; margin-top:6px;}
+  .team-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:18px; margin:22px 0 12px;}
+  .team-card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px; border-left:3px solid var(--magenta);}
+  .team-card:nth-child(2){border-left-color:var(--teal);}
+  .team-card:nth-child(3){border-left-color:var(--amber);}
+  .team-card:nth-child(4){border-left-color:var(--orange);}
+  .team-card .t-role{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--amber); letter-spacing:1.2px; text-transform:uppercase; margin-bottom:6px;}
+  .team-card .t-name{font-family:'Anton',sans-serif; font-size:18px; text-transform:uppercase; margin-bottom:8px;}
+  .team-card .t-desc{font-size:12.5px; color:var(--muted); line-height:1.55;}
+  .values-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin:22px 0 10px;}
+  .value-card{background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:20px;}
+  .value-card .v-tag{font-family:'Righteous',sans-serif; color:var(--teal); font-size:15px; margin-bottom:8px;}
+  .value-card p{font-size:12.5px; margin-bottom:0; color:var(--cream-dim); line-height:1.6;}
+
+  /* ---- Contacto ---- */
+  .contact-grid{display:grid; grid-template-columns:1.2fr 1fr; gap:48px; align-items:start;}
+  @media (max-width:760px){.contact-grid{grid-template-columns:1fr; gap:36px;}}
+  .contact-form{display:flex; flex-direction:column; gap:16px;}
+  .form-row{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media (max-width:480px){.form-row{grid-template-columns:1fr;}}
+  .form-group{display:flex; flex-direction:column; gap:7px;}
+  .form-group label{
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--amber);
   }
-  .modal-media{
-    flex:0 0 45%; max-width:45%; background:var(--brown-light);
-    display:flex; align-items:center; justify-content:center; overflow:hidden;
+  .form-group input, .form-group select, .form-group textarea{
+    background:var(--paper); border:1px solid var(--line); border-radius:8px;
+    padding:12px 14px; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--cream);
   }
-  .modal-media img{width:100%; height:100%; max-height:85vh; object-fit:contain;}
-  .modal-body{flex:1; min-width:0; padding:28px; overflow-y:auto; max-height:85vh;}
-  @media (max-width:680px){
-    .modal{flex-direction:column; max-height:90vh; overflow-y:auto;}
-    .modal-media{flex:0 0 auto; max-width:100%; max-height:42vh;}
-    .modal-media img{max-height:42vh;}
-    .modal-body{max-height:none; overflow-y:visible;}
+  .form-group input::placeholder, .form-group textarea::placeholder{color:var(--muted);}
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus{outline:none; border-color:var(--amber);}
+  .form-group textarea{resize:vertical; min-height:150px; font-family:'Inter',sans-serif;}
+  .form-submit{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--magenta); border:none; border-radius:8px; padding:14px;
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px;
+    text-transform:uppercase; color:var(--cream); cursor:pointer; transition:.2s; margin-top:4px;
   }
-  .modal-body h3{font-size:22px; margin-bottom:8px;}
-  .modal-body p{color:var(--cream-dim); font-size:14px; line-height:1.55; margin-bottom:16px;}
-  .modal-close{
-    background:none; border:1px solid var(--line); color:var(--cream);
-    padding:8px 16px; border-radius:6px; cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:12px;
+  .form-submit:hover{background:var(--orange);}
+  .form-submit:disabled{opacity:.6; cursor:default;}
+  .form-honeypot{position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;}
+  .form-status{
+    font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.6;
+    margin-top:4px; padding:13px 14px; border-radius:8px; display:none;
   }
+  .form-status.visible{display:block;}
+  .form-status.success{background:rgba(47,182,168,0.12); border:1px solid var(--teal); color:var(--teal);}
+  .form-status.error{background:rgba(232,35,107,0.12); border:1px solid var(--magenta); color:var(--magenta);}
+  .contact-side{display:flex; flex-direction:column; gap:22px;}
+  .contact-info-card{background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:22px;}
+  .contact-info-card h3{
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--amber); margin-bottom:10px;
+  }
+  .contact-info-card p{font-size:13px; color:var(--cream-dim); line-height:1.6; margin-bottom:0;}
+  .contact-info-card a{color:var(--cream); transition:.2s;}
+  .contact-info-card a:hover{color:var(--amber);}
+  .contact-social-row{display:flex; gap:8px; margin-top:14px;}
+  .contact-social-row a{
+    display:flex; align-items:center; justify-content:center;
+    width:34px; height:34px; border:1px solid var(--line); border-radius:8px;
+    color:var(--muted); transition:.2s;
+  }
+  .contact-social-row a:hover{border-color:var(--magenta); color:var(--magenta);}
+  .contact-social-row svg{width:16px; height:16px;}
 </style>
 </head>
 <body>
@@ -490,22 +479,76 @@
   <a href="index.html" class="back-link mono">← Volver a portada</a>
 
   <div class="banner">
-    <p class="eyebrow">// calendario stems</p>
-    <h1 class="display">Eventos<span class="script">próximamente</span></h1>
-    <p>Toques, sencillos, álbumes y videos oficiales — todo lo que se viene, en un solo lugar.</p>
+    <p class="eyebrow">// hablemos</p>
+    <h1 class="display">Contacto<span class="script"></span></h1>
+    <p>¿Tienes un lanzamiento, un evento o una propuesta? Escríbenos.</p>
   </div>
 
-  <div class="filters mono" id="filters">
-    <button class="chip active" data-type="all">Todos</button>
-    <button class="chip" data-type="toque">Toques</button>
-    <button class="chip" data-type="single">Sencillos</button>
-    <button class="chip" data-type="album">Álbumes</button>
-    <button class="chip" data-type="video">Videos</button>
-    <button class="chip" data-type="promo">Promo</button>
-  </div>
+  <div class="content-page" style="max-width:1080px;">
+    <div class="contact-grid">
+      <form class="contact-form" id="contactForm" action="https://formspree.io/f/mvzeozvd" method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cf-name">Nombre</label>
+            <input type="text" id="cf-name" name="name" placeholder="Tu nombre" required>
+          </div>
+          <div class="form-group">
+            <label for="cf-email">Correo</label>
+            <input type="email" id="cf-email" name="email" placeholder="tu@correo.com" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="cf-subject">Asunto</label>
+          <select id="cf-subject" name="asunto" required>
+            <option value="" disabled selected>Selecciona un tema</option>
+            <option value="Propuesta de artista o lanzamiento">Propuesta de artista o lanzamiento</option>
+            <option value="Cobertura de evento">Cobertura de evento</option>
+            <option value="Prensa / colaboraciones">Prensa / colaboraciones</option>
+            <option value="Publicidad">Publicidad</option>
+            <option value="Soporte / errores del sitio">Soporte / errores del sitio</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="cf-message">Mensaje</label>
+          <textarea id="cf-message" name="message" placeholder="Cuéntanos en qué podemos ayudarte..." required></textarea>
+        </div>
+        <input type="text" name="_gotcha" class="form-honeypot" tabindex="-1" autocomplete="off">
+        <input type="hidden" name="_subject" value="Nuevo mensaje desde STEMS — Contacto">
+        <button type="submit" class="form-submit" id="cf-submit">Enviar mensaje →</button>
+        <div class="form-status" id="cf-status"></div>
+      </form>
 
-  <p class="month-label" id="monthLabel"></p>
-  <div class="poster-grid" id="grid"></div>
+      <div class="contact-side">
+        <div class="contact-info-card">
+          <h3>Correo directo</h3>
+          <p><a href="mailto:hola@stemsmag.com">hola@stemsmag.com</a></p>
+        </div>
+        <div class="contact-info-card">
+          <h3>Para artistas y sellos</h3>
+          <p>¿Tienes un lanzamiento, sencillo o álbum que quieras que cubramos? Cuéntanos por este formulario con el enlace de streaming y una breve descripción.</p>
+        </div>
+        <div class="contact-info-card">
+          <h3>Síguenos</h3>
+          <p>La forma más rápida de estar al tanto de todo STEMS.</p>
+          <div class="contact-social-row">
+            <a href="https://www.instagram.com/stemsmag/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none"/></svg>
+            </a>
+            <a href="https://www.youtube.com/@stemsmag" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="5.5" width="19" height="13" rx="3.5"/><path d="M10 9.2 L15.5 12 L10 14.8 Z" fill="currentColor" stroke="none"/></svg>
+            </a>
+            <a href="https://open.spotify.com/playlist/0s9dUDfd3tbKknUUvKt0PM" target="_blank" rel="noopener noreferrer" aria-label="Spotify">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9.5"/><path d="M7 9.5c3.5-1 7-1 10 .6" stroke-linecap="round"/><path d="M7.3 12.5c3-.8 6-.8 8.6.5" stroke-linecap="round"/><path d="M7.6 15.3c2.3-.6 4.8-.6 6.9.5" stroke-linecap="round"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@stemsmag" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3v10.2a3.6 3.6 0 1 1-3-3.55" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 3c.3 2.4 2 4.2 4.4 4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <footer class="site-footer">
@@ -574,111 +617,42 @@
     <span>STEMS © 2026 — La música que nos une</span>
   </div>
 </footer>
-
-<div class="overlay" id="overlay">
-  <div class="modal" id="modal">
-    <div class="modal-media" id="modalMedia">
-      <img id="modalImg" src="" alt="">
-    </div>
-    <div class="modal-body">
-      <p class="poster-tag script" id="modalTag"></p>
-      <h3 class="display" id="modalTitle" style="text-transform:none;"></h3>
-      <p id="modalDesc"></p>
-      <p class="mono" id="modalDate" style="color:var(--muted); font-size:12px; margin-bottom:16px;"></p>
-      <button class="modal-close" id="modalClose">Cerrar</button>
-    </div>
-  </div>
-</div>
-
 <script>
-const TYPE_LABEL = {toque:'Toque', single:'Sencillo', album:'Álbum', video:'Video oficial', promo:'Promo'};
-const MONTHS = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+  const cfForm = document.getElementById('contactForm');
+  const cfSubmit = document.getElementById('cf-submit');
+  const cfStatus = document.getElementById('cf-status');
 
-let allEvents = [];
-let activeFilter = 'all';
+  cfForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    cfSubmit.disabled = true;
+    cfSubmit.textContent = 'Enviando...';
+    cfStatus.className = 'form-status';
 
-async function loadEvents(){
-  try{
-    const res = await fetch('events.json?_=' + Date.now());
-    const data = await res.json();
-    allEvents = (data.events || []).map(e => ({...e, dateObj:new Date(e.date+'T00:00:00')}))
-      .sort((a,b) => a.dateObj - b.dateObj);
-  }catch(err){
-    console.error('No se pudo cargar events.json', err);
-    allEvents = [];
-  }
-  render();
-}
+    try {
+      const res = await fetch(cfForm.action, {
+        method: 'POST',
+        body: new FormData(cfForm),
+        headers: { 'Accept': 'application/json' }
+      });
 
-function render(){
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-  let events = activeFilter === 'all' ? allEvents : allEvents.filter(e => e.type === activeFilter);
-
-  const now = new Date();
-  document.getElementById('monthLabel').textContent =
-    (events[0] ? MONTHS[events[0].dateObj.getMonth()] + ' ' + events[0].dateObj.getFullYear() : MONTHS[now.getMonth()] + ' ' + now.getFullYear());
-
-  if(!events.length){
-    grid.innerHTML = '<div class="empty">No hay eventos para este filtro por ahora.</div>';
-    return;
-  }
-
-  events.forEach(e => {
-    const card = document.createElement('div');
-    card.className = `poster-card t-${e.type}`;
-    const day = e.dateObj.getDate();
-    const monthShort = MONTHS[e.dateObj.getMonth()].slice(0,3);
-    const timeStr = e.time || '';
-
-    card.innerHTML = `
-      <div class="poster-top">
-        <div class="poster-day">${day}<span class="month">${monthShort}</span></div>
-        ${timeStr ? `<div class="time-pill">${timeStr}</div>` : ''}
-      </div>
-      ${e.image ? `<img class="poster-thumb" src="${e.image}" alt="" onerror="this.style.display='none'">` : ''}
-      <p class="poster-tag script">${TYPE_LABEL[e.type] || e.type}</p>
-      <p class="poster-title">${escapeHtml(e.title)}</p>
-      ${e.venue ? `<p class="poster-venue">${escapeHtml(e.venue)}</p>` : ''}
-      <p class="poster-desc">${escapeHtml(e.description || '')}</p>
-      ${e.status === 'pendiente' ? '<p class="poster-status">Pendiente de confirmar</p>' : ''}
-    `;
-    card.addEventListener('click', () => openModal(e));
-    grid.appendChild(card);
+      if (res.ok) {
+        cfStatus.textContent = '¡Gracias! Tu mensaje fue enviado. Te responderemos pronto.';
+        cfStatus.classList.add('success', 'visible');
+        cfForm.reset();
+      } else {
+        const data = await res.json().catch(() => null);
+        const msg = (data && data.errors && data.errors.map(e => e.message).join(', ')) || 'Ocurrió un error al enviar tu mensaje.';
+        cfStatus.textContent = msg + ' Intenta de nuevo o escríbenos directo a hola@stemsmag.com';
+        cfStatus.classList.add('error', 'visible');
+      }
+    } catch (err) {
+      cfStatus.textContent = 'No se pudo enviar el mensaje. Revisa tu conexión e intenta de nuevo.';
+      cfStatus.classList.add('error', 'visible');
+    } finally {
+      cfSubmit.disabled = false;
+      cfSubmit.textContent = 'Enviar mensaje →';
+    }
   });
-}
-
-function openModal(e){
-  const accentMap = {toque:'magenta', single:'teal', album:'amber', video:'orange', promo:'cream-dim'};
-  document.getElementById('modal').style.setProperty('--accent', `var(--${accentMap[e.type] || 'cream-dim'})`);
-  document.getElementById('modalImg').src = e.image || '';
-  document.getElementById('modalMedia').style.display = e.image ? 'flex' : 'none';
-  document.getElementById('modalTag').textContent = TYPE_LABEL[e.type] || e.type;
-  document.getElementById('modalTitle').textContent = e.title;
-  document.getElementById('modalDesc').textContent = e.description || '';
-  const fmt = new Intl.DateTimeFormat('es-ES', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
-  document.getElementById('modalDate').textContent = fmt.format(e.dateObj) + (e.venue ? ' · ' + e.venue : '');
-  document.getElementById('overlay').classList.add('open');
-}
-document.getElementById('modalClose').addEventListener('click', () => document.getElementById('overlay').classList.remove('open'));
-document.getElementById('overlay').addEventListener('click', ev => { if(ev.target.id==='overlay') ev.currentTarget.classList.remove('open'); });
-
-document.getElementById('filters').addEventListener('click', ev => {
-  const btn = ev.target.closest('.chip');
-  if(!btn) return;
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  activeFilter = btn.dataset.type;
-  render();
-});
-
-function escapeHtml(str){
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-loadEvents();
 </script>
 </body>
 </html>

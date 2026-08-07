@@ -1,0 +1,26 @@
+[
+  {
+    "status": "live",
+    "kind": "synth",
+    "seed": 9,
+    "id": "ART.01",
+    "name": "TETRAWAVE",
+    "desc": "Dual Poly Synthesizer &  rhythm engine.",
+    "specs": ["DUAL OSC", "MIDI IN", "SECUENCIADOR"],
+    "cta": "ABRIR INSTRUMENTO",
+    "img": "img/tetra.jpg",
+    "link": "https://stemsmag.github.io/stems-tetrawave/"
+  },
+  {
+    "status": "soon",
+    "kind": "mastering",
+    "seed": 21,
+    "id": "ART.02",
+    "name": "LAQUER",
+    "desc": "Escucha en tiempo real el efecto de una cadena de masterización.",
+    "specs": ["LUFS METER", "EQ", "COMPRESOR"],
+    "cta": "PRÓXIMAMENTE",
+    "img": "img/laquer.jpg",
+    "link": ""
+  }
+]

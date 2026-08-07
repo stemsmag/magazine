@@ -6,7 +6,7 @@
 <title>STEMS — La música que nos une</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;600;700&family=Barlow+Condensed:wght@700&family=Permanent+Marker&family=Righteous&family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;600;700&family=Barlow+Condensed:wght@700&family=Permanent+Marker&family=Righteous&family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500&family=Mr+Dafoe&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#00192E;
@@ -22,6 +22,14 @@
     --brown:#8B5A34;
     --brown-light:#052A3D;
     --line:rgba(244,232,211,0.14);
+    --font-logo:'Mr Dafoe', cursive;
+    --header-h:64px;
+    --top-band-h:24px;
+    --navbar-h:34px;
+    --header-overlay-color:0,25,46;
+    --header-overlay-opacity:0.55;
+    --band-overlay-opacity:0.8;
+    --stack-h:calc(var(--top-band-h) + var(--header-h) + var(--navbar-h));
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
@@ -49,22 +57,99 @@
     animation:grain .4s steps(2) infinite;
   }
   @keyframes grain{0%{transform:translate(0,0)}50%{transform:translate(-1%,1%)}100%{transform:translate(1%,-1%)}}
-  .timecode{position:fixed; bottom:20px; right:28px; z-index:150; font-size:12px; color:var(--amber);
-    text-shadow:0 0 6px rgba(242,169,60,0.4); letter-spacing:1px;}
-  @media (max-width:640px){.timecode{bottom:14px; right:14px; font-size:10px;}}
 
   /* ============ NAV ============ */
   header{
-    position:fixed; top:0; left:0; right:0; z-index:120;
-    padding:0;
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    height:var(--stack-h);
+    padding-top:var(--top-band-h);
     background:var(--brown-light);
-    border-bottom:1px solid var(--line);
     overflow:hidden;
   }
+  .header-hitbox{position:absolute; inset:0; z-index:1;}
+  .top-band{
+    position:fixed; top:0; left:0; right:0; z-index:130;
+    height:var(--top-band-h);
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(90deg,
+      rgba(232,35,107, var(--band-overlay-opacity)) 0%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 18%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 82%,
+      rgba(242,169,60, var(--band-overlay-opacity)) 100%);
+    border-bottom:1px solid var(--line);
+    font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:2px;
+    text-transform:uppercase; color:var(--amber);
+  }
+  .site-navbar{
+    position:fixed; top:calc(var(--top-band-h) + var(--header-h)); left:0; right:0; z-index:125;
+    height:var(--navbar-h);
+    background:linear-gradient(90deg,
+      rgba(232,35,107, var(--band-overlay-opacity)) 0%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 18%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 82%,
+      rgba(242,169,60, var(--band-overlay-opacity)) 100%);
+    border-bottom:1px solid var(--line);
+    overflow-x:auto;
+  }
+  .site-navbar .navbar-inner{
+    max-width:1200px; margin:0 auto; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    padding:0 24px; white-space:nowrap;
+  }
+  .navbar-links{display:flex; align-items:center; gap:36px;}
+  .site-navbar a{
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--cream); transition:color .2s;
+  }
+  .site-navbar a:hover{color:var(--amber);}
+  .nav-toggle{
+    display:none; flex-direction:column; justify-content:center; align-items:center; gap:5px;
+    width:32px; height:32px; padding:0; margin-left:auto;
+    background:transparent; border:none; cursor:pointer;
+  }
+  .nav-toggle-bar{
+    display:block; width:20px; height:2px; background:var(--cream);
+    transition:transform .25s ease, opacity .2s ease;
+  }
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(2){opacity:0;}
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  @media (max-width:640px){
+    .site-navbar .navbar-inner{justify-content:space-between;}
+    .nav-toggle{display:flex;}
+    .navbar-links{
+      display:none;
+      position:fixed; top:var(--stack-h); left:0; right:0; z-index:124;
+      flex-direction:column; align-items:stretch; gap:0;
+      max-height:calc(100vh - var(--stack-h)); overflow-y:auto;
+      background:rgba(4,37,56,0.97);
+      border-bottom:1px solid var(--line);
+      padding:6px 24px 14px;
+    }
+    .navbar-links a{padding:13px 0; border-bottom:1px solid var(--line); white-space:normal;}
+    .navbar-links a:last-child{border-bottom:none;}
+    .site-navbar.nav-open .navbar-links{display:flex;}
+  }
+  .header-bg{
+    position:absolute; left:0; top:0; z-index:-3;
+    width:100%; height:300%;
+    object-fit:cover;
+    transform:translateY(-33.3333%);
+    transition:transform .15s ease-out;
+    will-change:transform;
+  }
+  .header-overlay{
+    position:absolute; inset:0; z-index:-2;
+    background:rgba(var(--header-overlay-color), var(--header-overlay-opacity));
+    pointer-events:none;
+  }
   .header-inner{
+    position:relative; z-index:2;
     width:100%; max-width:1200px; margin:0 auto;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:20px 24px;
+    min-height:var(--header-h);
+    display:flex; align-items:center; justify-content:flex-end;
+    padding:0 24px;
+    pointer-events:none;
   }
   header::before{
     content:'';
@@ -79,60 +164,68 @@
     mix-blend-mode:overlay;
     pointer-events:none;
   }
-  .logo-block{display:flex; flex-direction:column; gap:0; text-decoration:none; color:inherit;}
+  /* Firma grande como fondo del header, tipo watermark */
+  /* Firma grande como fondo del header, tipo watermark — confinada al mismo ancho que .main-wrap */
+  .header-signature{
+    position:absolute; inset:0; z-index:-1;
+    max-width:1200px; margin:0 auto;
+    overflow:hidden;
+    pointer-events:none;
+  }
+  .header-signature::after{
+    content:'Stemsmag';
+    position:absolute; inset:0;
+    display:flex; align-items:center;
+    font-family:var(--font-logo); font-weight:400;
+    font-size:clamp(67px, 10.8vw, 108px); line-height:1;
+    letter-spacing:0; white-space:nowrap;
+    opacity:1;
+    color:var(--amber);
+    text-shadow:0 6px 24px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.35);
+    padding-left:24px;
+    transform:rotate(-3.5deg); transform-origin:left center;
+  }
+  .logo-block{
+    position:relative; z-index:1;
+    display:flex; flex-direction:column; gap:0; text-decoration:none; color:inherit;
+    transform:rotate(-3.5deg); transform-origin:left center;
+  }
   .logo{
-    font-family:'Anton', sans-serif; font-weight:400;
-    font-size:32px; letter-spacing:0; line-height:0.85;
-    color:var(--cream); white-space:nowrap; text-transform:uppercase;
+    font-family:var(--font-logo); font-weight:400;
+    font-size:66px; letter-spacing:0; line-height:1;
+    color:var(--cream); white-space:nowrap;
     display:flex; align-items:baseline;
   }
-  .logo-stems span:nth-child(1){color:var(--magenta);}
-  .logo-stems span:nth-child(2){color:var(--orange);}
-  .logo-stems span:nth-child(3){color:var(--amber);}
-  .logo-stems span:nth-child(4){color:var(--teal);}
-  .logo-stems span:nth-child(5){color:var(--cream);}
-  .logo-stems span:nth-child(6){color:var(--magenta);}
-  .logo-stems span:nth-child(7){color:var(--orange);}
-  .logo-stems span:nth-child(8){color:var(--amber);}
-  .logo-slash{color:var(--muted);}
-  .logo-stems{display:inline-block;}
-  .logo-stems span{transition:color .12s linear;}
+  .logo-stems{
+    display:inline-block;
+    background:linear-gradient(100deg, var(--amber) 42%, #FFF6E0 50%, var(--amber) 58%);
+    background-size:300% 100%;
+    background-position:100% 0;
+    -webkit-background-clip:text; background-clip:text;
+    color:transparent; -webkit-text-fill-color:transparent;
+    animation:logoShine 4.5s ease-in-out infinite;
+  }
+  @keyframes logoShine{
+    0%{background-position:160% 0;}
+    50%{background-position:-60% 0;}
+    100%{background-position:-60% 0;}
+  }
   .logo-tag{
-    font-family:'Barlow Condensed', sans-serif; font-weight:700;
-    font-size:13px; letter-spacing:1.5px; color:var(--cream-dim);
-    text-transform:uppercase; margin-top:-2px;
+    font-family:'JetBrains Mono', monospace; font-weight:500;
+    font-size:8.5px; letter-spacing:1.2px; color:var(--cream-dim);
+    text-transform:uppercase; margin-top:-16px;
   }
   @media (max-width:640px){
-    .logo{font-size:22px;}
-    .logo-tag{font-size:10px;}
+    .logo{font-size:52px;}
+    .logo-tag{font-size:7.5px;}
   }
-  nav ul{list-style:none; display:flex; gap:28px;}
-  nav a{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); transition:color .2s;}
-  nav a:hover{color:var(--cream);}
 
-  .hamburger{
-    display:none; flex-direction:column; justify-content:center; gap:5px;
-    width:36px; height:32px; background:none; border:1px solid var(--line); cursor:pointer; padding:0;
-  }
-  .hamburger span{display:block; width:18px; height:2px; background:var(--cream); margin:0 auto; transition:transform .2s, opacity .2s;}
-  .hamburger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg);}
-  .hamburger[aria-expanded="true"] span:nth-child(2){opacity:0;}
-  .hamburger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
-
-  @media (max-width:760px){
-    nav{
-      display:none; position:fixed; top:73px; left:0; right:0; z-index:119;
-      background:var(--brown-light); border-bottom:1px solid var(--line); padding:20px 24px;
-    }
-    nav.nav-open{display:block;}
-    nav ul{flex-direction:column; gap:18px;}
-    .hamburger{display:flex;}
-  }
+  #eventos, #playlist, #artifacts{scroll-margin-top:var(--stack-h);}
 
   /* ============ COVER (HERO) ============ */
   .cover{
     position:relative;
-    padding:88px 24px 24px;
+    padding:calc(var(--stack-h) + 14px) 24px 24px;
     display:flex;
     align-items:flex-start;
   }
@@ -162,10 +255,10 @@
   .stack{line-height:0.82; margin-bottom:14px;}
   .stack .line{display:block; font-size:clamp(48px, 10vw, 108px);}
   .stack .line-1{color:var(--magenta); text-shadow:3px 3px 0 rgba(0,0,0,0.4);}
-  .stack .line-2{color:var(--cream); -webkit-text-stroke:1.5px var(--cream); text-shadow:3px 3px 0 rgba(0,0,0,0.4);}
-  .stack .line-3{color:var(--bg); -webkit-text-stroke:2px var(--cream);}
+  .stack .line-2{color:var(--cream); text-shadow:3px 3px 0 rgba(0,0,0,0.4);}
+  .stack .line-3{color:var(--orange); text-shadow:3px 3px 0 rgba(0,0,0,0.4);}
   .dek{font-family:'Inter',sans-serif; font-size:clamp(14px,1.6vw,17px); font-weight:400; line-height:1.5; color:var(--cream); max-width:520px; margin-bottom:10px; opacity:0.9;}
-  .script-sub{font-family:'Permanent Marker',cursive; font-size:clamp(20px,3vw,30px); color:var(--teal); margin-bottom:8px;}
+  .script-sub{font-family:var(--font-logo); font-size:clamp(20px,3vw,30px); color:var(--amber); margin-bottom:8px;}
   .location{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1px; color:var(--muted);}
 
   .cover-bottom-row{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap;}
@@ -189,7 +282,7 @@
   .play-indicator{font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:2px; color:var(--cream); border:1px solid var(--cream); padding:8px 14px; white-space:nowrap;}
 
   .cover-side-right{
-    position:absolute; right:28px; top:110px; bottom:100px;
+    position:absolute; right:28px; top:calc(var(--stack-h) - 6px); bottom:100px;
     display:flex; flex-direction:column; align-items:flex-end; justify-content:space-between;
     gap:14px;
   }
@@ -221,7 +314,7 @@
     .cover-content{padding:20px;}
   }
   @media (max-width:600px){
-    .cover{padding:76px 12px 12px;}
+    .cover{padding:calc(var(--stack-h) + 2px) 12px 12px;}
     .cover-content{padding:16px;}
     .stack .line{font-size:15vw;}
   }
@@ -251,7 +344,7 @@
   /* ============ CONTENT SPLIT — 70 / 30 ============ */
   .content-split{display:grid; grid-template-columns:7fr 3fr; align-items:start;}
   .col-main{border-right:1px solid var(--line);}
-  .col-side{padding-top:88px;}
+  .col-side{padding-top:calc(var(--stack-h) + 14px);}
   .col-side .section-head{padding:56px 24px 20px;}
   .col-side > div:first-child .section-head{padding-top:0;}
   .col-side .section-head::before{left:24px;}
@@ -344,15 +437,51 @@
   .status-soon .artifact-cta{color:var(--muted); border-bottom-color:var(--muted);}
 
   /* ============ FOOTER ============ */
-  footer{
+  .site-footer{border-top:1px solid var(--line); margin-top:20px;}
+  .footer-top{
+    max-width:1200px; margin:0 auto;
+    display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:32px;
+    padding:52px 28px 40px;
+  }
+  @media (max-width:900px){.footer-top{grid-template-columns:1fr 1fr; row-gap:36px;}}
+  @media (max-width:560px){.footer-top{grid-template-columns:1fr; padding:44px 20px 32px;}}
+
+  .footer-brand .footer-logo{font-family:'Anton',sans-serif; font-size:26px; letter-spacing:0; color:var(--cream); text-transform:uppercase; margin-bottom:12px;}
+  .footer-brand .footer-logo span{color:var(--muted); font-weight:400;}
+  .footer-tagline-script{font-family:'JetBrains Mono',monospace; font-weight:500; font-size:9.5px; letter-spacing:1.5px; color:var(--amber); text-transform:uppercase; margin-bottom:10px;}
+  .footer-tagline{font-family:'Inter',sans-serif; font-size:12.5px; line-height:1.6; color:var(--muted); max-width:280px; margin-bottom:18px;}
+  .footer-social{display:flex; gap:8px;}
+  .footer-social a{
+    display:flex; align-items:center; justify-content:center;
+    width:32px; height:32px; border:1px solid var(--line);
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.5px;
+    color:var(--muted); transition:.2s;
+  }
+  .footer-social a:hover{border-color:var(--magenta); color:var(--magenta);}
+  .footer-social svg{width:16px; height:16px;}
+
+  .footer-col h4{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--amber); margin-bottom:16px;}
+  .footer-col ul{list-style:none; display:flex; flex-direction:column; gap:10px;}
+  .footer-col a{font-family:'Inter',sans-serif; font-size:13px; color:var(--muted); transition:.2s;}
+  .footer-col a:hover{color:var(--cream);}
+
+  .footer-bottom{
     border-top:1px solid var(--line);
-    padding:36px 28px;
+    max-width:1200px; margin:0 auto;
+    padding:20px 28px;
     display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
     font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; color:var(--muted);
   }
+  @media (max-width:560px){.footer-bottom{padding:18px 20px;}}
+  .footer-credit{
+    text-align:center; max-width:1200px; margin:0 auto;
+    padding:12px 24px 20px;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px;
+    color:rgba(244,232,211,0.28);
+  }
 
   /* ============ ARTÍCULO ============ */
-  .article-wrap{max-width:760px; margin:0 auto; padding:104px 24px 20px;}
+  .article-wrap{max-width:760px; margin:0 auto; padding:calc(var(--stack-h) + 30px) 24px 20px;}
   .back-link{display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:24px; transition:color .2s;}
   .back-link:hover{color:var(--cream);}
 
@@ -381,6 +510,53 @@
   }
   .article-closing{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-top:40px; padding-top:24px; border-top:1px solid var(--line);}
 
+  /* ============ FICHA DE ARTISTA ============ */
+  .ficha-section{margin:52px 0 8px; border-top:1px solid var(--line); padding-top:44px;}
+  .ficha-eyebrow{display:flex; align-items:center; gap:12px; margin-bottom:18px;}
+  .ficha-eyebrow .head-index{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--amber); border:1px solid var(--amber); padding:3px 7px;}
+  .ficha-eyebrow h2{font-family:'Righteous','Playfair Display',serif; font-size:clamp(24px,3.4vw,34px); letter-spacing:-0.4px; text-transform:uppercase; color:var(--amber); line-height:1;}
+  .ficha-eyebrow .sub{display:block; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); margin-top:6px; letter-spacing:1px;}
+
+  .ficha-card{border:1px solid var(--brown); background:var(--card); overflow:hidden;}
+  .ficha-top{display:grid; grid-template-columns:220px 1fr; gap:0;}
+  @media (max-width:640px){.ficha-top{grid-template-columns:1fr;}}
+
+  .ficha-photo{position:relative; aspect-ratio:4/5; background:#000; border-right:1px solid var(--brown); overflow:hidden;}
+  @media (max-width:640px){.ficha-photo{aspect-ratio:16/10; border-right:none; border-bottom:1px solid var(--brown);}}
+  .ficha-photo img{width:100%; height:100%; object-fit:cover; display:block; filter:sepia(0.15) saturate(1.15) contrast(1.05);}
+  .ficha-photo-scrim{position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,25,46,0) 55%, rgba(0,25,46,0.9) 100%); pointer-events:none;}
+  .ficha-photo-caption{position:absolute; left:10px; right:10px; bottom:10px; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--cream); text-transform:uppercase; opacity:0.85;}
+
+  .ficha-body{padding:22px 24px;}
+  .ficha-name{font-family:'Anton',sans-serif; font-size:22px; letter-spacing:1px; color:var(--cream); margin-bottom:6px;}
+  .ficha-genres{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px;}
+  .ficha-genres span{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; padding:3px 8px; border:1px solid var(--teal); color:var(--teal);}
+  .ficha-bio p{font-family:'Inter',sans-serif; font-size:14px; line-height:1.7; color:var(--cream-dim); margin-bottom:14px;}
+  .ficha-bio p:last-child{margin-bottom:0;}
+
+  .ficha-divider{border-top:1px solid var(--line); padding:22px 24px;}
+  .ficha-subhead{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:14px;}
+
+  .ficha-links{display:flex; flex-wrap:wrap; gap:8px;}
+  .ficha-links a{display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--cream); border:1px solid var(--line); padding:7px 11px; transition:.2s;}
+  .ficha-links a:hover{border-color:var(--magenta); color:var(--magenta);}
+
+  .ficha-press{display:flex; flex-direction:column; gap:10px;}
+  .ficha-press-item{display:flex; flex-wrap:wrap; align-items:baseline; gap:8px; font-family:'Inter',sans-serif; font-size:13px; color:var(--cream);}
+  .ficha-press-item b{font-weight:500;}
+  .ficha-press-item .role{color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.5px; text-transform:uppercase;}
+  .ficha-press-item a{color:var(--teal); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.5px;}
+
+  .ficha-releases{list-style:none; display:flex; flex-direction:column; gap:0;}
+  .ficha-releases li{display:flex; align-items:center; gap:12px; padding:10px 0; border-top:1px solid var(--line); font-family:'Oswald',sans-serif; font-weight:500; font-size:14px; color:var(--cream);}
+  .ficha-releases li:first-child{border-top:none;}
+  .ficha-releases li .n{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--amber); min-width:20px;}
+
+  /* ============ COMENTARIOS (Giscus) ============ */
+  .comments-section{margin:0 0 8px;}
+  .comments-embed{padding:0 28px 40px;}
+  @media (max-width:640px){.comments-embed{padding:0 20px 40px;}}
+
   .recommended{padding:56px 0 20px;}
 
   @media (prefers-reduced-motion: reduce){
@@ -407,70 +583,78 @@
 <body>
 
 <div class="grain"></div>
-<div class="timecode" id="timecode">00:00:00:00</div>
+
+<div class="top-band">La música que nos une</div>
 
 <header>
-  <div class="header-inner">
-    <a href="../index.html" class="logo-block">
-      <div class="logo">
-        <span class="logo-stems"><span>S</span><span>T</span><span>E</span><span>M</span><span>S</span><span>M</span><span>A</span><span>G</span></span><span class="logo-slash">//</span>
-      </div>
-      <div class="logo-tag">La música que nos une</div>
-    </a>
-    <nav id="mainNav">
-      <ul>
-        <li><a href="#">Reviews</a></li>
-        <li><a href="#eventos">Eventos</a></li>
-        <li><a href="#playlist">Playlist</a></li>
-        <li><a href="#artifacts">Artifacts</a></li>
-      </ul>
-    </nav>
-    <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú" aria-expanded="false" aria-controls="mainNav">
-      <span></span><span></span><span></span>
+  <img class="header-bg" src="../img/fondo-head.jpg" alt="">
+  <div class="header-overlay"></div>
+  <div class="header-signature"></div>
+  <a href="../index.html" class="header-hitbox" aria-label="Ir al inicio"></a>
+  <div class="header-inner"></div>
+</header>
+
+<nav class="site-navbar">
+  <div class="navbar-inner">
+    <div class="navbar-links">
+      <a href="../index.html">Artículos</a>
+      <a href="../index.html#eventos">Eventos y lanzamientos</a>
+      <a href="../index.html#playlist">Playlists y videos</a>
+    </div>
+    <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
     </button>
   </div>
-</header>
+</nav>
+
 <script>
-  const hamburgerBtn = document.getElementById('hamburgerBtn');
-  const mainNav = document.getElementById('mainNav');
-  hamburgerBtn.addEventListener('click', () => {
-    const isOpen = mainNav.classList.toggle('nav-open');
-    hamburgerBtn.setAttribute('aria-expanded', isOpen);
-  });
-  mainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    mainNav.classList.remove('nav-open');
-    hamburgerBtn.setAttribute('aria-expanded', 'false');
-  }));
+  /* Parallax de la imagen de fondo del header: mouse en desktop, dedo en mobile */
+  (function(){
+    const headerBg = document.querySelector('.header-bg');
+    if(!headerBg) return;
+    let ratio = 0.5, ticking = false;
+    function apply(){
+      headerBg.style.transform = `translateY(${-(ratio * 66.6667)}%)`;
+      ticking = false;
+    }
+    function onMove(clientY){
+      ratio = Math.min(1, Math.max(0, clientY / window.innerHeight));
+      if(!ticking){ requestAnimationFrame(apply); ticking = true; }
+    }
+    window.addEventListener('mousemove', e => onMove(e.clientY));
+    window.addEventListener('touchmove', e => {
+      if(e.touches && e.touches[0]) onMove(e.touches[0].clientY);
+    }, {passive:true});
+  })();
 
-  const logoEl = document.querySelector('.logo');
-  const stemsLetters = document.querySelectorAll('.logo-stems span');
-  const logoPalette = ['--magenta','--orange','--amber','--teal','--cream'];
-  let colorLoopId = null;
-
-  function randomizeLetterColors(){
-    stemsLetters.forEach(span => {
-      const v = logoPalette[Math.floor(Math.random() * logoPalette.length)];
-      span.style.color = `var(${v})`;
+  /* Menú hamburguesa del navbar en móvil */
+  (function(){
+    document.querySelectorAll('.site-navbar').forEach(nav => {
+      const toggle = nav.querySelector('.nav-toggle');
+      if(!toggle) return;
+      toggle.addEventListener('click', () => {
+        const open = nav.classList.toggle('nav-open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      nav.querySelectorAll('.navbar-links a').forEach(a => {
+        a.addEventListener('click', () => {
+          nav.classList.remove('nav-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        });
+      });
     });
-  }
-  function startColorLoop(){
-    if(colorLoopId) return;
-    colorLoopId = setInterval(randomizeLetterColors, 140);
-  }
-  function stopColorLoop(){
-    clearInterval(colorLoopId);
-    colorLoopId = null;
-    stemsLetters.forEach(span => { span.style.color = ''; });
-  }
-  logoEl.addEventListener('mouseenter', startColorLoop);
-  logoEl.addEventListener('mouseleave', stopColorLoop);
-
-  function autoColorBurst(){
-    startColorLoop();
-    setTimeout(stopColorLoop, 1600);
-  }
-  autoColorBurst();
-  setInterval(autoColorBurst, 90000);
+    window.addEventListener('resize', () => {
+      if(window.innerWidth > 640){
+        document.querySelectorAll('.site-navbar.nav-open').forEach(nav => {
+          nav.classList.remove('nav-open');
+          const t = nav.querySelector('.nav-toggle');
+          if(t) t.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
+  })();
 </script>
 
 <div class="main-wrap">
@@ -481,7 +665,7 @@
     <a href="../index.html" class="back-link">← Volver a portada</a>
 
     <span class="article-tag">Perfil</span>
-    <h1 class="article-title">RUDO: la máscara que esconde el rostro para que hable el mensaje</h1>
+    <h1 class="article-title">RUDO: el mensaje tras la máscara.</h1>
     <p class="article-dek">Detrás del techno melódico y la máscara roja hay una convicción que no cambia: la música puede levantar a alguien cuando siente que ya no puede más.</p>
 
     <div class="article-byline">
@@ -501,13 +685,13 @@
 
       <p>Hay proyectos que nacen de una idea de sonido. RUDO nació de una convicción distinta: que la música puede ser una herramienta para levantar a alguien cuando siente que ya no puede más. Esa certeza es el punto de partida de todo lo demás —la máscara, el techno melódico, el rojo que hoy domina su estética— y también la razón por la que, hablando con él, cuesta encontrar una sola respuesta que no vuelva a esa misma idea.</p>
 
-      <h2>Una máscara que no esconde, que recuerda</h2>
+      <h2>Un personaje con un propósito</h2>
 
       <p>Lo primero que llama la atención de RUDO es, precisamente, lo que no se ve: su rostro. La máscara es la imagen central del proyecto, pero él es tajante en aclarar que no se trata de un disfraz. "No se trata de quién está detrás, sino del mensaje que se transmite", explica. En una escena donde con frecuencia se idolatra a la persona detrás del nombre, RUDO eligió quitarse del centro: "Quiero que la atención esté en la música y en lo que puede provocar en el corazón de quien la escucha".</p>
 
       <p>Esa decisión, dice, no es solo estética sino también funcional. La máscara le da permiso para decir cosas que quizás no diría sin ella, porque le recuerda constantemente que el protagonista no es él. "Me permite dejar el ego a un lado y enfocarme en decir lo que realmente importa", cuenta. "Es un símbolo para recordar que el mensaje siempre debe estar por encima del artista".</p>
 
-      <h2>Sanar, tocar fondo y volver a levantarse</h2>
+      <h2>Tocar fondo y salir a flote</h2>
 
       <p>Detrás del nombre hay una historia personal que RUDO no oculta, aunque tampoco la convierte en el centro de la conversación. Habla de haber atravesado momentos de incertidumbre, de sentirse perdido, de preguntarse si quedaba algo de esperanza. Fue en ese lugar, dice, donde encontró que hasta los momentos más oscuros pueden transformarse en algo con propósito. "No porque tenga una vida perfecta", aclara, "sino porque he experimentado que siempre es posible volver a levantarse".</p>
 
@@ -519,7 +703,7 @@
 
       <p>Detrás de esa apuesta hay también una convicción sobre el género: que el techno en español puede cargar el mismo peso emocional que cualquier otro. Describe su sonido como "un viaje entre la oscuridad y la esperanza", con la energía suficiente para hacer bailar pero también con melodías y letras pensadas para dejar algo después de que termine la canción. Ese propósito ordena incluso su proceso creativo: antes de abrir el DAW, se pregunta qué quiere que alguien sienta al escuchar el track, y solo entonces empieza a construir la producción a su servicio. Las atmósferas, explica, representan la incertidumbre y la tensión; los drops, el momento de decidir levantarse. "No los hago solo para generar impacto en una pista de baile; quiero que también transmitan emoción y esperanza".</p>
 
-      <h2>De host a productor, y una comunidad que responde</h2>
+      <h2>De host a productor, y una comunidad que responde al llamado</h2>
 
       <p>RUDO no solo produce: también es host en LATAM Electrónica, un rol que describe como una escuela paralela a su carrera como artista. Conocer a otros productores, dice, lo empuja a seguir creciendo, pero también le recuerda algo que considera central: "la escena no se construye solo pensando en uno mismo. Se construye apoyando a otros, creando comunidad y abriendo espacios para que más talento pueda ser escuchado".</p>
 
@@ -539,7 +723,106 @@
 
     </div>
 
-    <!-- ============ ARTÍCULOS RECOMENDADOS (mock-up) ============ -->
+    <!-- ============ FICHA DE ARTISTA ============ -->
+    <div class="ficha-section">
+      <div class="ficha-eyebrow">
+        <h2>Ficha de Artista<span class="sub">RUDO</span></h2>
+      </div>
+
+      <div class="ficha-card">
+        <div class="ficha-top">
+          <div class="ficha-photo">
+            <img
+              src="images/rudo02.jpg"
+              alt="RUDO — foto de perfil"
+              loading="lazy">
+            <div class="ficha-photo-scrim"></div>
+            <span class="ficha-photo-caption">Foto vía Instagram · @yosoyrudomx</span>
+          </div>
+
+          <div class="ficha-body">
+            <div class="ficha-name">RUDO</div>
+            <div class="ficha-genres">
+              <span>Techno</span>
+              <span>Techno Melódico</span>
+            </div>
+            <div class="ficha-bio">
+              <p>Rudo es un productor mexicano que usa la música como un refugio y un mensaje: esperanza para quien atraviesa sus propias batallas. Detrás de la máscara no hay un personaje, sino una intención clara: que lo importante no sea la cara, sino lo que la música hace sentir. Rudo existe para recordarte que puedes sanar, transformar y encontrar luz incluso después de tocar fondo.</p>
+              <p>Su sonido nace de la energía del techno y la profundidad del trance, fusionados con vocales en español que abren espacio a un mensaje más cercano y honesto. Rudo cree que hace falta mucha más música electrónica en español, y su proyecto busca precisamente eso: crear un puente entre los beats más oscuros y el corazón de quien escucha.</p>
+              <p>Con drops intensos, atmósferas poderosas y letras que hablan desde el alma, Rudo construye un universo donde cada track es una historia de superación. Su misión es simple: que cada canción te recuerde que no estás solo, y que siempre hay un camino hacia adelante.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ficha-divider">
+          <div class="ficha-subhead">Redes y plataformas de escucha</div>
+          <div class="ficha-links">
+            <a href="https://instagram.com/yosoyrudomx" target="_blank" rel="noopener">Instagram · @yosoyrudomx</a>
+            <a href="https://open.spotify.com/artist/0n3muyGL8FyZjmX2F34tI0?si=iaNU5_tAQfiPMPG1IMuwqw" target="_blank" rel="noopener">Spotify · Rudo</a>
+            <a href="https://www.youtube.com/@YoSoyRudoMx" target="_blank" rel="noopener">YouTube · @YoSoyRudoMx</a>
+            <a href="https://on.soundcloud.com/QlQXFd7ezzB1nXotX7" target="_blank" rel="noopener">SoundCloud · Rudo</a>
+            <a href="https://music.apple.com/us/artist/rudo/1747838566" target="_blank" rel="noopener">Apple Music · Rudo</a>
+            <a href="https://youtu.be/FZNFWTfiWDU?si=tlNvDUKAFHolSkU_" target="_blank" rel="noopener">DJ Set · Ver en YouTube</a>
+            <a href="https://linktr.ee/rudoDJmusic" target="_blank" rel="noopener">linktr.ee/rudoDJmusic</a>
+          </div>
+        </div>
+
+        <div class="ficha-divider">
+          <div class="ficha-subhead">Prensa y medios de comunicación</div>
+          <div class="ficha-press">
+            <div class="ficha-press-item">
+              <b>LATAM Electrónica</b>
+              <span class="role">Host · desde 2025</span>
+              <a href="https://www.youtube.com/@LatamElectronica" target="_blank" rel="noopener">@LatamElectronica</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="ficha-divider">
+          <div class="ficha-subhead">Lanzamientos destacados (2024–2025)</div>
+          <ul class="ficha-releases">
+            <li><span class="n">01</span> "En El Silencio"</li>
+            <li><span class="n">02</span> "Cicatrices"</li>
+            <li><span class="n">03</span> "Caminando Solo"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="comments-section" id="comments">
+      <div class="section-head" style="--accent:var(--teal)">
+        <div class="head-title">
+          <span class="head-index">N.03</span>
+          <h2>Comentarios<span class="sub">Únete a la conversación</span></h2>
+        </div>
+      </div>
+
+      <!--
+        Comentarios vía Giscus (https://giscus.app), basado en GitHub Discussions.
+        Antes de publicar, configura tu propia instancia en https://giscus.app y reemplaza
+        data-repo, data-repo-id, data-category y data-category-id con los valores que te
+        genere el sitio para tu repositorio de GitHub.
+      -->
+      <div class="comments-embed">
+        <script src="https://giscus.app/client.js"
+          data-repo="tu-usuario/tu-repositorio"
+          data-repo-id="REPO_ID_AQUI"
+          data-category="General"
+          data-category-id="CATEGORY_ID_AQUI"
+          data-mapping="pathname"
+          data-strict="0"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="bottom"
+          data-theme="dark"
+          data-lang="es"
+          crossorigin="anonymous"
+          async>
+        </script>
+      </div>
+    </div>
+
+    <!-- ============ ARTÍCULOS RECOMENDADOS (mock-up) ============
     <div class="recommended">
       <div class="section-head" style="--accent:var(--teal)">
         <div class="head-title">
@@ -549,34 +832,79 @@
       </div>
       <div class="grid" id="recommended-grid"></div>
     </div>
+    -->
 
   </div>
 
-  <footer>
-    <span>STEMS © 2026 — La música que nos une</span>
-    <span>Fotografía vía Unsplash · Distorsión VHS con Three.js</span>
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">STEMS<span>//</span>MAGAZINE</div>
+        <p class="footer-tagline-script">La música que nos une</p>
+        <p class="footer-tagline">Reseñas, perfiles y cultura de la música electrónica en español.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect x="3" y="3" width="18" height="18" rx="5"/>
+              <circle cx="12" cy="12" r="4.2"/>
+              <circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect x="2.5" y="5.5" width="19" height="13" rx="3.5"/>
+              <path d="M10 9.2 L15.5 12 L10 14.8 Z" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="Spotify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <circle cx="12" cy="12" r="9.5"/>
+              <path d="M7 9.5c3.5-1 7-1 10 .6" stroke-linecap="round"/>
+              <path d="M7.3 12.5c3-.8 6-.8 8.6.5" stroke-linecap="round"/>
+              <path d="M7.6 15.3c2.3-.6 4.8-.6 6.9.5" stroke-linecap="round"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M14 3v10.2a3.6 3.6 0 1 1-3-3.55" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M14 3c.3 2.4 2 4.2 4.4 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Secciones</h4>
+        <ul>
+          <li><a href="../index.html#eventos">Eventos y lanzamientos</a></li>
+          <li><a href="../index.html#playlist">Playlists y videos</a></li>
+         </ul>
+      </div>
+      <div class="footer-col">
+        <h4>STEMS</h4>
+        <ul>
+          <li><a href="../sobre-nosotros.html">Sobre nosotros</a></li>
+          <li><a href="../contacto.html">Contacto</a></li>
+                 </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="../terminos.html">Términos y condiciones</a></li>
+          <li><a href="../privacidad.html">Política de privacidad</a></li>
+          <li><a href="../cookies.html">Aviso de cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>STEMS © 2026 — La música que nos une</span>
+    </div>
+    <div class="footer-credit">Revista de Música Electrónica Stems · Hecho en El Salvador · 2026</div>
   </footer>
 
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-/* =========================================================
-   TIMECODE tipo cinta Betamax
-   ========================================================= */
-(function(){
-  const el = document.getElementById('timecode');
-  let frames = 0;
-  const fmt = n => n.toString().padStart(2,'0');
-  setInterval(()=>{
-    frames++;
-    const totalSec = Math.floor(frames/30);
-    const f = frames % 30;
-    const h = Math.floor(totalSec/3600), m = Math.floor((totalSec%3600)/60), s = totalSec%60;
-    el.textContent = `${fmt(h)}:${fmt(m)}:${fmt(s)}:${fmt(f)}`;
-  }, 1000/30);
-})();
-
 /* =========================================================
    SHADER VHS — aberración cromática + tracking glitch + scanlines
    Se aplica sobre fotografías reales vía Three.js
@@ -806,6 +1134,9 @@ function drawArtifactPreview(canvas, kind, seed){
 /* =========================================================
    ARTÍCULOS RECOMENDADOS (mock-up)
    ========================================================= */
+/* =========================================================
+   ARTÍCULOS RECOMENDADOS (mock-up) — DESACTIVADO TEMPORALMENTE
+   =========================================================
 const recommended = [
   {tag:'Reseña', tagColor:'var(--magenta)', title:'«Óxido (Remixes)»: Ferro Nocturno reescribe su propio álbum', meta:'IDM · 7 min', seed:23,
     img:'https://images.unsplash.com/photo-1743705948277-84ec41bf81c1?auto=format&fit=crop&w=900&q=70'},
@@ -840,6 +1171,8 @@ recommended.forEach((a, i)=>{
   mountVHS(card.querySelector('canvas'), a.img, {base:0.09, hoverBoost:0.6});
   drawBarcode(document.getElementById('rec-bc-'+i), a.seed, 10);
 });
+*/
+
 </script>
 </body>
 </html>

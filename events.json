@@ -3,63 +3,19 @@
     {
       "id": "toque-warehouse-ago",
       "type": "toque",
-      "title": "UNDR",
-      "date": "2026-08-15",
-      "description": "Set de 3 horas cerrando la noche. Line up B2B con invitados locales.",
-      "image": "images/almacen7.jpg",
-      "venue": "Almacén 7, San Salvador",
-      "link": "",
+      "title": "Selecta Lattice",
+      "date": "2026-08-28",
+      "description": "Este 2026, Selecta regresa con LATTICE, un viaje sonoro y visual inspirado en las teorías de la conciencia de Jacobo Grinberg.",
+      "image": "img-ev/00 (4).jpg",
+      "venue": "Atlacomulco, edo. México",
+      "link": "https://selecta-lattice.boletia.com/",
       "status": "confirmado",
-      "time": "9:00 PM"
+      "time": "2:00 PM"
     },
-    {
-      "id": "single-nocturno",
-      "type": "single",
-      "title": "Nocturno",
-      "date": "2026-08-22",
-      "description": "Sencillo de electrónica melódica, primer adelanto del EP de noviembre.",
-      "image": "images/nocturno-cover.jpg",
-      "link": "",
-      "status": "confirmado",
-      "time": "12:00 PM"
-    },
-    {
-      "id": "video-nocturno",
-      "type": "video",
-      "title": "Nocturno (Video Oficial)",
-      "date": "2026-08-29",
-      "description": "Video grabado en locación urbana, dirigido en colaboración con estudio local.",
-      "image": "images/nocturno-video.jpg",
-      "link": "",
-      "status": "pendiente",
-      "time": "11:30 PM"
-    },
-    {
-      "id": "toque-festival-sep",
-      "type": "toque",
-      "title": "Festival Bajo Tierra - Escenario B",
-      "date": "2026-09-05",
-      "description": "Primera vez en este festival, horario de prime time.",
-      "image": "images/bajo-tierra.jpg",
-      "venue": "Recinto Ferial, Antiguo Cuscatlán",
-      "link": "",
-      "status": "confirmado",
-      "time": "10:00 PM"
-    },
-    {
-      "id": "album-ep-noviembre",
-      "type": "album",
-      "title": "Frecuencias Bajas (EP)",
-      "date": "2026-11-14",
-      "description": "EP de 5 tracks. Incluye Nocturno y 4 canciones inéditas.",
-      "image": "images/frecuencias-bajas.jpg",
-      "link": "",
-      "status": "pendiente",
-      "time": "12:00 PM"
-    },
+   
     {
       "id": "toque-proximamente-1",
-      "type": "toque",
+      "type": "album",
       "title": "Próximamente",
       "date": "2026-09-19",
       "description": "",
@@ -71,7 +27,7 @@
     },
     {
       "id": "toque-proximamente-2",
-      "type": "toque",
+      "type": "video",
       "title": "Próximamente",
       "date": "2026-09-26",
       "description": "",
@@ -95,7 +51,7 @@
     },
     {
       "id": "toque-proximamente-4",
-      "type": "toque",
+      "type": "single",
       "title": "Próximamente",
       "date": "2026-10-17",
       "description": "",

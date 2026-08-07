@@ -6,7 +6,7 @@
 <title>STEMS — La música que nos une</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;600;700&family=Barlow+Condensed:wght@700&family=Permanent+Marker&family=Righteous&family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;600;700&family=Barlow+Condensed:wght@700&family=Permanent+Marker&family=Righteous&family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500&family=Mr+Dafoe&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#00192E;
@@ -22,6 +22,14 @@
     --brown:#8B5A34;
     --brown-light:#052A3D;
     --line:rgba(244,232,211,0.14);
+    --font-logo:'Mr Dafoe', cursive;
+    --header-h:64px;
+    --top-band-h:24px;
+    --navbar-h:34px;
+    --header-overlay-color:0,25,46;
+    --header-overlay-opacity:0.55;
+    --band-overlay-opacity:0.8;
+    --stack-h:calc(var(--top-band-h) + var(--header-h) + var(--navbar-h));
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
@@ -49,22 +57,98 @@
     animation:grain .4s steps(2) infinite;
   }
   @keyframes grain{0%{transform:translate(0,0)}50%{transform:translate(-1%,1%)}100%{transform:translate(1%,-1%)}}
-  .timecode{position:fixed; bottom:20px; right:28px; z-index:150; font-size:12px; color:var(--amber);
-    text-shadow:0 0 6px rgba(242,169,60,0.4); letter-spacing:1px;}
-  @media (max-width:640px){.timecode{bottom:14px; right:14px; font-size:10px;}}
 
   /* ============ NAV ============ */
   header{
-    position:fixed; top:0; left:0; right:0; z-index:120;
-    padding:0;
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    height:var(--stack-h);
+    padding-top:var(--top-band-h);
     background:var(--brown-light);
-    border-bottom:1px solid var(--line);
     overflow:hidden;
   }
+  .header-hitbox{position:absolute; inset:0; z-index:1;}
+  .top-band{
+    position:fixed; top:0; left:0; right:0; z-index:130;
+    height:var(--top-band-h);
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(90deg,
+      rgba(232,35,107, var(--band-overlay-opacity)) 0%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 18%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 82%,
+      rgba(242,169,60, var(--band-overlay-opacity)) 100%);
+    border-bottom:1px solid var(--line);
+    font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:2px;
+    text-transform:uppercase; color:var(--amber);
+  }
+  .site-navbar{
+    position:fixed; top:calc(var(--top-band-h) + var(--header-h)); left:0; right:0; z-index:125;
+    height:var(--navbar-h);
+    background:linear-gradient(90deg,
+      rgba(232,35,107, var(--band-overlay-opacity)) 0%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 18%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 82%,
+      rgba(242,169,60, var(--band-overlay-opacity)) 100%);
+    border-bottom:1px solid var(--line);
+    overflow-x:auto;
+  }
+  .site-navbar .navbar-inner{
+    max-width:1200px; margin:0 auto; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    padding:0 24px; white-space:nowrap;
+  }
+  .navbar-links{display:flex; align-items:center; gap:36px;}
+  .site-navbar a{
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--cream); transition:color .2s;
+  }
+  .site-navbar a:hover{color:var(--amber);}
+  .nav-toggle{
+    display:none; flex-direction:column; justify-content:center; align-items:center; gap:5px;
+    width:32px; height:32px; padding:0; margin-left:auto;
+    background:transparent; border:none; cursor:pointer;
+  }
+  .nav-toggle-bar{
+    display:block; width:20px; height:2px; background:var(--cream);
+    transition:transform .25s ease, opacity .2s ease;
+  }
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(2){opacity:0;}
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  @media (max-width:640px){
+    .site-navbar .navbar-inner{justify-content:space-between;}
+    .nav-toggle{display:flex;}
+    .navbar-links{
+      display:none;
+      position:fixed; top:var(--stack-h); left:0; right:0; z-index:124;
+      flex-direction:column; align-items:stretch; gap:0;
+      max-height:calc(100vh - var(--stack-h)); overflow-y:auto;
+      background:rgba(4,37,56,0.97);
+      border-bottom:1px solid var(--line);
+      padding:6px 24px 14px;
+    }
+    .navbar-links a{padding:13px 0; border-bottom:1px solid var(--line); white-space:normal;}
+    .navbar-links a:last-child{border-bottom:none;}
+    .site-navbar.nav-open .navbar-links{display:flex;}
+  }
+  .header-bg{
+    position:absolute; left:0; top:0; z-index:-3;
+    width:100%; height:300%; /* extra alto: permite paneo vertical con el parallax */
+    object-fit:cover;
+    transform:translateY(-33.3333%); /* posición central por defecto */
+    transition:transform .15s ease-out;
+    will-change:transform;
+  }
+  .header-overlay{
+    position:absolute; inset:0; z-index:-2;
+    background:rgba(var(--header-overlay-color), var(--header-overlay-opacity));
+    pointer-events:none;
+  }
   .header-inner{
+    position:relative; z-index:2;
     width:100%; max-width:1200px; margin:0 auto;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:20px 24px;
+    min-height:var(--header-h);
+    display:flex; align-items:center; justify-content:flex-end;
+    padding:0 24px;
   }
   header::before{
     content:'';
@@ -79,60 +163,67 @@
     mix-blend-mode:overlay;
     pointer-events:none;
   }
-  .logo-block{display:flex; flex-direction:column; gap:0; text-decoration:none; color:inherit;}
+  /* Firma grande como fondo del header, tipo watermark — confinada al mismo ancho que .main-wrap */
+  .header-signature{
+    position:absolute; inset:0; z-index:-1;
+    max-width:1200px; margin:0 auto;
+    overflow:hidden;
+    pointer-events:none;
+  }
+  .header-signature::after{
+    content:'Stemsmag';
+    position:absolute; inset:0;
+    display:flex; align-items:center;
+    font-family:var(--font-logo); font-weight:400;
+    font-size:clamp(67px, 10.8vw, 108px); line-height:1;
+    letter-spacing:0; white-space:nowrap;
+    opacity:1;
+    color:var(--amber);
+    text-shadow:0 6px 24px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.35);
+    padding-left:24px;
+    transform:rotate(-3.5deg); transform-origin:left center;
+  }
+  .logo-block{
+    position:relative; z-index:1;
+    display:flex; flex-direction:column; gap:0; text-decoration:none; color:inherit;
+    transform:rotate(-3.5deg); transform-origin:left center;
+  }
   .logo{
-    font-family:'Anton', sans-serif; font-weight:400;
-    font-size:32px; letter-spacing:0; line-height:0.85;
-    color:var(--cream); white-space:nowrap; text-transform:uppercase;
+    font-family:var(--font-logo); font-weight:400;
+    font-size:66px; letter-spacing:0; line-height:1;
+    color:var(--cream); white-space:nowrap;
     display:flex; align-items:baseline;
   }
-  .logo-stems span:nth-child(1){color:var(--magenta);}
-  .logo-stems span:nth-child(2){color:var(--orange);}
-  .logo-stems span:nth-child(3){color:var(--amber);}
-  .logo-stems span:nth-child(4){color:var(--teal);}
-  .logo-stems span:nth-child(5){color:var(--cream);}
-  .logo-stems span:nth-child(6){color:var(--magenta);}
-  .logo-stems span:nth-child(7){color:var(--orange);}
-  .logo-stems span:nth-child(8){color:var(--amber);}
-  .logo-slash{color:var(--muted);}
-  .logo-stems{display:inline-block;}
-  .logo-stems span{transition:color .12s linear;}
+  .logo-stems{
+    display:inline-block;
+    background:linear-gradient(100deg, var(--amber) 42%, #FFF6E0 50%, var(--amber) 58%);
+    background-size:300% 100%;
+    background-position:100% 0;
+    -webkit-background-clip:text; background-clip:text;
+    color:transparent; -webkit-text-fill-color:transparent;
+    animation:logoShine 4.5s ease-in-out infinite;
+  }
+  @keyframes logoShine{
+    0%{background-position:160% 0;}
+    50%{background-position:-60% 0;}
+    100%{background-position:-60% 0;}
+  }
   .logo-tag{
-    font-family:'Barlow Condensed', sans-serif; font-weight:700;
-    font-size:13px; letter-spacing:1.5px; color:var(--cream-dim);
-    text-transform:uppercase; margin-top:-2px;
+    font-family:'JetBrains Mono', monospace; font-weight:500;
+    font-size:8.5px; letter-spacing:1.2px; color:var(--cream-dim);
+    text-transform:uppercase; margin-top:-16px;
   }
   @media (max-width:640px){
-    .logo{font-size:22px;}
-    .logo-tag{font-size:10px;}
+    .logo{font-size:52px;}
+    .logo-tag{font-size:7.5px;}
   }
-  nav ul{list-style:none; display:flex; gap:28px;}
-  nav a{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); transition:color .2s;}
-  nav a:hover{color:var(--cream);}
 
-  .hamburger{
-    display:none; flex-direction:column; justify-content:center; gap:5px;
-    width:36px; height:32px; background:none; border:1px solid var(--line); cursor:pointer; padding:0;
-  }
-  .hamburger span{display:block; width:18px; height:2px; background:var(--cream); margin:0 auto; transition:transform .2s, opacity .2s;}
-  .hamburger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg);}
-  .hamburger[aria-expanded="true"] span:nth-child(2){opacity:0;}
-  .hamburger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
-
-  @media (max-width:760px){
-    nav{
-      display:none; position:fixed; top:73px; left:0; right:0; z-index:119;
-      background:var(--brown-light); border-bottom:1px solid var(--line); padding:20px 24px;
-    }
-    nav.nav-open{display:block;}
-    nav ul{flex-direction:column; gap:18px;}
-    .hamburger{display:flex;}
-  }
+  #eventos, #playlist, #artifacts{scroll-margin-top:var(--stack-h);}
 
   /* ============ COVER (HERO) ============ */
   .cover{
     position:relative;
-    padding:88px 24px 24px;
+    padding:calc(var(--stack-h) + 14px) 24px 24px;
     display:flex;
     align-items:flex-start;
   }
@@ -169,10 +260,10 @@
   .stack{line-height:0.88; margin-bottom:10px;}
   .stack .line{display:block; font-size:clamp(26px, 5.4vw, 66px); overflow-wrap:break-word;}
   .stack .line-1{color:var(--magenta); text-shadow:2px 2px 0 rgba(0,0,0,0.4);}
-  .stack .line-2{color:var(--cream); -webkit-text-stroke:1.2px var(--cream); text-shadow:2px 2px 0 rgba(0,0,0,0.4);}
-  .stack .line-3{color:var(--bg); -webkit-text-stroke:1.5px var(--cream);}
+  .stack .line-2{color:var(--cream); text-shadow:2px 2px 0 rgba(0,0,0,0.4);}
+  .stack .line-3{color:var(--orange); text-shadow:2px 2px 0 rgba(0,0,0,0.4);}
   .dek{font-family:'Inter',sans-serif; font-size:clamp(12px,1.2vw,14px); font-weight:400; line-height:1.5; color:var(--cream); max-width:480px; margin-bottom:6px; opacity:0.9;}
-  .script-sub{font-family:'Permanent Marker',cursive; font-size:clamp(15px,2vw,19px); color:var(--teal); margin-bottom:6px;}
+  .script-sub{font-family:'Righteous'; font-size:clamp(15px,2vw,19px); color:var(--amber); margin-bottom:6px;}
   .location{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1px; color:var(--muted);}
 
   .cover-bottom-row{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap;}
@@ -209,7 +300,7 @@
   .hero-cta span{position:relative; z-index:1;}
 
   .cover-side-right{
-    position:absolute; right:28px; top:110px; bottom:100px;
+    position:absolute; right:28px; top:calc(var(--stack-h) - 6px); bottom:100px;
     display:flex; flex-direction:column; align-items:flex-end; justify-content:space-between;
     gap:14px;
   }
@@ -245,7 +336,7 @@
     .hero-cta::before{font-size:48px; left:7px;}
   }
   @media (max-width:600px){
-    .cover{padding:76px 12px 12px;}
+    .cover{padding:calc(var(--stack-h) + 2px) 12px 12px;}
     .cover-content{padding:14px; gap:6px;}
     .stack .line{font-size:7.2vw;}
     .dek{display:none;}
@@ -275,7 +366,7 @@
   /* ============ CONTENT SPLIT — 70 / 30 ============ */
   .content-split{display:grid; grid-template-columns:7fr 3fr; align-items:start;}
   .col-main{border-right:1px solid var(--line);}
-  .col-side{padding-top:88px;}
+  .col-side{padding-top:calc(var(--stack-h) + 14px);}
   .col-side .section-head{padding:56px 24px 20px;}
   .col-side > div:first-child .section-head{padding-top:0;}
   .col-side .section-head::before{left:24px;}
@@ -334,8 +425,8 @@
   .event-body h4{font-family:'Oswald',sans-serif; font-weight:600; font-size:12.5px; line-height:1.3; margin-bottom:3px;}
   .event-body .meta-line{font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--muted); letter-spacing:0.3px;}
 
-  .calendar-cta{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:16px 24px 8px; padding:14px 16px; border:1px dashed var(--muted); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--cream); transition:.2s;}
-  .calendar-cta:hover{border-color:var(--cream); background:rgba(244,232,211,0.04);}
+  .calendar-cta{display:flex; align-items:center; justify-content:center; gap:10px; margin:16px 24px 8px; padding:14px 18px; background:var(--teal); border:1px solid var(--teal); font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--bg); transition:.2s;}
+  .calendar-cta:hover{background:var(--amber); border-color:var(--amber); transform:translateY(-1px);}
 
   /* ============ PLAYLIST DE STEMS — embed de Spotify ============ */
   .playlist{padding:0 28px 28px;}
@@ -345,9 +436,9 @@
   .spotify-frame iframe{display:block; width:100%;}
 
   /* ============ ARTIFACTS ============ */
-  .artifacts-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px; padding:0 28px 28px;}
+  .artifacts-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; padding:0 28px 28px;}
   @media (max-width:760px){.artifacts-grid{grid-template-columns:1fr; padding:0 16px 16px;}}
-  .col-side .artifacts-grid{grid-template-columns:1fr; padding:0 24px 24px;}
+  .col-side .artifacts-grid{grid-template-columns:1fr; padding:0 24px 24px; gap:10px;}
 
   /* ============ NEWSLETTER ============ */
   .newsletter{padding:0 24px 40px;}
@@ -360,30 +451,100 @@
   .newsletter-form button{background:var(--magenta); border:none; padding:12px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--cream); cursor:pointer; transition:.2s;}
   .newsletter-form button:hover{background:var(--orange);}
   .newsletter-note{display:block; margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--muted); text-transform:uppercase;}
-  .artifact-card{border:1px solid var(--line); background:var(--card); padding:24px; position:relative; overflow:hidden;}
+  .artifact-card{
+    display:flex; gap:12px; align-items:flex-start;
+    border:1px solid var(--line); background:var(--card); padding:12px;
+    position:relative; overflow:hidden;
+  }
   .artifact-card::before{content:''; position:absolute; top:0; left:0; right:0; height:2px;}
   .artifact-card.status-live::before{background:var(--teal);}
   .artifact-card.status-soon::before{background:var(--muted);}
-  .artifact-preview{width:100%; aspect-ratio:16/9; border:1px solid var(--line); background:#001624; margin-bottom:18px; overflow:hidden;}
+  .artifact-preview{
+    flex:0 0 72px; width:72px; height:72px;
+    border:1px solid var(--line); background:#001624; overflow:hidden;
+  }
   .artifact-preview canvas{width:100%; height:100%; display:block;}
-  .artifact-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;}
-  .artifact-status{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1.5px; padding:3px 8px; text-transform:uppercase;}
+  .artifact-preview img{width:100%; height:100%; display:block; object-fit:cover;}
+  .artifact-body{flex:1; min-width:0;}
+  .artifact-top{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:5px;}
+  .artifact-status{font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:1.2px; padding:2px 6px; text-transform:uppercase; white-space:nowrap;}
   .status-live .artifact-status{background:var(--teal); color:var(--bg);}
   .status-soon .artifact-status{border:1px solid var(--muted); color:var(--muted);}
-  .artifact-id{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted);}
-  .artifact-name{font-family:'Anton',sans-serif; font-size:22px; letter-spacing:1px; margin-bottom:8px;}
-  .artifact-desc{font-family:'Inter',sans-serif; font-size:13px; color:var(--muted); line-height:1.55; margin-bottom:18px;}
-  .artifact-specs{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:20px;}
-  .artifact-specs span{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; border:1px solid var(--line); padding:3px 8px; color:var(--cream); text-transform:uppercase;}
-  .artifact-cta{display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--cream); border-bottom:1px solid var(--magenta); padding-bottom:2px;}
+  .artifact-id{font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--muted);}
+  .artifact-name{font-family:'Anton',sans-serif; font-size:15px; letter-spacing:0.5px; margin-bottom:4px; line-height:1.1;}
+  .artifact-desc{
+    font-family:'Inter',sans-serif; font-size:11.5px; color:var(--muted); line-height:1.4; margin-bottom:6px;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .artifact-specs{display:flex; flex-wrap:wrap; gap:4px; margin-bottom:8px;}
+  .artifact-specs span{font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:0.5px; border:1px solid var(--line); padding:2px 6px; color:var(--cream); text-transform:uppercase;}
+  .artifact-cta{display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--cream); border-bottom:1px solid var(--magenta); padding-bottom:2px;}
   .status-soon .artifact-cta{color:var(--muted); border-bottom-color:var(--muted);}
 
   /* ============ FOOTER ============ */
-  footer{
+  .site-footer{border-top:1px solid var(--line); margin-top:20px;}
+  .footer-top{
+    max-width:1200px; margin:0 auto;
+    display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:32px;
+    padding:52px 28px 40px;
+  }
+  @media (max-width:900px){.footer-top{grid-template-columns:1fr 1fr; row-gap:36px;}}
+  @media (max-width:560px){.footer-top{grid-template-columns:1fr; padding:44px 20px 32px;}}
+
+  .footer-brand .footer-logo{font-family:'Anton',sans-serif; font-size:26px; letter-spacing:0; color:var(--cream); text-transform:uppercase; margin-bottom:12px;}
+  .footer-brand .footer-logo span{color:var(--muted); font-weight:400;}
+  .footer-tagline-script{font-family:'JetBrains Mono',monospace; font-weight:500; font-size:9.5px; letter-spacing:1.5px; color:var(--amber); text-transform:uppercase; margin-bottom:10px;}
+  .footer-tagline{font-family:'Inter',sans-serif; font-size:12.5px; line-height:1.6; color:var(--muted); max-width:280px; margin-bottom:18px;}
+  .footer-social{display:flex; gap:8px;}
+  .footer-social a{
+    display:flex; align-items:center; justify-content:center;
+    width:32px; height:32px; border:1px solid var(--line);
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.5px;
+    color:var(--muted); transition:.2s;
+  }
+  .footer-social a:hover{border-color:var(--magenta); color:var(--magenta);}
+  .footer-social svg{width:16px; height:16px;}
+
+  .footer-col h4{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--amber); margin-bottom:16px;}
+  .footer-col ul{list-style:none; display:flex; flex-direction:column; gap:10px;}
+  .footer-col a{font-family:'Inter',sans-serif; font-size:13px; color:var(--muted); transition:.2s;}
+  .footer-col a:hover{color:var(--cream);}
+
+  .footer-bottom{
     border-top:1px solid var(--line);
-    padding:36px 28px;
+    max-width:1200px; margin:0 auto;
+    padding:20px 28px;
     display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
     font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; color:var(--muted);
+  }
+  @media (max-width:560px){.footer-bottom{padding:18px 20px;}}
+
+  .footer-badges{
+    border-top:1px solid var(--line);
+    max-width:1200px; margin:0 auto;
+    padding:22px 28px;
+  }
+  .badge-row{display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;}
+  .badge-row:last-child{margin-bottom:0;}
+  .badge-row-label{
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:2px;
+    color:var(--amber); text-transform:uppercase; margin-right:4px;
+  }
+  .badge{
+    display:inline-flex; align-items:center; gap:6px;
+    border:1px solid var(--line); background:rgba(244,232,211,0.03);
+    padding:6px 10px;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.5px;
+    color:var(--muted); text-transform:uppercase; white-space:nowrap;
+  }
+  .badge svg{width:13px; height:13px; flex:0 0 auto;}
+  @media (max-width:560px){.footer-badges{padding:18px 20px;}}
+
+  .footer-credit{
+    text-align:center; max-width:1200px; margin:0 auto;
+    padding:12px 24px 20px;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px;
+    color:rgba(244,232,211,0.28);
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -394,70 +555,78 @@
 <body>
 
 <div class="grain"></div>
-<div class="timecode" id="timecode">00:00:00:00</div>
+
+<div class="top-band">La música que nos une</div>
 
 <header>
-  <div class="header-inner">
-    <a href="index.html" class="logo-block">
-      <div class="logo">
-        <span class="logo-stems"><span>S</span><span>T</span><span>E</span><span>M</span><span>S</span><span>M</span><span>A</span><span>G</span></span><span class="logo-slash">//</span>
-      </div>
-      <div class="logo-tag">La música que nos une</div>
-    </a>
-    <nav id="mainNav">
-      <ul>
-        <li><a href="#">Reviews</a></li>
-        <li><a href="#eventos">Eventos</a></li>
-        <li><a href="#playlist">Playlist</a></li>
-        <li><a href="#artifacts">Artifacts</a></li>
-      </ul>
-    </nav>
-    <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menú" aria-expanded="false" aria-controls="mainNav">
-      <span></span><span></span><span></span>
+  <img class="header-bg" src="img/fondo-head.jpg" alt="">
+  <div class="header-overlay"></div>
+  <div class="header-signature"></div>
+  <a href="index.html" class="header-hitbox" aria-label="Ir al inicio"></a>
+  <div class="header-inner"></div>
+</header>
+
+<nav class="site-navbar">
+
+  <div class="navbar-inner">
+    <div class="navbar-links">
+           <a href="#eventos">Eventos y lanzamientos</a>
+      <a href="#playlist">Playlists y videos</a>
+    </div>
+    <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
     </button>
   </div>
-</header>
+</nav>
+
 <script>
-  const hamburgerBtn = document.getElementById('hamburgerBtn');
-  const mainNav = document.getElementById('mainNav');
-  hamburgerBtn.addEventListener('click', () => {
-    const isOpen = mainNav.classList.toggle('nav-open');
-    hamburgerBtn.setAttribute('aria-expanded', isOpen);
-  });
-  mainNav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    mainNav.classList.remove('nav-open');
-    hamburgerBtn.setAttribute('aria-expanded', 'false');
-  }));
+  /* Parallax de la imagen de fondo del header: mouse en desktop, dedo en mobile */
+  (function(){
+    const headerBg = document.querySelector('.header-bg');
+    if(!headerBg) return;
+    let ratio = 0.5, ticking = false;
+    function apply(){
+      headerBg.style.transform = `translateY(${-(ratio * 66.6667)}%)`;
+      ticking = false;
+    }
+    function onMove(clientY){
+      ratio = Math.min(1, Math.max(0, clientY / window.innerHeight));
+      if(!ticking){ requestAnimationFrame(apply); ticking = true; }
+    }
+    window.addEventListener('mousemove', e => onMove(e.clientY));
+    window.addEventListener('touchmove', e => {
+      if(e.touches && e.touches[0]) onMove(e.touches[0].clientY);
+    }, {passive:true});
+  })();
 
-  const logoEl = document.querySelector('.logo');
-  const stemsLetters = document.querySelectorAll('.logo-stems span');
-  const logoPalette = ['--magenta','--orange','--amber','--teal','--cream'];
-  let colorLoopId = null;
-
-  function randomizeLetterColors(){
-    stemsLetters.forEach(span => {
-      const v = logoPalette[Math.floor(Math.random() * logoPalette.length)];
-      span.style.color = `var(${v})`;
+  /* Menú hamburguesa del navbar en móvil */
+  (function(){
+    document.querySelectorAll('.site-navbar').forEach(nav => {
+      const toggle = nav.querySelector('.nav-toggle');
+      if(!toggle) return;
+      toggle.addEventListener('click', () => {
+        const open = nav.classList.toggle('nav-open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      nav.querySelectorAll('.navbar-links a').forEach(a => {
+        a.addEventListener('click', () => {
+          nav.classList.remove('nav-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        });
+      });
     });
-  }
-  function startColorLoop(){
-    if(colorLoopId) return;
-    colorLoopId = setInterval(randomizeLetterColors, 140);
-  }
-  function stopColorLoop(){
-    clearInterval(colorLoopId);
-    colorLoopId = null;
-    stemsLetters.forEach(span => { span.style.color = ''; });
-  }
-  logoEl.addEventListener('mouseenter', startColorLoop);
-  logoEl.addEventListener('mouseleave', stopColorLoop);
-
-  function autoColorBurst(){
-    startColorLoop();
-    setTimeout(stopColorLoop, 1600);
-  }
-  autoColorBurst();
-  setInterval(autoColorBurst, 90000);
+    window.addEventListener('resize', () => {
+      if(window.innerWidth > 640){
+        document.querySelectorAll('.site-navbar.nav-open').forEach(nav => {
+          nav.classList.remove('nav-open');
+          const t = nav.querySelector('.nav-toggle');
+          if(t) t.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
+  })();
 </script>
 
 <div class="main-wrap">
@@ -479,13 +648,14 @@
 
             <div class="cover-title">
               <h1 class="stack display" id="hero-stack">
-                <span class="line line-1">RUDO</span>
-                <span class="line line-2">LA MÁSCARA</span>
-                <span class="line line-3">QUE HABLA</span>
+                <span class="line line-1">xx:://**</span>
+                <span class="line line-2">//**::||++</span>
+                <span class="line line-3">//xx//::\\</span>
               </h1>
-              <p class="script-sub" id="hero-artist">RUDO — Techno Melódico</p>
-              <p class="dek" id="hero-dek">Detrás del techno melódico y la máscara roja hay una convicción que no cambia: la música puede levantar a alguien cuando siente que ya no puede más.</p>
+              <p class="script-sub" id="hero-artist">//xx//::\\//**::||++</p>
+              <p class="dek" id="hero-dek">//xx//::\\//**::||++xx:://**//xx//::\\//**::||++xx:://**//xx//::\\//**::||++xx:://**//xx//::\\//**::||++xx:://**//xx//::\\//**::||++xx:://**//xx//::\\//**::||++xx:://**</p>
             </div>
+
 
             <a href="articulos/articulo-rudo.html" class="hero-cta" id="hero-cta"><span>Leer el artículo</span></a>
 
@@ -512,7 +682,7 @@
       <div id="eventos">
         <div class="section-head" style="--accent:var(--teal)">
           <div class="head-title">
-            <h2>Eventos y<br>lanzamientos<span class="sub">Próximas fechas y estrenos</span></h2>
+            <h2><br>Eventos y<br>lanzamientos<span class="sub">Próximas fechas y estrenos</span></h2>
           </div>
         </div>
         <div class="events-columns">
@@ -526,16 +696,14 @@
       <div id="playlist">
         <div class="section-head" style="--accent:var(--amber)">
           <div class="head-title">
-            <h2>Playlist de<br>Stems<span class="sub">Curaduría semanal</span></h2>
+            <h2>Playlist de<br>Stems<span class="sub">Curaduría sin ranking</span></h2>
           </div>
         </div>
         <div class="playlist">
           <div class="spotify-frame">
-            <div class="spotify-frame-head">▶ SPOTIFY · STEMS WEEKLY</div>
+            <div class="spotify-frame-head">▶ STEMS vibes</div>
             <!-- TODO: reemplazar el ID del playlist por el playlist real de STEMS -->
-            <iframe src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0"
-              width="100%" height="380" frameborder="0" allowfullscreen=""
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/0s9dUDfd3tbKknUUvKt0PM?utm_source=generator&theme=0&si=vtYWHmVFTzyyjfgVrrnI4w" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
           </div>
         </div>
       </div>
@@ -560,8 +728,9 @@
         <div class="newsletter">
           <div class="newsletter-box">
             <p>Un correo a la semana con los lanzamientos, eventos y artifacts nuevos de STEMS.</p>
-            <form class="newsletter-form" onsubmit="return false;">
-              <input type="email" placeholder="tu@correo.com" required>
+            <form class="newsletter-form embeddable-buttondown-form" action="https://buttondown.email/api/emails/embed-subscribe/stems" method="post" target="popupwindow" onsubmit="window.open('https://buttondown.email/stems', 'popupwindow')">
+              <input type="email" name="email" placeholder="tu@correo.com" required>
+              <input type="hidden" value="1" name="embed">
               <button type="submit">Suscribirse →</button>
             </form>
             <span class="newsletter-note">Sin spam · 1 correo / semana</span>
@@ -573,31 +742,97 @@
 
   </div>
 
-  <footer>
-    <span>STEMS © 2026 — La música que nos une</span>
-    <span>Fotografía vía Unsplash · Distorsión VHS con Three.js</span>
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">STEMS<span>//</span>MAGAZINE</div>
+        <p class="footer-tagline-script">La música que nos une</p>
+        <p class="footer-tagline">Reseñas, perfiles y cultura de la música electrónica en español.</p>
+        <div class="footer-social">
+          <a href="https://www.instagram.com/stemsmag/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect x="3" y="3" width="18" height="18" rx="5"/>
+              <circle cx="12" cy="12" r="4.2"/>
+              <circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a href="https://www.youtube.com/@stemsmag" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect x="2.5" y="5.5" width="19" height="13" rx="3.5"/>
+              <path d="M10 9.2 L15.5 12 L10 14.8 Z" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a href="https://open.spotify.com/playlist/0s9dUDfd3tbKknUUvKt0PM" target="_blank" rel="noopener noreferrer" aria-label="Spotify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <circle cx="12" cy="12" r="9.5"/>
+              <path d="M7 9.5c3.5-1 7-1 10 .6" stroke-linecap="round"/>
+              <path d="M7.3 12.5c3-.8 6-.8 8.6.5" stroke-linecap="round"/>
+              <path d="M7.6 15.3c2.3-.6 4.8-.6 6.9.5" stroke-linecap="round"/>
+            </svg>
+          </a>
+          <a href="https://www.tiktok.com/@stemsmag" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M14 3v10.2a3.6 3.6 0 1 1-3-3.55" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M14 3c.3 2.4 2 4.2 4.4 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Secciones</h4>
+        <ul>
+          <li><a href="#eventos">Eventos y lanzamientos</a></li>
+          <li><a href="#playlist">Playlists y videos</a></li>
+         
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>STEMS</h4>
+        <ul>
+          <li><a href="sobre-nosotros.html">Sobre nosotros</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="terminos.html">Términos y condiciones</a></li>
+          <li><a href="privacidad.html">Política de privacidad</a></li>
+          <li><a href="cookies.html">Aviso de cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-badges">
+      <div class="badge-row">
+        <span class="badge-row-label">Powered by</span>
+        <span class="badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 2h10l-.9 9.2L8 13.5l-4.1-2.3L3 2z" stroke-linejoin="round"/></svg>HTML5</span>
+        <span class="badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M13 2H3l.9 9.2L8 13.5l4.1-2.3L13 2z" stroke-linejoin="round"/></svg>CSS3</span>
+        <span class="badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2.5 3.5h11v6.5H6.8L4 12.5v-2.5H2.5v-6.5z" stroke-linejoin="round"/></svg>Disqus</span>
+        <span class="badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="9" r="4.4"/><path d="M4.6 5.6 6.2 3M11.4 5.6 9.8 3" stroke-linecap="round"/></svg>GitHub</span>
+        <span class="badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="3" width="12" height="10" rx="1.5"/><circle cx="5.5" cy="6.5" r="1"/><path d="M2 11l3.5-3.5L9 11l2-2 3 3" stroke-linejoin="round" stroke-linecap="round"/></svg>Slightbox</span>
+        <span class="badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M8 2v12M2 8h12M4.2 4.2l7.6 7.6M11.8 4.2l-7.6 7.6"/></svg>Claude</span>
+        <span class="badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="8" cy="5.2" r="2.2"/><circle cx="11.3" cy="9.5" r="2.2"/><circle cx="4.7" cy="9.5" r="2.2"/></svg>ChatGPT</span>
+        <span class="badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M4.5 10.5c-1.4 0-2.5-1.1-2.5-2.5s1.1-2.5 2.5-2.5c1.8 0 2.6 2 3.5 3.2M11.5 5.5c1.4 0 2.5 1.1 2.5 2.5s-1.1 2.5-2.5 2.5c-1.8 0-2.6-2-3.5-3.2"/></svg>Meta AI</span>
+        <span class="badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"><path d="M8 2c-2 0-3 1-3 2.4v1.4h3.2v.5H3.6C2.6 6.3 2 7.2 2 8.6s.6 2.3 1.6 2.3h1.2V9.3c0-1.2.9-2 2.1-2h2.6c1.1 0 1.9-.8 1.9-1.9V4.4C11.4 3 10.2 2 8 2z"/><path d="M8 14c2 0 3-1 3-2.4V10.2H7.8v-.5h4.6c1 0 1.6-.9 1.6-2.3s-.6-2.3-1.6-2.3h-1.2v1.6c0 1.2-.9 2-2.1 2H6.5c-1.1 0-1.9.8-1.9 1.9v1.1C4.6 13 5.8 14 8 14z"/></svg>Python</span>
+      </div>
+      <div class="badge-row">
+        <span class="badge-row-label">Trusted by</span>
+        <span class="badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M8 2l5 1.8v3.4c0 3.2-2.1 5.6-5 6.6-2.9-1-5-3.4-5-6.6V3.8L8 2z" stroke-linejoin="round"/><path d="M5.8 8.2l1.5 1.5 3-3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>SSL / HTTPS Seguro</span>
+        <span class="badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="6" r="3.2"/><path d="M6 8.8 5 14l3-1.6L11 14l-1-5.2" stroke-linejoin="round"/></svg>Google AdSense Certificado</span>
+        <span class="badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13V9M7 13V6M11 13V3M13 13H2"/></svg>Analytics Verified</span>
+        <span class="badge"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 2h5.5L12 4.5V14H4V2z" stroke-linejoin="round"/><path d="M6 7h4M6 9.5h4M6 12h2.5" stroke-linecap="round"/></svg>Política de Privacidad</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>STEMS © 2026 — La música que nos une</span>
+    </div>
+    <div class="footer-credit">Revista de Música Electrónica Stems · Hecho en El Salvador · 2026</div>
   </footer>
 
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-/* =========================================================
-   TIMECODE tipo cinta Betamax
-   ========================================================= */
-(function(){
-  const el = document.getElementById('timecode');
-  let frames = 0;
-  const fmt = n => n.toString().padStart(2,'0');
-  setInterval(()=>{
-    frames++;
-    const totalSec = Math.floor(frames/30);
-    const f = frames % 30;
-    const h = Math.floor(totalSec/3600), m = Math.floor((totalSec%3600)/60), s = totalSec%60;
-    el.textContent = `${fmt(h)}:${fmt(m)}:${fmt(s)}:${fmt(f)}`;
-  }, 1000/30);
-})();
-
 /* =========================================================
    SHADER VHS — aberración cromática + tracking glitch + scanlines
    Se aplica sobre fotografías reales vía Three.js
@@ -1002,28 +1237,38 @@ fetch(EVENTOS_JSON_PATH + '?_=' + Date.now())
 /* =========================================================
    ARTIFACTS — instrumentos y herramientas propias
    ========================================================= */
-const artifacts = [
-  {status:'live', kind:'synth', seed:9, id:'ART.01', name:'TETRAWAVE', desc:'Sintetizador de síntesis dual-oscilador con modulación cruzada, filtro resonante y secuenciador integrado, corriendo directo en el navegador.', specs:['WEB AUDIO API','DUAL OSC','MIDI IN','SECUENCIADOR'], cta:'ABRIR INSTRUMENTO'},
-  {status:'soon', kind:'meter', seed:21, id:'ART.02', name:'MASTER STAGE', desc:'Sube un track ya renderizado en WAV o MP3 y ajusta loudness, EQ y saturación antes de publicarlo.', specs:['WAV / MP3','LUFS METER','EQ'], cta:'PRÓXIMAMENTE'},
-];
 const artifactsGrid = document.getElementById('artifacts-grid');
-artifacts.forEach(a=>{
-  const card = document.createElement('div');
-  card.className = 'artifact-card status-' + a.status;
-  card.innerHTML = `
-    <div class="artifact-preview"><canvas></canvas></div>
-    <div class="artifact-top">
-      <span class="artifact-status">${a.status === 'live' ? 'DISPONIBLE' : 'PRÓXIMAMENTE'}</span>
-      <span class="artifact-id mono">${a.id}</span>
-    </div>
-    <div class="artifact-name">${a.name}</div>
-    <p class="artifact-desc">${a.desc}</p>
-    <div class="artifact-specs">${a.specs.map(s=>`<span>${s}</span>`).join('')}</div>
-    <div class="artifact-cta">${a.cta} →</div>
-  `;
-  artifactsGrid.appendChild(card);
-  drawArtifactPreview(card.querySelector('canvas'), a.kind, a.seed);
-});
+fetch('artifacts.json' + '?_=' + Date.now())
+  .then(r => r.json())
+  .then(artifacts => {
+    artifacts.forEach(a=>{
+      const card = document.createElement('div');
+      card.className = 'artifact-card status-' + a.status;
+      const ctaTag = (a.status === 'live' && a.link) ? 'a' : 'span';
+      const ctaHref = (a.status === 'live' && a.link) ? `href="${a.link}"` : '';
+      card.innerHTML = `
+        <div class="artifact-preview">${a.img ? `<img src="${a.img}" alt="${a.name}">` : '<canvas></canvas>'}</div>
+        <div class="artifact-body">
+          <div class="artifact-top">
+            <span class="artifact-status">${a.status === 'live' ? 'DISPONIBLE' : 'PRÓXIMAMENTE'}</span>
+            <span class="artifact-id mono">${a.id}</span>
+          </div>
+          <div class="artifact-name">${a.name}</div>
+          <p class="artifact-desc">${a.desc}</p>
+          <div class="artifact-specs">${a.specs.map(s=>`<span>${s}</span>`).join('')}</div>
+          <${ctaTag} class="artifact-cta" ${ctaHref}>${a.cta} →</${ctaTag}>
+        </div>
+      `;
+      artifactsGrid.appendChild(card);
+      if(!a.img){
+        drawArtifactPreview(card.querySelector('canvas'), a.kind, a.seed);
+      }
+    });
+  })
+  .catch(err => {
+    console.error('No se pudo cargar artifacts.json', err);
+    artifactsGrid.insertAdjacentHTML('beforeend', `<p class="meta-line" style="padding:14px 0;">No se pudieron cargar los artifacts.</p>`);
+  });
 </script>
 </body>
 </html>
