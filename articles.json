@@ -66,10 +66,26 @@
      "comingSoon": false
   },
   {
+         "slug": "#",
+    "featured": false,
+    "date": "0000-00-00",
+    "title": "//**XX\\--00//",
+    "tag": "Entrevista",
+    "tagColor": "orange",
+    "meta": "45454 · 0000 min",
+    "image": "",
     "seed": 23,
     "comingSoon": true
   },
   {
+         "slug": "#",
+    "featured": false,
+    "date": "0000-00-00",
+    "title": "//**XX\\--00//",
+    "tag": "Entrevista",
+    "tagColor": "orange",
+    "meta": "45454 · 0000 min",
+    "image": "",
     "seed": 8,
     "comingSoon": true
   },
