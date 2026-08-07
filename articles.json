@@ -1,1 +1,68 @@
-[]
+[
+  {
+    "featured": false,
+    "pinned": true,
+    "date": "2026-08-07",
+    "category": "Perfil",
+    "categoryPill": "Bigroom House",
+    "titleLines": [
+      "IJGATU",
+      "DISCIPLINA",
+      "EN BIGROOM"
+    ],
+    "title": "ijgatu: la disciplina detrás del bigroom colombiano",
+    "artistLine": "ijgatu — Bigroom House",
+    "dek": "Doce horas de trabajo, noches y fines de semana robados al descanso, y un género que casi nadie produce en Colombia. Así construye Ivan Turizo su lugar en el bigroom house.",
+    "tag": "Perfil",
+    "tagColor": "magenta",
+    "meta": "Perfil · 7 min",
+    "image": "articulos/images/ijgatu01.jpg",
+    "slug": "articulos/articulo-ijgatu.html",
+    "seed": 44,
+    "comingSoon": false
+  },
+  {
+    "featured": false,
+    "pinned": true,
+    "date": "2026-08-07",
+    "category": "Comunidad",
+    "categoryPill": "Sobre Nosotros",
+    "titleLines": [
+      "UN REGRESO MÁS",
+      "LA HISTORIA",
+      "DE STEMS"
+    ],
+    "title": "Un regreso más: la historia detrás de STEMS.",
+    "artistLine": "STEMS — Sobre Nosotros",
+    "dek": "De HU a STEMS: veinte años después, esta es la memoria que decidimos volver a guardar, ahora dedicada a los productores independientes de Latam Electrónica.",
+    "tag": "Comunidad",
+    "tagColor": "teal",
+    "meta": "Comunidad · 6 min",
+    "image": "images/midesk.jpg",
+    "slug": "articulos/nacimos.html",
+    "seed": 12,
+    "comingSoon": false
+  },
+  {
+    "featured": false,
+    "pinned": true,
+    "date": "2026-08-01",
+    "category": "Perfil",
+    "categoryPill": "Techno Melódico",
+    "titleLines": [
+      "EL MENSAJE ",
+      "DETRAS DE",
+      "LA MÁSCARA"
+    ],
+    "title": "RUDO: la máscara que esconde el rostro para que hable el mensaje",
+    "artistLine": "Techno — Techno Melódico",
+    "dek": "Detrás del techno melódico y la máscara roja hay una convicción que no cambia: la música puede levantar a alguien cuando siente que ya no puede más.",
+    "tag": "Perfil",
+    "tagColor": "magenta",
+    "meta": "Perfil · 9 min",
+    "image": "articulos/images/rudo01.jpg",
+    "seed": 44,
+    "slug": "articulos/articulo-rudo.html",
+    "comingSoon": false
+  }
+]
