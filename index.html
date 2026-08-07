@@ -408,6 +408,14 @@
     background:rgba(0,25,46,0.75); padding:7px 16px;
     pointer-events:none; white-space:nowrap;
   }
+  .art-pin-badge{
+    position:absolute; top:10px; right:10px; z-index:3;
+    font-size:14px; line-height:1;
+    background:rgba(0,25,46,0.75); border:1px solid var(--cream);
+    border-radius:50%; width:26px; height:26px;
+    display:flex; align-items:center; justify-content:center;
+    pointer-events:none;
+  }
   .art-card canvas{position:absolute; inset:0; width:100%; height:100%;}
   .art-scrim{position:absolute; inset:0; z-index:1;
     background:linear-gradient(180deg, rgba(0,25,46,0.2) 0%, rgba(0,25,46,0.15) 40%, rgba(0,25,46,0.95) 100%);}
@@ -1153,6 +1161,7 @@ function renderGrid(list){
         <canvas></canvas>
         <div class="art-scrim"></div>
         ${a.comingSoon ? '<div class="art-soon-badge">Próximamente</div>' : ''}
+        ${a.pinned && !a.comingSoon ? '<div class="art-pin-badge" title="Fijado">📌</div>' : ''}
         <div class="art-inner">
           <div class="art-top">
             <span class="art-tag" style="background:var(--${a.tagColor})">${a.tag}</span>
@@ -1187,8 +1196,12 @@ fetch('articles.json')
       heroPool = articles.filter(a => !a.comingSoon).slice(0, 3);
     }
     const rest = articles.filter(a => !heroPool.includes(a));
+    // En la grilla, los artículos "pinned": true van primero (entre sí, por fecha),
+    // y luego el resto en orden normal por fecha.
+    const pinned = rest.filter(a => a.pinned === true);
+    const unpinned = rest.filter(a => a.pinned !== true);
     initHeroRotator(heroPool);
-    renderGrid(rest);
+    renderGrid([...pinned, ...unpinned]);
   })
   .catch(err => console.error('No se pudo cargar articles.json', err));
 
