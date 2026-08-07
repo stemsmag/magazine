@@ -49,7 +49,8 @@
     "tagColor": "orange",
     "meta": "45454 · 0000 min",
     "image": "",
-    "seed": 47
+    "seed": 47,
+     "comingSoon": false
   },
   {
      "slug": "#",
@@ -60,7 +61,8 @@
     "tagColor": "orange",
     "meta": "45454 · 0000 min",
     "image": "",
-    "seed": 47
+    "seed": 5,
+     "comingSoon": false
   },
   {
     "seed": 23,
