@@ -44,8 +44,8 @@
     "comingSoon": false
   },
   {
-    "featured": true,
-    "pinned": false,
+    "featured": false,
+    "pinned": true,
     "date": "2026-08-01",
     "category": "Perfil",
     "categoryPill": "Techno Melódico",
