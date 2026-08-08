@@ -36,30 +36,6 @@
   "link": "",
   "status": "pendiente",
   "productor": "TheGeco"
-},
-    {
-      "id": "toque-proximamente-3",
-      "type": "toque",
-      "title": "Próximamente",
-      "date": "2026-10-03",
-      "description": "",
-      "image": "",
-      "venue": "",
-      "link": "",
-      "status": "pendiente",
-      "time": ""
-    },
-    {
-      "id": "toque-proximamente-4",
-      "type": "single",
-      "title": "Próximamente",
-      "date": "2026-10-17",
-      "description": "",
-      "image": "",
-      "venue": "",
-      "link": "",
-      "status": "pendiente",
-      "time": ""
-    }
+}
   ]
 }
