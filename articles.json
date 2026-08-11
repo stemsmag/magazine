@@ -1,5 +1,27 @@
 [
   {
+    "featured": false,
+    "pinned": false,
+    "date": "2026-08-10",
+    "category": "Perfil",
+    "categoryPill": "Trance Melódico",
+    "titleLines": [
+      "LAS SEGUNDAS",
+      "OPORTUNIDADES",
+      "SIEMPRE LLEGAN"
+    ],
+    "title": "Kaleel Zibe: las segundas oportunidades siempre llegan",
+    "artistLine": "Trance — Melodic House — Synth-pop",
+    "dek": "Entre los sintetizadores de Kraftwerk y un reemplazo de rodilla, un productor del norte rural de Inglaterra encontró en la música electrónica lo que su juventud no le dio: una audiencia propia.",
+    "tag": "Perfil",
+    "tagColor": "amber",
+    "meta": "Perfil · 10 min",
+    "image": "articulos/images/kaleelzibe01.jpg",
+    "seed": 58,
+    "slug": "articulos/articulo-kaleel-zibe.html",
+    "comingSoon": false
+  },
+  {
     "featured": true,
     "pinned": false,
     "date": "2026-08-07",
