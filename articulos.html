@@ -159,6 +159,7 @@
     min-height:var(--header-h);
     display:flex; align-items:center; justify-content:flex-end;
     padding:0 24px;
+    pointer-events:none;
   }
   header::before{
     content:'';
@@ -571,8 +572,14 @@
   }
 
   /* ============ PÁGINA: TODOS LOS ARTÍCULOS ============ */
+  .back-link{
+    display:inline-block; margin:calc(var(--stack-h) + 24px) 0 0 28px;
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+  }
+  .back-link:hover{color:var(--cream);}
+
   .articles-hero{
-    padding:calc(var(--stack-h) + 44px) 28px 8px;
+    padding:20px 28px 8px;
     border-bottom:1px solid var(--line);
   }
   .articles-hero h1{
@@ -655,12 +662,11 @@
 </header>
 
 <nav class="site-navbar">
-
   <div class="navbar-inner">
-    <div class="navbar-links">
-      <a href="articulos.html" class="nav-active">Todos los artículos</a>
-      <a href="eventos.html">Eventos y lanzamientos</a>
-      <a href="index.html#playlist">Playlists y videos</a>
+    <div class="navbar-links"> <a href="articulos.html">Artículos</a>
+      <a href="eventos.html">Eventos</a>
+      <a href="playlist.html">Playlist</a>
+       
     </div>
     <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
       <span class="nav-toggle-bar"></span>
@@ -719,6 +725,8 @@
 </script>
 
 <div class="main-wrap">
+
+  <a href="index.html" class="back-link mono">← Volver a portada</a>
 
   <section class="articles-hero">
     <h1 class="display">Todos los artículos</h1>
