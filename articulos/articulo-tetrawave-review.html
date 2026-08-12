@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TetraWave // StemsMag — Banco de pruebas | STEMS LAB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0d10;
+    --panel:#10151a;
+    --panel-2:#141a20;
+    --grid:#1c242b;
+    --line:#232c33;
+    --cyan:#5EEAD4;
+    --orange:#FF7A2E;
+    --red:#e35a5a;
+    --amber:#e0c23e;
+    --text:#e7edf0;
+    --text-dim:#8b98a2;
+    --text-faint:#4c5760;
+    --mono:'JetBrains Mono', monospace;
+    --cond:'Barlow Condensed', sans-serif;
+    --sans:'IBM Plex Sans', sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background-color:#060907;
+    color:var(--text);
+    font-family:var(--sans);
+    overflow-x:hidden;
+    position:relative;
+  }
+  /* ============ FONDO BOKEH (verdes) ============ */
+  .bokeh-bg{
+    position:fixed; inset:0; z-index:-1; overflow:hidden;
+    background:#060907;
+  }
+  .bokeh-bg::before{
+    content:'';
+    position:absolute; inset:-15%;
+    background:
+      radial-gradient(circle at 10% 15%, rgba(10,70,95,0.55) 0%, transparent 26%),
+      radial-gradient(circle at 85% 10%, rgba(8,60,80,0.65) 0%, transparent 30%),
+      radial-gradient(circle at 95% 45%, rgba(12,90,90,0.42) 0%, transparent 28%),
+      radial-gradient(circle at 6% 48%, rgba(10,75,80,0.6) 0%, transparent 30%),
+      radial-gradient(circle at 50% 22%, rgba(30,150,160,0.30) 0%, transparent 34%),
+      radial-gradient(circle at 25% 75%, rgba(8,65,70,0.6) 0%, transparent 30%),
+      radial-gradient(circle at 68% 68%, rgba(22,120,130,0.30) 0%, transparent 30%),
+      radial-gradient(circle at 92% 88%, rgba(255,122,46,0.12) 0%, transparent 24%),
+      radial-gradient(circle at 40% 92%, rgba(12,80,85,0.4) 0%, transparent 28%),
+      radial-gradient(circle at 52% 48%, rgba(50,190,195,0.42) 0%, rgba(35,160,170,0.2) 22%, transparent 48%);
+    filter:blur(70px) saturate(115%) brightness(0.85);
+  }
+  .bokeh-bg::after{
+    /* grano sutil para que no se vea plano */
+    content:'';
+    position:absolute; inset:0;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity:0.05; mix-blend-mode:overlay;
+  }
+  ::selection{background:var(--orange); color:#0a0d10;}
+  a{color:inherit; text-decoration:none;}
+  img{display:block; max-width:100%;}
+
+  /* ============ TOPBAR ============ */
+  .lab-topbar{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 28px; background:rgba(10,13,16,0.88); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .lab-back{
+    display:flex; align-items:center; gap:8px;
+    font-family:var(--mono); font-size:11px; letter-spacing:1px; color:var(--text-dim);
+  }
+  .lab-back:hover{color:var(--cyan);}
+  .lab-brand{
+    font-family:var(--cond); font-weight:800; font-size:16px; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--text);
+  }
+  .lab-brand span{color:var(--orange);}
+  .lab-topbar-right{font-family:var(--mono); font-size:10px; letter-spacing:1.5px; color:var(--text-faint); text-transform:uppercase;}
+
+  /* ============ HERO / MASTHEAD ============ */
+  .lab-hero{max-width:920px; margin:0 auto; padding:52px 24px 0;}
+  .lab-kicker{
+    display:flex; align-items:center; gap:10px; margin-bottom:20px; flex-wrap:wrap;
+  }
+  .kicker-pill{
+    font-family:var(--mono); font-size:10px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--bg); background:var(--cyan); padding:4px 9px;
+  }
+  .kicker-text{font-family:var(--mono); font-size:10.5px; letter-spacing:2px; text-transform:uppercase; color:var(--text-faint);}
+
+  .lab-title{
+    font-family:var(--cond); font-weight:800; text-transform:uppercase;
+    font-size:clamp(34px,6.4vw,64px); line-height:0.98; letter-spacing:-0.5px;
+    color:var(--text); margin-bottom:20px; max-width:820px;
+  }
+  .lab-title .hl{color:var(--orange);}
+  .lab-dek{
+    font-family:var(--sans); font-size:clamp(15px,1.8vw,18px); line-height:1.6; color:var(--text-dim);
+    max-width:640px; margin-bottom:28px;
+  }
+
+  .lab-meta-row{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px;
+    padding:20px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    margin-bottom:8px;
+  }
+  .lab-byline{font-family:var(--mono); font-size:10.5px; letter-spacing:1px; color:var(--text-faint); text-transform:uppercase; line-height:1.7;}
+  .lab-byline b{color:var(--text-dim); font-weight:600;}
+
+  .score-badge{
+    display:flex; align-items:center; gap:12px;
+  }
+  .score-badge .num{
+    font-family:var(--cond); font-weight:800; font-size:44px; color:var(--orange); line-height:0.9;
+  }
+  .score-badge .num span{font-size:20px; color:var(--text-faint); font-weight:600;}
+  .score-badge .lbl{font-family:var(--mono); font-size:9px; letter-spacing:1.5px; color:var(--text-faint); text-transform:uppercase; max-width:110px; line-height:1.5;}
+
+  /* ============ SPEC STRIP ============ */
+  .spec-strip{
+    max-width:920px; margin:24px auto 0; padding:0 24px;
+    display:grid; grid-template-columns:repeat(5,1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line);
+  }
+  @media (max-width:760px){.spec-strip{grid-template-columns:repeat(2,1fr);}}
+  .spec-cell{background:var(--panel); padding:14px 16px;}
+  .spec-cell .k{font-family:var(--mono); font-size:9px; letter-spacing:1.5px; color:var(--text-faint); text-transform:uppercase; margin-bottom:6px;}
+  .spec-cell .v{font-family:var(--mono); font-size:12.5px; color:var(--cyan); letter-spacing:0.3px;}
+
+  /* ============ QUICK NAV ============ */
+  .quick-nav{
+    max-width:920px; margin:0 auto; padding:22px 24px 0;
+    display:flex; flex-wrap:wrap; gap:8px;
+  }
+  .quick-nav a{
+    font-family:var(--mono); font-size:10px; letter-spacing:1px; text-transform:uppercase;
+    color:var(--text-dim); border:1px solid var(--line); padding:6px 11px; transition:.15s;
+  }
+  .quick-nav a:hover{border-color:var(--cyan); color:var(--cyan);}
+
+  /* ============ HERO MEDIA ============ */
+  .lab-hero-media{max-width:920px; margin:32px auto 0; padding:0 24px;}
+  .media-frame{border:1px solid var(--line); background:#000; overflow:hidden; position:relative;}
+  .media-frame img{width:100%; display:block;}
+  .media-frame .scanline{
+    position:absolute; inset:0; pointer-events:none;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 1px, transparent 1px, transparent 3px);
+  }
+  .media-caption{
+    font-family:var(--mono); font-size:9.5px; letter-spacing:1px; color:var(--text-faint); text-transform:uppercase;
+    padding:10px 2px 0; display:flex; justify-content:space-between; gap:10px;
+  }
+  .media-caption .tag{color:var(--cyan);}
+
+  /* ============ BODY ============ */
+  .lab-body{max-width:920px; margin:0 auto; padding:44px 24px 0;}
+  .lab-col{max-width:680px;}
+  .lab-body p{
+    font-family:var(--sans); font-size:16px; line-height:1.8; color:var(--text);
+    margin-bottom:22px; max-width:680px;
+  }
+  .lab-body h2{
+    font-family:var(--cond); font-weight:800; text-transform:uppercase;
+    font-size:clamp(24px,3.4vw,34px); letter-spacing:-0.2px; color:var(--text);
+    margin:52px 0 8px; display:flex; align-items:baseline; gap:12px;
+  }
+  .lab-body h2 .idx{font-family:var(--mono); font-size:13px; color:var(--orange); font-weight:700;}
+  .lab-body h2:first-of-type{margin-top:8px;}
+  .lab-body h3{
+    font-family:var(--mono); font-weight:700; font-size:12.5px; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--cyan); margin:30px 0 12px;
+  }
+  .section-rule{max-width:680px; height:1px; background:var(--line); margin:0 0 26px;}
+
+  .lab-body blockquote{
+    font-family:var(--cond); font-weight:700; font-size:clamp(20px,2.6vw,27px); line-height:1.3; color:var(--orange);
+    border-left:3px solid var(--orange); padding:4px 0 4px 22px; margin:34px 0; max-width:640px;
+    text-transform:uppercase; letter-spacing:0.2px;
+  }
+
+  .callout{
+    max-width:680px; background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--cyan);
+    padding:16px 18px; margin:24px 0; font-family:var(--sans); font-size:14px; line-height:1.7; color:var(--text-dim);
+  }
+  .callout b{color:var(--cyan); font-family:var(--mono); font-size:11px; letter-spacing:1px; text-transform:uppercase; display:block; margin-bottom:8px;}
+
+  /* ============ FULL-WIDTH DATA PANELS ============ */
+  .data-panel{
+    background:var(--panel); border:1px solid var(--line); padding:22px 24px 24px; margin:14px 0 30px;
+  }
+  .data-panel img{width:100%; border:1px solid var(--line);}
+  .data-panel .panel-head{
+    display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px; flex-wrap:wrap; gap:8px;
+  }
+  .data-panel .panel-title{font-family:var(--mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text);}
+  .data-panel .panel-note{font-family:var(--mono); font-size:9.5px; letter-spacing:0.5px; color:var(--text-faint);}
+  .data-panel .panel-desc{font-family:var(--sans); font-size:13.5px; line-height:1.7; color:var(--text-dim); margin-top:14px;}
+
+  /* ============ TWO-UP MEDIA GRID ============ */
+  .media-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:14px 0 34px;}
+  @media (max-width:640px){.media-grid{grid-template-columns:1fr;}}
+  .media-grid .media-frame{margin-bottom:0;}
+
+  /* ============ SPEC TABLE ============ */
+  .spec-table{width:100%; max-width:680px; border-collapse:collapse; margin:10px 0 30px; font-family:var(--mono); font-size:12.5px;}
+  .spec-table th{text-align:left; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-faint); font-weight:600; padding:8px 12px; border-bottom:1px solid var(--line);}
+  .spec-table td{padding:10px 12px; border-bottom:1px solid var(--grid); color:var(--text-dim); vertical-align:top;}
+  .spec-table tr:hover td{background:rgba(94,234,212,0.04);}
+  .spec-table td:first-child{color:var(--cyan); font-weight:600; white-space:nowrap;}
+
+  /* ============ PROS / CONS ============ */
+  .proscons{display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:680px; margin:10px 0 30px;}
+  @media (max-width:560px){.proscons{grid-template-columns:1fr;}}
+  .pc-col{background:var(--panel); border:1px solid var(--line); padding:18px 20px;}
+  .pc-col.pro{border-top:2px solid var(--cyan);}
+  .pc-col.con{border-top:2px solid var(--red);}
+  .pc-col h4{font-family:var(--mono); font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:14px;}
+  .pc-col.pro h4{color:var(--cyan);}
+  .pc-col.con h4{color:var(--red);}
+  .pc-col ul{list-style:none; display:flex; flex-direction:column; gap:10px;}
+  .pc-col li{font-family:var(--sans); font-size:13.5px; line-height:1.55; color:var(--text-dim); padding-left:16px; position:relative;}
+  .pc-col.pro li::before{content:'+'; position:absolute; left:0; color:var(--cyan); font-weight:700; font-family:var(--mono);}
+  .pc-col.con li::before{content:'–'; position:absolute; left:0; color:var(--red); font-weight:700; font-family:var(--mono);}
+
+  /* ============ VERDICT ============ */
+  .verdict{
+    max-width:920px; margin:60px auto 0; padding:0 24px;
+  }
+  .verdict-box{
+    background:var(--panel); border:1px solid var(--line); border-top:3px solid var(--orange);
+    padding:36px 32px; display:grid; grid-template-columns:auto 1fr; gap:32px; align-items:center;
+  }
+  @media (max-width:640px){.verdict-box{grid-template-columns:1fr; text-align:center;}}
+  .verdict-score{font-family:var(--cond); font-weight:800; font-size:88px; line-height:0.85; color:var(--orange); text-align:center;}
+  .verdict-score span{display:block; font-family:var(--mono); font-size:11px; letter-spacing:2px; color:var(--text-faint); margin-top:8px; font-weight:400;}
+  .verdict-text h3{font-family:var(--cond); font-weight:800; text-transform:uppercase; font-size:22px; color:var(--text); margin-bottom:10px; letter-spacing:0.3px;}
+  .verdict-text p{font-family:var(--sans); font-size:14.5px; line-height:1.7; color:var(--text-dim); margin:0;}
+
+  .lab-closing{
+    max-width:920px; margin:40px auto 0; padding:20px 24px 0;
+    font-family:var(--mono); font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-faint);
+    border-top:1px solid var(--line);
+  }
+
+  /* ============ LINKS BAR ============ */
+  .links-bar{max-width:920px; margin:34px auto 0; padding:0 24px; display:flex; flex-wrap:wrap; gap:10px;}
+  .links-bar a{
+    font-family:var(--mono); font-size:11px; letter-spacing:1px; text-transform:uppercase;
+    color:var(--text); border:1px solid var(--line); padding:10px 16px; transition:.15s;
+  }
+  .links-bar a:hover{border-color:var(--orange); color:var(--orange);}
+  .links-bar a.primary{background:var(--cyan); color:var(--bg); border-color:var(--cyan);}
+  .links-bar a.primary:hover{background:var(--orange); border-color:var(--orange); color:var(--bg);}
+
+  /* ============ COMMENTS ============ */
+  .comments-section{max-width:920px; margin:60px auto 0; padding:0 24px 60px;}
+  .comments-head{font-family:var(--mono); font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--text-faint); padding-bottom:16px; margin-bottom:16px; border-bottom:1px solid var(--line);}
+
+  /* ============ FOOTER ============ */
+  .lab-footer{border-top:1px solid var(--line); padding:26px 24px; margin-top:20px;}
+  .lab-footer-inner{max-width:920px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;}
+  .lab-footer-inner{font-family:var(--mono); font-size:9.5px; letter-spacing:1px; color:var(--text-faint); text-transform:uppercase;}
+  .lab-footer-inner a:hover{color:var(--cyan);}
+</style>
+<script type="application/json" id="article-meta">
+{
+   "featured": false,
+   "pinned": true,
+   "date": "2026-08-11",
+    "category": "Review",
+    "categoryPill": "Instrumentos Virtuales",
+    "titleLines": ["TETRAWAVE"],
+    "title": "TetraWave // StemsMag — a prueba: dos synths y una caja de ritmos sin muestras",
+    "artistLine": "STEMS LAB",
+    "dek": "Le conectamos un analizador de espectro real al motor de audio, medimos su respuesta y pasamos una semana entera dentro de sus perillas. Esto es lo que encontramos.",
+    "tag": "Review",
+    "tagColor": "cyan",
+    "meta": "Review · 9 min",
+    "image": "articulos/images/tetra.jpg",
+    "seed": 4,
+    "slug": "articulos/articulo-tetrawave-review.html",
+    "comingSoon": false
+}
+</script>
+</head>
+<body>
+
+<div class="bokeh-bg"></div>
+
+<div class="lab-topbar">
+  <a href="articulo-tetrawave.html" class="lab-back">← STEMS.MAG</a>
+  <div class="lab-brand">STEMS <span>LAB</span></div>
+  <div class="lab-topbar-right">Banco de pruebas</div>
+</div>
+
+<div class="lab-hero">
+  <div class="lab-kicker">
+    <span class="kicker-pill">Review #004</span>
+    <span class="kicker-text">Instrumentos virtuales · Web Audio</span>
+  </div>
+  <h1 class="lab-title">TetraWave <span class="hl">//</span> StemsMag<br>a prueba: dos synths<br>y una <span class="hl">caja de ritmos</span> sin muestras</h1>
+  <p class="lab-dek">Le conectamos un analizador de espectro real al motor de audio, medimos su respuesta y pasamos una semana entera dentro de sus perillas. Esto es lo que encontramos.</p>
+
+  <div class="lab-meta-row">
+    <div class="lab-byline">
+      Probado por <b>STEMS LAB</b> · Redacción STEMS<br>
+      11 AGO 2026 · Build revisada en navegador desktop
+    </div>
+    <div class="score-badge">
+      <div class="num">8.5<span>/10</span></div>
+      <div class="lbl">Puntuación editorial — ver desglose más abajo</div>
+    </div>
+  </div>
+</div>
+
+<div class="spec-strip">
+  <div class="spec-cell"><div class="k">Categoría</div><div class="v">Synth + Drum Machine</div></div>
+  <div class="spec-cell"><div class="k">Plataforma</div><div class="v">Navegador (Web Audio API)</div></div>
+  <div class="spec-cell"><div class="k">Precio</div><div class="v">Gratis</div></div>
+  <div class="spec-cell"><div class="k">Licencia</div><div class="v">CC BY-NC 4.0</div></div>
+  <div class="spec-cell"><div class="k">Instalación</div><div class="v">Ninguna</div></div>
+</div>
+
+<div class="quick-nav">
+  <a href="#arquitectura">Arquitectura</a>
+  <a href="#tetra">Tetra 1/2</a>
+  <a href="#pulse9">Pulse-9</a>
+  <a href="#espectro">Espectro real</a>
+  <a href="#specs">Ficha técnica</a>
+  <a href="#veredicto">Veredicto</a>
+</div>
+
+<div class="lab-hero-media">
+  <div class="media-frame">
+    <img src="images/lab-hero.png" alt="Interfaz de TetraWave, TETRA 1 y TETRA 2">
+    <div class="scanline"></div>
+  </div>
+  <div class="media-caption">
+    <span>TETRA 1 / TETRA 2 — interfaz completa, sin edición</span>
+    <span class="tag">FIG. 01</span>
+  </div>
+</div>
+
+<div class="lab-body">
+  <div class="lab-col">
+
+    <p>Un sintetizador que corre en una pestaña del navegador suele venir con una advertencia implícita: va a sonar a demo. TetraWave, el instrumento gratuito de StemsMag, se pasó esa advertencia por alto. En vez de un solo motor liviano, trae <b style="color:var(--text)">dos sintetizadores poly-paraphonic completos e independientes</b> —TETRA 1 y TETRA 2— más una caja de ritmos sin una sola muestra grabada, PULSE-9, todo generado en tiempo real con la Web Audio API nativa. Para comprobar si el sonido está a la altura del discurso, no nos quedamos escuchando: le conectamos un <code style="font-family:var(--mono); color:var(--cyan);">AnalyserNode</code> al bus maestro y capturamos el espectro real mientras sonaba una nota. Los resultados están más abajo.</p>
+
+    <h2 id="arquitectura"><span class="idx">01</span> Arquitectura</h2>
+    <div class="section-rule"></div>
+
+    <p>Nada de lo que suena en TETRA 1 o TETRA 2 sale de un sample. Cada voz arma su propia cadena de nodos de audio en tiempo real: hasta tres osciladores más una fuente de ruido, un filtro biquad conmutable entre paso bajo, alto y banda con resonancia y seguimiento de teclado, envolventes ADSR de amplitud y ADS de filtro con gráfico en pantalla, un LFO compartido, y una cadena de efectos completa antes del mixer maestro. Como no hay ningún sample de por medio, cualquier cambio se escucha al instante, incluso a mitad de una nota sostenida.</p>
+
+    <div class="media-grid">
+      <div>
+        <div class="media-frame"><img src="images/lab-filter.png" alt="Módulo de filtro y envolventes de Tetra"></div>
+        <div class="media-caption"><span>Filtro + envolventes (AMP / FILTER)</span><span class="tag">FIG. 02</span></div>
+      </div>
+      <div>
+        <div class="media-frame"><img src="images/lab-fx.png" alt="Rack de efectos de Tetra"></div>
+        <div class="media-caption"><span>Rack de efectos: 8 unidades en cadena</span><span class="tag">FIG. 03</span></div>
+      </div>
+    </div>
+
+    <h2 id="tetra"><span class="idx">02</span> Tetra 1 / Tetra 2</h2>
+    <div class="section-rule"></div>
+
+    <p>Duplicar el sintetizador en vez de ofrecer un solo motor "más grande" resulta más útil de lo que parece en el papel. Tener dos instancias completas —cada una con sus tres modos de polifonía (poly, mono, unísono con detune), su arpegiador con patrones up/down/up-down, y su propio secuenciador de 16 pasos por página con acordes y swing— permite lo que en un DAW normal exigiría abrir dos pistas: un bajo en Tetra 1 y un pad sostenido en Tetra 2, editables por separado pero siempre en fase. Cada motor trae, además, más de <b style="color:var(--text)">1.700 presets de fábrica</b> organizados por categoría.</p>
+
+    <div class="data-panel">
+      <div class="panel-head">
+        <span class="panel-title">Navegador de presets por categoría</span>
+        <span class="panel-note">10 categorías · Init incluido</span>
+      </div>
+      <img src="images/lab-presets.png" alt="Modal de presets organizados por categoría">
+      <p class="panel-desc">Bass, Lead, Pad, Pluck, Brass &amp; Strings, Drone/Ambiental, Teclas &amp; Campanas, Arpegios &amp; Secuencias, FX &amp; Experimental — suficientes para empezar a tocar sin programar nada, y con el tiempo, para entender por comparación cómo está armado cada patch.</p>
+    </div>
+
+    <div class="media-frame"><img src="images/lab-keys.png" alt="Teclado, arpegiador y secuenciador"></div>
+    <div class="media-caption"><span>Teclado, arpegiador y secuenciador — completos y por separado en cada Tetra</span><span class="tag">FIG. 04</span></div>
+    <p style="margin-top:24px;">&nbsp;</p>
+
+    <h2 id="pulse9"><span class="idx">03</span> Pulse-9</h2>
+    <div class="section-rule"></div>
+
+    <p>Si los dos Tetra son el corazón melódico, Pulse-9 es la parte que más sorprende, precisamente porque no debería sonar tan bien sin usar una sola muestra grabada. Sus ocho voces de percusión —kick, snare, clap, hi-hats, low tom, shaker y un wood clack tipo clave— están sintetizadas por código: el kick con envolvente de pitch, la caja combinando cuerpo tonal con ruido, los hi-hats como bancos de osciladores metálicos filtrados en agudos. Encima de esa base hay cuatro controles de performance para tocar en vivo:</p>
+
+    <table class="spec-table">
+      <tr><th>Control</th><th>Función</th></tr>
+      <tr><td>Roll</td><td>Mantenido, hace stutter de todo el patrón a 4× velocidad</td></tr>
+      <tr><td>Break</td><td>Mantenido, silencia kick/snare/clap/tom y deja solo percusión suelta</td></tr>
+      <tr><td>Retrigger</td><td>Mantenido, repite el paso actual acelerando (build-up)</td></tr>
+      <tr><td>Fill In</td><td>Al soltar, inserta un relleno generado y vuelve sola al patrón</td></tr>
+    </table>
+
+    <div class="media-frame"><img src="images/lab-pulse9.png" alt="Panel de Pulse-9 con secuenciador de pasos"></div>
+    <div class="media-caption"><span>Pulse-9: 8 voces sintetizadas, patrón de 16 pasos × 8 páginas</span><span class="tag">FIG. 05</span></div>
+
+    <h2 id="espectro"><span class="idx">04</span> Medición: espectro real</h2>
+    <div class="section-rule"></div>
+
+    <p>Esto es lo que nadie suele mostrar en una reseña de un instrumento virtual: qué está sonando de verdad. En vez de describir el timbre con adjetivos, inyectamos un <code style="font-family:var(--mono); color:var(--cyan);">AnalyserNode</code> en el bus maestro de Tetra 1, sostuvimos una nota con el patch de fábrica <b style="color:var(--text)">"Default Init"</b> (dos osciladores en diente de sierra más uno triangular) y capturamos la respuesta en frecuencia directamente del motor mientras sonaba.</p>
+
+    <div class="data-panel">
+      <div class="panel-head">
+        <span class="panel-title">Espectro capturado en vivo — Tetra 1</span>
+        <span class="panel-note">FFT 8192 · AnalyserNode · nota sostenida</span>
+      </div>
+      <img src="images/lab-spectrum.png" alt="Gráfico de espectro de frecuencia capturado en vivo del motor de audio">
+      <p class="panel-desc">La serie de armónicos regularmente espaciados —y decayendo de forma progresiva hacia los agudos— es exactamente lo que se espera de una mezcla de ondas diente de sierra: un contenido armónico rico, sin aliasing audible ni artefactos digitales extraños en el rango medible. El pico fundamental cae en torno a 129 Hz, consistente con la nota tocada. Para un motor que corre íntegramente en JavaScript dentro del navegador, es una señal limpia.</p>
+    </div>
+
+    <div class="callout">
+      <b>Nota metodológica</b>
+      Esta captura es una medición real hecha con las herramientas de desarrollo del propio navegador sobre el patch de fábrica, no una simulación ni un gráfico ilustrativo. No sustituye un análisis de laboratorio con instrumental de audio profesional, pero sí confirma que la cadena de síntesis se comporta como cabría esperar de su arquitectura declarada.
+    </div>
+
+    <h2 id="specs"><span class="idx">05</span> Ficha técnica</h2>
+    <div class="section-rule"></div>
+
+    <table class="spec-table">
+      <tr><th>Módulo</th><th>Detalle</th></tr>
+      <tr><td>Motor de audio</td><td>Web Audio API nativa, sin samples en los sintetizadores</td></tr>
+      <tr><td>Osciladores</td><td>3 osc + ruido por voz, waveforms clásicas, unísono con detune, PWM real</td></tr>
+      <tr><td>Filtro</td><td>Lowpass / Highpass / Bandpass, resonancia 0.1–20, seguimiento de teclado</td></tr>
+      <tr><td>Envolventes</td><td>Amp (A/D/S/R) y Filtro (A/D/S), con gráfico ADSR en vivo</td></tr>
+      <tr><td>Modulación</td><td>LFO compartido → pitch / filtro / PWM</td></tr>
+      <tr><td>Efectos</td><td>Chorus, Phaser, Distorsión, Auto-Wah, Delay, Reverb por convolución</td></tr>
+      <tr><td>Polifonía</td><td>Poly / Mono / Unísono, con portamento y legato</td></tr>
+      <tr><td>Secuenciador</td><td>16 pasos × 8 páginas, TIE, acordes, swing, +40 presets de patrón</td></tr>
+      <tr><td>Presets de sonido</td><td>+1.700 patches de fábrica por Tetra, organizados por categoría</td></tr>
+      <tr><td>Pulse-9</td><td>8 voces de percusión sintetizada, sin muestras</td></tr>
+      <tr><td>Transporte</td><td>Pulse-9 es maestro; sincroniza los 3 motores sobre un mismo reloj</td></tr>
+      <tr><td>Guardado</td><td>Exportación de páginas a .json — nada se guarda en servidor</td></tr>
+      <tr><td>Exportación de audio</td><td>No disponible (sin render a WAV/MP3 por ahora)</td></tr>
+    </table>
+
+    <h3>Puntuación por categoría</h3>
+    <div class="data-panel" style="max-width:520px;">
+      <img src="images/lab-radar.png" alt="Radar de puntuación: Sonido, Interfaz, Rendimiento, Documentación, Valor">
+      <p class="panel-desc">El rendimiento es la categoría más floja, y depende directamente del equipo: en hardware modesto, patrones densos con muchos efectos activos pueden generar cortes. El resto sostiene el conjunto — sobre todo la relación con el precio, que es cero.</p>
+    </div>
+
+    <div class="proscons">
+      <div class="pc-col pro">
+        <h4>A favor</h4>
+        <ul>
+          <li>Dos sintetizadores completos e independientes, no uno recortado</li>
+          <li>Pulse-9 suena convincente sin una sola muestra</li>
+          <li>Transporte y páginas compartidas resuelven la sincronización de fábrica</li>
+          <li>Manual honesto sobre sus propios límites</li>
+          <li>Gratis, sin cuenta ni instalación</li>
+        </ul>
+      </div>
+      <div class="pc-col con">
+        <h4>En contra</h4>
+        <ul>
+          <li>No exporta audio multipista ni renderiza a WAV/MP3</li>
+          <li>Sin automatización avanzada de parámetros en el tiempo</li>
+          <li>El trabajo se pierde si se cierra la pestaña sin exportar</li>
+          <li>Rendimiento variable según el equipo</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="verdict" id="veredicto">
+  <div class="verdict-box">
+    <div class="verdict-score">8.5<span>/ 10</span></div>
+    <div class="verdict-text">
+      <h3>Veredicto</h3>
+      <p>TetraWave no compite con un DAW ni lo pretende: compite con la pregunta de qué tan lejos puede llegar un instrumento construido enteramente con Web Audio API, sin backend ni costo. Llega bastante lejos. El espectro que medimos confirma una síntesis limpia, y el catálogo de presets, arpegiador y secuenciador por motor sostienen horas de uso antes de tocar techo. La ausencia de exportación de audio es la limitación real frente a herramientas de estudio — el resto son detalles menores frente a lo que ofrece gratis.</p>
+    </div>
+  </div>
+</div>
+
+<div class="links-bar">
+  <a href="synth.html" class="primary">Probar el instrumento →</a>
+  <a href="tetrawave-manual.html">Ver el manual completo</a>
+  <a href="https://paypal.me/soundexp?locale.x=es_XC&country.x=SV" target="_blank" rel="noopener">Apoyar por PayPal</a>
+</div>
+
+<div class="lab-closing">Fin del banco de pruebas · Licencia del instrumento: Creative Commons BY-NC 4.0</div>
+
+<div class="comments-section" id="comments">
+  <div class="comments-head">Comentarios — únete a la conversación</div>
+  <!--
+    Comentarios vía Giscus (https://giscus.app), basado en GitHub Discussions.
+    Antes de publicar, configura tu propia instancia en https://giscus.app y reemplaza
+    data-repo, data-repo-id, data-category y data-category-id con los valores que te
+    genere el sitio para tu repositorio de GitHub.
+  -->
+  <script src="https://giscus.app/client.js"
+    data-repo="stemsmag/magazine"
+    data-repo-id="R_kgDOTsEphw"
+    data-category="Comments"
+    data-category-id="DIC_kwDOTsEph84DC18I"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="dark"
+    data-lang="es"
+    crossorigin="anonymous"
+    async>
+</script>
+</div>
+
+<footer class="lab-footer">
+  <div class="lab-footer-inner">
+    <span>STEMS LAB — un banco de pruebas de <a href="../index.html">STEMS Magazine</a></span>
+    <span>Hecho en El Salvador · 2026</span>
+  </div>
+</footer>
+
+</body>
+</html>
