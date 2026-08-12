@@ -2,6 +2,28 @@
   {
     "featured": true,
     "pinned": false,
+    "date": "2026-08-11",
+    "category": "Perfil",
+    "categoryPill": "Música Electrónica",
+    "titleLines": [
+      "LA ECUACIÓN ",
+      "DE",
+      "DIAMOND HM"
+    ],
+    "title": "La ecuación de Diamond HM",
+    "artistLine": "Música Electrónica",
+    "dek": "A los 15 años decidió que la música era el camino. Hoy, DJ Diamond HM produce desde una ecuación simple —energía de un lado, emoción del otro— y desconfía, a propósito, de su propio método.",
+    "tag": "Perfil",
+    "tagColor": "magenta",
+    "meta": "Perfil · 7 min",
+    "image": "articulos/images/diamondhm01.jpg",
+    "seed": 58,
+    "slug": "articulos/articulo-diamond-hm.html",
+    "comingSoon": false
+  },
+  {
+    "featured": true,
+    "pinned": false,
     "date": "2026-08-10",
     "category": "Perfil",
     "categoryPill": "Trance Melódico",
