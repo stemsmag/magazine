@@ -22,6 +22,28 @@
     "comingSoon": false
   },
   {
+    "featured": true,
+    "pinned": true,
+    "date": "2026-08-12",
+    "category": "Perfil",
+    "categoryPill": "Hard Techno",
+    "titleLines": [
+      "EL SEGUNDO ",
+      "EN QUE TODO",
+      "DESAPARECE"
+    ],
+    "title": "OBL1V!ØN: la conexión que la música crea",
+    "artistLine": "Hard Techno — Ciudad de México",
+    "dek": "Arriba del escenario hay un segundo exacto en el que todo desaparece. OBL1V!ØN construye cada set y cada track para llegar hasta ahí.",
+    "tag": "Perfil",
+    "tagColor": "orange",
+    "meta": "Perfil · 7 min",
+    "image": "articulos/images/obl1vion01.jpg",
+    "seed": 71,
+    "slug": "articulos/articulo-obl1vion.html",
+    "comingSoon": false
+  },
+  {
     "featured": false,
     "pinned": false,
     "date": "2026-08-11",
