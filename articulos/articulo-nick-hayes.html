@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E9K74DFXY3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-E9K74DFXY3');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Last DJ: la historia de Nick Hayes — STEMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;600;700&family=Barlow+Condensed:wght@700&family=Permanent+Marker&family=Righteous&family=Playfair+Display:wght@700;900&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500&family=Mr+Dafoe&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#00192E;
+    --paper:#042538;
+    --card:#062C42;
+    --cream:#F4E8D3;
+    --cream-dim:#A89A80;
+    --muted:#B49A7A;
+    --magenta:#E8236B;
+    --orange:#FF7A2E;
+    --amber:#F2A93C;
+    --teal:#2FB6A8;
+    --brown:#8B5A34;
+    --brown-light:#052A3D;
+    --line:rgba(244,232,211,0.14);
+    --font-logo:'Mr Dafoe', cursive;
+    --header-h:64px;
+    --top-band-h:24px;
+    --navbar-h:34px;
+    --header-overlay-color:0,25,46;
+    --header-overlay-opacity:0.55;
+    --band-overlay-opacity:0.8;
+    --stack-h:calc(var(--top-band-h) + var(--header-h) + var(--navbar-h));
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:
+      radial-gradient(ellipse 130% 60% at 50% 0%, #01415C 0%, #013246 28%, var(--bg) 60%, #001220 100%);
+    background-attachment:fixed;
+    color:var(--cream);
+    font-family:'Inter', sans-serif;
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--magenta); color:var(--cream);}
+  a{color:inherit; text-decoration:none;}
+  img{display:block; max-width:100%;}
+
+  .display{font-family:'Anton', sans-serif; font-weight:400; text-transform:uppercase;}
+  .script{font-family:'Permanent Marker', cursive;}
+  .mono{font-family:'JetBrains Mono', monospace;}
+
+  /* ============ GLOBAL TAPE OVERLAY ============ */
+  .grain{
+    position:fixed; inset:0; z-index:998; pointer-events:none;
+    opacity:0.07; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    animation:grain .4s steps(2) infinite;
+  }
+  @keyframes grain{0%{transform:translate(0,0)}50%{transform:translate(-1%,1%)}100%{transform:translate(1%,-1%)}}
+
+  /* ============ NAV ============ */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    height:var(--stack-h);
+    padding-top:var(--top-band-h);
+    background:var(--brown-light);
+    overflow:hidden;
+  }
+  .header-hitbox{position:absolute; inset:0; z-index:1;}
+  .top-band{
+    position:fixed; top:0; left:0; right:0; z-index:130;
+    height:var(--top-band-h);
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(90deg,
+      rgba(232,35,107, var(--band-overlay-opacity)) 0%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 18%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 82%,
+      rgba(242,169,60, var(--band-overlay-opacity)) 100%);
+    border-bottom:1px solid var(--line);
+    font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:2px;
+    text-transform:uppercase; color:var(--amber);
+  }
+  .site-navbar{
+    position:fixed; top:calc(var(--top-band-h) + var(--header-h)); left:0; right:0; z-index:125;
+    height:var(--navbar-h);
+    background:linear-gradient(90deg,
+      rgba(232,35,107, var(--band-overlay-opacity)) 0%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 18%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 82%,
+      rgba(242,169,60, var(--band-overlay-opacity)) 100%);
+    border-bottom:1px solid var(--line);
+    overflow-x:auto;
+  }
+  .site-navbar .navbar-inner{
+    max-width:1200px; margin:0 auto; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    padding:0 24px; white-space:nowrap;
+  }
+  .navbar-links{display:flex; align-items:center; gap:36px;}
+  .site-navbar a{
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--cream); transition:color .2s;
+  }
+  .site-navbar a:hover{color:var(--amber);}
+  .nav-toggle{
+    display:none; flex-direction:column; justify-content:center; align-items:center; gap:5px;
+    width:32px; height:32px; padding:0; margin-left:auto;
+    background:transparent; border:none; cursor:pointer;
+  }
+  .nav-toggle-bar{
+    display:block; width:20px; height:2px; background:var(--cream);
+    transition:transform .25s ease, opacity .2s ease;
+  }
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(2){opacity:0;}
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  @media (max-width:640px){
+    .site-navbar .navbar-inner{justify-content:space-between;}
+    .nav-toggle{display:flex;}
+    .navbar-links{
+      display:none;
+      position:fixed; top:var(--stack-h); left:0; right:0; z-index:124;
+      flex-direction:column; align-items:stretch; gap:0;
+      max-height:calc(100vh - var(--stack-h)); overflow-y:auto;
+      background:rgba(4,37,56,0.97);
+      border-bottom:1px solid var(--line);
+      padding:6px 24px 14px;
+    }
+    .navbar-links a{padding:13px 0; border-bottom:1px solid var(--line); white-space:normal;}
+    .navbar-links a:last-child{border-bottom:none;}
+    .site-navbar.nav-open .navbar-links{display:flex;}
+  }
+  .header-bg{
+    position:absolute; left:0; top:0; z-index:-3;
+    width:100%; height:300%;
+    object-fit:cover;
+    transform:translateY(-33.3333%);
+    transition:transform .15s ease-out;
+    will-change:transform;
+  }
+  .header-overlay{
+    position:absolute; inset:0; z-index:-2;
+    background:rgba(var(--header-overlay-color), var(--header-overlay-opacity));
+    pointer-events:none;
+  }
+  .header-inner{
+    position:relative; z-index:2;
+    width:100%; max-width:1200px; margin:0 auto;
+    min-height:var(--header-h);
+    display:flex; align-items:center; justify-content:flex-end;
+    padding:0 24px;
+    pointer-events:none;
+  }
+  header::before{
+    content:'';
+    position:absolute; inset:0; z-index:-1;
+    background-image:
+      radial-gradient(circle at 8% 15%, rgba(0,0,0,0.35), transparent 40%),
+      radial-gradient(circle at 92% 85%, rgba(0,0,0,0.3), transparent 45%),
+      radial-gradient(circle at 55% 50%, rgba(244,232,211,0.05), transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:auto, auto, auto, 160px 160px;
+    opacity:0.5;
+    mix-blend-mode:overlay;
+    pointer-events:none;
+  }
+  /* Firma grande como fondo del header, tipo watermark */
+  /* Firma grande como fondo del header, tipo watermark — confinada al mismo ancho que .main-wrap */
+  .header-signature{
+    position:absolute; inset:0; z-index:-1;
+    max-width:1200px; margin:0 auto;
+    overflow:hidden;
+    pointer-events:none;
+  }
+  .header-signature::after{
+    content:'Stemsmag';
+    position:absolute; inset:0;
+    display:flex; align-items:center;
+    font-family:var(--font-logo); font-weight:400;
+    font-size:clamp(67px, 10.8vw, 108px); line-height:1;
+    letter-spacing:0; white-space:nowrap;
+    opacity:1;
+    color:var(--amber);
+    text-shadow:0 6px 24px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.35);
+    padding-left:24px;
+    transform:rotate(-3.5deg); transform-origin:left center;
+  }
+  .logo-block{
+    position:relative; z-index:1;
+    display:flex; flex-direction:column; gap:0; text-decoration:none; color:inherit;
+    transform:rotate(-3.5deg); transform-origin:left center;
+  }
+  .logo{
+    font-family:var(--font-logo); font-weight:400;
+    font-size:66px; letter-spacing:0; line-height:1;
+    color:var(--cream); white-space:nowrap;
+    display:flex; align-items:baseline;
+  }
+  .logo-stems{
+    display:inline-block;
+    background:linear-gradient(100deg, var(--amber) 42%, #FFF6E0 50%, var(--amber) 58%);
+    background-size:300% 100%;
+    background-position:100% 0;
+    -webkit-background-clip:text; background-clip:text;
+    color:transparent; -webkit-text-fill-color:transparent;
+    animation:logoShine 4.5s ease-in-out infinite;
+  }
+  @keyframes logoShine{
+    0%{background-position:160% 0;}
+    50%{background-position:-60% 0;}
+    100%{background-position:-60% 0;}
+  }
+  .logo-tag{
+    font-family:'JetBrains Mono', monospace; font-weight:500;
+    font-size:8.5px; letter-spacing:1.2px; color:var(--cream-dim);
+    text-transform:uppercase; margin-top:-16px;
+  }
+  @media (max-width:640px){
+    .logo{font-size:52px;}
+    .logo-tag{font-size:7.5px;}
+  }
+
+  #eventos, #playlist, #artifacts{scroll-margin-top:var(--stack-h);}
+
+  /* ============ COVER (HERO) ============ */
+  .cover{
+    position:relative;
+    padding:calc(var(--stack-h) + 14px) 24px 24px;
+    display:flex;
+    align-items:flex-start;
+  }
+  .cover-frame{
+    position:relative;
+    width:100%;
+    aspect-ratio:5/4;
+    border:1px solid var(--brown);
+    overflow:hidden;
+  }
+  .cover-media{position:absolute; inset:0; z-index:0; background:#000;}
+  .cover-media canvas{width:100%; height:100%; display:block;}
+  .cover-scrim{
+    position:absolute; inset:0; z-index:1;
+    background:linear-gradient(180deg, rgba(0,25,46,0.55) 0%, rgba(0,25,46,0.05) 30%, rgba(0,25,46,0.15) 55%, rgba(0,25,46,0.85) 100%),
+               linear-gradient(90deg, rgba(0,25,46,0.55) 0%, rgba(0,25,46,0) 35%);
+  }
+  .cover-content{position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; justify-content:space-between; padding:28px;}
+
+  .cover-topbar{display:flex; align-items:flex-start; justify-content:space-between; gap:16px;}
+  .eyebrow-pill{display:flex; align-items:center; gap:10px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--cream);}
+  .eyebrow-pill .pill{background:var(--magenta); color:var(--cream); padding:3px 9px; font-size:10px; letter-spacing:1.5px;}
+  .year-block{text-align:right; font-family:'Anton',sans-serif; font-size:26px; color:var(--amber); line-height:1;}
+  .year-block span{display:block; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1.5px; color:var(--muted); text-transform:uppercase; margin-top:6px; max-width:150px;}
+
+  .cover-title{max-width:680px; margin-top:auto; margin-bottom:auto;}
+  .stack{line-height:0.82; margin-bottom:14px;}
+  .stack .line{display:block; font-size:clamp(48px, 10vw, 108px);}
+  .stack .line-1{color:var(--magenta); text-shadow:3px 3px 0 rgba(0,0,0,0.4);}
+  .stack .line-2{color:var(--cream); text-shadow:3px 3px 0 rgba(0,0,0,0.4);}
+  .stack .line-3{color:var(--orange); text-shadow:3px 3px 0 rgba(0,0,0,0.4);}
+  .dek{font-family:'Inter',sans-serif; font-size:clamp(14px,1.6vw,17px); font-weight:400; line-height:1.5; color:var(--cream); max-width:520px; margin-bottom:10px; opacity:0.9;}
+  .script-sub{font-family:var(--font-logo); font-size:clamp(20px,3vw,30px); color:var(--amber); margin-bottom:8px;}
+  .location{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1px; color:var(--muted);}
+
+  .cover-bottom-row{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap;}
+  .widget-row{display:flex; gap:10px; flex-wrap:wrap;}
+  .widget{
+    border:1px solid var(--brown);
+    background:rgba(43,26,12,0.55);
+    backdrop-filter:blur(2px);
+    padding:9px 12px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    line-height:1.5;
+    color:var(--cream);
+  }
+  .wave-widget{min-width:190px;}
+  .widget-tag{display:block; background:var(--magenta); padding:2px 6px; font-size:9px; margin-bottom:6px; width:fit-content;}
+  .wave-widget canvas{width:100%; height:34px; display:block; margin:4px 0;}
+  .widget-tags{display:block; color:var(--muted); font-size:9px; margin-top:2px;}
+  .play-indicator{font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:2px; color:var(--cream); border:1px solid var(--cream); padding:8px 14px; white-space:nowrap;}
+
+  .cover-side-right{
+    position:absolute; right:28px; top:calc(var(--stack-h) - 6px); bottom:100px;
+    display:flex; flex-direction:column; align-items:flex-end; justify-content:space-between;
+    gap:14px;
+  }
+  .bpm-block{font-family:'Anton',sans-serif; font-size:44px; color:var(--cream); text-align:right; line-height:0.9;}
+  .bpm-block span{display:block; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--muted); margin-top:4px;}
+  .stamp{
+    width:88px; height:88px; border-radius:50%;
+    border:1.5px dashed var(--cream);
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:1px; text-transform:uppercase;
+    color:var(--cream); padding:8px;
+  }
+  .barcode-box{
+    border:1px solid var(--magenta); padding:8px 10px;
+    font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--magenta);
+    letter-spacing:1px; text-align:right; text-transform:uppercase;
+  }
+  .barcode{display:flex; gap:1px; height:20px; margin-top:6px; justify-content:flex-end;}
+  .barcode div{background:var(--magenta); width:2px;}
+  .tracklist-box{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); text-align:right; line-height:1.6;}
+  .tracklist-box b{color:var(--cream); font-weight:500;}
+  .signature{font-family:'Permanent Marker',cursive; font-size:20px; color:var(--cream); text-align:right;}
+  .signature span{color:var(--orange);}
+
+  @media (max-width:900px){
+    .cover-content{position:relative; min-height:100%;}
+    .cover-frame{aspect-ratio:auto;}
+    .cover-media{position:relative; height:60vh;}
+    .cover-content{padding:20px;}
+  }
+  @media (max-width:600px){
+    .cover{padding:calc(var(--stack-h) + 2px) 12px 12px;}
+    .cover-content{padding:16px;}
+    .stack .line{font-size:15vw;}
+  }
+
+  /* ============ MAIN WRAP (contenido no toca los bordes en PC) ============ */
+  .main-wrap{width:100%; max-width:1200px; margin:0 auto;}
+
+  /* ============ SECTION HEAD — tratamiento retro ============ */
+  .section-head{
+    position:relative;
+    display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    padding:56px 28px 22px; border-top:1px solid var(--line);
+  }
+  .section-head::before{
+    content:''; position:absolute; top:-1px; left:28px; width:64px; height:4px;
+    background:linear-gradient(90deg, var(--magenta), var(--orange), var(--amber), var(--teal));
+  }
+  .head-title{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;}
+  .head-index{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--accent, var(--magenta)); border:1px solid var(--accent, var(--magenta)); padding:3px 7px; white-space:nowrap;}
+  .section-head h2{
+    font-family:'Righteous', 'Playfair Display', serif; font-size:clamp(28px,3.8vw,42px); letter-spacing:-0.5px;
+    text-transform:uppercase; line-height:0.98; color:var(--accent, var(--magenta));
+  }
+  .section-head .sub{display:block; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); margin-top:8px; letter-spacing:0.5px; text-transform:none;}
+  .section-head .count{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted);}
+
+  /* ============ CONTENT SPLIT — 70 / 30 ============ */
+  .content-split{display:grid; grid-template-columns:7fr 3fr; align-items:start;}
+  .col-main{border-right:1px solid var(--line);}
+  .col-side{padding-top:calc(var(--stack-h) + 14px);}
+  .col-side .section-head{padding:56px 24px 20px;}
+  .col-side > div:first-child .section-head{padding-top:0;}
+  .col-side .section-head::before{left:24px;}
+  @media (max-width:980px){
+    .content-split{grid-template-columns:1fr;}
+    .col-main{border-right:none; border-bottom:1px solid var(--line);}
+    .col-side{padding-top:0;}
+  }
+
+  /* ============ GRID (artículos) ============ */
+  .grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px; padding:0 28px 28px;}
+  @media (max-width:1300px){.grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:620px){.grid{grid-template-columns:1fr; padding:0 16px 16px;}}
+
+  .art-card{
+    position:relative;
+    aspect-ratio:5/4;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:#000;
+  }
+  .art-card canvas{position:absolute; inset:0; width:100%; height:100%;}
+  .art-scrim{position:absolute; inset:0; z-index:1;
+    background:linear-gradient(180deg, rgba(0,25,46,0.2) 0%, rgba(0,25,46,0.15) 40%, rgba(0,25,46,0.95) 100%);}
+  .art-inner{position:absolute; inset:0; z-index:2; display:flex; flex-direction:column; justify-content:space-between; padding:14px;}
+
+  .art-top{display:flex; justify-content:space-between; align-items:flex-start;}
+  .art-tag{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; padding:3px 7px; color:var(--bg);}
+  .art-num{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted);}
+
+  .art-bottom h3{font-family:'Oswald',sans-serif; font-weight:600; font-size:16px; line-height:1.25; margin-bottom:8px;}
+  .art-meta-row{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+  .art-meta{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--muted); text-transform:uppercase;}
+  .art-barcode{display:flex; gap:1px; height:14px;}
+  .art-barcode div{width:1.5px; background:var(--cream); opacity:0.7;}
+
+  /* ============ EVENTOS Y LANZAMIENTOS (sidebar, 2 sub-columnas) ============ */
+  .events-columns{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:0 20px; padding:0 24px 8px;}
+  .events-col h3{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--accent, var(--teal)); text-transform:uppercase; padding-bottom:8px; border-bottom:2px solid var(--accent, var(--teal)); margin-bottom:4px;}
+  .event-item{display:flex; gap:12px; padding:14px 0; border-top:1px solid var(--line);}
+  .event-thumb{width:52px; height:52px; flex:0 0 52px; border:1px solid var(--line); overflow:hidden; background:#000;}
+  .event-thumb img{width:100%; height:100%; object-fit:cover; filter:sepia(0.4) saturate(1.4) contrast(1.05) brightness(0.8);}
+  .event-body{min-width:0;}
+  .event-chip{display:block; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--muted); margin-bottom:4px; text-transform:uppercase;}
+  .event-body h4{font-family:'Oswald',sans-serif; font-weight:600; font-size:12.5px; line-height:1.3; margin-bottom:3px;}
+  .event-body .meta-line{font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--muted); letter-spacing:0.3px;}
+
+  .calendar-cta{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:16px 24px 8px; padding:14px 16px; border:1px dashed var(--muted); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--cream); transition:.2s;}
+  .calendar-cta:hover{border-color:var(--cream); background:rgba(244,232,211,0.04);}
+
+  /* ============ PLAYLIST DE STEMS — embed de Spotify ============ */
+  .playlist{padding:0 28px 28px;}
+  .col-side .playlist{padding:0 24px 24px;}
+  .spotify-frame{border:1px solid var(--brown); background:var(--paper);}
+  .spotify-frame-head{padding:11px 14px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--teal); border-bottom:1px solid var(--line); text-transform:uppercase;}
+  .spotify-frame iframe{display:block; width:100%;}
+
+  /* ============ ARTIFACTS ============ */
+  .artifacts-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:16px; padding:0 28px 28px;}
+  @media (max-width:760px){.artifacts-grid{grid-template-columns:1fr; padding:0 16px 16px;}}
+  .col-side .artifacts-grid{grid-template-columns:1fr; padding:0 24px 24px;}
+
+  /* ============ NEWSLETTER ============ */
+  .newsletter{padding:0 24px 40px;}
+  .newsletter-box{border:1px solid var(--brown); background:var(--paper); padding:22px;}
+  .newsletter-box p{font-family:'Inter',sans-serif; font-size:12px; color:var(--muted); line-height:1.55; margin-bottom:16px;}
+  .newsletter-form{display:flex; flex-direction:column; gap:10px;}
+  .newsletter-form input{background:transparent; border:1px solid var(--line); padding:11px 12px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--cream);}
+  .newsletter-form input::placeholder{color:var(--muted);}
+  .newsletter-form input:focus{outline:none; border-color:var(--amber);}
+  .newsletter-form button{background:var(--magenta); border:none; padding:12px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--cream); cursor:pointer; transition:.2s;}
+  .newsletter-form button:hover{background:var(--orange);}
+  .newsletter-note{display:block; margin-top:12px; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--muted); text-transform:uppercase;}
+  .artifact-card{border:1px solid var(--line); background:var(--card); padding:24px; position:relative; overflow:hidden;}
+  .artifact-card::before{content:''; position:absolute; top:0; left:0; right:0; height:2px;}
+  .artifact-card.status-live::before{background:var(--teal);}
+  .artifact-card.status-soon::before{background:var(--muted);}
+  .artifact-preview{width:100%; aspect-ratio:16/9; border:1px solid var(--line); background:#001624; margin-bottom:18px; overflow:hidden;}
+  .artifact-preview canvas{width:100%; height:100%; display:block;}
+  .artifact-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;}
+  .artifact-status{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1.5px; padding:3px 8px; text-transform:uppercase;}
+  .status-live .artifact-status{background:var(--teal); color:var(--bg);}
+  .status-soon .artifact-status{border:1px solid var(--muted); color:var(--muted);}
+  .artifact-id{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted);}
+  .artifact-name{font-family:'Anton',sans-serif; font-size:22px; letter-spacing:1px; margin-bottom:8px;}
+  .artifact-desc{font-family:'Inter',sans-serif; font-size:13px; color:var(--muted); line-height:1.55; margin-bottom:18px;}
+  .artifact-specs{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:20px;}
+  .artifact-specs span{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; border:1px solid var(--line); padding:3px 8px; color:var(--cream); text-transform:uppercase;}
+  .artifact-cta{display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--cream); border-bottom:1px solid var(--magenta); padding-bottom:2px;}
+  .status-soon .artifact-cta{color:var(--muted); border-bottom-color:var(--muted);}
+
+  /* ============ FOOTER ============ */
+  .site-footer{border-top:1px solid var(--line); margin-top:20px;}
+  .footer-top{
+    max-width:1200px; margin:0 auto;
+    display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:32px;
+    padding:52px 28px 40px;
+  }
+  @media (max-width:900px){.footer-top{grid-template-columns:1fr 1fr; row-gap:36px;}}
+  @media (max-width:560px){.footer-top{grid-template-columns:1fr; padding:44px 20px 32px;}}
+
+  .footer-brand .footer-logo{font-family:'Anton',sans-serif; font-size:26px; letter-spacing:0; color:var(--cream); text-transform:uppercase; margin-bottom:12px;}
+  .footer-brand .footer-logo span{color:var(--muted); font-weight:400;}
+  .footer-tagline-script{font-family:'JetBrains Mono',monospace; font-weight:500; font-size:9.5px; letter-spacing:1.5px; color:var(--amber); text-transform:uppercase; margin-bottom:10px;}
+  .footer-tagline{font-family:'Inter',sans-serif; font-size:12.5px; line-height:1.6; color:var(--muted); max-width:280px; margin-bottom:18px;}
+  .footer-social{display:flex; gap:8px;}
+  .footer-social a{
+    display:flex; align-items:center; justify-content:center;
+    width:32px; height:32px; border:1px solid var(--line);
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.5px;
+    color:var(--muted); transition:.2s;
+  }
+  .footer-social a:hover{border-color:var(--magenta); color:var(--magenta);}
+  .footer-social svg{width:16px; height:16px;}
+
+  .footer-col h4{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--amber); margin-bottom:16px;}
+  .footer-col ul{list-style:none; display:flex; flex-direction:column; gap:10px;}
+  .footer-col a{font-family:'Inter',sans-serif; font-size:13px; color:var(--muted); transition:.2s;}
+  .footer-col a:hover{color:var(--cream);}
+
+  .footer-bottom{
+    border-top:1px solid var(--line);
+    max-width:1200px; margin:0 auto;
+    padding:20px 28px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; color:var(--muted);
+  }
+  @media (max-width:560px){.footer-bottom{padding:18px 20px;}}
+  .footer-credit{
+    text-align:center; max-width:1200px; margin:0 auto;
+    padding:12px 24px 20px;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px;
+    color:rgba(244,232,211,0.28);
+  }
+
+  /* ============ ARTÍCULO ============ */
+  .article-wrap{max-width:760px; margin:0 auto; padding:calc(var(--stack-h) + 30px) 24px 20px;}
+  .back-link{display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:24px; transition:color .2s;}
+  .back-link:hover{color:var(--cream);}
+
+  .article-tag{display:inline-block; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--bg); background:var(--magenta); padding:4px 10px; margin-bottom:18px;}
+  .lang-toggle-btn{
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--cream); background:transparent; border:1px solid var(--line);
+    padding:4px 10px; cursor:pointer; transition:.2s;
+  }
+  .lang-toggle-btn:hover{border-color:var(--amber); color:var(--amber);}
+  .article-title{font-family:'Righteous','Playfair Display',serif; font-size:clamp(32px,6vw,56px); line-height:1.02; letter-spacing:-0.5px; color:var(--cream); margin-bottom:18px;}
+  .article-dek{font-family:'Inter',sans-serif; font-size:clamp(15px,2vw,19px); line-height:1.55; color:var(--cream-dim); max-width:640px; margin-bottom:26px;}
+  .article-byline{display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:18px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); margin-bottom:32px;}
+  .article-avatar{width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--magenta),var(--amber)); flex:0 0 34px;}
+  .article-byline-text{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; color:var(--muted); text-transform:uppercase; line-height:1.6;}
+  .article-byline-text b{color:var(--cream); font-weight:500;}
+
+  .article-hero-media{position:relative; width:100%; aspect-ratio:16/9; border:1px solid var(--brown); overflow:hidden; background:#000; margin-bottom:8px;}
+  .article-hero-media img{width:100%; height:100%; display:block; object-fit:cover; object-position:top;}
+  .article-caption{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--muted); text-transform:uppercase; margin-bottom:40px;}
+
+  .article-body{font-family:'Inter',sans-serif; font-size:17px; line-height:1.85; color:var(--cream);}
+  .article-body p{margin-bottom:22px;}
+  .article-body p:first-of-type::first-letter{
+    font-family:'Righteous','Playfair Display',serif; font-size:64px; line-height:0.75; float:left;
+    padding:6px 10px 0 0; color:var(--magenta);
+  }
+  .article-body h2{font-family:'Righteous','Playfair Display',serif; font-size:clamp(22px,3vw,30px); color:var(--teal); letter-spacing:-0.3px; margin:44px 0 18px;}
+  .article-body blockquote{
+    font-family:'Permanent Marker',cursive; font-size:clamp(20px,2.6vw,26px); line-height:1.4; color:var(--amber);
+    border-left:3px solid var(--amber); padding:6px 0 6px 22px; margin:36px 0;
+  }
+  .article-closing{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-top:40px; padding-top:24px; border-top:1px solid var(--line);}
+
+  /* ============ FICHA DE ARTISTA ============ */
+  .ficha-section{margin:52px 0 8px; border-top:1px solid var(--line); padding-top:44px;}
+  .ficha-eyebrow{display:flex; align-items:center; gap:12px; margin-bottom:18px;}
+  .ficha-eyebrow .head-index{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--amber); border:1px solid var(--amber); padding:3px 7px;}
+  .ficha-eyebrow h2{font-family:'Righteous','Playfair Display',serif; font-size:clamp(24px,3.4vw,34px); letter-spacing:-0.4px; text-transform:uppercase; color:var(--amber); line-height:1;}
+  .ficha-eyebrow .sub{display:block; font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); margin-top:6px; letter-spacing:1px;}
+
+  .ficha-card{border:1px solid var(--brown); background:var(--card); overflow:hidden;}
+  .ficha-top{display:grid; grid-template-columns:220px 1fr; gap:0;}
+  @media (max-width:640px){.ficha-top{grid-template-columns:1fr;}}
+
+  .ficha-photo{position:relative; aspect-ratio:4/5; background:#000; border-right:1px solid var(--brown); overflow:hidden;}
+  @media (max-width:640px){.ficha-photo{aspect-ratio:16/10; border-right:none; border-bottom:1px solid var(--brown);}}
+  .ficha-photo img{width:100%; height:100%; object-fit:cover; display:block; filter:sepia(0.15) saturate(1.15) contrast(1.05);}
+  .ficha-photo-scrim{position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,25,46,0) 55%, rgba(0,25,46,0.9) 100%); pointer-events:none;}
+  .ficha-photo-caption{position:absolute; left:10px; right:10px; bottom:10px; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px; color:var(--cream); text-transform:uppercase; opacity:0.85;}
+
+  .ficha-body{padding:22px 24px;}
+  .ficha-name{font-family:'Anton',sans-serif; font-size:22px; letter-spacing:1px; color:var(--cream); margin-bottom:6px;}
+  .ficha-genres{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px;}
+  .ficha-genres span{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; padding:3px 8px; border:1px solid var(--teal); color:var(--teal);}
+  .ficha-bio p{font-family:'Inter',sans-serif; font-size:14px; line-height:1.7; color:var(--cream-dim); margin-bottom:14px;}
+  .ficha-bio p:last-child{margin-bottom:0;}
+
+  .ficha-divider{border-top:1px solid var(--line); padding:22px 24px;}
+  .ficha-subhead{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:14px;}
+
+  .ficha-links{display:flex; flex-wrap:wrap; gap:8px;}
+  .ficha-links a{display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--cream); border:1px solid var(--line); padding:7px 11px; transition:.2s;}
+  .ficha-links a:hover{border-color:var(--magenta); color:var(--magenta);}
+
+  .ficha-press{display:flex; flex-direction:column; gap:10px;}
+  .ficha-press-item{display:flex; flex-wrap:wrap; align-items:baseline; gap:8px; font-family:'Inter',sans-serif; font-size:13px; color:var(--cream);}
+  .ficha-press-item b{font-weight:500;}
+  .ficha-press-item .role{color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.5px; text-transform:uppercase;}
+  .ficha-press-item a{color:var(--teal); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.5px;}
+
+  .ficha-releases{list-style:none; display:flex; flex-direction:column; gap:0;}
+  .ficha-releases li{display:flex; align-items:center; gap:12px; padding:10px 0; border-top:1px solid var(--line); font-family:'Oswald',sans-serif; font-weight:500; font-size:14px; color:var(--cream);}
+  .ficha-releases li:first-child{border-top:none;}
+  .ficha-releases li .n{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--amber); min-width:20px;}
+
+  /* ============ COMENTARIOS (Giscus) ============ */
+  .comments-section{margin:0 0 8px;}
+  .comments-embed{padding:0 28px 40px;}
+  @media (max-width:640px){.comments-embed{padding:0 20px 40px;}}
+
+  .recommended{padding:56px 0 20px;}
+
+  @media (prefers-reduced-motion: reduce){
+    .grain{animation:none;}
+  }
+</style>
+<script type="application/json" id="article-meta">
+{
+   "featured": false,
+   "pinned": false,
+   "date": "2026-08-12",
+    "category": "Perfil",
+    "categoryPill": "Hard Techno",
+    "titleLines": ["THE LAST DJ:", "LA HISTORIA DE", "NICK HAYES"],
+    "title": "The Last DJ: la historia de Nick Hayes",
+    "artistLine": "Hard Techno — EBM",
+    "dek": "Antes de convertirse en Nick Hayes, \"The Last DJ\" pasó años recorriendo carreteras del Reino Unido e Irlanda vendiendo pastillas de freno para coches. Ese trabajo, lejos de cualquier escenario, terminó siendo el origen silencioso de su carrera musical.",
+    "tag": "Perfil",
+    "tagColor": "teal",
+    "meta": "Perfil · 11 min",
+    "image": "articulos/images/nickhayes01.jpg",
+    "seed": 61,
+    "slug": "articulos/articulo-nick-hayes.html",
+    "comingSoon": false
+}
+</script>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<div class="top-band">La música que nos une</div>
+
+<header>
+  <img class="header-bg" src="../img/fondo-head.jpg" alt="">
+  <div class="header-overlay"></div>
+  <div class="header-signature"></div>
+  <a href="../index.html" class="header-hitbox" aria-label="Ir al inicio"></a>
+  <div class="header-inner"></div>
+</header>
+
+<nav class="site-navbar">
+  <div class="navbar-inner">
+    <div class="navbar-links">
+      <a href="../articulos.html">Artículos</a>
+      <a href="../eventos.html">Eventos y lanzamientos</a>
+      <a href="../playlist.html">Playlists y videos</a>
+    </div>
+    <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+    </button>
+  </div>
+</nav>
+
+<script>
+  /* Parallax de la imagen de fondo del header: mouse en desktop, dedo en mobile */
+  (function(){
+    const headerBg = document.querySelector('.header-bg');
+    if(!headerBg) return;
+    let ratio = 0.5, ticking = false;
+    function apply(){
+      headerBg.style.transform = `translateY(${-(ratio * 66.6667)}%)`;
+      ticking = false;
+    }
+    function onMove(clientY){
+      ratio = Math.min(1, Math.max(0, clientY / window.innerHeight));
+      if(!ticking){ requestAnimationFrame(apply); ticking = true; }
+    }
+    window.addEventListener('mousemove', e => onMove(e.clientY));
+    window.addEventListener('touchmove', e => {
+      if(e.touches && e.touches[0]) onMove(e.touches[0].clientY);
+    }, {passive:true});
+  })();
+
+  /* Menú hamburguesa del navbar en móvil */
+  (function(){
+    document.querySelectorAll('.site-navbar').forEach(nav => {
+      const toggle = nav.querySelector('.nav-toggle');
+      if(!toggle) return;
+      toggle.addEventListener('click', () => {
+        const open = nav.classList.toggle('nav-open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      nav.querySelectorAll('.navbar-links a').forEach(a => {
+        a.addEventListener('click', () => {
+          nav.classList.remove('nav-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+    });
+    window.addEventListener('resize', () => {
+      if(window.innerWidth > 640){
+        document.querySelectorAll('.site-navbar.nav-open').forEach(nav => {
+          nav.classList.remove('nav-open');
+          const t = nav.querySelector('.nav-toggle');
+          if(t) t.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
+  })();
+
+  /* Selector de idioma ES/EN — detecta el idioma del navegador y permite alternar manualmente */
+  (function(){
+    function setLang(lang){
+      document.querySelectorAll('[data-i18n="es"]').forEach(function(el){ el.style.display = (lang === 'en') ? 'none' : ''; });
+      document.querySelectorAll('[data-i18n="en"]').forEach(function(el){ el.style.display = (lang === 'en') ? '' : 'none'; });
+      document.querySelectorAll('#lang-toggle').forEach(function(btn){ btn.textContent = (lang === 'en') ? 'ES' : 'EN'; });
+      document.documentElement.setAttribute('lang', lang);
+      document.documentElement.dataset.currentLang = lang;
+    }
+
+    // Detecta el idioma del navegador/sistema: si no es español, muestra inglés por defecto
+    var browserLang = (navigator.language || navigator.userLanguage || 'es').toLowerCase();
+    var initialLang = browserLang.indexOf('es') === 0 ? 'es' : 'en';
+    setLang(initialLang);
+
+    document.addEventListener('click', function(e){
+      var btn = e.target.closest && e.target.closest('#lang-toggle');
+      if(!btn) return;
+      var current = document.documentElement.dataset.currentLang === 'en' ? 'en' : 'es';
+      setLang(current === 'en' ? 'es' : 'en');
+    });
+  })();
+</script>
+
+<div class="main-wrap">
+
+
+  <div class="article-wrap">
+
+    <a href="../index.html" class="back-link">
+      <span data-i18n="es">← Volver a portada</span>
+      <span data-i18n="en" style="display:none">← Back to homepage</span>
+    </a>
+
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:18px; flex-wrap:wrap;">
+      <span class="article-tag" style="margin-bottom:0;">
+        <span data-i18n="es">Perfil</span>
+        <span data-i18n="en" style="display:none">Profile</span>
+      </span>
+      <button type="button" id="lang-toggle" class="lang-toggle-btn" aria-label="Switch language / Cambiar idioma">EN</button>
+    </div>
+    <h1 class="article-title">
+      <span data-i18n="es">The Last DJ: la historia de Nick Hayes.</span>
+      <span data-i18n="en" style="display:none">The Last DJ: the story of Nick Hayes.</span>
+    </h1>
+    <p class="article-dek">
+      <span data-i18n="es">Antes de convertirse en Nick Hayes, "The Last DJ" pasó años recorriendo carreteras del Reino Unido e Irlanda vendiendo pastillas de freno para coches. Ese trabajo, lejos de cualquier escenario, terminó siendo el origen silencioso de su carrera musical.</span>
+      <span data-i18n="en" style="display:none">Before becoming Nick Hayes, "The Last DJ" spent years driving roads across the UK and Ireland selling car brake pads. That job, far from any stage, ended up being the quiet origin of his music career.</span>
+    </p>
+
+    <div class="article-byline">
+      <div class="article-avatar"></div>
+      <div class="article-byline-text" data-i18n="es">
+        Por <b>Redacción STEMS</b><br>
+        12 AGO 2026 · 11 min de lectura
+      </div>
+      <div class="article-byline-text" data-i18n="en" style="display:none">
+        By <b>STEMS Editorial Staff</b><br>
+        AUG 12, 2026 · 11 min read
+      </div>
+    </div>
+
+    <div class="article-hero-media">
+      <img src="images/nickhayes01.jpg" alt="Nick Hayes, The Last DJ, en su estudio casero">
+    </div>
+    <span class="article-caption">
+      <span data-i18n="es">The Last DJ (Nick Hayes) · Hard techno y EBM desde Wakefield, Reino Unido</span>
+      <span data-i18n="en" style="display:none">The Last DJ (Nick Hayes) · Hard techno and EBM from Wakefield, UK</span>
+    </span>
+
+    <div class="article-body" data-i18n="es">
+
+      <p>Antes de convertirse en Nick Hayes, "The Last DJ" pasó años recorriendo carreteras del Reino Unido e Irlanda vendiendo pastillas de freno para coches. Ese trabajo, lejos de cualquier escenario, terminó siendo el origen silencioso de su carrera musical. "Siempre amé la música dance incluso antes de que el género techno existiera", recuerda, "y escuchaba horas de música de alta energía en mi coche mientras viajaba, hablando con clientes que no querían comprar nada". La música, dice, era lo que le daba la energía para seguir.</p>
+
+      <h2>De las pastillas de freno a Serato Studio</h2>
+
+      <p>El giro llegó con la idea de la jubilación. Hayes empezó a pensar en qué hacer con todo ese tiempo libre y se compró unos platos baratos para probar suerte como DJ. Por su propia cuenta, era "terrible". Pero un día logró trocear una pista, y ahí encontró algo que le enganchó más que mezclar: el corte y recomposición de samples. La casualidad quiso que, en ese mismo momento, saliera al mercado Serato Studio, el software pensado para que los DJs mezclaran y crearan música. Hayes se enamoró del programa de inmediato y, según cuenta, empezó a lanzar pistas ya en la primera semana de usarlo.</p>
+
+      <p>Esa obsesión por lo funcional sigue marcando su forma de trabajar. No le interesa la ingeniería detrás de sus herramientas —admite abiertamente que no le importa entender qué hace un LFO, solo que puede cambiar el sonido cuando lo usa—, sino mantener un setup simple que no se interponga entre él y la música.</p>
+
+      <blockquote>"No puedo permitir que nada se interponga en el camino de hacer música."</blockquote>
+
+      <h2>Un nombre que nació de una novela inconclusa</h2>
+
+      <p>"The Last DJ" no es solo un alias: es el título de un libro que Hayes empezó a escribir durante sus largas jornadas en carretera y que nunca terminó. La premisa imaginaba un futuro en el que los gobiernos prohibían a los DJs, y en el que quedaba uno solo, en el Reino Unido, tocando en fiestas ilegales mientras huía de las autoridades. El proyecto literario se quedó a medias, pero el nombre sobrevivió y terminó definiendo su identidad como artista.</p>
+
+      <h2>La familia, el gimnasio y la ciencia ficción</h2>
+
+      <p>Fuera de los estudios y los escenarios, la vida de Hayes es, según él mismo la describe, bastante convencional: gimnasio, lectura de ciencia ficción, largas caminatas con su esposa y una fascinación casi obsesiva por la tecnología, que lo lleva a investigar constantemente cuál es la mejor cámara o el mejor ordenador del momento.</p>
+
+      <p>Su entorno cercano sigue de cerca ese segundo acto de su vida. "La familia y los amigos son muy solidarios y les encanta que la jubilación sea muy activa y productiva", cuenta. Aunque confiesa que el techno no es exactamente su música favorita, sus allegados le preguntan por sus próximos shows en vivo y hasta le proponen ideas para videos —alguna vez le retaron a grabar uno con una cortadora de césped o una desbrozadora—. Con el tiempo, esa curiosidad inicial se transformó en preguntas más profundas sobre su proceso creativo, su estilo y si ellos mismos podrían empezar a hacer música. Este año, dice, más familiares que nunca han ido a verlo tocar en vivo, pese a sus advertencias de que "la música es muy fuerte". La respuesta siempre es la misma: "genial, igual vamos a verte tocar".</p>
+
+      <h2>Ocho pistas al mes, tres tienen que ser "bangers"</h2>
+
+      <p>El proceso creativo de Hayes tiene poco de improvisado. Se sienta a trabajar con lo que describe como una "doble mentalidad": por un lado, escribir pensando en la pista de baile, lo que lo empuja hacia sonidos de alta energía; por otro, cumplir con una meta autoimpuesta de ocho pistas al mes, de las cuales al menos tres deben ser "bangers". Cualquier tema que no logre mover a la gente en la pista termina eliminado sin contemplaciones. Él mismo reconoce que le han llamado brutal por ese criterio, pero está convencido de que tiene que ser así.</p>
+
+      <p>Esa disciplina convive con una prioridad clara: la música ocupa el centro de su vida, una lección que dice haber aprendido de alguien que compartió un camino similar al suyo. Escribe constantemente, en preparación para dos shows al mes, con una única excepción innegociable: los sábados y los días festivos son 100% tiempo en familia.</p>
+
+      <h2>Motivación, comunidad y un lugar más grande que el artista</h2>
+
+      <p>Lo que lo mantiene publicando semana tras semana, dice, es en parte una necesidad casi compulsiva de seguir creando —admite que le genera cierto pánico no haber publicado o escrito algo nuevo—, y en parte la reacción de su comunidad: los comentarios, las sugerencias de sus seguidores y, sobre todo, ver a gente que retoma la música después de mucho tiempo de pausa gracias a él.</p>
+
+      <p>Esa comunidad, construida sobre la idea de ser genuino antes que pulido, es algo que Hayes cuida de manera activa. Insiste en responder todas las preguntas sobre cómo empezar a producir y en transmitir un mensaje puntual: la edad no es una barrera para hacer música. También dedica tiempo a repostear y seguir a otros artistas, entre ellos uno con quien coincide a menudo en los mismos escenarios y con quien sintió una conexión especial por compartir un recorrido parecido.</p>
+
+      <p>Para Hayes, el verdadero termómetro de su carrera no son los comentarios de prensa, sino el reconocimiento de las salas. Tocar en el Jazz Cafe de Londres —adonde volverá este año para dos shows importantes— o en el Welly Club de Hull pesa más, en su escala de valores, que cualquier reseña. Tiene, de hecho, una convicción firme al respecto: el venue siempre es más grande que el artista, y la comunidad que se construye alrededor de una sala es clave para que la cultura musical pase de una generación a otra. Esa conexión generacional la ha visto de cerca en sus shows en Londres y Manchester, donde familias enteras se han acercado después de los conciertos para presentarse, algo que describe como ver al techno "estirarse a través de muchas generaciones".</p>
+
+      <h2>"Tu música es tu música"</h2>
+
+      <p>De cara al futuro, Hayes mantiene un ritmo de lanzamiento de una pista nueva al mes, planificada con un par de meses de anticipación, y ha rechazado varios contratos discográficos para conservar el control sobre su producción creativa. A los artistas que le piden que revise sus canciones les repite siempre la misma frase: "tu música es tu música".</p>
+
+      <p>En lo que respecta a shows, apuesta por 2026 y 2027 con un enfoque particular: apoyar a promotores nuevos por encima de los ya establecidos, porque considera que suelen traer una visión y una pasión que lo motivan a seguir componiendo.</p>
+
+      <p>Su mensaje para quien descubra su proyecto hoy por primera vez es simple y directo: empezar a hacer música ahora, sin postergarlo, y escuchar todo lo posible. Como él mismo resume, el acceso a la música nunca fue tan sencillo — basta con encender la radio o el ordenador y subir el volumen.</p>
+
+      <div class="article-closing">— Fin del artículo</div>
+
+    </div>
+
+    <div class="article-body" data-i18n="en" style="display:none">
+
+      <p>Before becoming Nick Hayes, "The Last DJ" spent years driving roads across the UK and Ireland selling car brake pads. That job, far from any stage, ended up being the quiet origin of his music career. "I always loved dance music even before the Techno Genre was a thing," he recalls, "and would listen to hours of high energy music in my car travelling all over the UK and Ireland selling car brake pads. The music gave me high energy when talking to customers who didn't want to buy anything." Music, he says, was what kept him going.</p>
+
+      <h2>From Brake Pads to Serato Studio</h2>
+
+      <p>The turn came with the idea of retirement. Hayes started thinking about what to do with all that spare time and bought some cheap decks to try his hand at DJing. By his own account, he was "terrible." But one day he managed to chop up a track, and there he found something that hooked him more than mixing: cutting up and recomposing samples. As it happened, Serato Studio — software built for DJs to mix and create tracks — hit the market at that exact moment. Hayes fell for the program immediately and, by his own account, started making and releasing tracks in the first week of using it.</p>
+
+      <p>That obsession with function over form still shapes how he works. He isn't interested in the engineering behind his tools — he openly admits he doesn't care what an LFO does, only that it can change the sound when he uses it — but in keeping a setup simple enough that it never gets in the way of the music.</p>
+
+      <blockquote>"I cannot allow anything to get in the way of making music."</blockquote>
+
+      <h2>A Name Born From an Unfinished Novel</h2>
+
+      <p>"The Last DJ" isn't just an alias: it's the title of a book Hayes started writing during his long days on the road, and never finished. The premise imagined a future where governments banned DJs, and just one was left, in the UK, playing illegal gigs while on the run from the authorities. The literary project stalled halfway through, but the name survived and ended up defining his identity as an artist.</p>
+
+      <h2>Family, the Gym, and Science Fiction</h2>
+
+      <p>Outside the studio and the stage, Hayes' life is, by his own description, fairly ordinary: the gym, reading science fiction, long walks with his wife, and a near-obsessive fascination with technology that has him constantly researching the best camera or computer to own.</p>
+
+      <p>The people around him keep close tabs on this second act of his life. "Family and friends are very supportive and love that retirement is very busy and productive," he says. Even though he admits techno isn't exactly their music of choice, they ask him about his next live gigs and even pitch him video ideas — once daring him to film one with a lawn mower or a strimmer. Over time, that initial curiosity turned into deeper questions about his creative process, his style, and whether they could start making music themselves. This year, he says, more relatives than ever have come to see him play live, despite his warnings that "the music is very loud." The answer is always the same: "great, we are still coming to see you play live."</p>
+
+      <h2>Eight Tracks a Month, Three Have to Be Bangers</h2>
+
+      <p>Hayes' creative process is anything but improvised. He sits down to work with what he describes as a "double mindset": on one hand, writing for the dance floor, which pushes him toward high-energy sounds; on the other, hitting a self-imposed goal of eight tracks a month, at least three of which have to be "bangers." Any track that doesn't get people on the dance floor gets deleted without a second thought. He knows people have called him brutal for that standard, but he's convinced it has to be that way.</p>
+
+      <p>That discipline coexists with one clear priority: music comes first, a lesson he says he learned from someone who was on a similar journey to his own. He writes constantly, getting ready for two shows a month, with one non-negotiable exception: Saturdays and holidays are 100% family time.</p>
+
+      <h2>Motivation, Community, and Something Bigger Than the Artist</h2>
+
+      <p>What keeps him posting week after week, he says, is partly an almost compulsive need to keep creating — he admits he even panics if he hasn't posted or written something new — and partly the reaction from his community: the comments, the suggestions from followers, and above all, seeing people pick music back up after a long break because of him.</p>
+
+      <p>That community, built on being genuine rather than polished, is something Hayes tends to actively. He insists on answering every question about how to start producing and on getting one message across: age is no barrier to making music. He also spends time reposting and following other artists, including one he often shares stages with and with whom he felt a special connection over having taken a similar path.</p>
+
+      <p>For Hayes, the real measure of his career isn't press coverage — it's venue recognition. Playing the Jazz Cafe in London — where he'll return this year for two major gigs — or the Welly Club in Hull means more to him, by his own scale of values, than any review. He holds a firm belief on the matter: the venue is always bigger than the artist, and the community built around a venue is key to music culture passing from one generation to the next. He's seen that generational link up close at his London and Manchester shows, where whole families have come up to introduce themselves after the set — something he describes as watching techno "stretching across many generations."</p>
+
+      <h2>"Your Music Is Your Music"</h2>
+
+      <p>Looking ahead, Hayes keeps a steady pace of one new track a month, planned a couple of months in advance, and has turned down several record deals to keep control over his creative output. To artists who ask him to review their tracks, he always repeats the same line: "your music is your music."</p>
+
+      <p>As for shows, he's betting on 2026 and 2027 with a particular focus: backing new promoters over already-established ones, because he finds they tend to bring a vision and a passion that keeps him motivated to write new music.</p>
+
+      <p>His message to anyone discovering his project for the first time is simple and direct: start making music now, don't delay, and listen to as much as you can. As he puts it, access to music has never been easier — just switch on the radio or the computer and turn up the volume.</p>
+
+      <div class="article-closing">— End of article</div>
+
+    </div>
+
+    <!-- ============ FICHA DE ARTISTA / ARTIST PROFILE ============ -->
+    <div class="ficha-section" data-i18n="es">
+      <div class="ficha-eyebrow">
+        <h2>Ficha de Artista<span class="sub">The Last DJ (Nick Hayes)</span></h2>
+      </div>
+
+      <div class="ficha-card">
+        <div class="ficha-top">
+          <div class="ficha-photo">
+            <img
+              src="images/nickhayes02.jpg"
+              alt="Nick Hayes, The Last DJ — foto de perfil"
+              loading="lazy">
+            <div class="ficha-photo-scrim"></div>
+            <span class="ficha-photo-caption">Foto vía Instagram · @the_last_dj_</span>
+          </div>
+
+          <div class="ficha-body">
+            <div class="ficha-name">The Last DJ (Nick Hayes)</div>
+            <div class="ficha-genres">
+              <span>Hard Techno</span>
+              <span>EBM</span>
+            </div>
+            <div class="ficha-bio">
+              <p>Nick Hayes, conocido como The Last DJ, es un productor británico radicado en Wakefield, Reino Unido. Antes de dedicarse a la música pasó años vendiendo pastillas de freno por carreteras del Reino Unido e Irlanda, y llegó al techno casi por accidente, a través del corte y recomposición de samples en Serato Studio.</p>
+              <p>Su nombre artístico proviene de una novela inacabada que empezó a escribir en la carretera: la historia de un futuro donde los DJs están prohibidos y solo queda uno, tocando fiestas ilegales mientras huye de las autoridades.</p>
+              <p>Produce hard techno y EBM con una disciplina casi industrial —ocho pistas al mes, al menos tres "bangers"— y ha construido su carrera evitando sellos discográficos para mantener control total sobre su música. Toca regularmente en salas como el Jazz Cafe de Londres y el Welly Club de Hull, y graba sets en vivo con frecuencia, incluyendo sesiones desde su estudio casero.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ficha-divider">
+          <div class="ficha-subhead">Redes y plataformas de escucha</div>
+          <div class="ficha-links">
+            <a href="https://www.instagram.com/the_last_dj_/" target="_blank" rel="noopener">Instagram · @the_last_dj_</a>
+            <a href="https://open.spotify.com/artist/0vs4NkFUIWZFyYHXVU7IoQ" target="_blank" rel="noopener">Spotify · The Last DJ</a>
+            <a href="https://nickhayes1.bandcamp.com/" target="_blank" rel="noopener">Bandcamp · nickhayes1</a>
+            <a href="https://soundcloud.com/last-dj-702556113" target="_blank" rel="noopener">SoundCloud · The Last DJ</a>
+          </div>
+        </div>
+
+        <div class="ficha-divider">
+          <div class="ficha-subhead">Lanzamientos destacados (2025)</div>
+          <ul class="ficha-releases">
+            <li><span class="n">01</span> "Ebm" (dic. 2025)</li>
+            <li><span class="n">02</span> "The Carlton Club Live" (oct. 2025)</li>
+            <li><span class="n">03</span> "Boop" (sep. 2025)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="ficha-section" data-i18n="en" style="display:none">
+      <div class="ficha-eyebrow">
+        <h2>Artist Profile<span class="sub">The Last DJ (Nick Hayes)</span></h2>
+      </div>
+
+      <div class="ficha-card">
+        <div class="ficha-top">
+          <div class="ficha-photo">
+            <img
+              src="images/nickhayes02.jpg"
+              alt="Nick Hayes, The Last DJ — profile photo"
+              loading="lazy">
+            <div class="ficha-photo-scrim"></div>
+            <span class="ficha-photo-caption">Photo via Instagram · @the_last_dj_</span>
+          </div>
+
+          <div class="ficha-body">
+            <div class="ficha-name">The Last DJ (Nick Hayes)</div>
+            <div class="ficha-genres">
+              <span>Hard Techno</span>
+              <span>EBM</span>
+            </div>
+            <div class="ficha-bio">
+              <p>Nick Hayes, known as The Last DJ, is a British producer based in Wakefield, UK. Before turning to music he spent years selling car brake pads across the UK and Ireland, and came to techno almost by accident, through cutting and recomposing samples in Serato Studio.</p>
+              <p>His artist name comes from an unfinished novel he started writing on the road: the story of a future where DJs are banned and only one is left, playing illegal gigs while on the run from the authorities.</p>
+              <p>He produces hard techno and EBM with near-industrial discipline — eight tracks a month, at least three "bangers" — and has built his career turning down record deals to keep full control over his music. He plays regularly at venues like the Jazz Cafe in London and the Welly Club in Hull, and records live sets often, including sessions from his home studio.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="ficha-divider">
+          <div class="ficha-subhead">Socials & streaming platforms</div>
+          <div class="ficha-links">
+            <a href="https://www.instagram.com/the_last_dj_/" target="_blank" rel="noopener">Instagram · @the_last_dj_</a>
+            <a href="https://open.spotify.com/artist/0vs4NkFUIWZFyYHXVU7IoQ" target="_blank" rel="noopener">Spotify · The Last DJ</a>
+            <a href="https://nickhayes1.bandcamp.com/" target="_blank" rel="noopener">Bandcamp · nickhayes1</a>
+            <a href="https://soundcloud.com/last-dj-702556113" target="_blank" rel="noopener">SoundCloud · The Last DJ</a>
+          </div>
+        </div>
+
+        <div class="ficha-divider">
+          <div class="ficha-subhead">Featured releases (2025)</div>
+          <ul class="ficha-releases">
+            <li><span class="n">01</span> "Ebm" (Dec. 2025)</li>
+            <li><span class="n">02</span> "The Carlton Club Live" (Oct. 2025)</li>
+            <li><span class="n">03</span> "Boop" (Sep. 2025)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="comments-section" id="comments">
+      <div class="section-head" style="--accent:var(--teal)">
+        <div class="head-title">
+          <span class="head-index">N.03</span>
+          <h2>
+            <span data-i18n="es">Comentarios<span class="sub">Únete a la conversación</span></span>
+            <span data-i18n="en" style="display:none">Comments<span class="sub">Join the conversation</span></span>
+          </h2>
+        </div>
+      </div>
+
+      <!--
+        Comentarios vía Giscus (https://giscus.app), basado en GitHub Discussions.
+        Antes de publicar, configura tu propia instancia en https://giscus.app y reemplaza
+        data-repo, data-repo-id, data-category y data-category-id con los valores que te
+        genere el sitio para tu repositorio de GitHub.
+      -->
+      <div class="comments-embed">
+      <script src="https://giscus.app/client.js"
+        data-repo="stemsmag/magazine"
+        data-repo-id="R_kgDOTsEphw"
+        data-category="Comments"
+        data-category-id="DIC_kwDOTsEph84DC18I"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="es"
+        crossorigin="anonymous"
+        async>
+</script>
+      </div>
+    </div>
+
+    <!-- ============ ARTÍCULOS RECOMENDADOS (mock-up) ============
+    <div class="recommended">
+      <div class="section-head" style="--accent:var(--teal)">
+        <div class="head-title">
+          <span class="head-index">N.02</span>
+          <h2>Recomendados<span class="sub">Para seguir leyendo</span></h2>
+        </div>
+      </div>
+      <div class="grid" id="recommended-grid"></div>
+    </div>
+    -->
+
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">STEMS<span>//</span>MAGAZINE</div>
+        <p class="footer-tagline-script">La música que nos une</p>
+        <p class="footer-tagline">Reseñas, perfiles y cultura de la música electrónica en español.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect x="3" y="3" width="18" height="18" rx="5"/>
+              <circle cx="12" cy="12" r="4.2"/>
+              <circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect x="2.5" y="5.5" width="19" height="13" rx="3.5"/>
+              <path d="M10 9.2 L15.5 12 L10 14.8 Z" fill="currentColor" stroke="none"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="Spotify">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <circle cx="12" cy="12" r="9.5"/>
+              <path d="M7 9.5c3.5-1 7-1 10 .6" stroke-linecap="round"/>
+              <path d="M7.3 12.5c3-.8 6-.8 8.6.5" stroke-linecap="round"/>
+              <path d="M7.6 15.3c2.3-.6 4.8-.6 6.9.5" stroke-linecap="round"/>
+            </svg>
+          </a>
+          <a href="#" aria-label="TikTok">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M14 3v10.2a3.6 3.6 0 1 1-3-3.55" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M14 3c.3 2.4 2 4.2 4.4 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Secciones</h4>
+        <ul>
+          <li><a href="../eventos.html">Eventos y lanzamientos</a></li>
+          <li><a href="../playlist.html">Playlists y videos</a></li>
+         </ul>
+      </div>
+      <div class="footer-col">
+        <h4>STEMS</h4>
+        <ul>
+          <li><a href="../sobre-nosotros.html">Sobre nosotros</a></li>
+          <li><a href="../contacto.html">Contacto</a></li>
+                 </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="../terminos.html">Términos y condiciones</a></li>
+          <li><a href="../privacidad.html">Política de privacidad</a></li>
+          <li><a href="../cookies.html">Aviso de cookies</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>STEMS © 2026 — La música que nos une</span>
+    </div>
+    <div class="footer-credit">Revista de Música Electrónica Stems · Hecho en El Salvador · 2026</div>
+  </footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* =========================================================
+   SHADER VHS — aberración cromática + tracking glitch + scanlines
+   Se aplica sobre fotografías reales vía Three.js
+   ========================================================= */
+const VHS_VERT = `
+  varying vec2 vUv;
+  void main(){
+    vUv = uv;
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+  }
+`;
+const VHS_FRAG = `
+  precision mediump float;
+  uniform sampler2D uTex;
+  uniform float uTime;
+  uniform vec2 uMouse;
+  uniform vec2 uResolution;
+  uniform float uIntensity;
+  uniform vec2 uUvRepeat;
+  uniform vec2 uUvOffset;
+  varying vec2 vUv;
+
+  float rand(vec2 co){ return fract(sin(dot(co.xy, vec2(12.9898,78.233))) * 43758.5453); }
+
+  void main(){
+    vec2 uv = vUv * uUvRepeat + uUvOffset;
+
+    // banda de tracking (glitch horizontal esporádico, como una cinta desalineada)
+    float bandSeed = rand(vec2(floor(uv.y*36.0), floor(uTime*1.6)));
+    float band = step(0.975, bandSeed) * (0.4 + uIntensity);
+    uv.x += (rand(vec2(uTime, uv.y)) - 0.5) * band * 0.05;
+
+    // parallax sutil con el mouse
+    uv += uMouse * 0.012 * (0.3 + uIntensity);
+
+    // aberracion cromatica
+    float aberr = 0.0022 + uIntensity * 0.0035;
+    float r = texture2D(uTex, uv + vec2(aberr, 0.0)).r;
+    float g = texture2D(uTex, uv).g;
+    float b = texture2D(uTex, uv - vec2(aberr, 0.0)).b;
+    vec3 col = vec3(r, g, b);
+
+    // scanlines
+    col -= sin(uv.y * uResolution.y) * 0.035;
+
+    // viñeta
+    float vig = smoothstep(0.95, 0.25, length(uv - 0.5));
+    col *= mix(0.5, 1.0, vig);
+
+    // grano
+    col += (rand(uv * uResolution.xy + uTime) - 0.5) * 0.05;
+
+    // tinte cálido, atardecer
+    col = mix(col, col * vec3(1.08, 0.95, 0.86), 0.3);
+
+    gl_FragColor = vec4(col, 1.0);
+  }
+`;
+
+function mountVHS(canvas, imgUrl, opts){
+  opts = opts || {};
+  const hoverBoost = opts.hoverBoost !== undefined ? opts.hoverBoost : 1.0;
+  const base = opts.base !== undefined ? opts.base : 0.12;
+
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+  const geo = new THREE.PlaneGeometry(2,2);
+
+  const loader = new THREE.TextureLoader();
+  loader.crossOrigin = 'anonymous';
+  const tex = loader.load(imgUrl, fitCover);
+  tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
+  tex.minFilter = THREE.LinearFilter;
+
+  const uniforms = {
+    uTex: {value: tex},
+    uTime: {value: 0},
+    uMouse: {value: new THREE.Vector2(0,0)},
+    uResolution: {value: new THREE.Vector2(1,1)},
+    uIntensity: {value: base},
+    uUvRepeat: {value: new THREE.Vector2(1,1)},
+    uUvOffset: {value: new THREE.Vector2(0,0)}
+  };
+  const mat = new THREE.ShaderMaterial({uniforms, vertexShader:VHS_VERT, fragmentShader:VHS_FRAG});
+  scene.add(new THREE.Mesh(geo, mat));
+
+  function fitCover(){
+    if(!tex.image) return;
+    const imgAspect = tex.image.width / tex.image.height;
+    const w = canvas.clientWidth || 1, h = canvas.clientHeight || 1;
+    const canvasAspect = w / h;
+    let rx, ry, ox, oy;
+    if(canvasAspect > imgAspect){
+      rx = 1; ry = imgAspect / canvasAspect;
+      ox = 0; oy = 1 - ry; // ancla arriba, recorta por abajo
+    } else {
+      rx = canvasAspect / imgAspect; ry = 1;
+      ox = (1 - rx) / 2; oy = 0;
+    }
+    uniforms.uUvRepeat.value.set(rx, ry);
+    uniforms.uUvOffset.value.set(ox, oy);
+  }
+
+  function resize(){
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    renderer.setSize(w, h, false);
+    uniforms.uResolution.value.set(w, h);
+    fitCover();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const host = canvas.parentElement;
+  let targetHover = 0, hover = 0;
+  host.addEventListener('mouseenter', ()=> targetHover = hoverBoost);
+  host.addEventListener('mouseleave', ()=> targetHover = 0);
+  host.addEventListener('mousemove', (e)=>{
+    const rect = canvas.getBoundingClientRect();
+    const mx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const my = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+    uniforms.uMouse.value.set(mx * 0.5, -my * 0.5);
+  });
+
+  const clock = new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    hover += (targetHover - hover) * 0.08;
+    uniforms.uIntensity.value = base + hover;
+    uniforms.uTime.value = clock.getElapsedTime();
+    renderer.render(scene, camera);
+  }
+  animate();
+}
+
+/* =========================================================
+   BARCODE decorativo
+   ========================================================= */
+function drawBarcode(container, seed, count){
+  const rand = seededRandom(seed);
+  for(let i=0;i<count;i++){
+    const bar = document.createElement('div');
+    bar.style.height = (30 + rand()*70) + '%';
+    bar.style.alignSelf = 'flex-end';
+    bar.style.opacity = 0.5 + rand()*0.5;
+    container.appendChild(bar);
+  }
+}
+function seededRandom(seed){
+  let s = seed;
+  return function(){ s = (s*9301+49297)%233280; return s/233280; };
+}
+
+/* =========================================================
+   MINI WAVEFORM (canvas 2D) para el widget de portada
+   ========================================================= */
+const TRACE_COLORS = ['#E8236B', '#FF7A2E', '#F2A93C', '#2FB6A8', '#8B5A34'];
+function drawWaveThumb(canvas, seed){
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio, 2);
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = w*dpr; canvas.height = h*dpr; ctx.scale(dpr,dpr);
+  const rand = seededRandom(seed);
+  const freq1 = 2+rand()*6, freq2 = 8+rand()*14, amp = 0.3+rand()*0.5, phase = rand()*Math.PI*2;
+  const color = TRACE_COLORS[Math.floor(rand()*TRACE_COLORS.length)];
+  ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle = color; ctx.lineWidth = 1.4; ctx.globalAlpha = 0.95;
+  ctx.beginPath();
+  for(let x=0;x<=w;x++){
+    const nx = x/w;
+    const y = h/2 + Math.sin(nx*Math.PI*freq1+phase)*amp*(h*0.32) + Math.sin(nx*Math.PI*freq2+phase*1.3)*amp*0.3*(h*0.32);
+    x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+}
+
+/* =========================================================
+   PREVIEW de Artifacts (canvas 2D) — mock visual del instrumento
+   ========================================================= */
+function drawArtifactPreview(canvas, kind, seed){
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio, 2);
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = w*dpr; canvas.height = h*dpr; ctx.scale(dpr,dpr);
+  const rand = seededRandom(seed);
+
+  ctx.fillStyle = '#042538';
+  ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle = 'rgba(244,232,211,0.05)';
+  for(let y=0;y<h;y+=3){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
+
+  if(kind === 'synth'){
+    const freq1 = 2+rand()*4, freq2 = 10+rand()*10, amp = 0.35, phase = rand()*Math.PI*2;
+    ctx.strokeStyle = '#2FB6A8'; ctx.lineWidth = 2; ctx.beginPath();
+    for(let x=0;x<=w;x++){
+      const nx = x/w;
+      const y = h*0.4 + Math.sin(nx*Math.PI*freq1+phase)*amp*(h*0.3) + Math.sin(nx*Math.PI*freq2)*amp*0.3*(h*0.3);
+      x===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    const knobs = 4, ky = h*0.8, kr = Math.min(18, h*0.12);
+    for(let i=0;i<knobs;i++){
+      const kx = w*(0.15 + i*0.23);
+      ctx.strokeStyle = 'rgba(244,232,211,0.5)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(kx, ky, kr, 0, Math.PI*2); ctx.stroke();
+      const ang = -Math.PI*0.75 + rand()*Math.PI*1.5;
+      ctx.beginPath(); ctx.moveTo(kx, ky); ctx.lineTo(kx+Math.cos(ang)*kr, ky+Math.sin(ang)*kr);
+      ctx.strokeStyle = '#F2A93C'; ctx.stroke();
+    }
+  } else {
+    const bars = 24;
+    for(let i=0;i<bars;i++){
+      const bh = (0.15 + rand()*0.75) * h * 0.7;
+      const bx = (i/bars) * w;
+      const bw = (w/bars) * 0.6;
+      ctx.fillStyle = i % 5 === 0 ? '#FF7A2E' : 'rgba(244,232,211,0.55)';
+      ctx.fillRect(bx, h*0.75 - bh, bw, bh);
+    }
+    ctx.strokeStyle = 'rgba(242,169,60,0.6)'; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(0, h*0.75); ctx.lineTo(w, h*0.75); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+}
+
+/* =========================================================
+   ARTÍCULOS RECOMENDADOS (mock-up)
+   ========================================================= */
+/* =========================================================
+   ARTÍCULOS RECOMENDADOS (mock-up) — DESACTIVADO TEMPORALMENTE
+   =========================================================
+const recommended = [
+  {tag:'Reseña', tagColor:'var(--magenta)', title:'«Óxido (Remixes)»: Ferro Nocturno reescribe su propio álbum', meta:'IDM · 7 min', seed:23,
+    img:'https://images.unsplash.com/photo-1743705948277-84ec41bf81c1?auto=format&fit=crop&w=900&q=70'},
+  {tag:'Comunidad', tagColor:'var(--teal)', title:'El techno en español gana terreno en LATAM Electrónica', meta:'Comunidad · 6 min', seed:65,
+    img:'https://images.unsplash.com/photo-1759763494484-f20114b8451d?auto=format&fit=crop&w=900&q=70'},
+  {tag:'Perfil', tagColor:'var(--amber)', title:'Detrás de la máscara: por qué el anonimato vuelve a la electrónica', meta:'Perfil · 8 min', seed:31,
+    img:'https://images.unsplash.com/photo-1535406208535-1429839cfd13?auto=format&fit=crop&w=900&q=70'},
+];
+
+const recommendedGrid = document.getElementById('recommended-grid');
+recommended.forEach((a, i)=>{
+  const card = document.createElement('div');
+  card.className = 'art-card';
+  card.innerHTML = `
+    <canvas></canvas>
+    <div class="art-scrim"></div>
+    <div class="art-inner">
+      <div class="art-top">
+        <span class="art-tag" style="background:${a.tagColor}">${a.tag}</span>
+        <span class="art-num mono">0${i+1}</span>
+      </div>
+      <div class="art-bottom">
+        <h3>${a.title}</h3>
+        <div class="art-meta-row">
+          <span class="art-meta">${a.meta}</span>
+          <div class="art-barcode" id="rec-bc-${i}"></div>
+        </div>
+      </div>
+    </div>
+  `;
+  recommendedGrid.appendChild(card);
+  mountVHS(card.querySelector('canvas'), a.img, {base:0.09, hoverBoost:0.6});
+  drawBarcode(document.getElementById('rec-bc-'+i), a.seed, 10);
+});
+*/
+
+</script>
+</body>
+</html>
