@@ -2,6 +2,28 @@
   {
     "featured": false,
     "pinned": false,
+    "date": "2026-08-12",
+    "category": "Perfil",
+    "categoryPill": "Hard Techno",
+    "titleLines": [
+      "THE LAST DJ:",
+      "LA HISTORIA DE",
+      "NICK HAYES"
+    ],
+    "title": "The Last DJ: la historia de Nick Hayes",
+    "artistLine": "Hard Techno — EBM",
+    "dek": "Antes de convertirse en Nick Hayes, \"The Last DJ\" pasó años recorriendo carreteras del Reino Unido e Irlanda vendiendo pastillas de freno para coches. Ese trabajo, lejos de cualquier escenario, terminó siendo el origen silencioso de su carrera musical.",
+    "tag": "Perfil",
+    "tagColor": "teal",
+    "meta": "Perfil · 11 min",
+    "image": "articulos/images/nickhayes01.jpg",
+    "seed": 61,
+    "slug": "articulos/articulo-nick-hayes.html",
+    "comingSoon": false
+  },
+  {
+    "featured": false,
+    "pinned": false,
     "date": "2026-08-11",
     "category": "Perfil",
     "categoryPill": "Música Electrónica",
