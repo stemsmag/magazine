@@ -1,0 +1,25 @@
+{
+  "_comment": "Cada plataforma es una lista independiente. Si un artista no tiene playlist en una plataforma, simplemente no va en ese arreglo — no hace falta poner nada vacío. 'embed' es opcional: si no lo pones, la tarjeta muestra solo el botón 'Escuchar en...'.",
+
+  "spotify": [
+    {
+      "artist": "STEMS vibes",
+      "title": "Curaduría general",
+      "url": "https://open.spotify.com/playlist/0s9dUDfd3tbKknUUvKt0PM?si=SH-U6A2kTnSCjOtfATiw_A",
+      "embed": "https://open.spotify.com/embed/playlist/0s9dUDfd3tbKknUUvKt0PM?utm_source=generator&theme=0",
+      "embedHeight": 152
+    }
+  ],
+
+  "soundcloud": [],
+
+  "youtube": [
+    {
+      "artist": "STEMS vibes",
+      "title": "Selección en video",
+      "url": "https://www.youtube.com/playlist?list=PLQBmhO-cuUH8",
+      "embed": "https://www.youtube.com/embed/videoseries?list=PLQBmhO-cuUH8",
+      "embedHeight": 200
+    }
+  ]
+}
