@@ -1,0 +1,41 @@
+name: Actualizar sitemap.xml
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.html'
+      - 'generate_sitemap.py'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  sitemap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generar sitemap.xml
+        run: python3 generate_sitemap.py
+
+      - name: Confirmar y subir cambios si hay diferencias
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet -- sitemap.xml; then
+            git add sitemap.xml
+            git commit -m "chore: actualizar sitemap.xml [automático]"
+            git push
+          else
+            echo "sitemap.xml sin cambios."
+          fi
