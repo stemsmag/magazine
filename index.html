@@ -1332,7 +1332,7 @@ fetch(EVENTOS_JSON_PATH + '?_=' + Date.now())
     const eventos = all
       .filter(e => e.type === 'toque')
       .slice(0, 3)
-      .map(e => ({day:toDayLabel(e.dateObj), title:e.title, meta:e.venue || '', who:e.dj ? `-- ${e.dj}` : '', img:e.image || ''}));
+      .map(e => ({day:toDayLabel(e.dateObj), title:e.title, meta:e.venue || '', who:e.dj ? `DJ ${e.dj}` : '', img:e.image || ''}));
 
     const lanzamientos = all
       .filter(e => e.type !== 'toque')
