@@ -574,9 +574,73 @@
   @media (prefers-reduced-motion: reduce){
     .grain{animation:none;}
   }
+
+  /* ============ LANZAMIENTO — CONFETI Y BIENVENIDA ============ */
+  #launch-confetti{
+    position:fixed; inset:0; z-index:999; pointer-events:none;
+  }
+  .welcome-toast{
+    position:fixed; z-index:997; left:50%; bottom:22px;
+    transform:translateX(-50%) translateY(24px);
+    opacity:0; visibility:hidden;
+    display:flex; align-items:center; gap:14px;
+    width:min(92vw, 440px);
+    background:var(--brown-light);
+    border:1px solid var(--amber);
+    box-shadow:0 14px 44px rgba(0,0,0,0.5);
+    padding:14px 16px;
+    transition:opacity .5s ease, transform .5s ease, visibility 0s linear .5s;
+  }
+  .welcome-toast::before{
+    content:''; position:absolute; top:-1px; left:18px; width:52px; height:3px;
+    background:linear-gradient(90deg, var(--magenta), var(--orange), var(--amber), var(--teal));
+  }
+  .welcome-toast.show{
+    opacity:1; visibility:visible; transform:translateX(-50%) translateY(0);
+    transition:opacity .5s ease, transform .5s ease;
+  }
+  .welcome-toast-icon{font-size:24px; line-height:1; flex:0 0 auto;}
+  .welcome-toast-text{font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.4px; color:var(--cream); line-height:1.5;}
+  .welcome-toast-text b{
+    display:block; font-family:'Righteous',sans-serif; letter-spacing:0.3px;
+    font-size:13.5px; text-transform:uppercase; color:var(--amber); margin-bottom:3px;
+  }
+  .welcome-toast-close{
+    margin-left:auto; flex:0 0 auto; width:22px; height:22px; padding:0;
+    border:1px solid var(--line); background:transparent;
+    color:var(--cream-dim); font-size:13px; line-height:1; cursor:pointer;
+    transition:color .2s, border-color .2s;
+  }
+  .welcome-toast-close:hover{color:var(--cream); border-color:var(--amber);}
+  @media (max-width:480px){
+    .welcome-toast{padding:12px 14px; gap:10px;}
+    .welcome-toast-text{font-size:10px;}
+  }
+
+  .replay-confetti-btn{
+    flex:0 0 auto; align-self:flex-start;
+    width:34px; height:34px; margin-top:2px; padding:0;
+    border:1px solid var(--line);
+    background:transparent;
+    font-size:16px; line-height:1;
+    cursor:pointer;
+    transition:border-color .2s, background .2s, transform .2s;
+  }
+  .replay-confetti-btn:hover{border-color:var(--accent, var(--teal)); background:rgba(244,232,211,0.06);}
+  .replay-confetti-btn:active{transform:scale(0.92);}
 </style>
 </head>
 <body>
+
+<canvas id="launch-confetti" aria-hidden="true"></canvas>
+<div class="welcome-toast" id="welcome-toast" role="status">
+  <span class="welcome-toast-icon">🎉</span>
+  <div class="welcome-toast-text">
+    <b>¡Bienvenidos a STEMS!</b>
+    La música que nos une ya está en línea.
+  </div>
+  <button class="welcome-toast-close" id="welcome-toast-close" aria-label="Cerrar">✕</button>
+</div>
 
 <div class="grain"></div>
 
@@ -709,6 +773,7 @@
           <div class="head-title">
             <h2><br>Eventos y<br>lanzamientos<span class="sub">Próximas fechas y estrenos</span></h2>
           </div>
+          <button class="replay-confetti-btn" id="replay-confetti-btn" title="Repetir animación de bienvenida" aria-label="Repetir animación de bienvenida">🎊</button>
         </div>
         <div class="events-columns">
           <div class="events-col" id="events-col"><h3>Eventos</h3></div>
@@ -1317,6 +1382,148 @@ fetch('artifacts.json' + '?_=' + Date.now())
     console.error('No se pudo cargar artifacts.json', err);
     artifactsGrid.insertAdjacentHTML('beforeend', `<p class="meta-line" style="padding:14px 0;">No se pudieron cargar los artifacts.</p>`);
   });
+</script>
+
+<!-- =========================================================
+     LANZAMIENTO — efecto de confeti y aviso de bienvenida
+     Se dispara una vez por sesión de navegador (sessionStorage).
+     Para probarlo de nuevo: borra "stems_launch_seen" en
+     sessionStorage o abre la página en una pestaña/incógnito nueva.
+     Para desactivarlo por completo (pasado el estreno), basta con
+     eliminar este bloque de script.
+     ========================================================= -->
+<script>
+(function(){
+  var STORAGE_KEY = 'stems_launch_seen';
+  var toast = document.getElementById('welcome-toast');
+  var closeBtn = document.getElementById('welcome-toast-close');
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var toastHideTimer = null;
+  function showToast(){
+    toast.classList.add('show');
+    clearTimeout(toastHideTimer);
+    toastHideTimer = setTimeout(hideToast, 7000);
+  }
+  function hideToast(){
+    clearTimeout(toastHideTimer);
+    toast.classList.remove('show');
+  }
+  closeBtn.addEventListener('click', hideToast);
+
+  function runConfetti(){
+    var canvas = document.getElementById('launch-confetti');
+    var ctx = canvas.getContext('2d');
+    var DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var colors = ['#E8236B', '#FF7A2E', '#F2A93C', '#2FB6A8', '#F4E8D3'];
+    var W, H;
+    function resize(){
+      W = window.innerWidth; H = window.innerHeight;
+      canvas.width = W * DPR; canvas.height = H * DPR;
+      canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    var particles = [];
+    function spawn(n){
+      for(var i = 0; i < n; i++){
+        var isStreamer = Math.random() < 0.45;
+        particles.push({
+          x: Math.random() * W,
+          y: -20 - Math.random() * 120,
+          w: isStreamer ? (4 + Math.random() * 4) : (5 + Math.random() * 4),
+          h: isStreamer ? (10 + Math.random() * 10) : (5 + Math.random() * 4),
+          shape: isStreamer ? 'rect' : (Math.random() < 0.5 ? 'circle' : 'rect'),
+          color: colors[(Math.random() * colors.length) | 0],
+          vy: 1.6 + Math.random() * 2.4,
+          vx: (Math.random() - 0.5) * 1.6,
+          rot: Math.random() * Math.PI * 2,
+          vrot: (Math.random() - 0.5) * 0.22,
+          sway: Math.random() * Math.PI * 2,
+          swaySpeed: 0.02 + Math.random() * 0.025,
+          life: 0,
+          maxLife: 260 + Math.random() * 120
+        });
+      }
+    }
+
+    var spawnDuration = 1400;
+    var startTime = performance.now();
+    var lastSpawn = 0;
+    var running = true;
+
+    function frame(now){
+      if(!running) return;
+      var elapsed = now - startTime;
+      if(elapsed < spawnDuration && now - lastSpawn > 40){
+        spawn(6);
+        lastSpawn = now;
+      }
+      ctx.clearRect(0, 0, W, H);
+      for(var i = particles.length - 1; i >= 0; i--){
+        var p = particles[i];
+        p.life++;
+        p.sway += p.swaySpeed;
+        p.x += p.vx + Math.sin(p.sway) * 0.7;
+        p.y += p.vy;
+        p.rot += p.vrot;
+        p.vy += 0.012;
+        var fadeStart = p.maxLife * 0.75;
+        var alpha = p.life > fadeStart ? Math.max(0, 1 - (p.life - fadeStart) / (p.maxLife - fadeStart)) : 1;
+        if(p.y > H + 40 || p.life > p.maxLife){
+          particles.splice(i, 1);
+          continue;
+        }
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        if(p.shape === 'circle'){
+          ctx.beginPath();
+          ctx.arc(0, 0, p.w / 2, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        }
+        ctx.restore();
+      }
+      if(elapsed > spawnDuration && particles.length === 0){
+        running = false;
+        window.removeEventListener('resize', resize);
+        ctx.clearRect(0, 0, W, H);
+        return;
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function launch(){
+    if(!reduceMotion) runConfetti();
+    showToast();
+  }
+
+  var replayBtn = document.getElementById('replay-confetti-btn');
+  if(replayBtn){
+    replayBtn.addEventListener('click', function(){
+      hideToast();
+      setTimeout(launch, 50);
+    });
+  }
+
+  try{
+    if(!sessionStorage.getItem(STORAGE_KEY)){
+      sessionStorage.setItem(STORAGE_KEY, '1');
+      window.addEventListener('load', function(){ setTimeout(launch, 250); });
+    }
+  }catch(e){
+    // sessionStorage no disponible (p. ej. modo privado estricto): lanza igual, una vez por carga.
+    window.addEventListener('load', function(){ setTimeout(launch, 250); });
+  }
+})();
 </script>
 </body>
 </html>
