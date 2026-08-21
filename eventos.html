@@ -377,6 +377,10 @@
   .poster-venue{
     font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); margin-bottom:10px;
   }
+  .poster-credit{
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent); margin-bottom:10px;
+    text-transform:uppercase; letter-spacing:.5px;
+  }
   .poster-desc{
     font-size:13px; color:var(--cream-dim); line-height:1.55;
     display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
@@ -597,6 +601,7 @@
     <div class="modal-body">
       <p class="poster-tag script" id="modalTag"></p>
       <h3 class="display" id="modalTitle" style="text-transform:none;"></h3>
+      <p class="mono" id="modalCredit" style="color:var(--accent); font-size:12px; letter-spacing:1px; text-transform:uppercase; margin-bottom:12px;"></p>
       <p id="modalDesc"></p>
       <p class="mono" id="modalDate" style="color:var(--muted); font-size:12px; margin-bottom:16px;"></p>
       <button class="modal-close" id="modalClose">Cerrar</button>
@@ -654,6 +659,7 @@ function render(){
       <p class="poster-tag script">${TYPE_LABEL[e.type] || e.type}</p>
       <p class="poster-title">${escapeHtml(e.title)}</p>
       ${e.venue ? `<p class="poster-venue">${escapeHtml(e.venue)}</p>` : ''}
+      ${creditLine(e) ? `<p class="poster-credit">${escapeHtml(creditLine(e))}</p>` : ''}
       <p class="poster-desc">${escapeHtml(descTeaser(e.description))}</p>
       ${e.status === 'pendiente' ? '<p class="poster-status">Pendiente de confirmar</p>' : ''}
     `;
@@ -669,6 +675,9 @@ function openModal(e){
   document.getElementById('modalMedia').style.display = e.image ? 'flex' : 'none';
   document.getElementById('modalTag').textContent = TYPE_LABEL[e.type] || e.type;
   document.getElementById('modalTitle').textContent = e.title;
+  const credit = creditLine(e);
+  document.getElementById('modalCredit').textContent = credit;
+  document.getElementById('modalCredit').style.display = credit ? 'block' : 'none';
   document.getElementById('modalDesc').innerHTML = formatDescriptionHtml(e.description);
   const fmt = new Intl.DateTimeFormat('es-ES', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
   document.getElementById('modalDate').textContent = fmt.format(e.dateObj) + (e.venue ? ' · ' + e.venue : '');
@@ -686,7 +695,12 @@ document.getElementById('filters').addEventListener('click', ev => {
   render();
 });
 
-function escapeHtml(str){
+// Línea de crédito: DJ para toques, Productor para el resto
+function creditLine(e){
+  if(e.type === 'toque') return e.dj ? `🎧 ${e.dj}` : '';
+  return e.productor ? `Prod. ${e.productor}` : '';
+}
+
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
