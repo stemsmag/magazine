@@ -1,5 +1,18 @@
 { "events": [
   {
+  "id": "toque-zombieland",
+  "type": "toque",
+  "title": "ZOMBIELAND",
+  "date": "2026-10-17",
+  "time": "",
+  "description": "Plague Corporation",
+  "image": "img-ev/oblivion.jpg",
+  "link": "",
+  "status": "confirmado",
+  "venue": "Centro Histórico de la ciudad de México, Centro, Cuauhtémoc, 06010, ciudad de México.",
+  "dj": "O B L 1 V ! Ø N"
+},
+  {
   "id": "toque-sound-city",
   "type": "toque",
   "title": "Sound City",
