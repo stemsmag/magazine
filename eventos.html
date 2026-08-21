@@ -377,7 +377,12 @@
   .poster-venue{
     font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); margin-bottom:10px;
   }
-  .poster-desc{font-size:13px; color:var(--cream-dim); line-height:1.55;}
+  .poster-desc{
+    font-size:13px; color:var(--cream-dim); line-height:1.55;
+    display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  #modalDesc p{margin:0 0 12px;}
+  #modalDesc p:last-child{margin-bottom:0;}
   .poster-status{
     margin-top:14px; font-family:'JetBrains Mono',monospace; font-size:10px;
     text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
@@ -649,7 +654,7 @@ function render(){
       <p class="poster-tag script">${TYPE_LABEL[e.type] || e.type}</p>
       <p class="poster-title">${escapeHtml(e.title)}</p>
       ${e.venue ? `<p class="poster-venue">${escapeHtml(e.venue)}</p>` : ''}
-      <p class="poster-desc">${escapeHtml(e.description || '')}</p>
+      <p class="poster-desc">${escapeHtml(descTeaser(e.description))}</p>
       ${e.status === 'pendiente' ? '<p class="poster-status">Pendiente de confirmar</p>' : ''}
     `;
     card.addEventListener('click', () => openModal(e));
@@ -664,7 +669,7 @@ function openModal(e){
   document.getElementById('modalMedia').style.display = e.image ? 'flex' : 'none';
   document.getElementById('modalTag').textContent = TYPE_LABEL[e.type] || e.type;
   document.getElementById('modalTitle').textContent = e.title;
-  document.getElementById('modalDesc').textContent = e.description || '';
+  document.getElementById('modalDesc').innerHTML = formatDescriptionHtml(e.description);
   const fmt = new Intl.DateTimeFormat('es-ES', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
   document.getElementById('modalDate').textContent = fmt.format(e.dateObj) + (e.venue ? ' · ' + e.venue : '');
   document.getElementById('overlay').classList.add('open');
@@ -685,6 +690,28 @@ function escapeHtml(str){
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
+}
+
+// Quita marcado tipo markdown (**negrita**, *cursiva*) para vistas de texto plano
+function stripMarkdown(str){
+  return (str || '').replace(/\*\*(.+?)\*\*/g, '$1').replace(/\*(.+?)\*/g, '$1');
+}
+
+// Teaser corto y limpio para la tarjeta (sin markdown, sin saltos de línea, truncado)
+function descTeaser(str, maxLen = 140){
+  const clean = stripMarkdown(str || '').replace(/\s+/g, ' ').trim();
+  if(clean.length <= maxLen) return clean;
+  return clean.slice(0, maxLen).replace(/\s+\S*$/, '') + '…';
+}
+
+// Convierte markdown básico a HTML seguro (escapa primero, luego aplica negrita/cursiva/párrafos)
+function formatDescriptionHtml(str){
+  if(!str) return '';
+  let html = escapeHtml(str);
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  const paragraphs = html.split(/\n\s*\n/).map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`);
+  return paragraphs.join('');
 }
 
 loadEvents();
