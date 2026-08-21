@@ -1,4 +1,17 @@
 {
+  {
+  "id": "toque-sound-city",
+  "type": "toque",
+  "title": "Sound City",
+  "date": "2026-09-04",
+  "time": "",
+  "description": "The Last DJ - LIVE Techno Show // Hardware Driven Played Live and Loud.",
+  "image": "img-ev/thelastdj.jpg",
+  "link": "thelastdj.com",
+  "status": "confirmado",
+  "venue": "Bath & West Show Ground",
+  "dj": "The Last DJ - Nick Hayes"
+},
   "events": [
     {
       "id": "slecta-lattice-rudo",
