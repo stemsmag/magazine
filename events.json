@@ -1,4 +1,4 @@
-{
+{ "events": [
   {
   "id": "toque-sound-city",
   "type": "toque",
@@ -12,7 +12,7 @@
   "venue": "Bath & West Show Ground",
   "dj": "The Last DJ - Nick Hayes"
 },
-  "events": [
+ 
     {
       "id": "slecta-lattice-rudo",
       "type": "toque",
