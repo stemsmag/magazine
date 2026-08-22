@@ -1,5 +1,17 @@
 { "events": [
   {
+  "id": "album-chill-hop-coffee-session",
+  "type": "album",
+  "title": "Chill-Hop Coffee Session",
+  "date": "2026-08-31",
+  "time": "",
+  "description": "Trece mundos sonoros distintos estilo chill-hop — flamenco, bolero, bossa nova, marimba, cumbia salvadporeña, andina, lounge, moroccan groove — todos pasados por el mismo filtro: beats lentos, texturas cálidas para acompañar tu café, tu tarde de relax o estudio.\nDisponible en todas las plataformas.",
+  "image": "img-ev/chill.jpg",
+  "link": "",
+  "status": "pendiente",
+  "productor": "TheGeco"
+},
+  {
   "id": "toque-a-l-t-i-t-u-d-e",
   "type": "toque",
   "title": "A L T I T U D E",
