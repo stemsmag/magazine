@@ -377,16 +377,7 @@
   .poster-venue{
     font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); margin-bottom:10px;
   }
-  .poster-credit{
-    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent); margin-bottom:10px;
-    text-transform:uppercase; letter-spacing:.5px;
-  }
-  .poster-desc{
-    font-size:13px; color:var(--cream-dim); line-height:1.55;
-    display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
-  }
-  #modalDesc p{margin:0 0 12px;}
-  #modalDesc p:last-child{margin-bottom:0;}
+  .poster-desc{font-size:13px; color:var(--cream-dim); line-height:1.55;}
   .poster-status{
     margin-top:14px; font-family:'JetBrains Mono',monospace; font-size:10px;
     text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
@@ -396,6 +387,16 @@
     grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--muted);
     font-family:'JetBrains Mono',monospace; font-size:13px; border:1px dashed var(--line); border-radius:12px;
   }
+
+  .past-section{margin-top:56px; padding-top:8px; border-top:1px solid var(--line);}
+  .past-label{
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted);
+    text-transform:uppercase; letter-spacing:.1em; margin:24px 0 18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .past-label::after{content:''; flex:1; height:1px; background:var(--line);}
+  .poster-grid--past .poster-card{opacity:0.5; filter:grayscale(0.35);}
+  .poster-grid--past .poster-card:hover{opacity:0.85; filter:grayscale(0);}
 
   .overlay{
     position:fixed; inset:0; background:rgba(0,10,20,.75);
@@ -524,6 +525,11 @@
 
   <p class="month-label" id="monthLabel"></p>
   <div class="poster-grid" id="grid"></div>
+
+  <div class="past-section" id="pastSection" style="display:none;">
+    <p class="past-label">Eventos pasados</p>
+    <div class="poster-grid poster-grid--past" id="pastGrid"></div>
+  </div>
 </div>
 
 <footer class="site-footer">
@@ -601,7 +607,6 @@
     <div class="modal-body">
       <p class="poster-tag script" id="modalTag"></p>
       <h3 class="display" id="modalTitle" style="text-transform:none;"></h3>
-      <p class="mono" id="modalCredit" style="color:var(--accent); font-size:12px; letter-spacing:1px; text-transform:uppercase; margin-bottom:12px;"></p>
       <p id="modalDesc"></p>
       <p class="mono" id="modalDate" style="color:var(--muted); font-size:12px; margin-bottom:16px;"></p>
       <button class="modal-close" id="modalClose">Cerrar</button>
@@ -629,43 +634,59 @@ async function loadEvents(){
   render();
 }
 
+function buildCard(e, isPast){
+  const card = document.createElement('div');
+  card.className = `poster-card t-${e.type}` + (isPast ? ' poster-card--past' : '');
+  const day = e.dateObj.getDate();
+  const monthShort = MONTHS[e.dateObj.getMonth()].slice(0,3);
+  const timeStr = e.time || '';
+
+  card.innerHTML = `
+    <div class="poster-top">
+      <div class="poster-day">${day}<span class="month">${monthShort}</span></div>
+      ${timeStr ? `<div class="time-pill">${timeStr}</div>` : ''}
+    </div>
+    ${e.image ? `<img class="poster-thumb" src="${e.image}" alt="" onerror="this.style.display='none'">` : ''}
+    <p class="poster-tag script">${TYPE_LABEL[e.type] || e.type}</p>
+    <p class="poster-title">${escapeHtml(e.title)}</p>
+    ${e.venue ? `<p class="poster-venue">${escapeHtml(e.venue)}</p>` : ''}
+    <p class="poster-desc">${escapeHtml(e.description || '')}</p>
+    ${e.status === 'pendiente' ? '<p class="poster-status">Pendiente de confirmar</p>' : ''}
+  `;
+  card.addEventListener('click', () => openModal(e));
+  return card;
+}
+
 function render(){
   const grid = document.getElementById('grid');
+  const pastSection = document.getElementById('pastSection');
+  const pastGrid = document.getElementById('pastGrid');
   grid.innerHTML = '';
-  let events = activeFilter === 'all' ? allEvents : allEvents.filter(e => e.type === activeFilter);
+  pastGrid.innerHTML = '';
 
-  const now = new Date();
+  const filtered = activeFilter === 'all' ? allEvents : allEvents.filter(e => e.type === activeFilter);
+
+  // La fecha del sistema decide automáticamente qué eventos ya pasaron.
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const upcoming = filtered.filter(e => e.dateObj >= today);
+  const past = filtered.filter(e => e.dateObj < today).sort((a,b) => b.dateObj - a.dateObj);
+
   document.getElementById('monthLabel').textContent =
-    (events[0] ? MONTHS[events[0].dateObj.getMonth()] + ' ' + events[0].dateObj.getFullYear() : MONTHS[now.getMonth()] + ' ' + now.getFullYear());
+    (upcoming[0] ? MONTHS[upcoming[0].dateObj.getMonth()] + ' ' + upcoming[0].dateObj.getFullYear() : MONTHS[today.getMonth()] + ' ' + today.getFullYear());
 
-  if(!events.length){
+  if(!upcoming.length){
     grid.innerHTML = '<div class="empty">No hay eventos para este filtro por ahora.</div>';
-    return;
+  } else {
+    upcoming.forEach(e => grid.appendChild(buildCard(e)));
   }
 
-  events.forEach(e => {
-    const card = document.createElement('div');
-    card.className = `poster-card t-${e.type}`;
-    const day = e.dateObj.getDate();
-    const monthShort = MONTHS[e.dateObj.getMonth()].slice(0,3);
-    const timeStr = e.time || '';
-
-    card.innerHTML = `
-      <div class="poster-top">
-        <div class="poster-day">${day}<span class="month">${monthShort}</span></div>
-        ${timeStr ? `<div class="time-pill">${timeStr}</div>` : ''}
-      </div>
-      ${e.image ? `<img class="poster-thumb" src="${e.image}" alt="" onerror="this.style.display='none'">` : ''}
-      <p class="poster-tag script">${TYPE_LABEL[e.type] || e.type}</p>
-      <p class="poster-title">${escapeHtml(e.title)}</p>
-      ${e.venue ? `<p class="poster-venue">${escapeHtml(e.venue)}</p>` : ''}
-      ${creditLine(e) ? `<p class="poster-credit">${escapeHtml(creditLine(e))}</p>` : ''}
-      <p class="poster-desc">${escapeHtml(descTeaser(e.description))}</p>
-      ${e.status === 'pendiente' ? '<p class="poster-status">Pendiente de confirmar</p>' : ''}
-    `;
-    card.addEventListener('click', () => openModal(e));
-    grid.appendChild(card);
-  });
+  if(past.length){
+    pastSection.style.display = '';
+    past.forEach(e => pastGrid.appendChild(buildCard(e, true)));
+  } else {
+    pastSection.style.display = 'none';
+  }
 }
 
 function openModal(e){
@@ -675,10 +696,7 @@ function openModal(e){
   document.getElementById('modalMedia').style.display = e.image ? 'flex' : 'none';
   document.getElementById('modalTag').textContent = TYPE_LABEL[e.type] || e.type;
   document.getElementById('modalTitle').textContent = e.title;
-  const credit = creditLine(e);
-  document.getElementById('modalCredit').textContent = credit;
-  document.getElementById('modalCredit').style.display = credit ? 'block' : 'none';
-  document.getElementById('modalDesc').innerHTML = formatDescriptionHtml(e.description);
+  document.getElementById('modalDesc').textContent = e.description || '';
   const fmt = new Intl.DateTimeFormat('es-ES', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
   document.getElementById('modalDate').textContent = fmt.format(e.dateObj) + (e.venue ? ' · ' + e.venue : '');
   document.getElementById('overlay').classList.add('open');
@@ -695,38 +713,10 @@ document.getElementById('filters').addEventListener('click', ev => {
   render();
 });
 
-// Línea de crédito: DJ para toques, Productor para el resto
-function creditLine(e){
-  if(e.type === 'toque') return e.dj ? `🎧 ${e.dj}` : '';
-  return e.productor ? `Prod. ${e.productor}` : '';
-}
-
 function escapeHtml(str){
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
-}
-
-// Quita marcado tipo markdown (**negrita**, *cursiva*) para vistas de texto plano
-function stripMarkdown(str){
-  return (str || '').replace(/\*\*(.+?)\*\*/g, '$1').replace(/\*(.+?)\*/g, '$1');
-}
-
-// Teaser corto y limpio para la tarjeta (sin markdown, sin saltos de línea, truncado)
-function descTeaser(str, maxLen = 140){
-  const clean = stripMarkdown(str || '').replace(/\s+/g, ' ').trim();
-  if(clean.length <= maxLen) return clean;
-  return clean.slice(0, maxLen).replace(/\s+\S*$/, '') + '…';
-}
-
-// Convierte markdown básico a HTML seguro (escapa primero, luego aplica negrita/cursiva/párrafos)
-function formatDescriptionHtml(str){
-  if(!str) return '';
-  let html = escapeHtml(str);
-  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-  const paragraphs = html.split(/\n\s*\n/).map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`);
-  return paragraphs.join('');
 }
 
 loadEvents();
