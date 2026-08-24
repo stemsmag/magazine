@@ -1,5 +1,17 @@
 { "events": [
   {
+  "id": "single-until-we-meet-again",
+  "type": "single",
+  "title": "Until We Meet Again",
+  "date": "2026-09-10",
+  "time": "2:00 PM CT",
+  "description": "Until We Meet Again es un tributo a mi padre y a mi mascota, inspirado en el amor, la energía y la buena vibra que siempre dejaron en mi vida.\n\nJunto a mi compañero y amigo, transformamos esos sentimientos en música, creando una conexión entre melodía y emoción.\n\nUna canción para recordar, sentir y decir: hasta que nos volvamos a encontrar.\nDisponible en todas las plataformas.",
+  "image": "img-ev/uwma.jpg",
+  "link": "",
+  "status": "confirmado",
+  "productor": "DJ DIAMOND HM & HelMat"
+},
+  {
   "id": "album-chill-hop-coffee-session",
   "type": "album",
   "title": "Chill-Hop Coffee Session",
