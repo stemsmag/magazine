@@ -12,15 +12,15 @@
     "link": "https://stemsmag.fyi/artifacts/tetrawavev1.html"
   },
   {
-    "status": "soon",
+    "status": "live",
     "kind": "mastering",
     "seed": 21,
     "id": "ART.02",
     "name": "LAQUER",
     "desc": "Escucha en tiempo real el efecto de una cadena de masterización.",
     "specs": ["LUFS METER", "EQ", "COMPRESOR"],
-    "cta": "PRÓXIMAMENTE",
+    "cta": "ABRIR INSTRUMENTO",
     "img": "img/laquer.jpg",
-    "link": ""
+    "link": "https://stemsmag.fyi/articulos/articulo-lacquer-review.html"
   }
 ]
