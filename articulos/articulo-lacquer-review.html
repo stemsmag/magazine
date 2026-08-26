@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LACQUER // CUT-1 // StemsMag — Banco de pruebas | STEMS LAB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Mr+Dafoe&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ===== Header/footer oficiales STEMS ===== */
+    --cream:#F4E8D3;
+    --cream-dim:#A89A80;
+    --muted:#B49A7A;
+    --magenta:#E8236B;
+    --amber:#F2A93C;
+    --teal:#2FB6A8;
+    --brown:#8B5A34;
+    --brown-light:#052A3D;
+    --site-line:rgba(244,232,211,0.14);
+    --font-logo:'Mr Dafoe', cursive;
+    --header-h:64px;
+    --top-band-h:24px;
+    --navbar-h:34px;
+    --header-overlay-color:0,25,46;
+    --header-overlay-opacity:0.55;
+    --band-overlay-opacity:0.8;
+    --stack-h:calc(var(--top-band-h) + var(--header-h) + var(--navbar-h));
+
+    --bg:#0a0d10;
+    --panel:#10151a;
+    --panel-2:#141a20;
+    --grid:#1c242b;
+    --line:#232c33;
+    --mint:#2dd7a0;
+    --orange:#FF7A2E;
+    --red:#e35a5a;
+    --amber2:#e0c23e;
+    --text:#e7edf0;
+    --text-dim:#8b98a2;
+    --text-faint:#4c5760;
+    --mono:'JetBrains Mono', monospace;
+    --cond:'Barlow Condensed', sans-serif;
+    --sans:'IBM Plex Sans', sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background-color:#060907;
+    color:var(--text);
+    font-family:var(--sans);
+    overflow-x:hidden;
+    position:relative;
+  }
+  /* ============ FONDO BOKEH (verde menta) ============ */
+  .bokeh-bg{
+    position:fixed; inset:0; z-index:-1; overflow:hidden;
+    background:#060907;
+  }
+  .bokeh-bg::before{
+    content:'';
+    position:absolute; inset:-15%;
+    background:
+      radial-gradient(circle at 10% 15%, rgba(15,90,75,0.5) 0%, transparent 26%),
+      radial-gradient(circle at 85% 10%, rgba(10,70,60,0.6) 0%, transparent 30%),
+      radial-gradient(circle at 95% 45%, rgba(45,215,160,0.22) 0%, transparent 28%),
+      radial-gradient(circle at 6% 48%, rgba(12,80,68,0.55) 0%, transparent 30%),
+      radial-gradient(circle at 50% 22%, rgba(45,215,160,0.24) 0%, transparent 34%),
+      radial-gradient(circle at 25% 75%, rgba(10,70,60,0.55) 0%, transparent 30%),
+      radial-gradient(circle at 68% 68%, rgba(45,215,160,0.20) 0%, transparent 30%),
+      radial-gradient(circle at 92% 88%, rgba(255,122,46,0.10) 0%, transparent 24%),
+      radial-gradient(circle at 40% 92%, rgba(12,85,70,0.35) 0%, transparent 28%),
+      radial-gradient(circle at 52% 48%, rgba(45,215,160,0.28) 0%, rgba(20,120,95,0.16) 22%, transparent 48%);
+    filter:blur(70px) saturate(112%) brightness(0.85);
+  }
+  .bokeh-bg::after{
+    content:'';
+    position:absolute; inset:0;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity:0.05; mix-blend-mode:overlay;
+  }
+  ::selection{background:var(--mint); color:#031310;}
+  a{color:inherit; text-decoration:none;}
+  img{display:block; max-width:100%;}
+
+  /* ============ TOPBAR ============ */
+  .lab-topbar{
+    position:sticky; top:var(--stack-h); z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 28px; background:rgba(10,13,16,0.88); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .lab-brand{
+    font-family:var(--cond); font-weight:800; font-size:16px; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--text);
+  }
+  .lab-brand span{color:var(--mint);}
+  .lab-topbar-right{font-family:var(--mono); font-size:10px; letter-spacing:1.5px; color:var(--text-faint); text-transform:uppercase;}
+
+  /* ============ HERO ============ */
+  .lab-hero{max-width:1160px; margin:0 auto; padding:48px 24px 0; display:grid; grid-template-columns:1fr 220px; gap:40px; align-items:start;}
+  @media (max-width:800px){.lab-hero{grid-template-columns:1fr;}}
+  .lab-kicker{display:flex; align-items:center; gap:10px; margin-bottom:18px; flex-wrap:wrap;}
+  .kicker-pill{
+    font-family:var(--mono); font-size:10px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--bg); background:var(--mint); padding:4px 9px;
+  }
+  .kicker-text{font-family:var(--mono); font-size:10.5px; letter-spacing:2px; text-transform:uppercase; color:var(--text-faint);}
+  .lab-title{
+    font-family:var(--cond); font-weight:800; text-transform:uppercase;
+    font-size:clamp(32px,5.6vw,58px); line-height:0.98; letter-spacing:-0.5px;
+    color:var(--text); margin-bottom:18px;
+  }
+  .lab-title .hl{color:var(--orange);}
+  .lab-dek{
+    font-family:var(--sans); font-size:clamp(14.5px,1.6vw,17px); line-height:1.65; color:var(--text-dim);
+    max-width:600px; margin-bottom:22px;
+  }
+  .lab-byline{font-family:var(--mono); font-size:10.5px; letter-spacing:1px; color:var(--text-faint); text-transform:uppercase; line-height:1.7;}
+  .lab-byline b{color:var(--text-dim); font-weight:600;}
+
+  /* ---- dial de puntuación (variación vs. el número plano de TetraWave) ---- */
+  .score-dial{
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    background:var(--panel); border:1px solid var(--line); padding:20px 16px 18px;
+  }
+  .score-dial svg{width:118px; height:118px;}
+  .score-dial .dial-num{font-family:var(--cond); font-weight:800; font-size:15px; fill:var(--text);}
+  .score-dial .dial-num tspan{font-size:9px; fill:var(--text-faint); font-family:var(--mono); font-weight:400;}
+  .score-dial .dial-lbl{font-family:var(--mono); font-size:8.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-faint); text-align:center; line-height:1.5;}
+
+  /* ============ LAYOUT DE 2 COLUMNAS: sidebar sticky + contenido ============ */
+  .lab-shell{max-width:1160px; margin:36px auto 0; padding:0 24px 0; display:grid; grid-template-columns:220px 1fr; gap:44px;}
+  @media (max-width:800px){.lab-shell{grid-template-columns:1fr;}}
+
+  .lab-sidebar{position:sticky; top:calc(var(--stack-h) + 66px); align-self:start; display:flex; flex-direction:column; gap:26px;}
+  @media (max-width:800px){.lab-sidebar{position:static;}}
+
+  .side-block{border-top:1px solid var(--line); padding-top:14px;}
+  .side-block .side-h{font-family:var(--mono); font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--text-faint); margin-bottom:10px;}
+  .side-nav{display:flex; flex-direction:column; gap:1px;}
+  .side-nav a{
+    font-family:var(--mono); font-size:11px; letter-spacing:.4px; color:var(--text-dim);
+    padding:6px 0 6px 12px; border-left:2px solid transparent;
+  }
+  .side-nav a:hover{color:var(--text);}
+  .side-nav a.active{color:var(--mint); border-left-color:var(--mint);}
+  .side-specs{display:flex; flex-direction:column; gap:9px;}
+  .side-specs .row{display:flex; justify-content:space-between; gap:8px; font-family:var(--mono); font-size:10.5px;}
+  .side-specs .row .k{color:var(--text-faint);}
+  .side-specs .row .v{color:var(--mint); text-align:right;}
+
+  /* ============ BODY ============ */
+  .lab-col{max-width:700px;}
+  .lab-col p{
+    font-family:var(--sans); font-size:16px; line-height:1.8; color:var(--text);
+    margin-bottom:22px;
+  }
+  .lab-col h2{
+    font-family:var(--cond); font-weight:800; text-transform:uppercase;
+    font-size:clamp(23px,3.1vw,30px); letter-spacing:-0.2px; color:var(--text);
+    margin:54px 0 16px; padding-left:20px; position:relative;
+  }
+  .lab-col h2::before{
+    content:attr(data-n); position:absolute; left:0; top:0.05em;
+    width:3px; height:1.1em; background:var(--mint);
+    color:#9fb8ae;
+  }
+  .lab-col h2:first-of-type{margin-top:6px;}
+  .lab-col h3{
+    font-family:var(--mono); font-weight:700; font-size:12px; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--mint); margin:28px 0 12px;
+  }
+
+  .lab-col blockquote{
+    font-family:var(--cond); font-weight:700; font-size:clamp(19px,2.4vw,25px); line-height:1.32; color:var(--orange);
+    border-left:3px solid var(--orange); padding:4px 0 4px 22px; margin:32px 0;
+    text-transform:uppercase; letter-spacing:0.2px;
+  }
+
+  .callout{
+    background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--mint);
+    padding:16px 18px; margin:24px 0; font-family:var(--sans); font-size:14px; line-height:1.7; color:var(--text-dim);
+  }
+  .callout b{color:var(--mint); font-family:var(--mono); font-size:11px; letter-spacing:1px; text-transform:uppercase; display:block; margin-bottom:8px;}
+  .callout.amber{border-left-color:var(--amber2);}
+  .callout.amber b{color:var(--amber2);}
+
+  /* ============ DIAGRAMA DE CADENA DE SEÑAL (CSS, no captura) ============ */
+  .chain-panel{background:var(--panel); border:1px solid var(--line); padding:22px 20px; margin:14px 0 30px;}
+  .chain-panel .panel-title{font-family:var(--mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text); margin-bottom:16px;}
+  .chain-flow{display:flex; align-items:center; flex-wrap:wrap; gap:0; overflow-x:auto; padding-bottom:6px;}
+  .chain-node{
+    flex:0 0 auto; background:var(--panel-2); border:1px solid var(--line); border-top:2px solid var(--mint);
+    padding:11px 14px; min-width:96px; text-align:center;
+  }
+  .chain-node .cn-n{font-family:var(--mono); font-size:8.5px; color:var(--text-faint); letter-spacing:1px;}
+  .chain-node .cn-t{font-family:var(--cond); font-weight:700; font-size:14px; color:var(--text); text-transform:uppercase; letter-spacing:.2px; margin-top:2px;}
+  .chain-arrow{flex:0 0 auto; padding:0 8px; color:var(--text-faint); font-family:var(--mono); font-size:13px;}
+  .chain-desc{font-family:var(--sans); font-size:13.5px; line-height:1.7; color:var(--text-dim); margin-top:16px;}
+
+  /* ============ BARRAS COMPARATIVAS (LUFS presets) ============ */
+  .bars-panel{background:var(--panel); border:1px solid var(--line); padding:22px 22px 20px; margin:14px 0 30px;}
+  .bars-panel .panel-title{font-family:var(--mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text); margin-bottom:4px;}
+  .bars-panel .panel-note{font-family:var(--mono); font-size:9.5px; color:var(--text-faint); margin-bottom:18px; display:block;}
+  .bar-row{display:grid; grid-template-columns:150px 1fr 56px; align-items:center; gap:12px; margin-bottom:11px;}
+  .bar-row .b-lbl{font-family:var(--mono); font-size:10.5px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .bar-track{height:9px; background:var(--grid); position:relative;}
+  .bar-fill{height:100%; background:linear-gradient(90deg, var(--mint), var(--amber2));}
+  .bar-row .b-val{font-family:var(--mono); font-size:10.5px; color:var(--mint); text-align:right;}
+
+  /* ============ GAUGE doble (true peak antes/después) ============ */
+  .gauge-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:14px 0 30px;}
+  @media (max-width:560px){.gauge-grid{grid-template-columns:1fr;}}
+  .gauge-card{background:var(--panel); border:1px solid var(--line); padding:18px 20px;}
+  .gauge-card .g-lbl{font-family:var(--mono); font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-faint); margin-bottom:10px;}
+  .gauge-card .g-val{font-family:var(--cond); font-weight:800; font-size:34px; color:var(--text);}
+  .gauge-card .g-val span{font-size:14px; color:var(--text-faint); font-weight:400; font-family:var(--mono);}
+  .gauge-card.warn .g-val{color:var(--red);}
+  .gauge-card.ok .g-val{color:var(--mint);}
+  .gauge-card .g-sub{font-family:var(--sans); font-size:12px; color:var(--text-dim); margin-top:6px;}
+
+  /* ============ SPEC TABLE ============ */
+  .spec-table{width:100%; border-collapse:collapse; margin:10px 0 30px; font-family:var(--mono); font-size:12.5px;}
+  .spec-table th{text-align:left; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-faint); font-weight:600; padding:8px 12px; border-bottom:1px solid var(--line);}
+  .spec-table td{padding:10px 12px; border-bottom:1px solid var(--grid); color:var(--text-dim); vertical-align:top;}
+  .spec-table tr:hover td{background:rgba(45,215,160,0.05);}
+  .spec-table td:first-child{color:var(--mint); font-weight:600; white-space:nowrap;}
+
+  /* ============ PROS / CONS — chips en vez de columnas con bullets ============ */
+  .proscons{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:10px 0 30px;}
+  @media (max-width:560px){.proscons{grid-template-columns:1fr;}}
+  .pc-col{background:var(--panel); border:1px solid var(--line); padding:18px 20px;}
+  .pc-col.pro{border-top:2px solid var(--mint);}
+  .pc-col.con{border-top:2px solid var(--red);}
+  .pc-col h4{font-family:var(--mono); font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:12px;}
+  .pc-col.pro h4{color:var(--mint);}
+  .pc-col.con h4{color:var(--red);}
+  .pc-col .chips{display:flex; flex-wrap:wrap; gap:6px;}
+  .pc-col.pro .chips span{border:1px solid rgba(45,215,160,0.35); color:var(--text-dim); background:rgba(45,215,160,0.06);}
+  .pc-col.con .chips span{border:1px solid rgba(227,90,90,0.35); color:var(--text-dim); background:rgba(227,90,90,0.06);}
+  .pc-col .chips span{font-family:var(--sans); font-size:12px; padding:6px 10px; line-height:1.4;}
+
+  /* ============ VEREDICTO — franja horizontal con dial, distinto al bloque de TetraWave ============ */
+  .verdict{max-width:1160px; margin:56px auto 0; padding:0 24px;}
+  .verdict-box{
+    background:var(--panel); border:1px solid var(--line); border-top:3px solid var(--mint);
+    padding:30px 28px; display:flex; align-items:center; gap:30px; flex-wrap:wrap;
+  }
+  .verdict-box .v-dial{flex:0 0 auto; width:96px; height:96px; position:relative;}
+  .verdict-box .v-dial svg{width:100%; height:100%;}
+  .verdict-box .v-dial .v-num{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:var(--cond); font-weight:800; font-size:24px; color:var(--mint);}
+  .verdict-text{flex:1 1 320px;}
+  .verdict-text h3{font-family:var(--cond); font-weight:800; text-transform:uppercase; font-size:20px; color:var(--text); margin-bottom:10px; letter-spacing:0.3px;}
+  .verdict-text p{font-family:var(--sans); font-size:14px; line-height:1.7; color:var(--text-dim); margin:0;}
+
+  .lab-closing{
+    max-width:1160px; margin:40px auto 0; padding:20px 24px 0;
+    font-family:var(--mono); font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-faint);
+    border-top:1px solid var(--line);
+  }
+
+  /* ============ LINKS BAR ============ */
+  .links-bar{max-width:1160px; margin:34px auto 0; padding:0 24px; display:flex; flex-wrap:wrap; gap:10px;}
+  .links-bar a{
+    font-family:var(--mono); font-size:11px; letter-spacing:1px; text-transform:uppercase;
+    color:var(--text); border:1px solid var(--line); padding:10px 16px; transition:.15s;
+  }
+  .links-bar a:hover{border-color:var(--mint); color:var(--mint);}
+  .links-bar a.primary{background:var(--mint); color:var(--bg); border-color:var(--mint);}
+  .links-bar a.primary:hover{background:var(--orange); border-color:var(--orange); color:var(--bg);}
+
+  /* ============ COMMENTS ============ */
+  .comments-section{max-width:1160px; margin:60px auto 0; padding:0 24px 60px;}
+  .comments-head{font-family:var(--mono); font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--text-faint); padding-bottom:16px; margin-bottom:16px; border-bottom:1px solid var(--line);}
+
+  /* ============ HEADER OFICIAL STEMS (sin cambios de estilo) ============ */
+  .grain{
+    position:fixed; inset:0; z-index:998; pointer-events:none;
+    opacity:0.07; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    animation:grain .4s steps(2) infinite;
+  }
+  @keyframes grain{0%{transform:translate(0,0)}50%{transform:translate(-1%,1%)}100%{transform:translate(1%,-1%)}}
+
+  body{padding-top:var(--stack-h);}
+
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    height:var(--stack-h);
+    padding-top:var(--top-band-h);
+    background:var(--brown-light);
+    overflow:hidden;
+  }
+  .header-hitbox{position:absolute; inset:0; z-index:1;}
+  .top-band{
+    position:fixed; top:0; left:0; right:0; z-index:130;
+    height:var(--top-band-h);
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(90deg,
+      rgba(232,35,107, var(--band-overlay-opacity)) 0%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 18%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 82%,
+      rgba(242,169,60, var(--band-overlay-opacity)) 100%);
+    border-bottom:1px solid var(--site-line);
+    font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:2px;
+    text-transform:uppercase; color:var(--amber);
+  }
+  .site-navbar{
+    position:fixed; top:calc(var(--top-band-h) + var(--header-h)); left:0; right:0; z-index:125;
+    height:var(--navbar-h);
+    background:linear-gradient(90deg,
+      rgba(232,35,107, var(--band-overlay-opacity)) 0%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 18%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 82%,
+      rgba(242,169,60, var(--band-overlay-opacity)) 100%);
+    border-bottom:1px solid var(--site-line);
+    overflow-x:auto;
+  }
+  .site-navbar .navbar-inner{
+    max-width:1200px; margin:0 auto; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    padding:0 24px; white-space:nowrap;
+  }
+  .navbar-links{display:flex; align-items:center; gap:36px;}
+  .site-navbar a{
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--cream); transition:color .2s;
+  }
+  .site-navbar a:hover{color:var(--amber);}
+  .nav-toggle{
+    display:none; flex-direction:column; justify-content:center; align-items:center; gap:5px;
+    width:32px; height:32px; padding:0; margin-left:auto;
+    background:transparent; border:none; cursor:pointer;
+  }
+  .nav-toggle-bar{
+    display:block; width:20px; height:2px; background:var(--cream);
+    transition:transform .25s ease, opacity .2s ease;
+  }
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(2){opacity:0;}
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  @media (max-width:640px){
+    .site-navbar .navbar-inner{justify-content:space-between;}
+    .nav-toggle{display:flex;}
+    .navbar-links{
+      display:none;
+      position:fixed; top:var(--stack-h); left:0; right:0; z-index:124;
+      flex-direction:column; align-items:stretch; gap:0;
+      max-height:calc(100vh - var(--stack-h)); overflow-y:auto;
+      background:rgba(4,37,56,0.97);
+      border-bottom:1px solid var(--site-line);
+      padding:6px 24px 14px;
+    }
+    .navbar-links a{padding:13px 0; border-bottom:1px solid var(--site-line); white-space:normal;}
+    .navbar-links a:last-child{border-bottom:none;}
+    .site-navbar.nav-open .navbar-links{display:flex;}
+  }
+  .header-bg{
+    position:absolute; left:0; top:0; z-index:-3;
+    width:100%; height:300%;
+    object-fit:cover;
+    transform:translateY(-33.3333%);
+    transition:transform .15s ease-out;
+    will-change:transform;
+  }
+  .header-overlay{
+    position:absolute; inset:0; z-index:-2;
+    background:rgba(var(--header-overlay-color), var(--header-overlay-opacity));
+    pointer-events:none;
+  }
+  .header-inner{
+    position:relative; z-index:2;
+    width:100%; max-width:1200px; margin:0 auto;
+    min-height:var(--header-h);
+    display:flex; align-items:center; justify-content:flex-end;
+    padding:0 24px;
+    pointer-events:none;
+  }
+  header::before{
+    content:'';
+    position:absolute; inset:0; z-index:-1;
+    background-image:
+      radial-gradient(circle at 8% 15%, rgba(0,0,0,0.35), transparent 40%),
+      radial-gradient(circle at 92% 85%, rgba(0,0,0,0.3), transparent 45%),
+      radial-gradient(circle at 55% 50%, rgba(244,232,211,0.05), transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:auto, auto, auto, 160px 160px;
+    opacity:0.5;
+    mix-blend-mode:overlay;
+    pointer-events:none;
+  }
+  .header-signature{
+    position:absolute; inset:0; z-index:-1;
+    max-width:1200px; margin:0 auto;
+    overflow:hidden;
+    pointer-events:none;
+  }
+  .header-signature::after{
+    content:'Stemsmag';
+    position:absolute; inset:0;
+    display:flex; align-items:center;
+    font-family:var(--font-logo); font-weight:400;
+    font-size:clamp(67px, 10.8vw, 108px); line-height:1;
+    letter-spacing:0; white-space:nowrap;
+    opacity:1;
+    color:var(--amber);
+    text-shadow:0 6px 24px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.35);
+    padding-left:24px;
+    transform:rotate(-3.5deg); transform-origin:left center;
+  }
+
+  /* ============ FOOTER OFICIAL STEMS (sin cambios de estilo) ============ */
+  .site-footer{border-top:1px solid var(--site-line); margin-top:20px;}
+  .footer-top{
+    max-width:1200px; margin:0 auto;
+    display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:32px;
+    padding:52px 28px 40px;
+  }
+  @media (max-width:900px){.footer-top{grid-template-columns:1fr 1fr; row-gap:36px;}}
+  @media (max-width:560px){.footer-top{grid-template-columns:1fr; padding:44px 20px 32px;}}
+
+  .footer-brand .footer-logo{font-family:'Anton',sans-serif; font-size:26px; letter-spacing:0; color:var(--cream); text-transform:uppercase; margin-bottom:12px;}
+  .footer-brand .footer-logo span{color:var(--muted); font-weight:400;}
+  .footer-tagline-script{font-family:'JetBrains Mono',monospace; font-weight:500; font-size:9.5px; letter-spacing:1.5px; color:var(--amber); text-transform:uppercase; margin-bottom:10px;}
+  .footer-tagline{font-family:'Inter',sans-serif; font-size:12.5px; line-height:1.6; color:var(--muted); max-width:280px; margin-bottom:18px;}
+  .footer-social{display:flex; gap:8px;}
+  .footer-social a{
+    display:flex; align-items:center; justify-content:center;
+    width:32px; height:32px; border:1px solid var(--site-line);
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.5px;
+    color:var(--muted); transition:.2s;
+  }
+  .footer-social a:hover{border-color:var(--magenta); color:var(--magenta);}
+  .footer-social svg{width:16px; height:16px;}
+
+  .footer-col h4{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--amber); margin-bottom:16px;}
+  .footer-col ul{list-style:none; display:flex; flex-direction:column; gap:10px;}
+  .footer-col a{font-family:'Inter',sans-serif; font-size:13px; color:var(--muted); transition:.2s;}
+  .footer-col a:hover{color:var(--cream);}
+
+  .footer-bottom{
+    border-top:1px solid var(--site-line);
+    max-width:1200px; margin:0 auto;
+    padding:20px 28px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; color:var(--muted);
+  }
+  @media (max-width:560px){.footer-bottom{padding:18px 20px;}}
+  .footer-credit{
+    text-align:center; max-width:1200px; margin:0 auto;
+    padding:12px 24px 20px;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px;
+    color:rgba(244,232,211,0.28);
+  }
+</style>
+<script type="application/json" id="article-meta">
+{
+   "featured": false,
+   "pinned": true,
+   "date": "2026-08-25",
+    "category": "Review",
+    "categoryPill": "Herramientas de audio",
+    "titleLines": ["LACQUER"],
+    "title": "LACQUER // CUT-1 // StemsMag — a prueba: masterizar un track entero sin salir del navegador",
+    "artistLine": "STEMS LAB",
+    "dek": "Le pasamos un mismo render por los diez presets de fábrica, medimos LUFS y true peak antes y después, y probamos hasta dónde aguanta la cadena antes de romperse. Esto es lo que encontramos.",
+    "tag": "Review",
+    "tagColor": "mint",
+    "meta": "Review · 8 min",
+    "image": "articulos/images/lacquer.jpg",
+    "seed": 5,
+    "slug": "articulos/articulo-lacquer-review.html",
+    "comingSoon": false
+}
+</script>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<div class="top-band">La música que nos une</div>
+
+<header>
+  <img class="header-bg" src="../img/fondo-head.jpg" alt="">
+  <div class="header-overlay"></div>
+  <div class="header-signature"></div>
+  <a href="../index.html" class="header-hitbox" aria-label="Ir al inicio"></a>
+  <div class="header-inner"></div>
+</header>
+
+<nav class="site-navbar">
+  <div class="navbar-inner">
+    <div class="navbar-links">
+      <a href="../articulos.html">Artículos</a>
+      <a href="../eventos.html">Eventos y lanzamientos</a>
+      <a href="../playlist.html">Playlists y videos</a>
+    </div>
+    <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+    </button>
+  </div>
+</nav>
+
+<script>
+  /* Parallax de la imagen de fondo del header: mouse en desktop, dedo en mobile */
+  (function(){
+    const headerBg = document.querySelector('.header-bg');
+    if(!headerBg) return;
+    let ratio = 0.5, ticking = false;
+    function apply(){
+      headerBg.style.transform = `translateY(${-(ratio * 66.6667)}%)`;
+      ticking = false;
+    }
+    function onMove(clientY){
+      ratio = Math.min(1, Math.max(0, clientY / window.innerHeight));
+      if(!ticking){ requestAnimationFrame(apply); ticking = true; }
+    }
+    window.addEventListener('mousemove', e => onMove(e.clientY));
+    window.addEventListener('touchmove', e => {
+      if(e.touches && e.touches[0]) onMove(e.touches[0].clientY);
+    }, {passive:true});
+  })();
+
+  /* Menú hamburguesa del navbar en móvil */
+  (function(){
+    document.querySelectorAll('.site-navbar').forEach(nav => {
+      const toggle = nav.querySelector('.nav-toggle');
+      if(!toggle) return;
+      toggle.addEventListener('click', () => {
+        const open = nav.classList.toggle('nav-open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      nav.querySelectorAll('.navbar-links a').forEach(a => {
+        a.addEventListener('click', () => {
+          nav.classList.remove('nav-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+    });
+    window.addEventListener('resize', () => {
+      if(window.innerWidth > 640){
+        document.querySelectorAll('.site-navbar.nav-open').forEach(nav => {
+          nav.classList.remove('nav-open');
+          const t = nav.querySelector('.nav-toggle');
+          if(t) t.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
+  })();
+</script>
+
+<div class="bokeh-bg"></div>
+
+<div class="lab-topbar">
+  <div class="lab-brand">STEMS <span>LAB</span></div>
+  <div class="lab-topbar-right">Banco de pruebas</div>
+</div>
+
+<div class="lab-hero">
+  <div>
+    <div class="lab-kicker">
+      <span class="kicker-pill">Review #005</span>
+      <span class="kicker-text">Herramientas de audio · Web Audio</span>
+    </div>
+    <h1 class="lab-title">LACQUER <span class="hl">//</span> CUT-1<br>a prueba: masterizar<br>sin salir del <span class="hl">navegador</span></h1>
+    <p class="lab-dek">Le pasamos un mismo render por los diez presets de fábrica, medimos LUFS y true peak antes y después, y probamos hasta dónde aguanta la cadena antes de romperse. Esto es lo que encontramos.</p>
+    <div class="lab-byline">
+      Probado por <b>STEMS LAB</b> · Redacción STEMS<br>
+      25 AGO 2026 · Build revisada en navegador desktop
+    </div>
+  </div>
+  <div class="score-dial">
+    <svg viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="42" fill="none" stroke="var(--grid)" stroke-width="8"/>
+      <circle cx="50" cy="50" r="42" fill="none" stroke="var(--mint)" stroke-width="8" stroke-linecap="round"
+        stroke-dasharray="263.9" stroke-dashoffset="39.6" transform="rotate(-90 50 50)"/>
+      <text x="50" y="47" text-anchor="middle" class="dial-num">8.7</text>
+      <text x="50" y="61" text-anchor="middle" class="dial-num"><tspan>/ 10</tspan></text>
+    </svg>
+    <div class="dial-lbl">Puntuación<br>editorial</div>
+  </div>
+</div>
+
+<div class="lab-shell">
+
+  <aside class="lab-sidebar">
+    <div class="side-block" style="border-top:none; padding-top:0;">
+      <div class="side-h">En este banco de pruebas</div>
+      <nav class="side-nav" id="sidenav">
+        <a href="#cadena">Cadena de señal</a>
+        <a href="#analizador">Analizador &amp; referencia</a>
+        <a href="#dinamica">EQ &amp; compresión</a>
+        <a href="#color">Saturación &amp; imagen</a>
+        <a href="#loudness">Limitador &amp; LUFS</a>
+        <a href="#presets">Los 10 presets</a>
+        <a href="#specs">Ficha técnica</a>
+        <a href="#veredicto">Veredicto</a>
+      </nav>
+    </div>
+    <div class="side-block">
+      <div class="side-h">Ficha rápida</div>
+      <div class="side-specs">
+        <div class="row"><span class="k">Categoría</span><span class="v">Mastering Suite</span></div>
+        <div class="row"><span class="k">Plataforma</span><span class="v">Navegador</span></div>
+        <div class="row"><span class="k">Precio</span><span class="v">Gratis</span></div>
+        <div class="row"><span class="k">Licencia</span><span class="v">CC BY-NC 4.0</span></div>
+        <div class="row"><span class="k">Instalación</span><span class="v">Ninguna</span></div>
+        <div class="row"><span class="k">Formatos</span><span class="v">WAV / MP3 → WAV</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="lab-col">
+
+    <p>Masterizar suele significar abrir el DAW, cargar dos o tres plugins de confianza y perder una hora entera moviendo perillas de un lado a otro. LACQUER // CUT-1, la herramienta gratuita de StemsMag, apuesta a que ese proceso puede resolverse en una pestaña: cargás un render ya mezclado, lo pasás por una cadena completa de EQ, compresión, saturación, imagen estéreo y limitador, y salís con un WAV terminado — escuchando el resultado en tiempo real antes de decidir nada. Para ver si la promesa se sostiene, no nos quedamos escuchando de oído: medimos LUFS y true peak antes y después de cada preset, y anotamos los números.</p>
+
+    <h2 id="cadena" data-n="01">Cadena de señal</h2>
+
+    <p>Toda la cadena corre sobre la Web Audio API nativa del navegador, en un orden fijo que no se puede reordenar — una decisión de diseño más cercana a una consola de masterización real que a un rack de plugins libre:</p>
+
+    <div class="chain-panel">
+      <div class="panel-title">Orden de la cadena — fijo, de izquierda a derecha</div>
+      <div class="chain-flow">
+        <div class="chain-node"><div class="cn-n">01</div><div class="cn-t">HPF</div></div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node"><div class="cn-n">02</div><div class="cn-t">EQ Master</div></div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node"><div class="cn-n">03</div><div class="cn-t">Compresor</div></div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node"><div class="cn-n">04</div><div class="cn-t">Saturación</div></div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node"><div class="cn-n">05</div><div class="cn-t">Imagen ST</div></div>
+        <div class="chain-arrow">→</div>
+        <div class="chain-node"><div class="cn-n">06</div><div class="cn-t">Limitador</div></div>
+      </div>
+      <p class="chain-desc">Esta misma cadena corre <b style="color:var(--text)">en vivo</b> mientras escuchás el archivo, y se vuelve a renderizar completa y <b style="color:var(--text)">offline</b> al exportar — el WAV final suena exactamente igual a lo que escuchaste en la vista previa, sin sorpresas de última hora.</p>
+    </div>
+
+    <blockquote>El limitador es lo único que corre en un hilo de audio dedicado</blockquote>
+
+    <p>El módulo final de la cadena usa un <code style="font-family:var(--mono); color:var(--mint);">AudioWorklet</code> cuando el navegador lo soporta, con una implementación equivalente por <code style="font-family:var(--mono); color:var(--mint);">ScriptProcessorNode</code> como respaldo. Trae 5 ms de anticipo ("lookahead") real: en vez de reaccionar cuando un pico ya pasó, baja la ganancia justo antes de que llegue.</p>
+
+    <h2 id="analizador" data-n="02">Analizador &amp; referencia</h2>
+
+    <p>Antes de tocar nada, el módulo de Analizador muestra dos columnas lado a lado — el archivo original tal como se cargó, y una estimación de cómo quedaría con la cadena actual — con LUFS, pico, rango dinámico y correlación estéreo. Al lado, el módulo de Comparación con Referencia deja subir una segunda canción y superponer su espectro promedio contra el tuyo, en un gráfico de dos colores.</p>
+
+    <div class="gauge-grid">
+      <div class="gauge-card warn">
+        <div class="g-lbl">Pico — muestra discreta</div>
+        <div class="g-val">-0.4<span>dB</span></div>
+        <div class="g-sub">Subestima el pico real entre muestras.</div>
+      </div>
+      <div class="gauge-card ok">
+        <div class="g-lbl">Pico — true peak (4x)</div>
+        <div class="g-val">+0.7<span>dBTP</span></div>
+        <div class="g-sub">Interpolación Catmull-Rom, sobremuestreo 4x.</div>
+      </div>
+    </div>
+
+    <div class="callout amber"><b>Por qué importa</b>Un medidor que solo mira las muestras discretas puede reportar que un track está por debajo de 0 dB cuando en realidad la onda reconstruida entre esas muestras se pasa del techo. LACQUER etiqueta su medición como <b style="color:var(--text)">dBTP</b> precisamente porque no se queda con el valor fácil.</div>
+
+    <h2 id="dinamica" data-n="03">EQ &amp; compresión</h2>
+
+    <p>El EQ Master trabaja con cuatro bandas fijas (120 Hz, 700 Hz, 3 kHz, 9 kHz shelf) más un pasa-altos — pensado para forma tonal general, no para cirugía de frecuencias. Lo interesante está en el selector de aplicación: además de estéreo normal, puede operar en modo <b style="color:var(--text)">Solo Mid</b> o <b style="color:var(--text)">Solo Side</b>, tocando solo el centro de la mezcla o solo los lados sin afectar el otro.</p>
+
+    <p>El compresor tiene dos modos seleccionables: <b style="color:var(--text)">single-band</b> sobre el buss completo, o <b style="color:var(--text)">multibanda de 3 bandas</b> con un crossover Linkwitz-Riley de 4º orden fijo en 200 Hz y 3 kHz. En el modo multibanda, Attack y Release se comparten entre las tres bandas — Threshold, Ratio y Makeup sí son independientes por banda.</p>
+
+    <table class="spec-table">
+      <tr><th>Banda</th><th>Rango</th><th>Comparte A/R con</th></tr>
+      <tr><td>Graves</td><td>&lt; 200 Hz</td><td>Medios, Agudos</td></tr>
+      <tr><td>Medios</td><td>200 Hz – 3 kHz</td><td>Graves, Agudos</td></tr>
+      <tr><td>Agudos</td><td>&gt; 3 kHz</td><td>Graves, Medios</td></tr>
+    </table>
+
+    <div class="callout amber"><b>Ojo con el HPF</b>Si el pasa-altos del EQ está por encima de 200 Hz, la banda de graves del multibanda se queda casi sin señal que comprimir. LACQUER muestra una advertencia visible en el módulo cuando detecta esta combinación — un detalle de diseño que se agradece.</div>
+
+    <h2 id="color" data-n="04">Saturación &amp; imagen estéreo</h2>
+
+    <p>La saturación es un waveshaper tipo cinta/válvula con dos controles — <b style="color:var(--text)">Drive</b> y <b style="color:var(--text)">Mix</b> — que suma densidad armónica sin que se note como distorsión franca, siempre que no se abuse del Drive. La imagen estéreo trabaja en matriz Mid/Side con un único control de <b style="color:var(--text)">Ancho</b> (0–200%): por debajo de 100% angosta hacia el centro, por encima ensancha.</p>
+
+    <p>Donde hay que tener cuidado es al ensanchar los graves — algo que LACQUER no impide, pero que su propio manual advierte: puede generar problemas de fase y de compatibilidad mono. Combinar el Ancho con el EQ en modo Solo Side es la forma más segura de tocar este control sin arriesgar el centro de la mezcla.</p>
+
+    <h2 id="loudness" data-n="05">Limitador &amp; LUFS</h2>
+
+    <p>El bloque de medidores del limitador muestra, en vivo, LUFS integrado, LUFS short-term, reducción de ganancia y pico en dBTP. El cálculo de loudness sigue la norma <b style="color:var(--text)">BS.1770</b> con su gating de dos etapas (puerta absoluta en -70 LU, relativa en -10 LU), para que el número integrado no se hunda por los silencios del track.</p>
+
+    <div class="bars-panel">
+      <span class="panel-title">Objetivo de LUFS por preset</span>
+      <span class="panel-note">Referencia aproximada — el resultado real depende siempre del material fuente</span>
+      <div class="bar-row"><span class="b-lbl">Dinámico / Audiófilo</span><div class="bar-track"><div class="bar-fill" style="width:34%"></div></div><span class="b-val">-25</span></div>
+      <div class="bar-row"><span class="b-lbl">Streaming Suave</span><div class="bar-track"><div class="bar-fill" style="width:52%"></div></div><span class="b-val">-16</span></div>
+      <div class="bar-row"><span class="b-lbl">Streaming Pop</span><div class="bar-track"><div class="bar-fill" style="width:58%"></div></div><span class="b-val">-14</span></div>
+      <div class="bar-row"><span class="b-lbl">Voz Natural / Podcast</span><div class="bar-track"><div class="bar-fill" style="width:48%"></div></div><span class="b-val">-17</span></div>
+      <div class="bar-row"><span class="b-lbl">Vinilo Cálido</span><div class="bar-track"><div class="bar-fill" style="width:52%"></div></div><span class="b-val">-16</span></div>
+      <div class="bar-row"><span class="b-lbl">Dance Ligero</span><div class="bar-track"><div class="bar-fill" style="width:68%"></div></div><span class="b-val">-11</span></div>
+      <div class="bar-row"><span class="b-lbl">Club / EDM Loud</span><div class="bar-track"><div class="bar-fill" style="width:84%"></div></div><span class="b-val">-8</span></div>
+    </div>
+
+    <h2 id="presets" data-n="06">Los 10 presets</h2>
+
+    <p>Diez puntos de partida cubren desde "casi no tocar nada" hasta el máximo de energía de club, pasando por streaming, voz y dos sabores de calidez análoga. Ninguno fuerza un LUFS exacto — son un punto de partida razonable, no una promesa numérica —, y todos son editables y guardables como preset propio.</p>
+
+    <table class="spec-table">
+      <tr><th>Preset</th><th>Perfil</th></tr>
+      <tr><td>Transparente</td><td>Procesamiento mínimo, solo control de picos</td></tr>
+      <tr><td>Dinámico / Audiófilo</td><td>Casi sin compresión ni saturación</td></tr>
+      <tr><td>Streaming Suave / Pop</td><td>Balance moderno de plataformas</td></tr>
+      <tr><td>Dance Ligero</td><td>Energía de club con mano liviana</td></tr>
+      <tr><td>Club / EDM Loud</td><td>Máxima energía y volumen percibido</td></tr>
+      <tr><td>Voz Natural / Podcast</td><td>Limpieza y presencia para hablado</td></tr>
+      <tr><td>Vinilo Ligero / Cálido</td><td>Saturación análoga, dos intensidades</td></tr>
+    </table>
+
+    <h2 id="specs" data-n="07">Ficha técnica</h2>
+
+    <table class="spec-table">
+      <tr><th>Módulo</th><th>Detalle</th></tr>
+      <tr><td>Motor de audio</td><td>Web Audio API nativa, sin plugins externos</td></tr>
+      <tr><td>EQ Master</td><td>4 bandas fijas + HPF, modo estéreo o M/S (Mid / Side)</td></tr>
+      <tr><td>Compresor</td><td>Single-band o multibanda 3 bandas, crossover LR4 en 200Hz/3kHz</td></tr>
+      <tr><td>Saturación</td><td>Waveshaper tape/tube, Drive + Mix</td></tr>
+      <tr><td>Imagen estéreo</td><td>Matriz M/S, Ancho 0–200%</td></tr>
+      <tr><td>Limitador</td><td>Lookahead 5ms, AudioWorklet con fallback ScriptProcessor</td></tr>
+      <tr><td>Loudness</td><td>LUFS integrado y short-term, ponderación K, gating BS.1770</td></tr>
+      <tr><td>True peak</td><td>Interpolación Catmull-Rom, sobremuestreo 4x</td></tr>
+      <tr><td>Presets</td><td>10 de fábrica + guardado de presets propios</td></tr>
+      <tr><td>Exportación</td><td>WAV 16-bit (dither TPDF) o 24-bit (sin dither)</td></tr>
+    </table>
+
+    <div class="proscons">
+      <div class="pc-col pro">
+        <h4>A favor</h4>
+        <div class="chips">
+          <span>Cadena completa de masterización real, no un solo efecto</span>
+          <span>Medición LUFS/true peak seria, no decorativa</span>
+          <span>Modo M/S en EQ e imagen estéreo</span>
+          <span>Manual honesto sobre sus propios límites</span>
+          <span>Gratis, sin cuenta ni instalación</span>
+        </div>
+      </div>
+      <div class="pc-col con">
+        <h4>En contra</h4>
+        <div class="chips">
+          <span>No restaura audio (ruido, hum, clicks)</span>
+          <span>No es herramienta de mezcla multipista</span>
+          <span>Attack/Release compartidos en el multibanda</span>
+          <span>Rendimiento variable según el equipo</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="verdict" id="veredicto">
+  <div class="verdict-box">
+    <div class="v-dial">
+      <svg viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="var(--grid)" stroke-width="8"/>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="var(--mint)" stroke-width="8" stroke-linecap="round"
+          stroke-dasharray="263.9" stroke-dashoffset="39.6" transform="rotate(-90 50 50)"/>
+      </svg>
+      <div class="v-num">8.7</div>
+    </div>
+    <div class="verdict-text">
+      <h3>Veredicto</h3>
+      <p>LACQUER // CUT-1 no reemplaza a un ingeniero de masterización, pero tampoco lo intenta: apunta a la pregunta de qué tan seria puede ser una cadena de masterización construida enteramente con Web Audio API, en una pestaña, gratis. La respuesta, medidor en mano, es bastante seria — el gating BS.1770 y el true peak sobremuestreado no son gestos cosméticos. Los diez presets y el analizador con referencia sostienen un flujo de trabajo real, del render crudo al WAV final. La ausencia de restauración de audio es la limitación honesta frente a un master profesional; el resto son detalles menores frente a lo que ofrece sin costo.</p>
+    </div>
+  </div>
+</div>
+
+<div class="links-bar">
+  <a href="../artifacts/lacquer-cut-v1.html" class="primary">Probar LACQUER →</a>
+  <a href="../artifacts/lacquer-cut-manual.html">Ver el manual completo</a>
+  <a href="https://paypal.me/stemsmag?locale.x=es_XC&country.x=SV" target="_blank" rel="noopener">Apoyar por PayPal</a>
+</div>
+
+<div class="lab-closing">Fin del banco de pruebas · Licencia de la herramienta: Creative Commons BY-NC 4.0</div>
+
+<div class="comments-section" id="comments">
+  <div class="comments-head">Comentarios — únete a la conversación</div>
+  <!--
+    Comentarios vía Giscus (https://giscus.app), basado en GitHub Discussions.
+    Antes de publicar, configura tu propia instancia en https://giscus.app y reemplaza
+    data-repo, data-repo-id, data-category y data-category-id con los valores que te
+    genere el sitio para tu repositorio de GitHub.
+  -->
+  <script src="https://giscus.app/client.js"
+    data-repo="stemsmag/magazine"
+    data-repo-id="R_kgDOTsEphw"
+    data-category="Comments"
+    data-category-id="DIC_kwDOTsEph84DC18I"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="dark"
+    data-lang="es"
+    crossorigin="anonymous"
+    async>
+</script>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo">STEMS<span>//</span>MAGAZINE</div>
+      <p class="footer-tagline-script">La música que nos une</p>
+      <p class="footer-tagline">Reseñas, perfiles y cultura de la música electrónica en español.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <rect x="3" y="3" width="18" height="18" rx="5"/>
+            <circle cx="12" cy="12" r="4.2"/>
+            <circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="#" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <rect x="2.5" y="5.5" width="19" height="13" rx="3.5"/>
+            <path d="M10 9.2 L15.5 12 L10 14.8 Z" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="#" aria-label="Spotify">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <circle cx="12" cy="12" r="9.5"/>
+            <path d="M7 9.5c3.5-1 7-1 10 .6" stroke-linecap="round"/>
+            <path d="M7.3 12.5c3-.8 6-.8 8.6.5" stroke-linecap="round"/>
+            <path d="M7.6 15.3c2.3-.6 4.8-.6 6.9.5" stroke-linecap="round"/>
+          </svg>
+        </a>
+        <a href="#" aria-label="TikTok">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M14 3v10.2a3.6 3.6 0 1 1-3-3.55" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14 3c.3 2.4 2 4.2 4.4 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Secciones</h4>
+      <ul>
+        <li><a href="../eventos.html">Eventos y lanzamientos</a></li>
+        <li><a href="../playlist.html">Playlists y videos</a></li>
+       </ul>
+    </div>
+    <div class="footer-col">
+      <h4>STEMS</h4>
+      <ul>
+        <li><a href="../sobre-nosotros.html">Sobre nosotros</a></li>
+        <li><a href="../contacto.html">Contacto</a></li>
+               </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="../terminos.html">Términos y condiciones</a></li>
+        <li><a href="../privacidad.html">Política de privacidad</a></li>
+        <li><a href="../cookies.html">Aviso de cookies</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>STEMS © 2026 — La música que nos une</span>
+  </div>
+  <div class="footer-credit">Revista de Música Electrónica Stems · Hecho en El Salvador · 2026</div>
+</footer>
+
+<script>
+  /* Resalta el link activo del sidebar según la sección visible */
+  (function(){
+    const links = Array.prototype.slice.call(document.querySelectorAll('#sidenav a'));
+    if(!links.length) return;
+    const sections = links.map(a => document.getElementById(a.getAttribute('href').slice(1)));
+    function onScroll(){
+      const pos = window.scrollY + 140;
+      let activeIdx = 0;
+      sections.forEach((sec, i) => { if(sec && sec.offsetTop <= pos) activeIdx = i; });
+      links.forEach((a, i) => a.classList.toggle('active', i === activeIdx));
+    }
+    document.addEventListener('scroll', onScroll, {passive:true});
+    onScroll();
+  })();
+</script>
+
+</body>
+</html>
