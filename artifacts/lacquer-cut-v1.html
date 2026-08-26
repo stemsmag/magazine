@@ -1,0 +1,2932 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>// LACQUER - CUT v1 by STEMSMAG — Mastering Suite</title>
+<style>
+  :root{
+    --bg:#07090a; --frame-bg:#10141a; --panel:#151a20; --panel-alt:#1a2029;
+    --border:#232a33; --border-soft:#1a1f27;
+    --accent:#2dd7a0; --accent-soft:#123629; --accent-glow:rgba(45,215,160,.45);
+    --amber:#e0a23e; --amber-glow:rgba(224,162,62,.45); --amber-soft:rgba(224,162,62,.14);
+    --red:#e35a5a; --yellow:#e0c23e; --blue:#4fa3e0;
+    --text:#eef2f4; --text-dim:#8a97a0; --text-faint:#54616a;
+    --radius-lg:16px; --radius-md:11px; --radius-sm:7px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:8px; min-height:100vh;
+    background:var(--bg); color:var(--text);
+    font-family:'Segoe UI',system-ui,Arial,sans-serif;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+  }
+  .frame{
+    width:min(1280px,100%); background:var(--frame-bg); border-radius:18px; padding:12px;
+    box-shadow:0 30px 80px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.03);
+    border:1px solid var(--border-soft);
+    container-type:inline-size; container-name:lacquer-frame;
+  }
+
+  /* ===== Topbar ===== */
+  .topbar{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:4px 8px 12px; flex-wrap:wrap; border-bottom:1px solid var(--border-soft); margin-bottom:10px;}
+  .brand-block{display:flex; flex-direction:column; gap:2px;}
+  .brand{font-weight:800; font-size:22px; letter-spacing:2px; color:#f4f6fa;}
+  .brand .c{color:var(--accent);}
+  .subtitle{font-size:9.5px; letter-spacing:3px; color:var(--text-faint); text-transform:uppercase; font-weight:600;}
+  .preset-nav{display:flex; align-items:center; gap:8px;}
+  .preset-pill{
+    min-width:230px; text-align:left; background:var(--panel-alt); border:1px solid var(--border); border-radius:8px;
+    color:var(--text); font-size:12px; padding:7px 10px; appearance:none; cursor:pointer; letter-spacing:.3px;
+  }
+  .preset-desc{font-size:9.5px; color:var(--text-faint); max-width:230px; line-height:1.3;}
+  .topbar-right{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .btn{
+    display:flex; align-items:center; gap:6px; background:var(--panel-alt); border:1px solid var(--border); border-radius:8px;
+    padding:8px 14px; cursor:pointer; font-size:11.5px; color:var(--text-dim); letter-spacing:.5px; font-weight:600;
+  }
+  .btn:hover{color:var(--text); border-color:var(--text-faint);}
+  .btn.accent{color:var(--accent); border-color:var(--accent);}
+  .btn.accent:hover{background:var(--accent-soft);}
+  .btn.on{background:var(--accent-soft); color:var(--accent); border-color:var(--accent);}
+  .btn:disabled{opacity:.4; cursor:not-allowed;}
+  .btn .dot{width:7px; height:7px; border-radius:50%; background:#4a2a2a;}
+  .btn .dot.on{background:var(--accent); box-shadow:0 0 7px var(--accent-glow);}
+
+  /* A/B: azulado cuando se escucha el procesado (preview), rojizo cuando se escucha el original */
+  .btn.ab-processed{background:rgba(79,163,224,.14); color:var(--blue); border-color:var(--blue);}
+  .btn.ab-processed .dot{background:var(--blue); box-shadow:0 0 7px rgba(79,163,224,.5);}
+  .btn.ab-original{background:rgba(227,90,90,.14); color:var(--red); border-color:var(--red);}
+  .btn.ab-original .dot{background:var(--red); box-shadow:0 0 7px rgba(227,90,90,.5);}
+
+  /* ===== Dashboard grid ===== */
+  /* ===== Dashboard: filas independientes en vez de un solo grid con áreas ===== */
+  .dashboard{ display:flex; flex-direction:column; gap:8px; }
+  .row-2{ display:grid; grid-template-columns:1.15fr 0.85fr; gap:8px; }
+  .row-3{ display:grid; grid-template-columns:0.62fr 0.62fr 1.76fr; gap:8px; }
+  @container lacquer-frame (max-width:640px){
+    .row-2, .row-3{ grid-template-columns:1fr; }
+  }
+
+  /* Saturación / Imagen estéreo / Limitador comparten fila -> versión compacta */
+  .row-3 .module{ padding:9px 10px 10px; gap:8px; }
+  .row-3 .module-header{ padding-bottom:6px; }
+  .row-3 .module-title{ font-size:9.5px; letter-spacing:1.3px; }
+  .row-3 .module-sub{ font-size:8px; max-width:140px; }
+  .row-3 .knob-row{ gap:8px; }
+  .row-3 .knob-wrap{ width:50px; gap:3px; }
+  .row-3 .knob{ width:36px; height:36px; }
+  .row-3 .knob-indicator{ top:2px; height:13px; transform-origin:50% 16px; }
+  .row-3 .knob-label{ font-size:7.7px; }
+  .row-3 .knob-val{ font-size:8.3px; }
+  .row-3 .meter-label{ font-size:8px; width:64px; }
+  .row-3 .meter-track{ height:7px; }
+  .row-3 .meter-num{ font-size:9px; width:52px; }
+  .row-3 .lufs-big{ padding:3px 0; }
+  .row-3 .lufs-big .val{ font-size:20px; }
+  .row-3 .lufs-big .unit{ font-size:9px; }
+  .row-3 .meter-block{ gap:6px; min-width:170px !important; }
+  .limiter-flex{ display:flex; gap:18px; flex-wrap:wrap; }
+  .limiter-meters{ flex:1; min-width:220px; }
+  .row-3 .limiter-flex{ gap:10px; }
+
+  /* El limitador/loudness recupera su tamaño normal dentro de la fila -3
+     (más específico que las reglas .row-3 compactas de arriba, así que las gana) */
+  .row-3 .mod-limiter{ padding:12px 14px 14px; gap:10px; }
+  .row-3 .mod-limiter .module-header{ padding-bottom:8px; }
+  .row-3 .mod-limiter .module-title{ font-size:11px; letter-spacing:2px; }
+  .row-3 .mod-limiter .module-sub{ font-size:9px; max-width:260px; }
+  .row-3 .mod-limiter .knob-row{ gap:16px; }
+  .row-3 .mod-limiter .knob-wrap{ width:64px; gap:4px; }
+  .row-3 .mod-limiter .knob{ width:44px; height:44px; }
+  .row-3 .mod-limiter .knob-indicator{ top:3px; height:16px; transform-origin:50% 19px; }
+  .row-3 .mod-limiter .knob-label{ font-size:8.7px; }
+  .row-3 .mod-limiter .knob-val{ font-size:9.5px; }
+  .row-3 .mod-limiter .meter-label{ font-size:9px; width:78px; }
+  .row-3 .mod-limiter .meter-track{ height:9px; }
+  .row-3 .mod-limiter .meter-num{ font-size:10.5px; width:64px; }
+  .row-3 .mod-limiter .meter-block{ gap:8px; min-width:220px !important; }
+  .row-3 .mod-limiter .lufs-big{ padding:6px 0; }
+  .row-3 .mod-limiter .lufs-big .val{ font-size:26px; }
+  .row-3 .mod-limiter .lufs-big .unit{ font-size:11px; }
+  .row-3 .mod-limiter .limiter-flex{ gap:18px; }
+
+  /* Saturación e Imagen Estéreo: cajas angostas, solo 1-2 perillas */
+  .row-3 .mod-sat, .row-3 .mod-stereo{ padding:8px 8px 9px; }
+  .row-3 .mod-sat .module-sub, .row-3 .mod-stereo .module-sub{ max-width:110px; }
+  .row-3 .mod-sat .knob-row, .row-3 .mod-stereo .knob-row{ justify-content:center; gap:14px; }
+
+  .analyzer-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px;}
+  .stat-box{background:var(--panel-alt); border:1px solid var(--border-soft); border-radius:var(--radius-md); padding:9px 10px; display:flex; flex-direction:column; gap:3px;}
+  .stat-label{font-size:8.7px; letter-spacing:.7px; color:var(--text-faint); text-transform:uppercase;}
+  .stat-val{font-size:16px; font-weight:800; color:var(--accent); font-variant-numeric:tabular-nums;}
+  .stat-sub{font-size:9px; color:var(--text-dim);}
+  .analyzer-verdict{background:var(--accent-soft); border:1px solid var(--accent); border-radius:var(--radius-md); padding:10px 12px; font-size:11.5px; color:var(--text); line-height:1.5;}
+  .analyzer-verdict strong{color:var(--accent);}
+  .analyzer-empty{font-size:11px; color:var(--text-faint); padding:6px 2px;}
+
+  /* Análisis rápido (archivo original, sin procesar) = naranja / Estimación con ajustes actuales = verde */
+  .analyzer-subhead{display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:9px; letter-spacing:1.1px; text-transform:uppercase; font-weight:700; margin:2px 0 -3px;}
+  .analyzer-subhead.tone-orange{color:var(--amber);}
+  .analyzer-subhead.tone-green{color:var(--accent);}
+  .analyzer-split{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .analyzer-col{display:flex; flex-direction:column; gap:10px; min-width:0;}
+  @container lacquer-frame (max-width:640px){
+    .analyzer-split{grid-template-columns:1fr;}
+  }
+
+  /* Cajas de stats más chicas dentro de Análisis rápido / Estimación, para que
+     cada label y valor entren en una sola línea aunque la columna sea angosta */
+  .analyzer-split .analyzer-grid{grid-template-columns:repeat(auto-fit,minmax(84px,1fr)); gap:6px;}
+  .analyzer-split .stat-box{padding:6px 7px; gap:1px;}
+  .analyzer-split .stat-label{font-size:7.2px; letter-spacing:.2px; white-space:nowrap;}
+  .analyzer-split .stat-val{font-size:13px;}
+  .analyzer-split .stat-sub{font-size:7.5px; white-space:nowrap;}
+  .analyzer-split .analyzer-verdict{padding:8px 10px; font-size:10.5px; line-height:1.4;}
+
+  /* Barra de deltas (ΔLUFS/ΔPico/ΔDR) arriba de la grilla verde: resume de un
+     vistazo cuánto cambió la Estimación respecto al Análisis rápido original. */
+  .delta-bar{display:flex; gap:6px; margin-bottom:6px; flex-wrap:wrap;}
+  .delta-item{
+    flex:1; min-width:74px; background:var(--accent-soft); border:1px solid var(--accent);
+    border-radius:var(--radius-sm); padding:5px 7px; display:flex; flex-direction:column; gap:1px;
+  }
+  .delta-key{font-size:7.5px; letter-spacing:.5px; color:var(--text-dim); text-transform:uppercase;}
+  .delta-val{font-size:13px; font-weight:800; color:var(--accent); font-variant-numeric:tabular-nums;}
+  .delta-item.tone-orange{background:var(--amber-soft); border-color:var(--amber);}
+  .delta-item.tone-orange .delta-val{color:var(--amber);}
+  .delta-item.tone-blue{background:rgba(79,163,224,.12); border-color:var(--blue);}
+  .delta-item.tone-blue .delta-val{color:var(--blue);}
+
+  /* Canvas de EQ: curva de respuesta en frecuencia + espectro en vivo superpuesto */
+  .eq-canvas{width:100%; height:104px; display:block; margin-top:8px; border-radius:var(--radius-sm); border:1px solid var(--border-soft); background:var(--panel-alt);}
+
+  /* Selector de modo Mid/Side del EQ */
+  .eq-ms-row{display:flex; align-items:center; gap:6px; margin:2px 0 6px;}
+  .eq-ms-label{font-size:9.5px; color:var(--text-faint); letter-spacing:.4px; white-space:nowrap;}
+  .eq-ms-select{font-size:10px; padding:2px 6px; flex:1; min-width:0;}
+
+  /* Compresor multibanda: 3 columnas compactas, una por banda */
+  .mod-multiband{margin-top:12px;}
+  .mb-bands{display:flex; gap:12px; flex-wrap:wrap; margin-top:8px;}
+  .mb-band{flex:1; min-width:170px; background:var(--panel-alt); border:1px solid var(--border-soft); border-radius:var(--radius-sm); padding:8px;}
+  .mb-band-label{font-size:9px; letter-spacing:.6px; color:var(--text-faint); text-transform:uppercase; margin-bottom:4px;}
+  .mb-lo-warning{font-size:9.5px; color:var(--amber); background:var(--amber-soft); border:1px solid var(--amber); border-radius:var(--radius-sm); padding:5px 7px; margin-bottom:6px; line-height:1.35;}
+  .btn-mini{background:var(--panel-alt); border:1px solid var(--border); border-radius:6px; color:var(--text-dim); font-size:11px; padding:1px 7px; cursor:pointer; line-height:1.5;}
+  .btn-mini:hover{color:var(--text); border-color:var(--text-faint);}
+  .btn-mini:disabled{opacity:.4; cursor:not-allowed;}
+  .stat-box.tone-orange .stat-val{color:var(--amber);}
+  .analyzer-verdict.tone-orange{background:var(--amber-soft); border-color:var(--amber);}
+  .analyzer-verdict.tone-orange strong{color:var(--amber);}
+  .stat-box.tone-green .stat-val{color:var(--accent);}
+  .analyzer-verdict.tone-green{background:var(--accent-soft); border-color:var(--accent);}
+  .analyzer-verdict.tone-green strong{color:var(--accent);}
+
+  /* ===== Comparación con referencia ===== */
+  .stat-box.tone-blue .stat-val{color:var(--blue);}
+  .analyzer-verdict.tone-blue{background:rgba(79,163,224,.12); border-color:var(--blue);}
+  .analyzer-verdict.tone-blue strong{color:var(--blue);}
+  .analyzer-subhead.tone-blue{color:var(--blue);}
+  .mod-reference .dropzone{padding:14px; font-size:11px; margin-bottom:8px;}
+  .ref-file-row{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;}
+  .ref-compare-mode{display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap;}
+  .ref-compare-mode .eq-ms-label{font-size:10px; color:var(--text-dim); letter-spacing:.3px;}
+  .ref-split{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:10px;}
+  @container lacquer-frame (max-width:640px){ .ref-split{grid-template-columns:1fr;} }
+  .ref-spectrum-legend{display:flex; align-items:center; gap:14px; flex-wrap:wrap; font-size:10px; color:var(--text-dim); margin-bottom:6px;}
+  .ref-spectrum-legend .legend-item{display:flex; align-items:center; gap:5px;}
+  .ref-spectrum-legend .legend-dot{width:8px; height:8px; border-radius:50%; display:inline-block;}
+  .ref-spectrum-legend .legend-note{font-size:9px; color:var(--text-faint); margin-left:auto;}
+  .ref-spectrum-canvas{height:140px;}
+  .preview-loading{font-size:11.5px; color:var(--text-dim); text-align:center; padding:16px 4px; animation:calculandoFade 1.3s ease-in-out infinite;}
+  @keyframes calculandoFade{ 0%,100%{opacity:.2;} 50%{opacity:1;} }
+
+  .module{
+    background:var(--panel); border:1px solid var(--border); border-radius:var(--radius-lg);
+    padding:12px 14px 14px; display:flex; flex-direction:column; gap:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.02);
+    min-width:0;
+  }
+  .module-header{display:flex; align-items:center; gap:8px; padding-bottom:8px; border-bottom:1px solid var(--border-soft);}
+  .module-title{font-size:11px; letter-spacing:2px; font-weight:700; color:var(--text-dim); text-transform:uppercase;}
+  .module-title .n{color:var(--accent); margin-right:6px;}
+  .module-sub{margin-left:auto; font-size:9px; color:var(--text-faint); letter-spacing:.5px; max-width:260px; text-align:right;}
+
+  /* ===== Loader ===== */
+  .dropzone{
+    border:1.5px dashed var(--border); border-radius:var(--radius-md); padding:18px; text-align:center;
+    color:var(--text-faint); font-size:11.5px; cursor:pointer; transition:border-color .15s, color .15s;
+  }
+  .dropzone:hover, .dropzone.drag{border-color:var(--accent); color:var(--accent);}
+  .dropzone strong{color:var(--text);}
+  .waveform-wrap{position:relative; width:100%; height:96px; background:var(--panel-alt); border-radius:var(--radius-md); border:1px solid var(--border-soft); overflow:hidden;}
+  canvas#waveform{width:100%; height:100%; display:block;}
+  .playhead{position:absolute; top:0; bottom:0; width:1px; background:var(--accent); box-shadow:0 0 6px var(--accent-glow); left:0; pointer-events:none;}
+  .transport-row{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .time-disp{font-size:11px; color:var(--text-dim); font-variant-numeric:tabular-nums; min-width:96px;}
+  .file-name{font-size:10.5px; color:var(--text-faint); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; min-width:60px;}
+
+  /* ===== Knobs ===== */
+  .knob-row{display:flex; flex-wrap:wrap; gap:16px; justify-content:space-around;}
+  .knob-wrap{display:flex; flex-direction:column; align-items:center; gap:4px; width:64px;}
+  .knob{
+    width:44px; height:44px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #2a323d, #12161b 70%);
+    border:1px solid var(--border); position:relative; cursor:ns-resize; touch-action:none;
+    box-shadow:0 2px 6px rgba(0,0,0,.4), inset 0 1px 1px rgba(255,255,255,.06);
+  }
+  .knob-indicator{
+    position:absolute; top:3px; left:50%; width:2px; height:16px; background:var(--accent);
+    transform-origin:50% 19px; transform:translateX(-50%) rotate(-135deg); border-radius:1px;
+    box-shadow:0 0 4px var(--accent-glow);
+  }
+  .knob-label{font-size:8.7px; letter-spacing:.7px; color:var(--text-faint); text-transform:uppercase; text-align:center; line-height:1.15;}
+  .knob-val{font-size:9.5px; color:var(--text-dim); font-weight:700; font-variant-numeric:tabular-nums;}
+  .knob-val.editing{background:var(--panel-alt); border-radius:3px; outline:1px solid var(--accent); padding:0 2px;}
+
+  /* ===== Meters ===== */
+  .meter-block{display:flex; flex-direction:column; gap:8px;}
+  .meter-row{display:flex; align-items:center; gap:8px;}
+  .meter-label{font-size:9px; color:var(--text-faint); letter-spacing:.6px; width:78px; flex:0 0 auto;}
+  .meter-track{flex:1; height:9px; background:var(--panel-alt); border-radius:5px; overflow:hidden; border:1px solid var(--border-soft); position:relative;}
+  .meter-fill{height:100%; width:0%; background:linear-gradient(90deg, var(--accent), var(--accent) 70%, var(--yellow) 88%, var(--red) 97%); transition:width .05s linear;}
+  .meter-peak-mark{position:absolute; top:0; bottom:0; width:2px; background:var(--text); opacity:.7;}
+  .meter-num{width:64px; text-align:right; font-size:10.5px; color:var(--text-dim); font-variant-numeric:tabular-nums; flex:0 0 auto;}
+  .meter-num.clip-flash{color:#fff; background:var(--red); border-radius:3px; padding:0 3px; box-shadow:0 0 8px rgba(227,90,90,.7);}
+  .gr-num{color:var(--amber);}
+  .lufs-big{display:flex; align-items:baseline; gap:6px; justify-content:center; padding:6px 0;}
+  .lufs-big .val{font-size:26px; font-weight:800; color:var(--accent); font-variant-numeric:tabular-nums;}
+  .lufs-big .unit{font-size:11px; color:var(--text-faint); letter-spacing:1px;}
+
+  .status-line{font-size:9.5px; color:var(--text-faint); line-height:1.5;}
+  input[type=file]{display:none;}
+  ::selection{background:var(--accent-soft);}
+
+  .footer{
+    margin-top:6px; padding:10px 8px 4px; border-top:1px solid var(--border-soft);
+    text-align:center; font-size:9.5px; color:var(--text-faint); line-height:1.6; letter-spacing:.3px;
+  }
+  .footer .credit{margin-top:2px; color:var(--text-dim); letter-spacing:.5px;}
+  .footer .c{color:var(--accent);}
+
+  /* ===== Pantalla de inicio / disclaimer ===== */
+  .splash-overlay{
+    position:fixed; inset:0; z-index:1000; background:var(--bg);
+    display:flex; align-items:center; justify-content:center; padding:24px;
+  }
+  .splash-card{
+    width:min(560px,100%); background:var(--frame-bg); border:1px solid var(--border-soft); border-radius:18px;
+    padding:28px 26px 22px; box-shadow:0 30px 80px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.03);
+  }
+  .splash-brand{font-weight:800; font-size:22px; letter-spacing:2px; color:#f4f6fa; margin-bottom:2px;}
+  .splash-brand .c{color:var(--accent);}
+  .splash-tag{font-size:9.5px; letter-spacing:3px; color:var(--text-faint); text-transform:uppercase; font-weight:600; margin-bottom:18px;}
+  .splash-badge{
+    display:inline-block; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; font-weight:700;
+    color:var(--amber); border:1px solid var(--amber); border-radius:5px; padding:3px 8px; margin-bottom:14px;
+  }
+  .splash-body p{font-size:12.5px; line-height:1.65; color:var(--text-dim); margin:0 0 12px;}
+  .splash-body strong{color:var(--text); font-weight:700;}
+  .splash-body .warn{color:var(--amber); font-weight:600;}
+  .splash-body ul{margin:0 0 12px; padding-left:18px;}
+  .splash-body li{font-size:12.5px; line-height:1.6; color:var(--text-dim); margin-bottom:4px;}
+  .splash-actions{display:flex; justify-content:flex-end; margin-top:18px;}
+  .splash-actions .btn{padding:9px 20px; font-size:12px;}
+  .splash-manual-link{color:var(--accent); text-decoration:none; font-weight:700; border-bottom:1px solid var(--accent-soft);}
+  .splash-manual-link:hover{border-bottom-color:var(--accent);}
+
+  .support-link{font-size:8.5px; letter-spacing:.5px; color:var(--text-faint); text-decoration:none; margin-top:1px; display:inline-block;}
+  .support-link:hover{color:var(--accent);}
+  .brand-links{display:flex; align-items:center; gap:9px; margin-top:2px;}
+  .brand-links .support-link{margin-top:0;}
+
+  /* ===== Selector de idioma (discreto) ===== */
+  .lang-pill{
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:30px; height:20px; padding:0 8px; margin-left:2px;
+    background:transparent; border:1px solid var(--border); border-radius:999px;
+    color:var(--text-faint); font-size:9.5px; font-weight:700; letter-spacing:.5px;
+    cursor:pointer; line-height:1; user-select:none; transition:color .15s, border-color .15s, background .15s;
+  }
+  .lang-pill:hover{color:var(--accent); border-color:var(--accent);}
+  .splash-lang-row{display:flex; justify-content:flex-end; margin-bottom:-6px;}
+</style>
+</head>
+<body>
+
+<div class="splash-overlay" id="splash-overlay">
+  <div class="splash-card">
+    <div class="splash-lang-row"><button class="lang-pill" id="lang-toggle-splash" type="button" title="Switch language / Cambiar idioma">EN</button></div>
+    <div class="splash-brand"><span class="c">//</span> LACQUER - CUT v1</div>
+    <div class="splash-tag">by STEMSMAG · Mastering Suite · WAV / MP3</div>
+    <div class="splash-badge">Herramienta de ensayo / experimental</div>
+    <div class="splash-body">
+      <p>Este es un <strong>proyecto experimental</strong> construido sobre la <strong>Web Audio API</strong>, la API nativa del navegador para procesar audio en tiempo real. Funciona armando una cadena de nodos de audio (filtros, compresor, waveshaper de saturación, matriz estéreo y un limitador con anticipo/"lookahead") que procesan tu archivo en vivo mientras suena, y que también pueden renderizarse completos para exportar un WAV.</p>
+      <p>// LACQUER - CUT v1 <strong>no es un producto de entrega final profesional</strong>. Tampoco es:</p>
+      <ul>
+        <li>Un <strong>restaurador de audio</strong> (no quita ruido, hum, clicks de vinilo, ni repara grabaciones dañadas).</li>
+        <li>Una <strong>herramienta de mezcla</strong> (no balancea pistas, no automatiza, no reemplaza tu DAW).</li>
+      </ul>
+      <p>Lo que sí hace: te deja <strong>escuchar en tiempo real</strong> el efecto de una cadena de masterización simplificada (EQ, compresión de buss, saturación, imagen estéreo y limitador) sobre un render ya mezclado, para experimentar con presets y exportar un WAV procesado.</p>
+      <p class="warn">Si tu audio ya viene mal desde el origen — mal grabado, sin claridad en la mezcla, o con problemas de calidad — // LACQUER - CUT v1 no está diseñado para hacer milagros.</p>
+      <p><strong>Notas técnicas y manual:</strong> arquitectura de la cadena de señal, cómo se calculan las métricas y guía de uso de cada módulo en <a class="splash-manual-link" href="lacquer-cut-manual.html" target="_blank" rel="noopener">el manual de // LACQUER - CUT v1 &rarr;</a></p>
+    </div>
+    <div class="splash-actions">
+      <button class="btn accent" id="btn-splash-accept">Aceptar</button>
+    </div>
+  </div>
+</div>
+
+<div class="frame" id="main-frame" style="display:none;">
+  <div class="topbar">
+    <div class="brand-block">
+      <div class="brand"><span class="c">//</span> LACQUER - CUT v1</div>
+      <div class="subtitle">by STEMSMAG · Mastering Suite · WAV / MP3</div>
+      <div class="brand-links">
+        <a class="support-link" href="lacquer-cut-manual.html#apoyar" target="_blank" rel="noopener">☕ Apoyá el proyecto</a>
+        <a class="support-link" href="lacquer-cut-manual.html" target="_blank" rel="noopener">📖 Manual</a>
+        <a class="support-link" href="../index.html">🏠 Home</a>
+        <button class="lang-pill" id="lang-toggle" type="button" title="Switch language / Cambiar idioma">EN</button>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <select id="preset-select" class="preset-pill"></select>
+      <div class="preset-desc" id="preset-desc"></div>
+      <button class="btn-mini" id="btn-save-preset" title="Guardar los ajustes actuales como preset propio">💾 guardar</button>
+      <button class="btn-mini" id="btn-delete-preset" title="Borrar este preset propio" style="display:none;">✕ borrar</button>
+      <button class="btn ab-processed" id="btn-ab"><span class="dot" id="ab-dot"></span> <span id="ab-label">A/B (procesado)</span></button>
+      <select id="export-bitdepth" class="preset-pill" style="min-width:auto; padding:8px 10px;" title="Profundidad de bits del WAV exportado">
+        <option value="16">16-bit (dither TPDF)</option>
+        <option value="24">24-bit (sin dither)</option>
+      </select>
+      <button class="btn accent" id="btn-export" disabled>Exportar WAV</button>
+    </div>
+  </div>
+
+  <div class="dashboard">
+
+    <!-- LOADER -->
+    <div class="module mod-loader">
+      <div class="module-header"><span class="module-title"><span class="n">01</span>Fuente</span><span class="module-sub">Cargá un render (wav/mp3) para masterizar</span></div>
+      <div class="dropzone" id="dropzone">
+        Arrastrá tu archivo acá, o <strong>hacé clic para elegir</strong> (.wav / .mp3)
+        <input type="file" id="file-input" accept=".wav,.mp3,audio/*">
+      </div>
+      <div class="waveform-wrap"><canvas id="waveform"></canvas><div class="playhead" id="playhead"></div></div>
+      <div class="transport-row">
+        <button class="btn accent" id="btn-play" disabled>▶ Play</button>
+        <button class="btn" id="btn-stop" disabled>■ Stop</button>
+        <div class="time-disp" id="time-disp">00:00 / 00:00</div>
+        <div class="file-name" id="file-name">Sin archivo cargado</div>
+      </div>
+      <div class="status-line" id="status-line">Esperando archivo…</div>
+    </div>
+
+    <!-- ANALYZER -->
+    <div class="module mod-analyzer">
+      <div class="module-header"><span class="module-title"><span class="n">02</span>Analizador de Track</span><button class="btn-mini" id="btn-refresh-preview" title="Recalcular estimación ahora" disabled>↻ recalcular</button><span class="module-sub">LUFS, pico, rango dinámico y correlación estéreo</span></div>
+
+      <div class="analyzer-split">
+        <div class="analyzer-col">
+          <div class="analyzer-subhead tone-orange">Análisis rápido — archivo original</div>
+          <div id="analyzer-body"><div class="analyzer-empty" id="analyzer-empty">Cargá un archivo para ver su análisis.</div></div>
+        </div>
+        <div class="analyzer-col">
+          <div class="analyzer-subhead tone-green">Estimación — con los ajustes actuales</div>
+          <div id="preview-body"><div class="analyzer-empty" id="preview-empty">Cargá un archivo para ver la estimación.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARACIÓN CON REFERENCIA -->
+    <div class="module mod-reference">
+      <div class="module-header"><span class="module-title"><span class="n">02b</span>Comparación con Referencia</span><span class="module-sub">Cargá un track de referencia y compará LUFS/espectro contra tu mezcla</span></div>
+
+      <div class="dropzone" id="ref-dropzone">
+        Arrastrá una canción de referencia acá, o <strong>hacé clic para elegir</strong> (.wav / .mp3)
+        <input type="file" id="ref-file-input" accept=".wav,.mp3,audio/*">
+      </div>
+      <div class="ref-file-row">
+        <div class="file-name" id="ref-file-name">Sin referencia cargada</div>
+        <button class="btn-mini" id="btn-ref-play" title="Escuchar la referencia (sin procesar, tal cual el archivo)" style="display:none;">▶ escuchar</button>
+        <button class="btn-mini" id="btn-ref-clear" title="Quitar referencia" style="display:none;">✕ quitar referencia</button>
+      </div>
+      <audio id="ref-audio-el" style="display:none;"></audio>
+
+      <div id="ref-compare-wrap" style="display:none;">
+        <div class="ref-compare-mode">
+          <span class="eq-ms-label">Comparar mi mezcla:</span>
+          <select id="ref-compare-select" class="preset-pill eq-ms-select" style="min-width:170px;">
+            <option value="original">Archivo original</option>
+            <option value="preview">Estimación procesada (con la cadena actual)</option>
+          </select>
+        </div>
+        <div class="delta-bar" id="ref-delta-bar"></div>
+        <div class="ref-split">
+          <div class="analyzer-col">
+            <div class="analyzer-subhead tone-orange">Tu mezcla</div>
+            <div id="ref-mine-body"><div class="analyzer-empty">—</div></div>
+          </div>
+          <div class="analyzer-col">
+            <div class="analyzer-subhead tone-blue">Referencia</div>
+            <div id="ref-theirs-body"><div class="analyzer-empty">—</div></div>
+          </div>
+        </div>
+        <div class="ref-spectrum-legend">
+          <span class="legend-item"><span class="legend-dot" style="background:var(--amber)"></span>Tu mezcla</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--blue)"></span>Referencia</span>
+          <span class="legend-note">Espectro promedio de todo el track (no en vivo)</span>
+        </div>
+        <canvas id="ref-spectrum-canvas" class="eq-canvas ref-spectrum-canvas" title="Espectro promedio: tu mezcla (ámbar) vs referencia (azul)"></canvas>
+      </div>
+      <div class="status-line" id="ref-status-line">Cargá tu mezcla (arriba) y una referencia para comparar.</div>
+    </div>
+
+    <!-- EQ + COMPRESOR -->
+    <div class="row-2">
+    <div class="module mod-eq">
+      <div class="module-header"><span class="module-title"><span class="n">03</span>EQ Master</span><span class="module-sub">HPF + shelf/peak fijos (120 / 700 / 3k / 9k Hz)</span></div>
+      <div class="eq-ms-row">
+        <span class="eq-ms-label">Aplicar EQ a:</span>
+        <select id="eq-ms-mode" class="preset-pill eq-ms-select">
+          <option value="stereo">Estéreo (L/R, normal)</option>
+          <option value="mid">Solo Mid (centro) — deja los lados intactos</option>
+          <option value="side">Solo Side (lados) — deja el centro intacto</option>
+        </select>
+      </div>
+      <div class="knob-row" id="knobs-eq"></div>
+      <canvas id="eq-canvas" class="eq-canvas" title="Curva de EQ (verde) y espectro en vivo (azul, mientras suena)"></canvas>
+    </div>
+
+    <div class="module mod-comp">
+      <div class="module-header"><span class="module-title"><span class="n">04</span>Compresor Buss</span><span class="module-sub">Cohesión y control dinámico</span></div>
+      <div class="eq-ms-row">
+        <span class="eq-ms-label">Modo:</span>
+        <select id="comp-mode" class="preset-pill eq-ms-select">
+          <option value="single">Single-band (buss completo)</option>
+          <option value="multi">Multibanda (3 bandas)</option>
+        </select>
+      </div>
+      <div id="comp-single-wrap">
+        <div class="knob-row" id="knobs-comp"></div>
+        <div class="meter-row">
+          <div class="meter-label">GAIN REDUCTION</div>
+          <div class="meter-track"><div class="meter-fill" id="gr-fill" style="background:var(--amber); width:0%"></div></div>
+          <div class="meter-num gr-num" id="gr-num">0.0 dB</div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <!-- COMPRESOR MULTIBANDA (oculto salvo que se elija ese modo) -->
+    <div class="module mod-multiband" id="mod-multiband" style="display:none;">
+      <div class="module-header"><span class="module-title"><span class="n">04b</span>Compresor Multibanda</span><span class="module-sub">Crossover LR4 fijo en 200Hz / 3kHz — Attack/Release compartidos entre bandas</span></div>
+      <div class="knob-row" id="knobs-mb-shared"></div>
+      <div class="mb-bands">
+        <div class="mb-band">
+          <div class="mb-band-label">GRAVES &lt; 200Hz</div>
+          <div class="mb-lo-warning" id="mb-lo-warning" style="display:none;">⚠ El HPF (EQ Master) está por encima de 200Hz — esta banda recibe poca o ninguna señal.</div>
+          <div class="knob-row" id="knobs-mb-lo"></div>
+          <div class="meter-row"><div class="meter-label">GR</div><div class="meter-track"><div class="meter-fill" id="mb-lo-gr-fill" style="background:var(--amber); width:0%"></div></div><div class="meter-num gr-num" id="mb-lo-gr-num">0.0 dB</div></div>
+        </div>
+        <div class="mb-band">
+          <div class="mb-band-label">MEDIOS 200Hz–3k</div>
+          <div class="knob-row" id="knobs-mb-mid"></div>
+          <div class="meter-row"><div class="meter-label">GR</div><div class="meter-track"><div class="meter-fill" id="mb-mid-gr-fill" style="background:var(--amber); width:0%"></div></div><div class="meter-num gr-num" id="mb-mid-gr-num">0.0 dB</div></div>
+        </div>
+        <div class="mb-band">
+          <div class="mb-band-label">AGUDOS &gt; 3k</div>
+          <div class="knob-row" id="knobs-mb-hi"></div>
+          <div class="meter-row"><div class="meter-label">GR</div><div class="meter-track"><div class="meter-fill" id="mb-hi-gr-fill" style="background:var(--amber); width:0%"></div></div><div class="meter-num gr-num" id="mb-hi-gr-num">0.0 dB</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SATURACIÓN + IMAGEN ESTÉREO + LIMITADOR/LOUDNESS -->
+    <div class="row-3">
+    <div class="module mod-sat">
+      <div class="module-header"><span class="module-title"><span class="n">05</span>Saturación</span><span class="module-sub">Color armónico sutil (tape/tube)</span></div>
+      <div class="knob-row" id="knobs-sat"></div>
+    </div>
+
+    <div class="module mod-stereo">
+      <div class="module-header"><span class="module-title"><span class="n">06</span>Imagen Estéreo</span><span class="module-sub">Matriz M/S · usar con cuidado en graves</span></div>
+      <div class="knob-row" id="knobs-stereo"></div>
+    </div>
+
+    <div class="module mod-limiter">
+      <div class="module-header"><span class="module-title"><span class="n">07</span>Limitador &amp; Loudness</span><span class="module-sub">LUFS con ponderación K aprox. + gating BS.1770 (abs. -70 / rel. -10 LU)</span></div>
+
+      <div class="limiter-flex">
+        <div class="knob-row" id="knobs-limiter" style="flex:0 0 auto;"></div>
+        <div class="meter-block limiter-meters">
+          <div class="lufs-big"><span class="val" id="lufs-int">—</span><span class="unit">LUFS INTEGRADO</span></div>
+          <div class="meter-row"><div class="meter-label">LIMITER GR</div><div class="meter-track"><div class="meter-fill" id="lim-gr-fill" style="background:var(--amber); width:0%"></div></div><div class="meter-num gr-num" id="lim-gr-num">0.0 dB</div></div>
+          <div class="meter-row"><div class="meter-label">LUFS SHORT-TERM</div><div class="meter-track"><div class="meter-fill" id="lufs-st-fill"></div></div><div class="meter-num" id="lufs-st-num">—</div></div>
+          <div class="meter-row"><div class="meter-label">PICO (dBTP aprox.)</div><div class="meter-track"><div class="meter-fill" id="peak-fill"></div></div><div class="meter-num" id="peak-num">—</div></div>
+        </div>
+      </div>
+    </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Cadena de masterización <span class="c">//</span> LACQUER - CUT v1 — EQ, compresor buss, saturación, imagen estéreo y limitador con lookahead, todo generado con Web Audio API.
+    <div class="credit">by STEMSMAG</div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   // LACQUER - CUT v1 by STEMSMAG — herramienta de masterización
+   Cadena: HPF -> EQ (low shelf, 2 peak, high shelf; L/R o M/S) -> Compresor
+           buss (single-band o multibanda de 3 bandas con crossover LR4)
+           -> Saturación (waveshaper, dry/wet) -> Imagen estéreo (matriz M/S)
+           -> Limitador (lookahead real + gating BS.1770 en el medidor LUFS)
+   ============================================================ */
+
+const $ = id => document.getElementById(id);
+const dbToLin = db => Math.pow(10, db/20);
+const clamp = (v,a,b)=>Math.min(b,Math.max(a,v));
+
+/* ---------------- True peak (aprox.) ----------------
+   El "pico de muestra" (max abs de las muestras discretas) puede subestimar el
+   pico real de la forma de onda reconstruida entre muestras (inter-sample peak):
+   una señal puede rebasar 0 dBFS entre dos muestras sin que ninguna muestra
+   individual lo muestre. Esto importa porque el knob del limitador se llama
+   "Ceiling" y se mide en dBTP (true peak), así que el medidor debería medir lo
+   mismo que promete esa etiqueta.
+   Nota: interpolación LINEAL entre muestras nunca detecta esto (una recta entre
+   dos puntos jamás supera a ninguno de los dos extremos), así que no sirve para
+   este propósito aunque parezca la opción más barata. Usamos interpolación
+   cúbica (Catmull-Rom) con sobremuestreo 4x: al ser una curva, sí puede tener
+   overshoot entre muestras y aproxima razonablemente bien el pico real sin el
+   costo de un filtro de reconstrucción band-limited completo (BS.1770 Annex 2). */
+function truePeakAbsFromChannel(d, len, oversample){
+  const os = oversample||4;
+  let peak = 0;
+  const at = (i)=> d[i<0?0:(i>=len?len-1:i)]; // bordes: repite la muestra extrema
+  for(let i=0;i<len;i++){
+    const a0 = Math.abs(d[i]); if(a0>peak) peak=a0;
+    if(i<len-1){
+      const p0=at(i-1), p1=d[i], p2=d[i+1], p3=at(i+2);
+      for(let k=1;k<os;k++){
+        const t = k/os, t2=t*t, t3=t2*t;
+        const v = 0.5*((2*p1) + (-p0+p2)*t + (2*p0-5*p1+4*p2-p3)*t2 + (-p0+3*p1-3*p2+p3)*t3);
+        const a = Math.abs(v); if(a>peak) peak=a;
+      }
+    }
+  }
+  return peak;
+}
+
+/* Misma cuenta que truePeakAbsFromChannel, pero async: cede el hilo principal
+   cada YIELD_EVERY_SAMPLES muestras (ver comentario junto a yieldToMain). Se usa
+   en analyzeBuffer(), que corre en cada actualización de la Estimación mientras
+   el usuario mueve knobs — si el limitador está en modo fallback (ScriptProcessor,
+   ver ensureLimiterWorklet), este bucle es justo el tipo de trabajo síncrono largo
+   que produce cortes de audio audibles si no se trocea. */
+async function truePeakAbsFromChannelAsync(d, len, oversample){
+  const os = oversample||4;
+  let peak = 0;
+  const at = (i)=> d[i<0?0:(i>=len?len-1:i)];
+  let sinceYield = 0;
+  for(let i=0;i<len;i++){
+    const a0 = Math.abs(d[i]); if(a0>peak) peak=a0;
+    if(i<len-1){
+      const p0=at(i-1), p1=d[i], p2=d[i+1], p3=at(i+2);
+      for(let k=1;k<os;k++){
+        const t = k/os, t2=t*t, t3=t2*t;
+        const v = 0.5*((2*p1) + (-p0+p2)*t + (2*p0-5*p1+4*p2-p3)*t2 + (-p0+3*p1-3*p2+p3)*t3);
+        const a = Math.abs(v); if(a>peak) peak=a;
+      }
+    }
+    sinceYield++;
+    if(sinceYield >= YIELD_EVERY_SAMPLES){ sinceYield = 0; await yieldToMain(); }
+  }
+  return peak;
+}
+function linToDb(v){ return v>0 ? 20*Math.log10(v) : -100; }
+
+/* ---------------- Ceder el hilo principal en cálculos pesados ----------------
+   Si el AudioWorklet no está disponible (ver ensureLimiterWorklet más abajo:
+   requiere HTTPS o http://localhost — falla en file://), el limitador cae a un
+   ScriptProcessorNode que corre EN el hilo principal. En ese caso, cualquier
+   bloque de JS largo y síncrono (por ejemplo analizar todo el track para el
+   panel de Estimación) retrasa el callback de audio y se escucha como un
+   glitch/crujido justo cuando cambian los parámetros. yieldToMain() corta esos
+   bucles pesados en pedacitos con una pausa real entre uno y otro, para que el
+   hilo principal (y por lo tanto el audio, en modo fallback) no se quede
+   bloqueado de un tirón. No tiene costo perceptible en navegadores modernos
+   con AudioWorklet disponible; es una salvaguarda extra para el peor caso. */
+function yieldToMain(){ return new Promise(res=> setTimeout(res, 0)); }
+const YIELD_EVERY_SAMPLES = 200000; // ~4-5ms de trabajo por tanda a velocidades típicas de estos bucles
+
+/* ---------------- Aviso si no hay AudioWorklet disponible ----------------
+   AudioWorklet requiere un "contexto seguro": HTTPS o http://localhost. Si el
+   HTML se abrió directo desde el disco (file://) el navegador lo bloquea sin
+   avisar explícitamente, y la app cae en el fallback ScriptProcessorNode (más
+   propenso a glitches, ver arriba). Lo detectamos apenas carga la página y lo
+   mostramos en el status-line para que quede claro por qué puede haber ruido. */
+const INSECURE_CONTEXT_NO_WORKLET = !window.isSecureContext;
+
+
+/* ---------------- Pantalla de inicio / disclaimer ---------------- */
+$('btn-splash-accept').addEventListener('click', ()=>{
+  $('splash-overlay').remove();
+  $('main-frame').style.display = '';
+  drawEqPanel(); // recién ahora el frame es visible (display:none -> ''), así que el canvas ya tiene ancho real para medir
+});
+
+let audioCtx = null;
+let audioBuffer = null;   // AudioBuffer original decodificado
+let fileLabel = "";
+
+// nodos de reproducción en vivo
+let live = null;          // { srcNode, chain, dryGain, wetGain, analyser, startedAt, pausedAt, playing }
+let rafId = null;
+
+// acumuladores de loudness (aprox.). `blocks` guarda la media-cuadrado K-ponderada
+// de cada tick de medición (~46-50ms) desde que arrancó la reproducción, para poder
+// calcular el LUFS integrado CON gating BS.1770 (ver gatedLufsFromBlocks) sobre
+// todo lo reproducido hasta ahora, no solo un promedio simple sin gatear.
+let loudnessAcc = { blocks:[], stWindow:[] };
+
+const state = {
+  hpf: 30,
+  lowShelfGain: 0, peak1Gain: 0, peak2Gain: 0, highShelfGain: 0,
+  eqMsMode: 'stereo', // 'stereo' | 'mid' | 'side' — a qué canal(es) se le aplica el EQ de 5 bandas
+  compThreshold: -18, compRatio: 2, compAttack: 0.01, compRelease: 0.25, compMakeup: 0,
+  multibandOn: false, // false = compresor single-band de siempre; true = 3 bandas independientes (ver mbXxx abajo)
+  mbAttack: 0.01, mbRelease: 0.25, // compartidos entre las 3 bandas (simplificación deliberada, ver comentario en buildChain)
+  mbLoThreshold: -18, mbLoRatio: 3, mbLoMakeup: 0,     // graves, < 200Hz
+  mbMidThreshold: -16, mbMidRatio: 2.5, mbMidMakeup: 0, // medios, 200Hz–3kHz
+  mbHiThreshold: -14, mbHiRatio: 2, mbHiMakeup: 0,      // agudos, > 3kHz
+  satDrive: 0, satMix: 0,
+  width: 1.0,
+  ceiling: -1.0, limiterDrive: 0
+};
+
+/* Snapshot de los valores "de fábrica" de cada parámetro, tomado ANTES de que
+   cualquier preset los pise. Se usa para el doble-clic en un knob (resetear ese
+   parámetro puntual a su default), ver createKnob más abajo. */
+const DEFAULT_STATE = Object.assign({}, state);
+
+const PRESETS = [
+  { name:"Transparente", desc:"Procesamiento mínimo, control de picos únicamente.",
+    p:{ hpf:30, lowShelfGain:0, peak1Gain:0, peak2Gain:0, highShelfGain:0,
+        compThreshold:-18, compRatio:2, compAttack:0.01, compRelease:0.25, compMakeup:0,
+        satDrive:0, satMix:0, width:1.0, ceiling:-1.0, limiterDrive:0 } },
+  { name:"Dinámico / Audiófilo (~ -20/-25 LUFS)", desc:"Casi sin compresión ni saturación — deja pasar la dinámica original del render. El LUFS final depende del material fuente, no lo fuerza este preset.",
+    p:{ hpf:20, lowShelfGain:0, peak1Gain:0, peak2Gain:0, highShelfGain:0,
+        compThreshold:-30, compRatio:1.2, compAttack:0.02, compRelease:0.4, compMakeup:0,
+        satDrive:0, satMix:0, width:1.0, ceiling:-1.0, limiterDrive:0 } },
+  { name:"Streaming Suave (~ -16 LUFS)", desc:"Versión más delicada del master de streaming, casi imperceptible.",
+    p:{ hpf:30, lowShelfGain:-0.5, peak1Gain:0.5, peak2Gain:0.7, highShelfGain:1,
+        compThreshold:-22, compRatio:1.8, compAttack:0.012, compRelease:0.22, compMakeup:1,
+        satDrive:0.08, satMix:0.1, width:1.08, ceiling:-1.2, limiterDrive:2 } },
+  { name:"Streaming Pop (~ -14 LUFS)", desc:"Balance moderno para plataformas de streaming.",
+    p:{ hpf:30, lowShelfGain:-1, peak1Gain:1, peak2Gain:1.5, highShelfGain:2,
+        compThreshold:-20, compRatio:2.5, compAttack:0.008, compRelease:0.18, compMakeup:2,
+        satDrive:0.15, satMix:0.2, width:1.15, ceiling:-1.0, limiterDrive:4 } },
+  { name:"Dance Ligero (~ -11 LUFS)", desc:"Energía de club con mano más liviana, menos limitación.",
+    p:{ hpf:35, lowShelfGain:1, peak1Gain:0, peak2Gain:0.5, highShelfGain:1.5,
+        compThreshold:-20, compRatio:2.5, compAttack:0.006, compRelease:0.16, compMakeup:1.5,
+        satDrive:0.15, satMix:0.15, width:1.15, ceiling:-1.0, limiterDrive:4 } },
+  { name:"Club / EDM Loud (~ -8 LUFS)", desc:"Máxima energía y volumen percibido, más limitación.",
+    p:{ hpf:40, lowShelfGain:2, peak1Gain:0, peak2Gain:1, highShelfGain:2.5,
+        compThreshold:-24, compRatio:4, compAttack:0.003, compRelease:0.12, compMakeup:3,
+        satDrive:0.35, satMix:0.35, width:1.3, ceiling:-0.3, limiterDrive:8 } },
+  { name:"Voz Natural (~ -18 LUFS)", desc:"Limpieza y presencia suaves, mantiene la dinámica de la voz.",
+    p:{ hpf:70, lowShelfGain:-1.5, peak1Gain:-0.5, peak2Gain:1, highShelfGain:0.5,
+        compThreshold:-20, compRatio:2, compAttack:0.008, compRelease:0.2, compMakeup:2,
+        satDrive:0.02, satMix:0.05, width:0.95, ceiling:-1.8, limiterDrive:1.5 } },
+  { name:"Podcast / Voz (~ -16 LUFS)", desc:"Limpieza de graves y presencia vocal.",
+    p:{ hpf:90, lowShelfGain:-3, peak1Gain:-1, peak2Gain:2, highShelfGain:1,
+        compThreshold:-18, compRatio:3, compAttack:0.005, compRelease:0.15, compMakeup:4,
+        satDrive:0.05, satMix:0.1, width:0.9, ceiling:-1.5, limiterDrive:3 } },
+  { name:"Vinilo Ligero (~ -18 LUFS)", desc:"Un toque de calidez análoga, sin exagerar la saturación.",
+    p:{ hpf:25, lowShelfGain:0.7, peak1Gain:0.2, peak2Gain:-0.2, highShelfGain:-0.5,
+        compThreshold:-18, compRatio:1.5, compAttack:0.02, compRelease:0.3, compMakeup:0.5,
+        satDrive:0.15, satMix:0.15, width:1.02, ceiling:-1.5, limiterDrive:0.5 } },
+  { name:"Vinilo Cálido (~ -16 LUFS)", desc:"Saturación generosa, agudos suavizados.",
+    p:{ hpf:25, lowShelfGain:1.5, peak1Gain:0.5, peak2Gain:-0.5, highShelfGain:-1.5,
+        compThreshold:-16, compRatio:1.8, compAttack:0.015, compRelease:0.3, compMakeup:1,
+        satDrive:0.4, satMix:0.4, width:1.05, ceiling:-1.2, limiterDrive:1 } }
+];
+
+/* ---------------- Limitador con lookahead: AudioWorklet ----------------
+   Antes esto corría en un ScriptProcessorNode (hilo principal): cualquier corte
+   del hilo principal (pintar la waveform, refrescar medidores, arrastrar un knob,
+   aplicar un preset) producía un audio-dropout que se escuchaba como un click/pop
+   ("polvo de aguja"). Un AudioWorkletNode corre en el hilo de audio dedicado del
+   navegador y es inmune a esos cortes: es la forma correcta de hacer DSP a medida
+   sin glitches.
+   AudioWorklet requiere un contexto seguro (HTTPS o http://localhost). Si el
+   archivo se abre directo desde el disco (file://) o algún navegador no lo
+   soporta, usamos como respaldo el mismo algoritmo corriendo en un
+   ScriptProcessorNode (createLookaheadLimiterCore, más abajo) para que la
+   reproducción nunca se rompa. */
+const LOOKAHEAD_MS = 5;
+const RELEASE_MS = 60;
+const LIMITER_BLOCK_SIZE = 1024;
+
+function createLookaheadLimiterCore(sampleRate, ceilingDb, lookaheadMs, releaseMs){
+  const lookaheadSamples = Math.max(1, Math.round(lookaheadMs/1000*sampleRate));
+  const windowSize = lookaheadSamples + 1;
+  const delayLen = windowSize + 16384 + 16;
+  const releaseCoeff = 1 - Math.exp(-1/(Math.max(0.001, releaseMs/1000) * sampleRate));
+
+  let ceilingLin = dbToLin(ceilingDb);
+  const setCeiling = (db)=>{ ceilingLin = dbToLin(db); };
+
+  const delayL = new Float32Array(delayLen);
+  const delayR = new Float32Array(delayLen);
+
+  const dqCap = windowSize + 4;
+  const dqIdx = new Float64Array(dqCap);
+  const dqVal = new Float32Array(dqCap);
+  let head = 0, tail = 0, count = 0;
+
+  function dqPushBack(idx, val){
+    while(count > 0){
+      const lastPos = (tail - 1 + dqCap) % dqCap;
+      if(dqVal[lastPos] <= val){ tail = lastPos; count--; } else break;
+    }
+    dqIdx[tail] = idx; dqVal[tail] = val; tail = (tail+1) % dqCap; count++;
+  }
+  function dqPopFront(){ head = (head+1) % dqCap; count--; }
+
+  let m = 0;
+  let outIndex = -lookaheadSamples;
+  let smoothedGain = 1;
+
+  function processBlock(inL, inR, outL, outR, n){
+    for(let i=0;i<n;i++){
+      const sL = inL[i], sR = inR[i];
+      delayL[m % delayLen] = sL; delayR[m % delayLen] = sR;
+      const peak = Math.max(Math.abs(sL), Math.abs(sR));
+      dqPushBack(m, peak);
+      const winStart = m - windowSize + 1;
+      while(count > 0 && dqIdx[head] < winStart) dqPopFront();
+      m++;
+
+      if(outIndex >= 0){
+        const windowMax = count>0 ? dqVal[head] : 0;
+        const required = windowMax > ceilingLin ? (ceilingLin/windowMax) : 1;
+        if(required < smoothedGain) smoothedGain = required;
+        else smoothedGain += (required - smoothedGain) * releaseCoeff;
+        const pos = outIndex % delayLen;
+        outL[i] = delayL[pos] * smoothedGain + 1e-24; // +1e-24: evita denormals (ver nota más abajo)
+        outR[i] = delayR[pos] * smoothedGain - 1e-24;
+      } else {
+        outL[i] = 0; outR[i] = 0;
+      }
+      outIndex++;
+    }
+  }
+
+  return { processBlock, setCeiling, lookaheadSamples, getReductionDb: ()=> 20*Math.log10(Math.max(smoothedGain,1e-6)) };
+}
+
+const LIMITER_WORKLET_CODE = `
+class LookaheadLimiterProcessor extends AudioWorkletProcessor {
+  static get parameterDescriptors(){
+    return [{ name:'ceilingDb', defaultValue:-1, minValue:-24, maxValue:0, automationRate:'k-rate' }];
+  }
+  constructor(options){
+    super();
+    const sr = sampleRate;
+    const lookaheadMs = options.processorOptions.lookaheadMs;
+    const releaseMs = options.processorOptions.releaseMs;
+    this.lookaheadSamples = Math.max(1, Math.round(lookaheadMs/1000*sr));
+    this.windowSize = this.lookaheadSamples + 1;
+    this.delayLen = this.windowSize + 16384 + 16;
+    this.releaseCoeff = 1 - Math.exp(-1/(Math.max(0.001, releaseMs/1000) * sr));
+    this.delayL = new Float32Array(this.delayLen);
+    this.delayR = new Float32Array(this.delayLen);
+    this.dqCap = this.windowSize + 4;
+    this.dqIdx = new Float64Array(this.dqCap);
+    this.dqVal = new Float32Array(this.dqCap);
+    this.head = 0; this.tail = 0; this.count = 0;
+    this.m = 0;
+    this.outIndex = -this.lookaheadSamples;
+    this.smoothedGain = 1;
+  }
+  dqPushBack(idx, val){
+    while(this.count > 0){
+      const lastPos = (this.tail - 1 + this.dqCap) % this.dqCap;
+      if(this.dqVal[lastPos] <= val){ this.tail = lastPos; this.count--; } else break;
+    }
+    this.dqIdx[this.tail] = idx; this.dqVal[this.tail] = val;
+    this.tail = (this.tail+1) % this.dqCap; this.count++;
+  }
+  dqPopFront(){ this.head = (this.head+1) % this.dqCap; this.count--; }
+  process(inputs, outputs, parameters){
+    const input = inputs[0] || [];
+    const outL = outputs[0][0], outR = outputs[0][1];
+    const n = outL.length;
+    const inL = (input[0] && input[0].length===n) ? input[0] : null;
+    const inR = (input[1] && input[1].length===n) ? input[1] : inL;
+    const ceilingLin = Math.pow(10, parameters.ceilingDb[0]/20);
+    for(let i=0;i<n;i++){
+      const sL = inL ? inL[i] : 0, sR = inR ? inR[i] : 0;
+      this.delayL[this.m % this.delayLen] = sL;
+      this.delayR[this.m % this.delayLen] = sR;
+      const peak = Math.max(Math.abs(sL), Math.abs(sR));
+      this.dqPushBack(this.m, peak);
+      const winStart = this.m - this.windowSize + 1;
+      while(this.count > 0 && this.dqIdx[this.head] < winStart) this.dqPopFront();
+      this.m++;
+      if(this.outIndex >= 0){
+        const windowMax = this.count>0 ? this.dqVal[this.head] : 0;
+        const required = windowMax > ceilingLin ? (ceilingLin/windowMax) : 1;
+        if(required < this.smoothedGain) this.smoothedGain = required;
+        else this.smoothedGain += (required - this.smoothedGain) * this.releaseCoeff;
+        const pos = this.outIndex % this.delayLen;
+        outL[i] = this.delayL[pos]*this.smoothedGain + 1e-24;
+        outR[i] = this.delayR[pos]*this.smoothedGain - 1e-24;
+      } else {
+        outL[i] = 0; outR[i] = 0;
+      }
+      this.outIndex++;
+    }
+    this._postCounter = (this._postCounter||0) + 1;
+    if(this._postCounter >= 4){ // ~11.6ms a 44.1kHz (128 samples/bloque) — suficiente para un medidor visual, sin saturar el canal de mensajes
+      this._postCounter = 0;
+      this.port.postMessage(20*Math.log10(Math.max(this.smoothedGain,1e-6)));
+    }
+    return true;
+  }
+}
+registerProcessor('lookahead-limiter', LookaheadLimiterProcessor);
+`;
+const limiterWorkletURL = URL.createObjectURL(new Blob([LIMITER_WORKLET_CODE], {type:'application/javascript'}));
+const workletStatus = new WeakMap(); // ctx -> 'ready' | 'unavailable'
+async function ensureLimiterWorklet(ctx){
+  if(workletStatus.has(ctx)) return workletStatus.get(ctx);
+  try{
+    if(!ctx.audioWorklet) throw new Error('audioWorklet no disponible en este contexto (requiere HTTPS o localhost)');
+    await ctx.audioWorklet.addModule(limiterWorkletURL);
+    workletStatus.set(ctx, 'ready');
+  }catch(err){
+    // Fallback: si el AudioWorklet no está disponible (por ejemplo, abriendo el
+    // archivo directo con file:// en vez de servirlo por HTTPS), usamos el
+    // limitador con ScriptProcessorNode de siempre en vez de romper la reproducción.
+    console.warn('AudioWorklet no disponible, usando fallback ScriptProcessorNode:', err);
+    workletStatus.set(ctx, 'unavailable');
+  }
+  return workletStatus.get(ctx);
+}
+
+function ensureCtx(){
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  return audioCtx;
+}
+let liveWorkletReady = null;
+
+/* ---------------- Construcción de la cadena de procesamiento ----------------
+   Se usa tanto en reproducción en vivo como en el render offline para exportar,
+   así los parámetros suenan igual en preview y en el archivo final.
+   IMPORTANTE: el AudioWorklet del limitador debe estar cargado en `ctx` (ver
+   ensureLimiterWorklet) ANTES de llamar a esta función. */
+function buildChain(ctx, p){
+  const input = ctx.createGain(); input.gain.value = 1;
+
+  const hp = ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value = p.hpf; hp.Q.value = 0.707;
+  const lowShelf = ctx.createBiquadFilter(); lowShelf.type='lowshelf'; lowShelf.frequency.value = 120; lowShelf.gain.value = p.lowShelfGain;
+  const peak1 = ctx.createBiquadFilter(); peak1.type='peaking'; peak1.frequency.value = 700; peak1.Q.value = 0.9; peak1.gain.value = p.peak1Gain;
+  const peak2 = ctx.createBiquadFilter(); peak2.type='peaking'; peak2.frequency.value = 3000; peak2.Q.value = 0.9; peak2.gain.value = p.peak2Gain;
+  const highShelf = ctx.createBiquadFilter(); highShelf.type='highshelf'; highShelf.frequency.value = 9000; highShelf.gain.value = p.highShelfGain;
+
+  // El compresor single-band solo se instancia cuando ese es el modo activo.
+  // Antes se creaba siempre (incluso en modo multibanda, donde queda
+  // desconectado del grafo) — nodo huérfano que se descartaba sin usar.
+  let comp = null, makeup = null;
+  if(!p.multibandOn){
+    comp = ctx.createDynamicsCompressor();
+    comp.threshold.value = p.compThreshold; comp.ratio.value = p.compRatio;
+    comp.attack.value = p.compAttack; comp.release.value = p.compRelease; comp.knee.value = 6;
+    makeup = ctx.createGain(); makeup.gain.value = dbToLin(p.compMakeup);
+  }
+
+  /* Compresor multibanda (3 bandas): crossover Linkwitz-Riley de 4to orden
+     (-24dB/oct) armado con DOS biquads Butterworth (Q=0.7071) en cascada por
+     cada punto de corte — es la forma estándar de conseguir una suma de bandas
+     con magnitud prácticamente plana (a diferencia de un solo biquad, cuya suma
+     lowpass+highpass tiene un bache/pico cerca del corte). Cruces fijos en
+     200Hz y 3kHz (no editables, para no sumar más knobs de los necesarios).
+     Cada banda tiene su propio DynamicsCompressorNode + makeup gain; el
+     Attack/Release se comparte entre las 3 (mbAttack/mbRelease) — una
+     simplificación deliberada frente a un attack/release independiente por
+     banda, para no triplicar esos dos knobs también.
+     Todo esto solo se crea cuando el modo multibanda está activo — en modo
+     single-band no se instancian nodos de más. */
+  let mbLp1=null, mbHp1=null, mbLp2=null, mbHp2=null, mbLoBand=null, mbMidBand=null, mbHiBand=null, mbSum=null;
+  if(p.multibandOn){
+    const mkLR4 = (type, freq) => {
+      const a = ctx.createBiquadFilter(); a.type=type; a.frequency.value=freq; a.Q.value=0.7071;
+      const b = ctx.createBiquadFilter(); b.type=type; b.frequency.value=freq; b.Q.value=0.7071;
+      a.connect(b);
+      return { in:a, out:b };
+    };
+    const mbXo1 = 200, mbXo2 = 3000;
+    mbLp1 = mkLR4('lowpass', mbXo1);   // -> banda de graves
+    mbHp1 = mkLR4('highpass', mbXo1);  // -> resto (medios+agudos), se vuelve a partir abajo
+    mbLp2 = mkLR4('lowpass', mbXo2);   // sobre la salida de mbHp1 -> banda de medios
+    mbHp2 = mkLR4('highpass', mbXo2);  // sobre la salida de mbHp1 -> banda de agudos
+    mbHp1.out.connect(mbLp2.in); mbHp1.out.connect(mbHp2.in);
+
+    const buildBandComp = (thr, ratio, makeupDb) => {
+      const c = ctx.createDynamicsCompressor();
+      c.threshold.value = thr; c.ratio.value = ratio; c.knee.value = 6;
+      c.attack.value = p.mbAttack; c.release.value = p.mbRelease;
+      const g = ctx.createGain(); g.gain.value = dbToLin(makeupDb);
+      c.connect(g);
+      return { comp:c, makeup:g };
+    };
+    mbLoBand = buildBandComp(p.mbLoThreshold, p.mbLoRatio, p.mbLoMakeup);
+    mbMidBand = buildBandComp(p.mbMidThreshold, p.mbMidRatio, p.mbMidMakeup);
+    mbHiBand = buildBandComp(p.mbHiThreshold, p.mbHiRatio, p.mbHiMakeup);
+
+    /* Compensación de fase (all-pass) en la banda de graves: Medios y Agudos
+       pasan por DOS etapas de crossover LR4 en cascada (200Hz y luego 3kHz:
+       4 biquads en total), mientras que Graves solo pasa por UNA (200Hz: 2
+       biquads). La suma sigue siendo plana en magnitud, pero Graves llega con
+       menos retardo de grupo que las otras dos bandas, lo que puede correrle
+       la fase relativa en la zona de cruce de 3kHz. Se agrega un filtro
+       all-pass de 2do orden (mismo Q=0.7071, mismo criterio LR4) en 3kHz,
+       repetido dos veces, que no cambia la magnitud (ganancia unitaria en
+       toda la banda) pero sí agrega el mismo retardo que la etapa de 3kHz
+       que atraviesan Medios/Agudos — alineando las 3 bandas en fase. */
+    const mbLoPhaseA = ctx.createBiquadFilter(); mbLoPhaseA.type='allpass'; mbLoPhaseA.frequency.value=mbXo2; mbLoPhaseA.Q.value=0.7071;
+    const mbLoPhaseB = ctx.createBiquadFilter(); mbLoPhaseB.type='allpass'; mbLoPhaseB.frequency.value=mbXo2; mbLoPhaseB.Q.value=0.7071;
+    mbLp1.out.connect(mbLoPhaseA); mbLoPhaseA.connect(mbLoPhaseB); mbLoPhaseB.connect(mbLoBand.comp);
+    mbLp2.out.connect(mbMidBand.comp); mbHp2.out.connect(mbHiBand.comp);
+    mbSum = ctx.createGain(); mbSum.gain.value = 1;
+    mbLoBand.makeup.connect(mbSum); mbMidBand.makeup.connect(mbSum); mbHiBand.makeup.connect(mbSum);
+  }
+  // Saturación: dry + wet en paralelo (Web Audio suma señales automáticamente al conectar varias fuentes al mismo destino)
+  const satPre = ctx.createGain(); satPre.gain.value = 1;
+  const dryGainSat = ctx.createGain(); dryGainSat.gain.value = 1 - p.satMix;
+  const wetGainSat = ctx.createGain(); wetGainSat.gain.value = p.satMix;
+  const shaper = ctx.createWaveShaper(); shaper.curve = makeSaturationCurve(p.satDrive);
+  // Oversampling en la saturación: el atributo nativo `oversample` del WaveShaperNode
+  // hace exactamente upsample -> aplica la curva -> downsample con filtro anti-alias,
+  // que es lo que pedía el ítem #8. Usamos '4x' (más agresivo que el 2x sugerido),
+  // soportado en Chrome/Firefox/Safari desde hace años — no hace falta implementarlo
+  // a mano con un OfflineAudioContext ni nodos extra.
+  shaper.oversample = '4x';
+  const satOut = ctx.createGain(); satOut.gain.value = 1;
+
+  // Imagen estéreo: matriz M/S vía splitter/merger + 4 ganancias
+  const splitter = ctx.createChannelSplitter(2);
+  const merger = ctx.createChannelMerger(2);
+  const w = p.width;
+  const gLL = ctx.createGain(); gLL.gain.value = 0.5 + 0.5*w;
+  const gRL = ctx.createGain(); gRL.gain.value = 0.5 - 0.5*w;
+  const gLR = ctx.createGain(); gLR.gain.value = 0.5 - 0.5*w;
+  const gRR = ctx.createGain(); gRR.gain.value = 0.5 + 0.5*w;
+
+  /* EQ Mid/Side: reutiliza la MISMA idea de matriz M/S que el ancho estéreo de
+     arriba (encode L/R -> M/S con gains + splitter/merger, decode de vuelta).
+     Modo 'stereo' (default): el EQ se queda tal cual estaba, en el dominio L/R,
+     sin nodos de más — cero cambio de comportamiento ni de costo.
+     Modo 'mid': el EQ de 5 bandas se aplica SOLO al canal Mid (centro); el
+     Side (contenido lateral/estéreo) pasa sin tocar. Así se puede, por ejemplo,
+     mover los graves sin que eso afecte el ancho estéreo general — el ejemplo
+     concreto que motivó este feature.
+     Modo 'side': al revés — el EQ se aplica solo al Side, dejando el centro intacto. */
+  let eqIn = input, eqOut = null;
+  let msEncGains = null, msDecGains = null;
+  if(p.eqMsMode==='mid' || p.eqMsMode==='side'){
+    const msSplitIn = ctx.createChannelSplitter(2);
+    const msEncMerger = ctx.createChannelMerger(2); // canal 0 = M, canal 1 = S
+    const gEncM_L = ctx.createGain(); gEncM_L.gain.value = 0.5;
+    const gEncM_R = ctx.createGain(); gEncM_R.gain.value = 0.5;
+    const gEncS_L = ctx.createGain(); gEncS_L.gain.value = 0.5;
+    const gEncS_R = ctx.createGain(); gEncS_R.gain.value = -0.5;
+    input.connect(msSplitIn);
+    msSplitIn.connect(gEncM_L,0); msSplitIn.connect(gEncM_R,1);
+    msSplitIn.connect(gEncS_L,0); msSplitIn.connect(gEncS_R,1);
+    gEncM_L.connect(msEncMerger,0,0); gEncM_R.connect(msEncMerger,0,0);
+    gEncS_L.connect(msEncMerger,0,1); gEncS_R.connect(msEncMerger,0,1);
+
+    const msSplitEnc = ctx.createChannelSplitter(2); // separa el M/S codificado en dos mono: 0=M, 1=S
+    msEncMerger.connect(msSplitEnc);
+
+    const bypassGain = ctx.createGain(); bypassGain.gain.value = 1; // el canal que NO pasa por el EQ
+
+    if(p.eqMsMode==='mid'){
+      msSplitEnc.connect(hp, 0); // Mid -> cadena de EQ
+      msSplitEnc.connect(bypassGain, 1); // Side -> directo, sin EQ
+    } else {
+      msSplitEnc.connect(hp, 1); // Side -> cadena de EQ
+      msSplitEnc.connect(bypassGain, 0); // Mid -> directo, sin EQ
+    }
+    eqIn = null; // ya conectamos manualmente arriba, no usar el input->hp genérico de más abajo
+
+    const msDecMerger = ctx.createChannelMerger(2); // decodifica M/S -> L/R: L=M+S, R=M-S
+    const gDecL_A = ctx.createGain(); gDecL_A.gain.value = 1;
+    const gDecL_B = ctx.createGain(); gDecL_B.gain.value = 1;
+    const gDecR_A = ctx.createGain(); gDecR_A.gain.value = 1;
+    const gDecR_B = ctx.createGain(); gDecR_B.gain.value = -1;
+    // highShelf = salida de la rama que pasó por el EQ (Mid o Side, según el modo); bypassGain = la otra rama
+    const eqdBranch = highShelf, plainBranch = bypassGain;
+    const branchA = p.eqMsMode==='mid' ? eqdBranch : plainBranch; // M
+    const branchB = p.eqMsMode==='mid' ? plainBranch : eqdBranch; // S
+    branchA.connect(gDecL_A); branchB.connect(gDecL_B);
+    branchA.connect(gDecR_A); branchB.connect(gDecR_B);
+    gDecL_A.connect(msDecMerger,0,0); gDecL_B.connect(msDecMerger,0,0);
+    gDecR_A.connect(msDecMerger,0,1); gDecR_B.connect(msDecMerger,0,1);
+    eqOut = msDecMerger;
+    msEncGains = { gEncM_L, gEncM_R, gEncS_L, gEncS_R };
+    msDecGains = { gDecL_A, gDecL_B, gDecR_A, gDecR_B, bypassGain };
+  }
+
+  // Limitador con lookahead real. Usa AudioWorklet (hilo de audio dedicado) si
+  // está disponible; si no (p.ej. archivo abierto con file://, sin HTTPS), cae
+  // en el ScriptProcessorNode de respaldo para que la reproducción no se rompa.
+  const limDrive = ctx.createGain(); limDrive.gain.value = dbToLin(p.limiterDrive);
+  let limiterNode, limiterCore = null;
+  const limiterReduction = { value: 0 }; // dB, <=0 — actualizado en vivo por el worklet o por el ScriptProcessor de respaldo
+  if(workletStatus.get(ctx) === 'ready'){
+    limiterNode = new AudioWorkletNode(ctx, 'lookahead-limiter', {
+      numberOfInputs:1, numberOfOutputs:1, channelCount:2, channelCountMode:'explicit',
+      outputChannelCount:[2],
+      processorOptions:{ lookaheadMs:LOOKAHEAD_MS, releaseMs:RELEASE_MS }
+    });
+    limiterNode.parameters.get('ceilingDb').value = p.ceiling;
+    limiterNode.port.onmessage = (e)=>{ limiterReduction.value = e.data; };
+  } else {
+    limiterCore = createLookaheadLimiterCore(ctx.sampleRate, p.ceiling, LOOKAHEAD_MS, RELEASE_MS);
+    limiterNode = ctx.createScriptProcessor(LIMITER_BLOCK_SIZE, 2, 2);
+    limiterNode.onaudioprocess = (ev)=>{
+      const inL = ev.inputBuffer.getChannelData(0), inR = ev.inputBuffer.getChannelData(1);
+      const outL = ev.outputBuffer.getChannelData(0), outR = ev.outputBuffer.getChannelData(1);
+      limiterCore.processBlock(inL, inR, outL, outR, ev.inputBuffer.length);
+      limiterReduction.value = limiterCore.getReductionDb();
+    };
+  }
+  const output = ctx.createGain(); output.gain.value = 1;
+
+  // Conexión: input -> [EQ, en L/R directo o vía M/S según el modo] -> comp (single o multibanda) -> saturación (dry/wet) -> estéreo -> limitador -> output
+  if(eqIn){ eqIn.connect(hp); } // modo 'stereo': camino de siempre
+  hp.connect(lowShelf); lowShelf.connect(peak1); peak1.connect(peak2); peak2.connect(highShelf);
+  const postEq = eqOut || highShelf;
+  let postComp;
+  if(p.multibandOn){
+    postEq.connect(mbLp1.in); postEq.connect(mbHp1.in);
+    postComp = mbSum;
+  } else {
+    postEq.connect(comp); comp.connect(makeup);
+    postComp = makeup;
+  }
+  // (comp/makeup son null cuando p.multibandOn es true — ver creación arriba)
+  postComp.connect(satPre);
+  satPre.connect(dryGainSat); satPre.connect(shaper); shaper.connect(wetGainSat);
+  dryGainSat.connect(satOut); wetGainSat.connect(satOut);
+  satOut.connect(splitter);
+  splitter.connect(gLL,0); splitter.connect(gRL,0); splitter.connect(gLR,1); splitter.connect(gRR,1);
+  gLL.connect(merger,0,0); gRL.connect(merger,0,1); gLR.connect(merger,0,0); gRR.connect(merger,0,1);
+  merger.connect(limDrive); limDrive.connect(limiterNode); limiterNode.connect(output);
+
+  return { input, output, nodes:{ hp, lowShelf, peak1, peak2, highShelf, comp, makeup, dryGainSat, wetGainSat, shaper,
+                                    gLL, gRL, gLR, gRR, limDrive, limiterNode, limiterCore, limiterReduction,
+                                    msEncGains, msDecGains,
+                                    mbLoComp: p.multibandOn ? mbLoBand.comp : null, mbLoMakeup: p.multibandOn ? mbLoBand.makeup : null,
+                                    mbMidComp: p.multibandOn ? mbMidBand.comp : null, mbMidMakeup: p.multibandOn ? mbMidBand.makeup : null,
+                                    mbHiComp: p.multibandOn ? mbHiBand.comp : null, mbHiMakeup: p.multibandOn ? mbHiBand.makeup : null } };
+}
+
+function makeSaturationCurve(amount){
+  const n = 1024; const curve = new Float32Array(n);
+  const k = 1 + amount*9; // 1 (sin saturar) .. 10
+  const norm = Math.tanh(k) || 1;
+  for(let i=0;i<n;i++){
+    const x = (i/(n-1))*2-1;
+    curve[i] = Math.tanh(x*k)/norm;
+  }
+  return curve;
+}
+
+/* ---------------- EQ: curva de respuesta + espectro en vivo ----------------
+   La curva se calcula con BiquadFilterNode.getFrequencyResponse sobre los MISMOS
+   parámetros que usa la cadena real (no es un dibujo aproximado hecho a mano), así
+   que lo que se ve coincide exactamente con lo que hacen los knobs. Los 5 filtros
+   están en serie, así que sus respuestas en dB se suman.
+   Cuando hay reproducción en vivo, se superpone el espectro real de la señal que
+   se está escuchando (AnalyserNode.getFloatFrequencyData), tomado del mismo
+   analyser que ya alimenta el medidor de pico — no se crea un nodo de audio nuevo. */
+const EQ_KEYS = new Set(['hpf','lowShelfGain','peak1Gain','peak2Gain','highShelfGain']);
+const EQ_FREQ_MIN = 20, EQ_FREQ_MAX = 20000;
+const EQ_DB_RANGE = 18; // eje Y del panel: -18..+18 dB
+
+let eqRespFilters = null; // filtros "mudos", nunca conectados a nada — solo existen para poder llamar getFrequencyResponse
+function ensureEqRespFilters(){
+  if(eqRespFilters) return eqRespFilters;
+  const ctx = ensureCtx();
+  const hp = ctx.createBiquadFilter(); hp.type='highpass'; hp.Q.value=0.707;
+  const lowShelf = ctx.createBiquadFilter(); lowShelf.type='lowshelf'; lowShelf.frequency.value=120;
+  const peak1 = ctx.createBiquadFilter(); peak1.type='peaking'; peak1.frequency.value=700; peak1.Q.value=0.9;
+  const peak2 = ctx.createBiquadFilter(); peak2.type='peaking'; peak2.frequency.value=3000; peak2.Q.value=0.9;
+  const highShelf = ctx.createBiquadFilter(); highShelf.type='highshelf'; highShelf.frequency.value=9000;
+  eqRespFilters = { hp, lowShelf, peak1, peak2, highShelf };
+  return eqRespFilters;
+}
+
+let eqFreqArray = null; // grilla log de frecuencias para el ancho actual del canvas (se recalcula si cambia el ancho)
+function eqFreqForWidth(w){
+  if(eqFreqArray && eqFreqArray.length===w) return eqFreqArray;
+  const arr = new Float32Array(w);
+  for(let x=0;x<w;x++){
+    const t = w>1 ? x/(w-1) : 0;
+    arr[x] = EQ_FREQ_MIN * Math.pow(EQ_FREQ_MAX/EQ_FREQ_MIN, t);
+  }
+  eqFreqArray = arr;
+  return arr;
+}
+
+function computeEqResponseDb(freqArray){
+  const filt = ensureEqRespFilters();
+  filt.hp.frequency.value = state.hpf;
+  filt.lowShelf.gain.value = state.lowShelfGain;
+  filt.peak1.gain.value = state.peak1Gain;
+  filt.peak2.gain.value = state.peak2Gain;
+  filt.highShelf.gain.value = state.highShelfGain;
+  const n = freqArray.length;
+  const mag = new Float32Array(n), phase = new Float32Array(n);
+  const totalDb = new Float32Array(n);
+  [filt.hp, filt.lowShelf, filt.peak1, filt.peak2, filt.highShelf].forEach(node=>{
+    node.getFrequencyResponse(freqArray, mag, phase);
+    for(let i=0;i<n;i++) totalDb[i] += 20*Math.log10(Math.max(1e-6, mag[i]));
+  });
+  return totalDb;
+}
+
+function eqFreqToX(freq, w){
+  const t = Math.log(freq/EQ_FREQ_MIN) / Math.log(EQ_FREQ_MAX/EQ_FREQ_MIN);
+  return clamp(t,0,1)*w;
+}
+
+function drawEqPanel(){
+  const canvas = $('eq-canvas'); if(!canvas) return;
+  const dpr = window.devicePixelRatio||1;
+  const w = canvas.clientWidth||300, h = canvas.clientHeight||104;
+  if(w<=0 || h<=0) return;
+  canvas.width = w*dpr; canvas.height = h*dpr;
+  const ctx2d = canvas.getContext('2d');
+  ctx2d.setTransform(1,0,0,1,0,0); ctx2d.scale(dpr,dpr);
+  ctx2d.clearRect(0,0,w,h);
+  ctx2d.fillStyle = '#151a20'; ctx2d.fillRect(0,0,w,h);
+
+  // Grilla: líneas verticales en 100Hz/1k/10k, horizontales en 0/±6/±12 dB
+  [100,1000,10000].forEach(f=>{
+    const x = eqFreqToX(f,w);
+    ctx2d.strokeStyle = 'rgba(255,255,255,.06)'; ctx2d.lineWidth = 1;
+    ctx2d.beginPath(); ctx2d.moveTo(x+0.5,0); ctx2d.lineTo(x+0.5,h); ctx2d.stroke();
+  });
+  const midY = h/2;
+  [-12,-6,0,6,12].forEach(db=>{
+    const y = midY - (db/EQ_DB_RANGE)*(h/2);
+    ctx2d.strokeStyle = db===0 ? 'rgba(255,255,255,.15)' : 'rgba(255,255,255,.05)';
+    ctx2d.beginPath(); ctx2d.moveTo(0,y+0.5); ctx2d.lineTo(w,y+0.5); ctx2d.stroke();
+  });
+
+  // Espectro en vivo (si está sonando), dibujado detrás de la curva de EQ
+  if(live && live.playing && live.analyser && audioCtx){
+    const fbuf = new Float32Array(live.analyser.frequencyBinCount);
+    live.analyser.getFloatFrequencyData(fbuf);
+    const sr = audioCtx.sampleRate;
+    const minDb = live.analyser.minDecibels, maxDb = live.analyser.maxDecibels;
+    ctx2d.beginPath(); ctx2d.moveTo(0,h);
+    for(let x=0;x<w;x++){
+      const t = w>1 ? x/(w-1) : 0;
+      const freq = EQ_FREQ_MIN*Math.pow(EQ_FREQ_MAX/EQ_FREQ_MIN,t);
+      const bin = Math.min(fbuf.length-1, Math.round(freq/(sr/2)*fbuf.length));
+      const norm = clamp((fbuf[bin]-minDb)/(maxDb-minDb),0,1);
+      ctx2d.lineTo(x, h-norm*h);
+    }
+    ctx2d.lineTo(w,h); ctx2d.closePath();
+    ctx2d.fillStyle = 'rgba(79,163,224,.18)'; ctx2d.fill();
+    ctx2d.strokeStyle = 'rgba(79,163,224,.55)'; ctx2d.lineWidth = 1; ctx2d.stroke();
+  }
+
+  // Curva de EQ (siempre visible, con o sin audio sonando)
+  const freqArray = eqFreqForWidth(w);
+  const respDb = computeEqResponseDb(freqArray);
+  ctx2d.beginPath();
+  for(let x=0;x<w;x++){
+    const db = clamp(respDb[x], -EQ_DB_RANGE, EQ_DB_RANGE);
+    const y = midY - (db/EQ_DB_RANGE)*(h/2);
+    if(x===0) ctx2d.moveTo(x,y); else ctx2d.lineTo(x,y);
+  }
+  ctx2d.strokeStyle = '#2dd7a0'; ctx2d.lineWidth = 1.6; ctx2d.stroke();
+}
+
+/* ---------------- Carga de archivo ---------------- */
+function loadFile(file){
+  if(!file) return;
+  $('status-line').textContent = "Decodificando "+file.name+"…";
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    ensureCtx();
+    liveWorkletReady = ensureLimiterWorklet(audioCtx);
+    audioCtx.decodeAudioData(e.target.result.slice(0), (buf)=>{
+      audioBuffer = buf; fileLabel = file.name;
+      $('file-name').textContent = file.name;
+      $('btn-play').disabled = false; $('btn-stop').disabled = false; $('btn-export').disabled = false;
+      $('status-line').textContent = `Listo — ${buf.duration.toFixed(1)}s · ${buf.sampleRate} Hz · ${buf.numberOfChannels} canal(es)`
+        + (INSECURE_CONTEXT_NO_WORKLET ? " · ⚠ abierto sin servidor (file://): el limitador usa un modo de respaldo más propenso a ruidos/glitches — para el motor completo, serví esta página por http(s):// o localhost." : "");
+      drawWaveform(buf);
+      stopPlayback();
+      analyzeAndShow(buf);
+      $('btn-refresh-preview').disabled = false;
+      schedulePreviewUpdate(50);
+    }, (err)=>{
+      $('status-line').textContent = "No se pudo decodificar el archivo. Probá con otro wav/mp3.";
+    });
+  };
+  reader.readAsArrayBuffer(file);
+}
+$('file-input').addEventListener('change', e=> loadFile(e.target.files[0]));
+const dz = $('dropzone');
+dz.addEventListener('click', ()=> $('file-input').click());
+['dragover','dragenter'].forEach(ev=> dz.addEventListener(ev, e=>{ e.preventDefault(); dz.classList.add('drag'); }));
+['dragleave','drop'].forEach(ev=> dz.addEventListener(ev, e=>{ e.preventDefault(); dz.classList.remove('drag'); }));
+dz.addEventListener('drop', e=>{ if(e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]); });
+
+/* ---------------- Waveform ---------------- */
+function drawWaveform(buf){
+  const canvas = $('waveform');
+  const dpr = window.devicePixelRatio||1;
+  const w = canvas.clientWidth||600, h = canvas.clientHeight||96;
+  canvas.width = w*dpr; canvas.height = h*dpr;
+  const ctx2d = canvas.getContext('2d'); ctx2d.scale(dpr,dpr);
+  ctx2d.clearRect(0,0,w,h);
+  const data = buf.getChannelData(0);
+  const step = Math.max(1, Math.floor(data.length/w));
+  ctx2d.fillStyle = '#1a2029'; ctx2d.fillRect(0,0,w,h);
+  ctx2d.beginPath();
+  ctx2d.strokeStyle = '#2dd7a0'; ctx2d.lineWidth = 1;
+  const mid = h/2;
+  for(let x=0;x<w;x++){
+    let min=1,max=-1;
+    const start = x*step;
+    for(let i=0;i<step;i++){
+      const s = data[start+i]||0;
+      if(s<min) min=s; if(s>max) max=s;
+    }
+    ctx2d.moveTo(x, mid+min*mid*0.9);
+    ctx2d.lineTo(x, mid+max*mid*0.9);
+  }
+  ctx2d.stroke();
+}
+
+/* ---------------- Analizador de track ----------------
+   Corre sobre el archivo TAL CUAL SE CARGÓ (sin pasar por la cadena de
+   masterización), para saber qué tan procesado/comprimido llega ya el render. */
+let originalAnalysis = null; // resultado del análisis del archivo original (naranja), usado para calcular el delta en la Estimación (verde)
+
+async function analyzeAndShow(buf){
+  $('analyzer-body').innerHTML = '<div class="analyzer-empty">Analizando…</div>';
+  try{
+    const result = await analyzeBuffer(buf);
+    originalAnalysis = result;
+    renderAnalysis(result);
+    renderRefCompare(); // el track propio cambió (o se cargó por primera vez): refrescar la comparación si hay referencia cargada
+  }catch(err){
+    originalAnalysis = null;
+    $('analyzer-body').innerHTML = '<div class="analyzer-empty">No se pudo analizar el archivo.</div>';
+  }
+}
+
+/* ---------------- LUFS integrado con gating BS.1770 ----------------
+   El filtro K-weighting (k1/k2 más abajo: shelf ~1500Hz +4dB + highpass ~38Hz)
+   sigue siendo una aproximación de los coeficientes exactos del estándar, pero el
+   GATEO es el procedimiento real de BS.1770-4: sin él, silencios largos al
+   principio/final o pasajes muy bajos de un track dinámico arrastran el promedio
+   hacia abajo, y el número no coincide con lo que muestran Spotify/YouTube (que sí
+   gatean). El procedimiento:
+     1) Se mide en bloques de 400ms con 75% de solape (hop de 100ms).
+     2) Gate absoluto: se descartan bloques por debajo de -70 LUFS (silencio puro).
+     3) Gate relativo: se promedian los bloques que pasaron el gate absoluto, y se
+        descartan además los que estén más de 10 LU por debajo de ese promedio
+        (partes calladas de una canción dinámica, que no deberían "contar" tanto
+        como las partes con contenido real). */
+function lufsFromMeanSq(ms){ return ms>0 ? (-0.691 + 10*Math.log10(ms)) : -100; }
+
+function gatedLufsFromBlocks(blockMeanSq){
+  if(!blockMeanSq || !blockMeanSq.length) return null;
+  const passAbs = blockMeanSq.filter(ms => lufsFromMeanSq(ms) > -70);
+  if(!passAbs.length) return -100;
+  const ungatedMeanSq = passAbs.reduce((a,b)=>a+b,0)/passAbs.length;
+  const relThreshold = lufsFromMeanSq(ungatedMeanSq) - 10;
+  const passRel = passAbs.filter(ms => lufsFromMeanSq(ms) > relThreshold);
+  const finalSet = passRel.length ? passRel : passAbs; // salvaguarda: en la práctica casi nunca vacía el gate relativo del todo
+  const gatedMeanSq = finalSet.reduce((a,b)=>a+b,0)/finalSet.length;
+  return lufsFromMeanSq(gatedMeanSq);
+}
+
+function computeBlockMeanSqArray(buf, blockSec, hopSec){
+  const numCh = buf.numberOfChannels, sr = buf.sampleRate, len = buf.length;
+  const chans = []; for(let c=0;c<numCh;c++) chans.push(buf.getChannelData(c));
+  const blockLen = Math.round((blockSec!=null?blockSec:0.4)*sr);
+  const hopLen = Math.round((hopSec!=null?hopSec:0.1)*sr);
+  const out = [];
+  if(len < blockLen) return out; // archivo más corto que un bloque: no se puede medir un bloque completo
+  for(let start=0; start+blockLen<=len; start+=hopLen){
+    let sumSq=0;
+    for(let c=0;c<numCh;c++){ const d=chans[c]; for(let i=start;i<start+blockLen;i++) sumSq += d[i]*d[i]; }
+    out.push(sumSq/(blockLen*numCh));
+  }
+  return out;
+}
+
+function gatedIntegratedLufs(buf){
+  return gatedLufsFromBlocks(computeBlockMeanSqArray(buf, 0.4, 0.1));
+}
+
+async function analyzeBuffer(buf){
+  const numCh = buf.numberOfChannels, sr = buf.sampleRate, len = buf.length;
+  const chans = []; for(let c=0;c<numCh;c++) chans.push(buf.getChannelData(c));
+
+  // Pico de muestra (dBFS) — pico real de las muestras, sin sobremuestreo. Se usa
+  // internamente para crest factor / DR aprox. Cede el hilo cada tanto (ver
+  // yieldToMain) para no bloquear el audio en modo fallback mientras se recalcula
+  // la Estimación con el track sonando.
+  let peak = 0;
+  for(let c=0;c<numCh;c++){
+    const d=chans[c]; let sinceYield=0;
+    for(let i=0;i<len;i++){
+      const a=Math.abs(d[i]); if(a>peak) peak=a;
+      sinceYield++; if(sinceYield>=YIELD_EVERY_SAMPLES){ sinceYield=0; await yieldToMain(); }
+    }
+  }
+  const peakDb = peak>0 ? 20*Math.log10(peak) : -100;
+
+  // True peak aprox. (dBTP) — pico de muestra + inter-sample peaks detectados por
+  // sobremuestreo 4x (ver truePeakAbsFromChannelAsync). Este es el valor que se
+  // muestra en la UI, porque es lo que el ceiling del limitador (dBTP) promete
+  // controlar.
+  let truePeak = 0;
+  for(let c=0;c<numCh;c++){ const tp = await truePeakAbsFromChannelAsync(chans[c], len, 4); if(tp>truePeak) truePeak=tp; }
+  const truePeakDb = truePeak>0 ? 20*Math.log10(truePeak) : -100;
+
+  // RMS global (sin ponderar) y RMS por bloques de 3s, para el factor de cresta / rango dinámico aprox.
+  const blockSec = 3;
+  const blockLen = Math.max(1, Math.round(blockSec*sr));
+  const blockRms = [];
+  let sumSqTotal = 0;
+  for(let start=0; start<len; start+=blockLen){
+    const end = Math.min(len, start+blockLen);
+    let sumSq=0, count=0;
+    for(let c=0;c<numCh;c++){ const d=chans[c]; for(let i=start;i<end;i++){ sumSq += d[i]*d[i]; count++; } }
+    sumSqTotal += sumSq;
+    if(count>0) blockRms.push(Math.sqrt(sumSq/count));
+    await yieldToMain(); // un bloque de 3s ya es un buen tamaño de tanda para ceder el hilo
+  }
+  const totalCount = len*numCh;
+  const overallRms = totalCount>0 ? Math.sqrt(sumSqTotal/totalCount) : 0;
+  const overallRmsDb = overallRms>0 ? 20*Math.log10(overallRms) : -100;
+  const crestDb = peakDb - overallRmsDb;
+
+  // Rango dinámico aprox. tipo "DR": promedio del 20% de bloques más fuertes (RMS) vs. el pico general.
+  // Es una simplificación del algoritmo DR14 real (que usa el 2do pico por bloque), pero da una
+  // idea razonable de cuánta variación hay entre las partes fuertes y el resto del track.
+  let drDb = crestDb;
+  if(blockRms.length>=5){
+    const sorted = [...blockRms].sort((a,b)=>b-a);
+    const topN = Math.max(1, Math.round(sorted.length*0.2));
+    const topAvg = sorted.slice(0,topN).reduce((a,b)=>a+b,0)/topN;
+    drDb = topAvg>0 ? (peakDb - (20*Math.log10(topAvg))) : crestDb;
+  }
+
+  // Correlación estéreo (-1 a +1). Solo tiene sentido con 2 canales.
+  let correlation = null;
+  if(numCh>=2){
+    const L=chans[0], R=chans[1];
+    let sLR=0, sLL=0, sRR=0, sinceYield=0;
+    for(let i=0;i<len;i++){
+      sLR += L[i]*R[i]; sLL += L[i]*L[i]; sRR += R[i]*R[i];
+      sinceYield++; if(sinceYield>=YIELD_EVERY_SAMPLES){ sinceYield=0; await yieldToMain(); }
+    }
+    const denom = Math.sqrt(sLL*sRR);
+    correlation = denom>0 ? (sLR/denom) : 1;
+  }
+
+  // LUFS integrado con ponderación K + gating BS.1770 (ver gatedIntegratedLufs arriba).
+  let estLufs = null;
+  try{
+    const offline = new OfflineAudioContext(numCh, len, sr);
+    const src = offline.createBufferSource(); src.buffer = buf;
+    const k1 = offline.createBiquadFilter(); k1.type='highshelf'; k1.frequency.value=1500; k1.gain.value=4;
+    const k2 = offline.createBiquadFilter(); k2.type='highpass'; k2.frequency.value=38; k2.Q.value=0.5;
+    src.connect(k1); k1.connect(k2); k2.connect(offline.destination);
+    src.start(0);
+    const filtered = await offline.startRendering();
+    estLufs = gatedIntegratedLufs(filtered);
+    if(estLufs==null){
+      // Fallback para archivos más cortos que un bloque de 400ms: LUFS sin gatear sobre todo el buffer.
+      let sumSqK=0, countK=0;
+      for(let c=0;c<filtered.numberOfChannels;c++){
+        const d = filtered.getChannelData(c);
+        for(let i=0;i<d.length;i++){ sumSqK += d[i]*d[i]; countK++; }
+      }
+      estLufs = countK>0 ? lufsFromMeanSq(sumSqK/countK) : -100;
+    }
+  }catch(err){ estLufs = null; }
+
+  return { peakDb, truePeakDb, overallRmsDb, crestDb, drDb, correlation, estLufs, durationSec: buf.duration, numCh };
+}
+
+function classifyMaster(r){
+  const parts = [];
+  if(r.estLufs!=null){
+    if(r.estLufs > -9) parts.push("nivel de loudness muy alto (típico de 'guerra del loudness')");
+    else if(r.estLufs > -12) parts.push("loudness de club/EDM bien arriba");
+    else if(r.estLufs > -15) parts.push("loudness típico de streaming moderno (pop/rock actual)");
+    else if(r.estLufs > -18) parts.push("loudness moderado");
+    else if(r.estLufs > -22) parts.push("loudness bajo, poco procesado");
+    else parts.push("loudness muy bajo — sugiere un máster dinámico sin comprimir (clásico, audiófilo)");
+  }
+  if(r.drDb < 6) parts.push("rango dinámico muy chico (mucha compresión/limitación)");
+  else if(r.drDb < 10) parts.push("compresión notoria");
+  else if(r.drDb < 14) parts.push("dinámica moderada");
+  else parts.push("dinámica amplia — casi sin compresión");
+
+  if(r.correlation!=null){
+    if(r.correlation < 0.2) parts.push("imagen estéreo muy ancha (revisar compatibilidad mono)");
+    else if(r.correlation < 0.6) parts.push("buena amplitud estéreo");
+    else parts.push("centrado, casi mono");
+  }
+  return parts.join(" · ");
+}
+
+/* ΔLUFS / ΔPico / ΔDR — se calculan íntegramente a partir del análisis del
+   propio archivo, sin comparar contra ningún otro:
+     - ΔLUFS (PLR, Peak-to-Loudness Ratio) = True Peak - LUFS integrado.
+       Cuánto "aire" hay entre el pico y el volumen percibido: un PLR chico
+       (~4-6 dB) es típico de un máster muy comprimido/plano; un PLR grande
+       (~12+ dB) indica bastante dinámica sin comprimir.
+     - ΔPico (TP vs SP) = True Peak - Pico de muestra (Sample Peak). Cuánto
+       más alto es el pico real (entre muestras, detectado por oversampling)
+       que el pico que se ve mirando las muestras tal cual — si es alto, hay
+       riesgo de "inter-sample peaks" que un limitador que no mida true peak
+       no vería venir.
+     - ΔDR = el mismo "rango dinámico aprox." (crest factor tipo DR) que ya
+       se muestra en la grilla, presentado acá como métrica rápida. */
+function computeSelfDeltas(r){
+  const plr = (r.truePeakDb!=null && r.estLufs!=null) ? (r.truePeakDb - r.estLufs) : null;
+  const peakDelta = (r.truePeakDb!=null && r.peakDb!=null) ? (r.truePeakDb - r.peakDb) : null;
+  return { plr, peakDelta };
+}
+
+function renderSelfDeltaBar(r, tone){
+  const { plr, peakDelta } = computeSelfDeltas(r);
+  const plrTxt = plr!=null ? plr.toFixed(1) : "—";
+  const peakDeltaTxt = peakDelta!=null ? peakDelta.toFixed(1) : "—";
+  const drTxt = r.drDb!=null ? r.drDb.toFixed(1) : "—";
+  return `
+    <div class="delta-bar" title="Métricas derivadas del propio archivo (no comparan contra otro track)">
+      <div class="delta-item ${tone}"><span class="delta-key">ΔLUFS (PLR)</span><span class="delta-val">${plrTxt} dB</span></div>
+      <div class="delta-item ${tone}"><span class="delta-key">ΔPico (TP vs SP)</span><span class="delta-val">${peakDeltaTxt} dB</span></div>
+      <div class="delta-item ${tone}"><span class="delta-key">ΔDR</span><span class="delta-val">${drTxt} dB</span></div>
+    </div>
+  `;
+}
+
+function renderAnalysis(r){
+  const lufsTxt = r.estLufs!=null ? r.estLufs.toFixed(1) : "—";
+  const corrTxt = r.correlation!=null ? r.correlation.toFixed(2) : "—(mono)";
+  $('analyzer-body').innerHTML = `
+    ${renderSelfDeltaBar(r, 'tone-orange')}
+    <div class="analyzer-grid">
+      <div class="stat-box tone-orange"><div class="stat-label">LUFS integrado</div><div class="stat-val">${lufsTxt}</div><div class="stat-sub">ponderación K + gating BS.1770</div></div>
+      <div class="stat-box tone-orange"><div class="stat-label">True Peak (aprox.)</div><div class="stat-val">${r.truePeakDb.toFixed(1)}</div><div class="stat-sub">dBTP, oversampling 4x</div></div>
+      <div class="stat-box tone-orange"><div class="stat-label">RMS general</div><div class="stat-val">${r.overallRmsDb.toFixed(1)}</div><div class="stat-sub">dBFS</div></div>
+      <div class="stat-box tone-orange"><div class="stat-label">Rango dinámico (aprox.)</div><div class="stat-val">${r.drDb.toFixed(1)}</div><div class="stat-sub">dB, tipo DR</div></div>
+      <div class="stat-box tone-orange"><div class="stat-label">Correlación estéreo</div><div class="stat-val">${corrTxt}</div><div class="stat-sub">-1 fuera de fase · +1 mono</div></div>
+    </div>
+    <div class="analyzer-verdict tone-orange"><strong>Lectura rápida:</strong> ${classifyMaster(r)}.</div>
+  `;
+}
+
+/* ---------------- Comparación con track de referencia ----------------
+   Permite cargar un segundo archivo (una canción ya masterizada, comercial)
+   y comparar su LUFS/pico/DR y su espectro promedio contra el track propio,
+   para tener un punto de referencia real al masterizar ("¿qué tan lejos
+   estoy de sonar como X?"). No pasa por la cadena de efectos — es un
+   análisis directo del archivo tal cual se cargó, igual que el análisis
+   "original" del módulo 02. */
+let refAudioBuffer = null, refFileLabel = null, refAnalysis = null;
+let lastPreviewAnalysis = null; // seteado por updatePreview() más abajo, para poder comparar contra la "estimación procesada"
+let refCompareMode = 'original'; // 'original' | 'preview'
+
+/* --- FFT real, iterativa, radix-2 (requiere longitud potencia de 2). Solo se usa
+   para calcular el espectro PROMEDIO de todo el archivo (no en vivo), así que no
+   necesita ser rapidísima — se corre una vez por archivo cargado. */
+function fftInPlace(re, im){
+  const n = re.length;
+  for(let i=1,j=0;i<n;i++){
+    let bit = n>>1;
+    for(; j&bit; bit>>=1) j^=bit;
+    j^=bit;
+    if(i<j){ let t=re[i]; re[i]=re[j]; re[j]=t; t=im[i]; im[i]=im[j]; im[j]=t; }
+  }
+  for(let len=2; len<=n; len<<=1){
+    const ang = -2*Math.PI/len;
+    const wr = Math.cos(ang), wi = Math.sin(ang);
+    for(let i=0;i<n;i+=len){
+      let curWr=1, curWi=0;
+      for(let k=0;k<len/2;k++){
+        const ur=re[i+k], ui=im[i+k];
+        const vr=re[i+k+len/2]*curWr - im[i+k+len/2]*curWi;
+        const vi=re[i+k+len/2]*curWi + im[i+k+len/2]*curWr;
+        re[i+k]=ur+vr; im[i+k]=ui+vi;
+        re[i+k+len/2]=ur-vr; im[i+k+len/2]=ui-vi;
+        const nwr = curWr*wr - curWi*wi, nwi = curWr*wi + curWi*wr;
+        curWr=nwr; curWi=nwi;
+      }
+    }
+  }
+}
+
+/* Espectro promedio (dB) de todo el buffer: ventanea en frames de fftSize con 50%
+   de solape (Hann), promedia la energía por bin en todos los frames y devuelve el
+   resultado en dB. Los canales se mezclan a mono (promedio) antes de analizar,
+   porque acá interesa el balance tonal general, no la imagen estéreo.
+   Async + yieldToMain cada tanda de frames FFT: en un archivo de referencia largo
+   este cálculo puede tomar varios cientos de ms corriendo de un tirón, lo que se
+   siente como un mini-freeze de la UI (y, en el peor caso — limitador en modo
+   fallback ScriptProcessor — puede competir con el audio si hay algo sonando en
+   simultáneo). Trocearlo evita ambos problemas. */
+async function computeAverageSpectrumDb(buf, fftSize){
+  fftSize = fftSize || 4096;
+  const numCh = buf.numberOfChannels, len = buf.length, sr = buf.sampleRate;
+  const half = fftSize/2;
+  const hop = Math.floor(fftSize/2);
+  const hann = new Float32Array(fftSize);
+  for(let i=0;i<fftSize;i++) hann[i] = 0.5 - 0.5*Math.cos(2*Math.PI*i/(fftSize-1));
+  const mono = new Float32Array(len);
+  for(let c=0;c<numCh;c++){ const d=buf.getChannelData(c); for(let i=0;i<len;i++) mono[i]+=d[i]/numCh; }
+  const accum = new Float64Array(half);
+  const re = new Float32Array(fftSize), im = new Float32Array(fftSize);
+  let frameCount = 0, framesSinceYield = 0;
+  const step = len>fftSize ? hop : fftSize; // si el archivo es más corto que un frame, un solo paso alcanza
+  for(let start=0; start===0 || start+fftSize<=len; start+=step){
+    for(let i=0;i<fftSize;i++){ const s = (start+i)<len ? mono[start+i] : 0; re[i]=s*hann[i]; im[i]=0; }
+    fftInPlace(re, im);
+    for(let b=0;b<half;b++){ const mag = Math.sqrt(re[b]*re[b]+im[b]*im[b])/fftSize; accum[b] += mag*mag; }
+    frameCount++;
+    if(len<=fftSize) break;
+    framesSinceYield++;
+    if(framesSinceYield>=30){ framesSinceYield=0; await yieldToMain(); } // ~30 frames FFT de 4096 por tanda
+  }
+  const out = new Float32Array(half);
+  for(let b=0;b<half;b++){
+    const meanSq = accum[b]/Math.max(1,frameCount);
+    out[b] = meanSq>0 ? 10*Math.log10(meanSq) : -160;
+  }
+  return { db: out, sr };
+}
+
+/* Cachés simples: se recalculan solo cuando cambia el buffer correspondiente
+   (analizar el espectro completo de un archivo largo no es gratis). Se cachea
+   la Promise (no el resultado ya resuelto), así dos llamadas concurrentes al
+   mismo buffer no disparan el cálculo dos veces en paralelo. */
+let mineSpectrumCache = { buf:null, spec:null };
+let refSpectrumCache = { buf:null, spec:null };
+async function getMineSpectrum(){
+  if(!audioBuffer) return null;
+  if(mineSpectrumCache.buf !== audioBuffer) mineSpectrumCache = { buf:audioBuffer, spec:computeAverageSpectrumDb(audioBuffer) };
+  return mineSpectrumCache.spec;
+}
+async function getRefSpectrum(){
+  if(!refAudioBuffer) return null;
+  if(refSpectrumCache.buf !== refAudioBuffer) refSpectrumCache = { buf:refAudioBuffer, spec:computeAverageSpectrumDb(refAudioBuffer) };
+  return refSpectrumCache.spec;
+}
+
+const REF_SPEC_MIN_DB = -100, REF_SPEC_MAX_DB = -20;
+let refSpectrumDrawToken = 0;
+async function drawRefSpectrum(){
+  const canvas = $('ref-spectrum-canvas'); if(!canvas) return;
+  const myToken = ++refSpectrumDrawToken;
+  const [mineSpec, refSpec] = await Promise.all([getMineSpectrum(), getRefSpectrum()]);
+  if(myToken !== refSpectrumDrawToken) return; // llegó un pedido de redibujado más nuevo (cambió el archivo) mientras esperábamos
+
+  const dpr = window.devicePixelRatio||1;
+  const w = canvas.clientWidth||300, h = canvas.clientHeight||140;
+  if(w<=0 || h<=0) return;
+  canvas.width = w*dpr; canvas.height = h*dpr;
+  const ctx2d = canvas.getContext('2d');
+  ctx2d.setTransform(1,0,0,1,0,0); ctx2d.scale(dpr,dpr);
+  ctx2d.clearRect(0,0,w,h);
+  ctx2d.fillStyle = '#151a20'; ctx2d.fillRect(0,0,w,h);
+
+  [100,1000,10000].forEach(f=>{
+    const x = eqFreqToX(f,w);
+    ctx2d.strokeStyle = 'rgba(255,255,255,.06)'; ctx2d.lineWidth = 1;
+    ctx2d.beginPath(); ctx2d.moveTo(x+0.5,0); ctx2d.lineTo(x+0.5,h); ctx2d.stroke();
+  });
+
+  function plotSpectrum(spec, strokeColor, fillColor){
+    if(!spec) return;
+    const { db, sr } = spec;
+    const binHz = sr / (2*db.length);
+    ctx2d.beginPath(); ctx2d.moveTo(0,h);
+    for(let x=0;x<w;x++){
+      const t = w>1 ? x/(w-1) : 0;
+      const freq = EQ_FREQ_MIN*Math.pow(EQ_FREQ_MAX/EQ_FREQ_MIN,t);
+      const bin = Math.min(db.length-1, Math.round(freq/binHz));
+      const norm = clamp((db[bin]-REF_SPEC_MIN_DB)/(REF_SPEC_MAX_DB-REF_SPEC_MIN_DB),0,1);
+      ctx2d.lineTo(x, h-norm*h);
+    }
+    ctx2d.lineTo(w,h); ctx2d.closePath();
+    ctx2d.fillStyle = fillColor; ctx2d.fill();
+    ctx2d.strokeStyle = strokeColor; ctx2d.lineWidth = 1.4; ctx2d.stroke();
+  }
+  plotSpectrum(getMineSpectrum(), 'rgba(224,162,62,.75)', 'rgba(224,162,62,.16)');
+  plotSpectrum(getRefSpectrum(), 'rgba(79,163,224,.85)', 'rgba(79,163,224,.16)');
+}
+
+function refStatBoxes(r, tone){
+  const lufsTxt = r.estLufs!=null ? r.estLufs.toFixed(1) : "—";
+  const corrTxt = r.correlation!=null ? r.correlation.toFixed(2) : "—(mono)";
+  return `
+    <div class="analyzer-grid">
+      <div class="stat-box ${tone}"><div class="stat-label">LUFS integrado</div><div class="stat-val">${lufsTxt}</div><div class="stat-sub">ponderación K + gating BS.1770</div></div>
+      <div class="stat-box ${tone}"><div class="stat-label">True Peak (aprox.)</div><div class="stat-val">${r.truePeakDb.toFixed(1)}</div><div class="stat-sub">dBTP</div></div>
+      <div class="stat-box ${tone}"><div class="stat-label">Rango dinámico (aprox.)</div><div class="stat-val">${r.drDb.toFixed(1)}</div><div class="stat-sub">dB, tipo DR</div></div>
+      <div class="stat-box ${tone}"><div class="stat-label">Correlación estéreo</div><div class="stat-val">${corrTxt}</div><div class="stat-sub">-1 fuera de fase · +1 mono</div></div>
+    </div>
+  `;
+}
+
+/* Recalcula y pinta todo el panel de comparación: cajitas de "tu mezcla" (según
+   el modo elegido: original o estimación procesada), cajitas de la referencia,
+   barra de deltas y el espectro superpuesto. Se llama cada vez que cambia
+   cualquiera de las dos fuentes o el modo de comparación. */
+function renderRefCompare(){
+  const wrap = $('ref-compare-wrap');
+  if(!refAudioBuffer){
+    wrap.style.display = 'none';
+    $('ref-status-line').textContent = audioBuffer
+      ? "Cargá una canción de referencia para comparar contra tu mezcla."
+      : "Cargá tu mezcla (arriba) y una referencia para comparar.";
+    return;
+  }
+  if(!audioBuffer){
+    wrap.style.display = 'none';
+    $('ref-status-line').textContent = "Referencia lista — cargá también tu mezcla (módulo 01) para poder comparar.";
+    return;
+  }
+  const mine = refCompareMode==='preview' ? lastPreviewAnalysis : originalAnalysis;
+  if(!mine){
+    wrap.style.display = 'none';
+    $('ref-status-line').textContent = "Todavía no hay estimación procesada calculada — esperá a que termine o elegí \"Archivo original\".";
+    return;
+  }
+  wrap.style.display = '';
+  $('ref-status-line').textContent = `Comparando contra: ${refFileLabel}`;
+
+  const dLufs = (mine.estLufs!=null && refAnalysis.estLufs!=null) ? (mine.estLufs - refAnalysis.estLufs) : null;
+  const dPeak = (mine.truePeakDb!=null && refAnalysis.truePeakDb!=null) ? (mine.truePeakDb - refAnalysis.truePeakDb) : null;
+  const dDr   = (mine.drDb!=null && refAnalysis.drDb!=null) ? (mine.drDb - refAnalysis.drDb) : null;
+  $('ref-delta-bar').innerHTML = `
+    <div class="delta-item"><span class="delta-key">ΔLUFS (vs ref)</span><span class="delta-val">${fmtDelta(dLufs)}</span></div>
+    <div class="delta-item"><span class="delta-key">ΔPico (TP)</span><span class="delta-val">${fmtDelta(dPeak)} dB</span></div>
+    <div class="delta-item"><span class="delta-key">ΔDR</span><span class="delta-val">${fmtDelta(dDr)}</span></div>
+  `;
+  $('ref-mine-body').innerHTML = refStatBoxes(mine, 'tone-orange');
+  $('ref-theirs-body').innerHTML = refStatBoxes(refAnalysis, 'tone-blue');
+  drawRefSpectrum();
+}
+
+/* ---------------- Reproducción simple del track de referencia ----------------
+   Usa un <audio> HTML normal con un object URL del File original — no pasa por
+   Web Audio ni por la cadena de masterización (adrede: queremos escuchar la
+   referencia "tal cual viene", para un A/B de oído contra nuestra mezcla, no
+   una versión reprocesada). No se auto-detiene la mezcla principal si empieza a
+   sonar la referencia (ni viceversa): si el usuario quiere comparar de oído
+   puede simplemente pausar la que no quiera escuchar. */
+let refObjectUrl = null;
+const refAudioEl = $('ref-audio-el');
+function setRefPlayButtonState(playing){
+  const btn = $('btn-ref-play'); if(!btn) return;
+  btn.textContent = playing ? "⏸ pausar" : "▶ escuchar";
+}
+$('btn-ref-play').addEventListener('click', ()=>{
+  if(!refAudioEl.src) return;
+  if(refAudioEl.paused){ refAudioEl.play().catch(()=>{}); }
+  else { refAudioEl.pause(); }
+});
+refAudioEl.addEventListener('play', ()=> setRefPlayButtonState(true));
+refAudioEl.addEventListener('pause', ()=> setRefPlayButtonState(false));
+refAudioEl.addEventListener('ended', ()=> setRefPlayButtonState(false));
+
+async function loadRefFile(file){
+  if(!file) return;
+  $('ref-status-line').textContent = "Decodificando referencia: "+file.name+"…";
+  // Prepara la reproducción simple con un <audio> nativo apenas se elige el
+  // archivo (no depende de decodeAudioData, así que queda lista igual de rápido
+  // aunque el análisis tarde un poco más).
+  refAudioEl.pause();
+  if(refObjectUrl){ URL.revokeObjectURL(refObjectUrl); refObjectUrl = null; }
+  refObjectUrl = URL.createObjectURL(file);
+  refAudioEl.src = refObjectUrl;
+  $('btn-ref-play').style.display = '';
+  setRefPlayButtonState(false);
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    ensureCtx();
+    audioCtx.decodeAudioData(e.target.result.slice(0), async (buf)=>{
+      refAudioBuffer = buf; refFileLabel = file.name;
+      $('ref-file-name').textContent = file.name+` — ${buf.duration.toFixed(1)}s`;
+      $('btn-ref-clear').style.display = '';
+      $('ref-status-line').textContent = "Analizando referencia…";
+      try{
+        refAnalysis = await analyzeBuffer(buf);
+      }catch(err){
+        refAnalysis = null;
+        $('ref-status-line').textContent = "No se pudo analizar la referencia.";
+        return;
+      }
+      renderRefCompare();
+    }, (err)=>{
+      $('ref-status-line').textContent = "No se pudo decodificar la referencia. Probá con otro wav/mp3.";
+    });
+  };
+  reader.readAsArrayBuffer(file);
+}
+$('ref-file-input').addEventListener('change', e=> loadRefFile(e.target.files[0]));
+const refDz = $('ref-dropzone');
+refDz.addEventListener('click', ()=> $('ref-file-input').click());
+['dragover','dragenter'].forEach(ev=> refDz.addEventListener(ev, e=>{ e.preventDefault(); refDz.classList.add('drag'); }));
+['dragleave','drop'].forEach(ev=> refDz.addEventListener(ev, e=>{ e.preventDefault(); refDz.classList.remove('drag'); }));
+refDz.addEventListener('drop', e=>{ if(e.dataTransfer.files[0]) loadRefFile(e.dataTransfer.files[0]); });
+$('btn-ref-clear').addEventListener('click', ()=>{
+  refAudioBuffer = null; refFileLabel = null; refAnalysis = null; refSpectrumCache = { buf:null, spec:null };
+  refAudioEl.pause(); refAudioEl.removeAttribute('src'); refAudioEl.load();
+  if(refObjectUrl){ URL.revokeObjectURL(refObjectUrl); refObjectUrl = null; }
+  $('btn-ref-play').style.display = 'none';
+  $('ref-file-name').textContent = "Sin referencia cargada";
+  $('ref-file-input').value = '';
+  $('btn-ref-clear').style.display = 'none';
+  renderRefCompare();
+});
+$('ref-compare-select').addEventListener('change', e=>{
+  refCompareMode = e.target.value;
+  renderRefCompare();
+});
+
+/* ---------------- Estimación con los ajustes actuales ----------------
+   Renderiza el buffer cargado a través de la cadena de masterización
+   completa (offline, igual que la exportación) con el estado actual de
+   los knobs/preset, y le corre el mismo análisis que al archivo original,
+   para estimar cómo quedaría el track si se exportara ahora mismo. */
+let previewToken = 0;
+let previewDebounceId = null;
+let previewRenderInProgress = false; // true mientras hay un render offline en curso
+let previewRerunNeeded = false; // llegó un cambio nuevo mientras se renderizaba: correr una vez más al terminar
+
+function schedulePreviewUpdate(delay){
+  if(!audioBuffer) return;
+  clearTimeout(previewDebounceId);
+  previewDebounceId = setTimeout(()=>{
+    if(previewRenderInProgress){
+      // Ya hay un render offline en curso (puede tardar varios segundos en
+      // tracks largos). En vez de lanzar OTRO OfflineAudioContext en paralelo
+      // (lo que antes causaba que se acumularan renders concurrentes y
+      // colgaran el navegador si se seguían moviendo perillas), marcamos que
+      // hace falta una corrida más y la disparamos apenas termine la actual.
+      previewRerunNeeded = true;
+      return;
+    }
+    updatePreview();
+  }, delay!=null ? delay : 700);
+}
+
+async function renderProcessedForPreview(){
+  if(!audioBuffer) return null;
+  ensureCtx();
+  // Mismo padding/recorte que usa la exportación, para no medir el silencio
+  // inicial que introduce el lookahead del limitador.
+  const lookaheadSamplesPrev = Math.max(1, Math.round(LOOKAHEAD_MS/1000*audioBuffer.sampleRate));
+  const pad = lookaheadSamplesPrev + 32;
+  const offline = new OfflineAudioContext(audioBuffer.numberOfChannels, audioBuffer.length+pad, audioBuffer.sampleRate);
+  await ensureLimiterWorklet(offline);
+  const src = offline.createBufferSource(); src.buffer = audioBuffer;
+  const chain = buildChain(offline, state);
+  src.connect(chain.input); chain.output.connect(offline.destination);
+  src.start(0);
+  const rendered = await offline.startRendering();
+  const trimmed = audioCtx.createBuffer(rendered.numberOfChannels, audioBuffer.length, rendered.sampleRate);
+  for(let c=0;c<rendered.numberOfChannels;c++){
+    trimmed.copyToChannel(rendered.getChannelData(c).subarray(lookaheadSamplesPrev, lookaheadSamplesPrev+audioBuffer.length), c);
+  }
+  return trimmed;
+}
+
+async function updatePreview(){
+  if(!audioBuffer) return;
+  previewRenderInProgress = true;
+  const myToken = ++previewToken;
+  $('btn-refresh-preview').disabled = true;
+  renderPreviewLoading();
+  try{
+    const rendered = await renderProcessedForPreview();
+    if(myToken !== previewToken) return; // llegó una estimación más nueva, descartar esta
+    const result = await analyzeBuffer(rendered);
+    if(myToken !== previewToken) return;
+    renderPreview(result);
+    lastPreviewAnalysis = result;
+    if(refCompareMode==='preview') renderRefCompare(); // solo repintar la comparación si el usuario eligió comparar contra la estimación (si no, sería trabajo de más en cada tick de knobs)
+  }catch(err){
+    if(myToken === previewToken) $('preview-body').innerHTML = '<div class="analyzer-empty">No se pudo calcular la estimación.</div>';
+  }finally{
+    if(myToken === previewToken) $('btn-refresh-preview').disabled = false;
+    previewRenderInProgress = false;
+    if(previewRerunNeeded){
+      previewRerunNeeded = false;
+      schedulePreviewUpdate(50); // hubo cambios de knobs mientras se renderizaba: correr una vez más, ya con los valores finales
+    }
+  }
+}
+
+/* ---------------- Estado de carga mientras se calcula la estimación ----------------
+   Texto simple en loop de fade-in/fade-out (ver @keyframes calculandoFade), en vez
+   de la grilla de casilleros anterior. */
+function renderPreviewLoading(){
+  $('preview-body').innerHTML = '<div class="preview-loading">Calculando…</div>';
+}
+
+/* Formatea un delta numérico con signo explícito (+/-), para las cajitas ΔLUFS/ΔPico/ΔDR.
+   0 exacto se muestra como "±0.0" para que quede claro que se comparó (no que falta el dato). */
+function fmtDelta(v, decimals){
+  if(v==null || !isFinite(v)) return "—";
+  const d = decimals!=null ? decimals : 1;
+  if(Math.abs(v) < (0.5*Math.pow(10,-d))) return "±"+Math.abs(v).toFixed(d);
+  return (v>0?"+":"")+v.toFixed(d);
+}
+
+function renderDeltaBar(r){
+  if(!originalAnalysis) return "";
+  const o = originalAnalysis;
+  const dLufs = (r.estLufs!=null && o.estLufs!=null) ? (r.estLufs - o.estLufs) : null;
+  const dPeak = (r.truePeakDb!=null && o.truePeakDb!=null) ? (r.truePeakDb - o.truePeakDb) : null;
+  const dDr   = (r.drDb!=null && o.drDb!=null) ? (r.drDb - o.drDb) : null;
+  return `
+    <div class="delta-bar">
+      <div class="delta-item"><span class="delta-key">ΔLUFS</span><span class="delta-val">${fmtDelta(dLufs)}</span></div>
+      <div class="delta-item"><span class="delta-key">ΔPico (TP)</span><span class="delta-val">${fmtDelta(dPeak)} dB</span></div>
+      <div class="delta-item"><span class="delta-key">ΔDR</span><span class="delta-val">${fmtDelta(dDr)}</span></div>
+    </div>
+  `;
+}
+
+function renderPreview(r){
+  const lufsTxt = r.estLufs!=null ? r.estLufs.toFixed(1) : "—";
+  const corrTxt = r.correlation!=null ? r.correlation.toFixed(2) : "—(mono)";
+  $('preview-body').innerHTML = `
+    ${renderDeltaBar(r)}
+    <div class="analyzer-grid">
+      <div class="stat-box tone-green"><div class="stat-label">LUFS integrado (est.)</div><div class="stat-val">${lufsTxt}</div><div class="stat-sub">con la cadena · gating BS.1770</div></div>
+      <div class="stat-box tone-green"><div class="stat-label">True Peak (aprox.)</div><div class="stat-val">${r.truePeakDb.toFixed(1)}</div><div class="stat-sub">dBTP, oversampling 4x</div></div>
+      <div class="stat-box tone-green"><div class="stat-label">RMS general</div><div class="stat-val">${r.overallRmsDb.toFixed(1)}</div><div class="stat-sub">dBFS</div></div>
+      <div class="stat-box tone-green"><div class="stat-label">Rango dinámico (aprox.)</div><div class="stat-val">${r.drDb.toFixed(1)}</div><div class="stat-sub">dB, tipo DR</div></div>
+      <div class="stat-box tone-green"><div class="stat-label">Correlación estéreo</div><div class="stat-val">${corrTxt}</div><div class="stat-sub">-1 fuera de fase · +1 mono</div></div>
+    </div>
+    <div class="analyzer-verdict tone-green"><strong>Así quedaría:</strong> ${classifyMaster(r)}.</div>
+  `;
+}
+$('btn-refresh-preview').addEventListener('click', ()=>{
+  clearTimeout(previewDebounceId);
+  if(previewRenderInProgress){ previewRerunNeeded = true; return; } // ya hay un render en curso: no lanzar otro en paralelo
+  updatePreview();
+});
+
+
+/* ---------------- Click en waveform: saltar a esa posición ---------------- */
+const waveformWrap = document.querySelector('.waveform-wrap');
+waveformWrap.style.cursor = 'pointer';
+waveformWrap.addEventListener('click', (e)=>{
+  if(!audioBuffer) return;
+  const rect = waveformWrap.getBoundingClientRect();
+  const frac = clamp((e.clientX - rect.left) / rect.width, 0, 1);
+  const offset = frac * audioBuffer.duration;
+  if(live && live.playing){
+    // ya está sonando: reiniciar la reproducción desde la nueva posición
+    startPlayback(offset);
+  } else {
+    // pausado o sin iniciar: solo guardamos la posición y movemos la cabeza visual
+    if(!live) live = { offset:0, playing:false };
+    live.offset = offset;
+    $('playhead').style.left = (frac*100)+"%";
+    $('time-disp').textContent = `${fmtTime(offset)} / ${fmtTime(audioBuffer.duration)}`;
+  }
+});
+
+/* ---------------- Reproducción en vivo ---------------- */
+async function startPlayback(offset){
+  if(!audioBuffer) return;
+  ensureCtx();
+  if(!liveWorkletReady) liveWorkletReady = ensureLimiterWorklet(audioCtx);
+  await liveWorkletReady;
+  stopSourceOnly();
+  const src = audioCtx.createBufferSource();
+  src.buffer = audioBuffer;
+  const chain = buildChain(audioCtx, state);
+  const dryGain = audioCtx.createGain(); dryGain.gain.value = abOn?0:1;
+  const wetGain = audioCtx.createGain(); wetGain.gain.value = abOn?1:0;
+  const analyser = audioCtx.createAnalyser(); analyser.fftSize = 2048;
+
+  // Tap paralelo para medir LUFS con ponderación K aproximada (BS.1770: shelf de
+  // agudos ~+4dB + highpass de graves ~38Hz). Es un camino de SOLO MEDICIÓN — no
+  // está conectado al destino, así que no altera el audio que se escucha. Un
+  // AnalyserNode no necesita salida conectada para poder leerse (está permitido
+  // explícitamente en la spec para casos de monitoreo como este).
+  const kStage1 = audioCtx.createBiquadFilter(); kStage1.type='highshelf'; kStage1.frequency.value=1500; kStage1.gain.value=4;
+  const kStage2 = audioCtx.createBiquadFilter(); kStage2.type='highpass'; kStage2.frequency.value=38; kStage2.Q.value=0.5;
+  const lufsAnalyser = audioCtx.createAnalyser(); lufsAnalyser.fftSize = 2048;
+
+  src.connect(dryGain); dryGain.connect(analyser);
+  src.connect(chain.input); chain.output.connect(wetGain); wetGain.connect(analyser);
+  analyser.connect(audioCtx.destination);
+
+  dryGain.connect(kStage1); wetGain.connect(kStage1);
+  kStage1.connect(kStage2); kStage2.connect(lufsAnalyser);
+
+  const startedAt = audioCtx.currentTime - (offset||0);
+  src.start(0, offset||0);
+  src.onended = ()=>{ if(live && live.srcNode===src && live.playing){ pausedAtOnEnd(); } };
+
+  live = { srcNode:src, chain, dryGain, wetGain, analyser, kStage1, kStage2, lufsAnalyser, startedAt, offset:offset||0, playing:true };
+  loudnessAcc = { blocks:[], stWindow:[] };
+  $('btn-play').textContent = "⏸ Pause";
+  tick();
+}
+function pausedAtOnEnd(){
+  if(!live) return;
+  live.playing = false; live.offset = audioBuffer.duration;
+  $('btn-play').textContent = "▶ Play";
+  updateTimeDisplay();
+}
+function stopSourceOnly(){
+  // Cancelar el loop de animación (tick/requestAnimationFrame) ANTES que
+  // cualquier otra cosa. stopSourceOnly() se llama al arrancar una nueva
+  // reproducción (incluido cada seek en la waveform mientras suena, que NO
+  // pasa por pausa: live.playing sigue en true todo el tiempo) y también al
+  // pausar/parar. Si no se cancela acá, cada restart deja el loop anterior
+  // vivo (sigue re-programándose solo porque nadie le avisó que parara) y
+  // arranca uno nuevo al final de startPlayback() -- los seeks sucesivos
+  // durante la reproducción van acumulando loops paralelos permanentes, cada
+  // uno redibujando medidores/canvas por frame y compitiendo por CPU con el
+  // audio en el hilo principal (ver comentario en tick()), lo que se
+  // percibe como picos, cortes y desincronización que empeoran cuanto más
+  // se usa el seek.
+  if(rafId!=null){ cancelAnimationFrame(rafId); rafId=null; }
+  // Importante: además de detener la fuente, hay que DESCONECTAR toda la cadena
+  // anterior (filtros, compresor, saturador, limitador ScriptProcessor, ganancias,
+  // analyser). Si no se desconectan, cada Play/Pausa deja nodos "colgados" conectados
+  // al destino, que siguen procesando en paralelo y generan ruido/crepitación
+  // (hiss) que empeora cuanto más se usa play/pausa.
+  if(!live) return;
+  if(live.srcNode){
+    try{ live.srcNode.onended = null; live.srcNode.stop(); }catch(e){}
+    try{ live.srcNode.disconnect(); }catch(e){}
+  }
+  if(live.dryGain) try{ live.dryGain.disconnect(); }catch(e){}
+  if(live.wetGain) try{ live.wetGain.disconnect(); }catch(e){}
+  if(live.analyser) try{ live.analyser.disconnect(); }catch(e){}
+  if(live.kStage1) try{ live.kStage1.disconnect(); }catch(e){}
+  if(live.kStage2) try{ live.kStage2.disconnect(); }catch(e){}
+  if(live.lufsAnalyser) try{ live.lufsAnalyser.disconnect(); }catch(e){}
+  if(live.chain){
+    try{ live.chain.input.disconnect(); }catch(e){}
+    try{ live.chain.output.disconnect(); }catch(e){}
+    Object.values(live.chain.nodes).forEach(node=>{
+      if(node && typeof node.disconnect === 'function'){
+        try{ node.disconnect(); }catch(e){}
+      }
+    });
+  }
+}
+function pausePlayback(){
+  if(!live || !live.playing) return;
+  live.offset = audioCtx.currentTime - live.startedAt;
+  stopSourceOnly();
+  live.playing = false;
+  $('btn-play').textContent = "▶ Play";
+}
+function stopPlayback(){
+  stopSourceOnly();
+  live = null;
+  $('btn-play').textContent = "▶ Play";
+  $('playhead').style.left = "0%";
+  $('time-disp').textContent = `00:00 / ${fmtTime(audioBuffer?audioBuffer.duration:0)}`;
+  resetMeters();
+}
+$('btn-play').addEventListener('click', ()=>{
+  if(!audioBuffer) return;
+  if(live && live.playing) pausePlayback();
+  else{
+    let offset = live ? live.offset : 0;
+    if(offset >= audioBuffer.duration - 0.02) offset = 0; // el track ya terminó: reiniciar en vez de arrancar en el silencio final
+    startPlayback(offset);
+  }
+});
+$('btn-stop').addEventListener('click', stopPlayback);
+
+function fmtTime(t){
+  t = Math.max(0,t||0);
+  const m = Math.floor(t/60), s = Math.floor(t%60);
+  return String(m).padStart(2,'0')+":"+String(s).padStart(2,'0');
+}
+function updateTimeDisplay(){
+  const cur = live ? (live.playing ? (audioCtx.currentTime-live.startedAt) : live.offset) : 0;
+  const dur = audioBuffer?audioBuffer.duration:0;
+  $('time-disp').textContent = `${fmtTime(cur)} / ${fmtTime(dur)}`;
+  $('playhead').style.left = (dur? clamp(cur/dur,0,1)*100:0)+"%";
+}
+
+/* ---------------- Aviso visual de clipping (true peak cerca de 0dBTP) ---------------- */
+const CLIP_FLASH_THRESHOLD_DB = -0.15; // margen chico bajo 0dBTP; el limitador ya debería mantenerse por debajo salvo picos puntuales de medición
+const CLIP_FLASH_MS = 350;
+let clipFlashTimeoutId = null;
+function flashClipIndicator(){
+  const el = $('peak-num'); if(!el) return;
+  el.classList.add('clip-flash');
+  clearTimeout(clipFlashTimeoutId);
+  clipFlashTimeoutId = setTimeout(()=> el.classList.remove('clip-flash'), CLIP_FLASH_MS);
+}
+
+function resetMeters(){
+  $('gr-fill').style.width='0%'; $('gr-num').textContent='0.0 dB';
+  $('mb-lo-gr-fill').style.width='0%'; $('mb-lo-gr-num').textContent='0.0 dB';
+  $('mb-mid-gr-fill').style.width='0%'; $('mb-mid-gr-num').textContent='0.0 dB';
+  $('mb-hi-gr-fill').style.width='0%'; $('mb-hi-gr-num').textContent='0.0 dB';
+  $('peak-fill').style.width='0%'; $('peak-num').textContent='—';
+  $('peak-num').classList.remove('clip-flash'); clearTimeout(clipFlashTimeoutId);
+  $('lufs-st-fill').style.width='0%'; $('lufs-st-num').textContent='—';
+  $('lufs-int').textContent='—';
+  drawEqPanel(); // sin `live.playing`, esto quita el espectro superpuesto y deja solo la curva de EQ
+}
+
+let lastMeterPaint = 0;
+function tick(){
+  if(live && live.playing){
+    updateTimeDisplay();
+
+    // Los medidores (DOM) se repintan a ~20fps en vez de 60fps: el limitador corre
+    // en el hilo principal (ScriptProcessorNode) y repintar el DOM a 60fps compite
+    // por tiempo de CPU con el procesamiento de audio, causando glitches/ruido
+    // audibles. La posición de reproducción (updateTimeDisplay) sigue a 60fps
+    // para que se vea fluida; solo se limitan los medidores.
+    const now = performance.now();
+    if(now - lastMeterPaint < 50){ rafId = requestAnimationFrame(tick); return; }
+    lastMeterPaint = now;
+
+    // Gain reduction del compresor de buss — single-band o las 3 bandas, según el modo activo
+    if(state.multibandOn && live.chain.nodes.mbLoComp){
+      const grLo = live.chain.nodes.mbLoComp.reduction||0;
+      const grMid = live.chain.nodes.mbMidComp.reduction||0;
+      const grHi = live.chain.nodes.mbHiComp.reduction||0;
+      $('mb-lo-gr-fill').style.width = clamp(Math.abs(grLo)/18,0,1)*100+"%"; $('mb-lo-gr-num').textContent = grLo.toFixed(1)+" dB";
+      $('mb-mid-gr-fill').style.width = clamp(Math.abs(grMid)/18,0,1)*100+"%"; $('mb-mid-gr-num').textContent = grMid.toFixed(1)+" dB";
+      $('mb-hi-gr-fill').style.width = clamp(Math.abs(grHi)/18,0,1)*100+"%"; $('mb-hi-gr-num').textContent = grHi.toFixed(1)+" dB";
+    } else {
+      const gr = live.chain.nodes.comp ? (live.chain.nodes.comp.reduction||0) : 0;
+      $('gr-fill').style.width = clamp(Math.abs(gr)/18,0,1)*100+"%";
+      $('gr-num').textContent = gr.toFixed(1)+" dB";
+    }
+
+    // Gain reduction del limitador (funciona igual con AudioWorklet o con el fallback ScriptProcessor)
+    const limGr = live.chain.nodes.limiterReduction ? live.chain.nodes.limiterReduction.value : 0;
+    $('lim-gr-fill').style.width = clamp(Math.abs(limGr)/18,0,1)*100+"%";
+    $('lim-gr-num').textContent = limGr.toFixed(1)+" dB";
+
+    // Nivel de pico (dBTP aprox.), con sobremuestreo 4x lineal — igual criterio que
+    // analyzeBuffer/truePeakAbsFromChannel, para que el medidor en vivo coincida con
+    // lo que promete el label "Ceiling ... dBTP" del limitador.
+    const buf = new Float32Array(live.analyser.fftSize);
+    live.analyser.getFloatTimeDomainData(buf);
+    const peak = truePeakAbsFromChannel(buf, buf.length, 4);
+    const peakDb = linToDb(peak);
+    $('peak-fill').style.width = clamp((peakDb+60)/60,0,1)*100+"%";
+    $('peak-num').textContent = peakDb.toFixed(1)+" dBTP";
+    // Aviso visual de clipping: el ceiling del limitador es la promesa de no pasar
+    // ese nivel, pero el propio proceso de medición (sample peak del analyser,
+    // interpolado) es una aproximación, así que igual puede haber lecturas puntuales
+    // muy cerca de 0dBTP. Un flash breve en rojo avisa sin ensuciar el medidor
+    // permanentemente (se apaga solo con CLIP_FLASH_MS, ver debajo).
+    if(peakDb >= CLIP_FLASH_THRESHOLD_DB) flashClipIndicator();
+
+    // LUFS en vivo, con ponderación K (ver kStage1/kStage2 en startPlayback) y
+    // gating BS.1770 sobre el LUFS integrado (ver gatedLufsFromBlocks): cada tick
+    // aporta un mini-bloque (~46-50ms, más fino que el bloque estándar de 400ms
+    // del spec, pero el mismo criterio de gateo absoluto/relativo aplica igual)
+    // al historial acumulado desde que arrancó la reproducción. El short-term
+    // LUFS (ventana de ~2s) es intencionalmente SIN gatear, como define el
+    // estándar para la medición short-term.
+    const kbuf = new Float32Array(live.lufsAnalyser.fftSize);
+    live.lufsAnalyser.getFloatTimeDomainData(kbuf);
+    let sumSqK=0;
+    for(let i=0;i<kbuf.length;i++){ sumSqK += kbuf[i]*kbuf[i]; }
+    const meanSqK = sumSqK/kbuf.length;
+
+    loudnessAcc.blocks.push(meanSqK);
+    loudnessAcc.stWindow.push(meanSqK); if(loudnessAcc.stWindow.length>40) loudnessAcc.stWindow.shift();
+
+    const stMeanSq = loudnessAcc.stWindow.reduce((a,b)=>a+b,0)/(loudnessAcc.stWindow.length||1);
+    const intLufs = gatedLufsFromBlocks(loudnessAcc.blocks) ?? -100;
+    const stLufs = stMeanSq>0 ? (-0.691 + 10*Math.log10(stMeanSq)) : -100;
+    $('lufs-int').textContent = intLufs>-99? intLufs.toFixed(1) : "—";
+    $('lufs-st-fill').style.width = clamp((stLufs+40)/40,0,1)*100+"%";
+    $('lufs-st-num').textContent = stLufs>-99? stLufs.toFixed(1)+" LUFS" : "—";
+
+    drawEqPanel(); // repinta también el espectro en vivo superpuesto a la curva de EQ
+
+    rafId = requestAnimationFrame(tick);
+  }
+}
+
+/* ---------------- A/B bypass ---------------- */
+let abOn = true; // true = escuchando el master procesado
+$('btn-ab').addEventListener('click', ()=>{
+  abOn = !abOn;
+  if(live && live.dryGain){
+    // Rampa corta en vez de salto instantáneo de ganancia: el camino "procesado"
+    // pasa por el limitador con lookahead (~5ms de delay), así que no está alineado
+    // en el tiempo con el original. Un cambio de ganancia instantáneo entre dos
+    // señales desalineadas genera una discontinuidad en la onda (click/pop) que
+    // se percibe como un estallido de ruido justo al cambiar de A/B.
+    const t = audioCtx.currentTime;
+    const rampTime = 0.02; // 20ms
+    live.dryGain.gain.cancelScheduledValues(t);
+    live.wetGain.gain.cancelScheduledValues(t);
+    live.dryGain.gain.setValueAtTime(live.dryGain.gain.value, t);
+    live.wetGain.gain.setValueAtTime(live.wetGain.gain.value, t);
+    live.dryGain.gain.linearRampToValueAtTime(abOn?0:1, t+rampTime);
+    live.wetGain.gain.linearRampToValueAtTime(abOn?1:0, t+rampTime);
+  }
+  $('ab-label').textContent = abOn? "A/B (procesado)" : "A/B (original)";
+  $('btn-ab').classList.toggle('ab-processed', abOn);
+  $('btn-ab').classList.toggle('ab-original', !abOn);
+  $('ab-dot').classList.toggle('on', !abOn);
+});
+
+/* ---------------- Knobs genéricos ---------------- */
+function createKnob(opts){
+  const wrap = document.createElement('div'); wrap.className='knob-wrap';
+  const knob = document.createElement('div'); knob.className='knob';
+  const ind = document.createElement('div'); ind.className='knob-indicator';
+  knob.appendChild(ind);
+  const lbl = document.createElement('div'); lbl.className='knob-label'; lbl.textContent = opts.label;
+  const valDisp = document.createElement('div'); valDisp.className='knob-val';
+  wrap.appendChild(knob); wrap.appendChild(lbl); wrap.appendChild(valDisp);
+
+  let val = opts.value;
+  function fmt(v){ return opts.format? opts.format(v) : v.toFixed(2); }
+  function paint(){
+    const pct = (val-opts.min)/(opts.max-opts.min);
+    ind.style.transform = `translateX(-50%) rotate(${-135+pct*270}deg)`;
+    valDisp.textContent = fmt(val);
+  }
+  function setVal(nv, silent){
+    nv = clamp(nv, opts.min, opts.max);
+    const step = opts.step||0.01; nv = Math.round(nv/step)*step;
+    val = nv; paint();
+    if(!silent) opts.onChange(val);
+  }
+  paint();
+  opts._setter = setVal;
+
+  let dragging=false, startY=0, startVal=0;
+  let pendingClientY=null, rafId=null;
+  function flushDrag(){
+    rafId=null;
+    if(!dragging || pendingClientY==null) return;
+    const dy = startY-pendingClientY, range = opts.max-opts.min;
+    setVal(startVal + (dy/140)*range);
+  }
+  knob.addEventListener('pointerdown', e=>{ dragging=true; startY=e.clientY; startVal=val; knob.setPointerCapture(e.pointerId); });
+  knob.addEventListener('pointermove', e=>{
+    if(!dragging) return;
+    // No aplicar cada evento nativo de pointermove directamente (pueden
+    // llegar cientos por segundo con mouse/trackpad de alta frecuencia).
+    // Guardamos solo la posición más reciente y la aplicamos una vez por
+    // frame con requestAnimationFrame -- así el AudioParam, el análisis de
+    // Estimación y el repintado del knob reciben como mucho ~60 updates/seg
+    // en vez de la tasa cruda del dispositivo de entrada.
+    pendingClientY = e.clientY;
+    if(rafId==null) rafId = requestAnimationFrame(flushDrag);
+  });
+  function endDrag(){
+    dragging=false;
+    if(rafId!=null){ cancelAnimationFrame(rafId); rafId=null; }
+    pendingClientY=null;
+  }
+  knob.addEventListener('pointerup', endDrag); knob.addEventListener('pointercancel', endDrag);
+
+  // Doble clic: resetea este knob puntual a su valor por defecto (opts.resetValue).
+  // Solo se agrega el listener si se proveyó un valor de reset (todos los knobs de
+  // buildKnob lo traen; un createKnob genérico usado sin resetValue simplemente no
+  // tiene esta interacción).
+  if(opts.resetValue!=null){
+    knob.title = "Doble clic para restablecer";
+    knob.addEventListener('dblclick', ()=>{ setVal(opts.resetValue); });
+  }
+  return wrap;
+}
+
+const dbFmt = v => (v>0?'+':'')+v.toFixed(1)+' dB';
+const hzFmt = v => v>=1000? (v/1000).toFixed(2)+'k Hz' : Math.round(v)+' Hz';
+const pctFmt = v => Math.round(v*100)+'%';
+const msFmt = v => Math.round(v*1000)+' ms';
+const ratioFmt = v => v.toFixed(1)+':1';
+
+const knobSetters = {};
+function buildKnob(containerId, key, cfg){
+  const opts = {
+    label: cfg.label, min: cfg.min, max: cfg.max, value: state[key], step: cfg.step, format: cfg.format,
+    resetValue: DEFAULT_STATE[key],
+    onChange: v=>{ state[key]=v; applyLiveParam(key, v); schedulePreviewUpdate(); if(EQ_KEYS.has(key)) drawEqPanel(); if(key==='hpf' && typeof syncMbHpfWarning==='function') syncMbHpfWarning(); }
+  };
+  const node = createKnob(opts);
+  knobSetters[key] = opts._setter;
+  $(containerId).appendChild(node);
+}
+
+buildKnob('knobs-eq','hpf',{label:'HPF', min:20, max:300, step:1, format:hzFmt});
+buildKnob('knobs-eq','lowShelfGain',{label:'Graves 120Hz', min:-12, max:12, step:0.5, format:dbFmt});
+buildKnob('knobs-eq','peak1Gain',{label:'Medios 700Hz', min:-12, max:12, step:0.5, format:dbFmt});
+buildKnob('knobs-eq','peak2Gain',{label:'Presencia 3k', min:-12, max:12, step:0.5, format:dbFmt});
+buildKnob('knobs-eq','highShelfGain',{label:'Brillo 9k', min:-12, max:12, step:0.5, format:dbFmt});
+drawEqPanel(); // pinta la curva de EQ inicial (identidad, sin ajustes) apenas se construyen los knobs
+
+/* Selector de modo M/S del EQ: cambia el ROUTING de la cadena (qué canal pasa por
+   los filtros), no un simple AudioParam, así que no admite rampa en caliente.
+   Si está sonando, reiniciamos la reproducción en la misma posición para que el
+   cambio se escuche sin tener que tocar Play manualmente. */
+const eqMsSelect = $('eq-ms-mode');
+eqMsSelect.value = state.eqMsMode;
+eqMsSelect.addEventListener('change', ()=>{
+  state.eqMsMode = eqMsSelect.value;
+  if(live && live.playing){
+    const pos = audioCtx.currentTime - live.startedAt;
+    startPlayback(pos);
+  }
+  schedulePreviewUpdate(150);
+});
+
+buildKnob('knobs-comp','compThreshold',{label:'Threshold', min:-40, max:0, step:0.5, format:dbFmt});
+buildKnob('knobs-comp','compRatio',{label:'Ratio', min:1, max:10, step:0.1, format:ratioFmt});
+buildKnob('knobs-comp','compAttack',{label:'Attack', min:0.001, max:0.1, step:0.001, format:msFmt});
+buildKnob('knobs-comp','compRelease',{label:'Release', min:0.03, max:0.6, step:0.01, format:msFmt});
+buildKnob('knobs-comp','compMakeup',{label:'Makeup', min:0, max:12, step:0.5, format:dbFmt});
+
+buildKnob('knobs-mb-shared','mbAttack',{label:'Attack (3 bandas)', min:0.001, max:0.1, step:0.001, format:msFmt});
+buildKnob('knobs-mb-shared','mbRelease',{label:'Release (3 bandas)', min:0.03, max:0.6, step:0.01, format:msFmt});
+buildKnob('knobs-mb-lo','mbLoThreshold',{label:'Threshold', min:-40, max:0, step:0.5, format:dbFmt});
+buildKnob('knobs-mb-lo','mbLoRatio',{label:'Ratio', min:1, max:10, step:0.1, format:ratioFmt});
+buildKnob('knobs-mb-lo','mbLoMakeup',{label:'Makeup', min:0, max:12, step:0.5, format:dbFmt});
+buildKnob('knobs-mb-mid','mbMidThreshold',{label:'Threshold', min:-40, max:0, step:0.5, format:dbFmt});
+buildKnob('knobs-mb-mid','mbMidRatio',{label:'Ratio', min:1, max:10, step:0.1, format:ratioFmt});
+buildKnob('knobs-mb-mid','mbMidMakeup',{label:'Makeup', min:0, max:12, step:0.5, format:dbFmt});
+buildKnob('knobs-mb-hi','mbHiThreshold',{label:'Threshold', min:-40, max:0, step:0.5, format:dbFmt});
+buildKnob('knobs-mb-hi','mbHiRatio',{label:'Ratio', min:1, max:10, step:0.1, format:ratioFmt});
+buildKnob('knobs-mb-hi','mbHiMakeup',{label:'Makeup', min:0, max:12, step:0.5, format:dbFmt});
+
+/* Selector Single-band / Multibanda: cambia el ROUTING (qué nodos están en la
+   cadena), igual que el modo M/S del EQ — no admite rampa en caliente, así que
+   si está sonando reiniciamos en la misma posición. También muestra/oculta los
+   paneles correspondientes. */
+const compModeSelect = $('comp-mode');
+compModeSelect.value = state.multibandOn ? 'multi' : 'single';
+const MB_XO1_HZ = 200; // debe coincidir con mbXo1 dentro de buildChain()
+function syncMbHpfWarning(){
+  // Si el HPF maestro (EQ Master) corta por encima del primer crossover del
+  // multibanda (fijo en 200Hz), la banda de graves del multibanda recibe muy
+  // poca o ninguna señal — el knob de esa banda dejaría de tener efecto
+  // audible sin que nada en la UI lo explique. Solo tiene sentido mostrar
+  // este aviso si el modo multibanda está activo.
+  const warn = $('mb-lo-warning');
+  if(!warn) return;
+  warn.style.display = (state.multibandOn && state.hpf >= MB_XO1_HZ) ? '' : 'none';
+}
+function syncCompModeUI(){
+  const isMulti = state.multibandOn;
+  $('comp-single-wrap').style.display = isMulti ? 'none' : '';
+  $('mod-multiband').style.display = isMulti ? '' : 'none';
+  syncMbHpfWarning();
+}
+syncCompModeUI();
+compModeSelect.addEventListener('change', ()=>{
+  state.multibandOn = compModeSelect.value === 'multi';
+  syncCompModeUI();
+  if(live && live.playing){
+    const pos = audioCtx.currentTime - live.startedAt;
+    startPlayback(pos);
+  }
+  schedulePreviewUpdate(150);
+});
+
+buildKnob('knobs-sat','satDrive',{label:'Drive', min:0, max:1, step:0.01, format:pctFmt});
+buildKnob('knobs-sat','satMix',{label:'Mix', min:0, max:1, step:0.01, format:pctFmt});
+
+buildKnob('knobs-stereo','width',{label:'Ancho', min:0, max:2, step:0.01, format:pctFmt});
+
+buildKnob('knobs-limiter','ceiling',{label:'Ceiling', min:-3, max:0, step:0.1, format:v=>v.toFixed(1)+' dBTP'});
+buildKnob('knobs-limiter','limiterDrive',{label:'Ganancia', min:0, max:12, step:0.5, format:dbFmt});
+
+/* ---------------- Aplicar parámetros a la cadena en vivo sin reconstruirla ---------------- */
+function applyLiveParam(key, v){
+  if(!live) return;
+  const n = live.chain.nodes;
+  const t = audioCtx.currentTime;
+  const tc = 0.012; // rampa corta (~12ms): evita el click/pop que produce un salto instantáneo de valor en un AudioParam mientras suena
+  const ramp = (param, target)=>{
+    // Cancelar la automatización pendiente y fijar el valor actual como punto
+    // de partida ANTES de programar la nueva rampa. Sin esto, arrastrar una
+    // perilla (docenas de eventos por segundo) apila una curva
+    // setTargetAtTime nueva sobre cada una de las anteriores sin cancelarlas,
+    // y esa cola de automatizaciones superpuestas puede crecer sin límite,
+    // saturando el audio y colgando la pestaña con tracks largos o sesiones
+    // de ajuste prolongadas.
+    try{ param.cancelScheduledValues(t); param.setValueAtTime(param.value, t); }catch(e){}
+    param.setTargetAtTime(target, t, tc);
+  };
+  switch(key){
+    case 'hpf': ramp(n.hp.frequency, v); break;
+    case 'lowShelfGain': ramp(n.lowShelf.gain, v); break;
+    case 'peak1Gain': ramp(n.peak1.gain, v); break;
+    case 'peak2Gain': ramp(n.peak2.gain, v); break;
+    case 'highShelfGain': ramp(n.highShelf.gain, v); break;
+    case 'compThreshold': if(n.comp) ramp(n.comp.threshold, v); break;
+    case 'compRatio': if(n.comp) ramp(n.comp.ratio, v); break;
+    case 'compAttack': if(n.comp) ramp(n.comp.attack, v); break;
+    case 'compRelease': if(n.comp) ramp(n.comp.release, v); break;
+    case 'compMakeup': if(n.makeup) ramp(n.makeup.gain, dbToLin(v)); break;
+    case 'mbAttack':
+      if(n.mbLoComp) ramp(n.mbLoComp.attack, v);
+      if(n.mbMidComp) ramp(n.mbMidComp.attack, v);
+      if(n.mbHiComp) ramp(n.mbHiComp.attack, v);
+      break;
+    case 'mbRelease':
+      if(n.mbLoComp) ramp(n.mbLoComp.release, v);
+      if(n.mbMidComp) ramp(n.mbMidComp.release, v);
+      if(n.mbHiComp) ramp(n.mbHiComp.release, v);
+      break;
+    case 'mbLoThreshold': if(n.mbLoComp) ramp(n.mbLoComp.threshold, v); break;
+    case 'mbLoRatio': if(n.mbLoComp) ramp(n.mbLoComp.ratio, v); break;
+    case 'mbLoMakeup': if(n.mbLoMakeup) ramp(n.mbLoMakeup.gain, dbToLin(v)); break;
+    case 'mbMidThreshold': if(n.mbMidComp) ramp(n.mbMidComp.threshold, v); break;
+    case 'mbMidRatio': if(n.mbMidComp) ramp(n.mbMidComp.ratio, v); break;
+    case 'mbMidMakeup': if(n.mbMidMakeup) ramp(n.mbMidMakeup.gain, dbToLin(v)); break;
+    case 'mbHiThreshold': if(n.mbHiComp) ramp(n.mbHiComp.threshold, v); break;
+    case 'mbHiRatio': if(n.mbHiComp) ramp(n.mbHiComp.ratio, v); break;
+    case 'mbHiMakeup': if(n.mbHiMakeup) ramp(n.mbHiMakeup.gain, dbToLin(v)); break;
+    case 'satDrive': n.shaper.curve = makeSaturationCurve(v); break; // cambiar la curva no admite rampa; el salto entre curvas es sutil (tanh similar)
+    case 'satMix': ramp(n.dryGainSat.gain, 1-v); ramp(n.wetGainSat.gain, v); break;
+    case 'width':
+      ramp(n.gLL.gain, 0.5+0.5*v); ramp(n.gRL.gain, 0.5-0.5*v);
+      ramp(n.gLR.gain, 0.5-0.5*v); ramp(n.gRR.gain, 0.5+0.5*v);
+      break;
+    case 'ceiling':
+      // Funciona tanto con el AudioWorklet (AudioParam real) como con el
+      // fallback de ScriptProcessorNode (objeto JS con su propio setCeiling).
+      if(n.limiterCore) n.limiterCore.setCeiling(v);
+      else ramp(n.limiterNode.parameters.get('ceilingDb'), v);
+      break;
+    case 'limiterDrive': ramp(n.limDrive.gain, dbToLin(v)); break;
+  }
+}
+
+/* ---------------- Presets ---------------- */
+const USER_PRESETS_KEY = 'lacquer_user_presets_v1';
+
+function loadUserPresets(){
+  try{
+    const raw = localStorage.getItem(USER_PRESETS_KEY);
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr : [];
+  }catch(err){ return []; }
+}
+function saveUserPresetsToStorage(){
+  try{ localStorage.setItem(USER_PRESETS_KEY, JSON.stringify(userPresets)); }
+  catch(err){ $('status-line').textContent = "No se pudo guardar el preset (localStorage no disponible)."; }
+}
+let userPresets = loadUserPresets(); // presets propios del usuario, persistidos en localStorage
+function allPresets(){ return PRESETS.concat(userPresets); }
+
+const presetSelect = $('preset-select');
+function renderPresetOptions(selectedIndex){
+  presetSelect.innerHTML = '';
+  const gBuiltin = document.createElement('optgroup'); gBuiltin.label = 'De fábrica';
+  PRESETS.forEach((pr,i)=>{
+    const o = document.createElement('option'); o.value=i; o.textContent = pr.name; gBuiltin.appendChild(o);
+  });
+  presetSelect.appendChild(gBuiltin);
+  if(userPresets.length){
+    const gUser = document.createElement('optgroup'); gUser.label = 'Tus presets';
+    userPresets.forEach((pr,i)=>{
+      const o = document.createElement('option'); o.value=PRESETS.length+i; o.textContent = pr.name; gUser.appendChild(o);
+    });
+    presetSelect.appendChild(gUser);
+  }
+  presetSelect.value = selectedIndex!=null ? selectedIndex : 0;
+  $('btn-delete-preset').style.display = (selectedIndex!=null && selectedIndex>=PRESETS.length) ? '' : 'none';
+}
+function applyPreset(i){
+  const pr = allPresets()[i]; if(!pr) return;
+  $('preset-desc').textContent = pr.desc;
+  const isFactory = i < PRESETS.length;
+  const prevMultibandOn = state.multibandOn;
+  // BUGFIX: los presets de fábrica fueron diseñados para el compresor
+  // single-band y no incluyen parámetros de multibanda (mbLoThreshold, etc.).
+  // Si el usuario estaba en modo multibanda y aplicaba un preset de fábrica,
+  // los valores de compThreshold/compRatio/... del preset se aplicaban al
+  // nodo single-band, que en modo multibanda queda DESCONECTADO de la
+  // cadena de audio — el preset no sonaba, sin ningún aviso. Ahora, un
+  // preset de fábrica (que no trae su propio 'multibandOn') vuelve siempre
+  // a modo single-band para que sus parámetros sí tengan efecto real.
+  if(isFactory && !('multibandOn' in pr.p)){
+    state.multibandOn = false;
+  }
+  Object.keys(pr.p).forEach(key=>{
+    state[key] = pr.p[key];
+    if(knobSetters[key]) knobSetters[key](pr.p[key], true);
+    applyLiveParam(key, pr.p[key]);
+  });
+  if(eqMsSelect) eqMsSelect.value = state.eqMsMode; // por si un preset propio (snapshot completo del state) trae su propio modo M/S
+  if(compModeSelect){ compModeSelect.value = state.multibandOn ? 'multi' : 'single'; syncCompModeUI(); }
+  $('btn-delete-preset').style.display = (i>=PRESETS.length) ? '' : 'none';
+  drawEqPanel();
+  // El modo de compresión (single/multi) cambia el ROUTING del grafo, no un
+  // simple AudioParam — si el preset lo cambió y hay reproducción en curso,
+  // hace falta reconstruir la cadena (mismo criterio que compModeSelect).
+  if(state.multibandOn !== prevMultibandOn && live && live.playing){
+    const pos = audioCtx.currentTime - live.startedAt;
+    startPlayback(pos);
+  }
+  schedulePreviewUpdate(150);
+}
+presetSelect.addEventListener('change', e=> applyPreset(parseInt(e.target.value,10)));
+renderPresetOptions(0); applyPreset(0);
+
+$('btn-save-preset').addEventListener('click', ()=>{
+  const name = prompt("Nombre del preset:");
+  if(!name || !name.trim()) return;
+  const snapshot = {}; Object.keys(state).forEach(k=> snapshot[k]=state[k]); // clonar el state actual, no la referencia
+  userPresets.push({ name: name.trim(), desc: "Preset propio, guardado el "+new Date().toLocaleDateString(), p: snapshot });
+  saveUserPresetsToStorage();
+  const newIndex = PRESETS.length + userPresets.length - 1;
+  renderPresetOptions(newIndex);
+  $('preset-desc').textContent = userPresets[userPresets.length-1].desc;
+  $('status-line').textContent = "Preset \""+name.trim()+"\" guardado.";
+});
+
+$('btn-delete-preset').addEventListener('click', ()=>{
+  const i = parseInt(presetSelect.value,10);
+  if(i < PRESETS.length) return; // no se pueden borrar los de fábrica
+  const userIdx = i - PRESETS.length;
+  const removed = userPresets[userIdx];
+  if(!confirm('¿Borrar el preset "'+removed.name+'"?')) return;
+  userPresets.splice(userIdx,1);
+  saveUserPresetsToStorage();
+  renderPresetOptions(0);
+  applyPreset(0);
+  $('status-line').textContent = "Preset \""+removed.name+"\" borrado.";
+});
+
+/* ---------------- Exportación (render offline) ---------------- */
+$('btn-export').addEventListener('click', async ()=>{
+  if(!audioBuffer) return;
+  const btn = $('btn-export'); const prevTxt = btn.textContent;
+  btn.disabled = true; btn.textContent = "Renderizando…";
+  try{
+    // El limitador con lookahead retrasa la señal ~LOOKAHEAD_MS antes de que
+    // empiece a salir audio real (los primeros samples de salida son silencio).
+    // Si el contexto offline dura exactamente audioBuffer.length, ese retraso
+    // hace que se corten los últimos samples reales (se quedan "atascados" en el
+    // delay interno del limitador cuando el render ya terminó). Por eso extendemos
+    // la duración del render y después recortamos el silencio inicial para que el
+    // WAV final quede sample-accurate con la duración del archivo original.
+    const lookaheadSamplesExport = Math.max(1, Math.round(LOOKAHEAD_MS/1000*audioBuffer.sampleRate));
+    const renderPad = lookaheadSamplesExport + 32; // pequeño margen de seguridad
+    const offline = new OfflineAudioContext(audioBuffer.numberOfChannels, audioBuffer.length+renderPad, audioBuffer.sampleRate);
+    await ensureLimiterWorklet(offline);
+    const src = offline.createBufferSource(); src.buffer = audioBuffer;
+    const chain = buildChain(offline, state);
+    src.connect(chain.input); chain.output.connect(offline.destination);
+    src.start(0);
+    const rendered = await offline.startRendering();
+    const bitDepth = parseInt($('export-bitdepth').value, 10) === 24 ? 24 : 16;
+    const blob = audioBufferToWavBlob(rendered, lookaheadSamplesExport, audioBuffer.length, bitDepth);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const base = (fileLabel.replace(/\.[^.]+$/,'')||'master');
+    a.href = url; a.download = base+"_LACQUER-CUTv1-STEMSMAG_"+bitDepth+"bit.wav";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 4000);
+    $('status-line').textContent = "Exportado: "+a.download;
+  }catch(err){
+    $('status-line').textContent = "Error al exportar: "+err.message;
+  }finally{
+    btn.disabled = false; btn.textContent = prevTxt;
+  }
+});
+
+function audioBufferToWavBlob(buffer, startSample, frameCount, bitDepth){
+  const numCh = buffer.numberOfChannels, sr = buffer.sampleRate;
+  const start = startSample||0;
+  const len = (frameCount!=null) ? frameCount : (buffer.length-start);
+  const bits = (bitDepth===24) ? 24 : 16;
+  const bytesPerSample = bits/8, blockAlign = numCh*bytesPerSample;
+  const dataSize = len*blockAlign;
+  const bufferArr = new ArrayBuffer(44+dataSize);
+  const view = new DataView(bufferArr);
+  function writeStr(off,str){ for(let i=0;i<str.length;i++) view.setUint8(off+i, str.charCodeAt(i)); }
+  writeStr(0,'RIFF'); view.setUint32(4, 36+dataSize, true); writeStr(8,'WAVE');
+  writeStr(12,'fmt '); view.setUint32(16,16,true); view.setUint16(20,1,true);
+  view.setUint16(22,numCh,true); view.setUint32(24,sr,true);
+  view.setUint32(28, sr*blockAlign, true); view.setUint16(32, blockAlign, true); view.setUint16(34,bits,true);
+  writeStr(36,'data'); view.setUint32(40, dataSize, true);
+
+  const channels = []; for(let c=0;c<numCh;c++) channels.push(buffer.getChannelData(c));
+  let offset = 44;
+
+  if(bits===16){
+    // Dither TPDF (triangular) de 1 LSB en 16-bit: sin esto, el truncado de float a
+    // int16 cuantiza directo y agrega distorsión correlacionada con la señal, audible
+    // sobre todo en colas de reverb/fades largos que decaen por debajo del LSB. Sumar
+    // ruido triangular (dos uniformes -1..1 restadas) decorrelaciona ese error y lo
+    // convierte en piso de ruido, mucho menos perceptible.
+    const lsb = 1/0x7FFF;
+    for(let i=0;i<len;i++){
+      for(let c=0;c<numCh;c++){
+        let s = clamp(channels[c][start+i],-1,1);
+        const dither = (Math.random()-Math.random()) * lsb; // TPDF: suma de dos uniformes independientes
+        s = clamp(s+dither,-1,1);
+        s = s<0? s*0x8000 : s*0x7FFF;
+        view.setInt16(offset, Math.round(s), true); offset += 2;
+      }
+    }
+  } else {
+    // 24-bit: el piso de ruido de cuantización (1 LSB de 24-bit ≈ -144dBFS) queda
+    // muy por debajo del ruido térmico de cualquier grabación real, así que no hace
+    // falta dither — truncar directo no agrega distorsión audible a esta resolución.
+    // DataView no tiene setInt24, así que se escriben los 3 bytes a mano (little-endian).
+    for(let i=0;i<len;i++){
+      for(let c=0;c<numCh;c++){
+        let s = clamp(channels[c][start+i],-1,1);
+        let v = Math.round(s<0 ? s*0x800000 : s*0x7FFFFF);
+        v = clamp(v,-0x800000,0x7FFFFF);
+        if(v<0) v = v + 0x1000000; // a complemento a dos de 24 bits sin signo
+        view.setUint8(offset, v & 0xFF);
+        view.setUint8(offset+1, (v>>8) & 0xFF);
+        view.setUint8(offset+2, (v>>16) & 0xFF);
+        offset += 3;
+      }
+    }
+  }
+  return new Blob([view], {type:'audio/wav'});
+}
+
+window.addEventListener('resize', ()=>{ if(audioBuffer) drawWaveform(audioBuffer); drawEqPanel(); if(refAudioBuffer) drawRefSpectrum(); });
+
+})();
+</script>
+
+<script>
+/* ============================================================
+   Selector de idioma ES/EN — traducción en vivo de la interfaz
+   No depende del script principal: recorre el DOM (texto y
+   atributos title) y traduce por coincidencia de frases/strings
+   contra un diccionario. Como la app siempre genera su contenido
+   dinámico en español, basta con traducir "hacia adelante" (ES->EN)
+   cada vez que aparece texto nuevo, y aplicar el mapa inverso
+   (EN->ES) al volver a español para restaurar el texto visible.
+   ============================================================ */
+(function(){
+"use strict";
+
+const DICT = [
+  // ---- Splash / disclaimer ----
+  ["Herramienta de ensayo / experimental","Testing / experimental tool"],
+  ["Este es un ","This is an "],
+  ["proyecto experimental","experimental project"],
+  [" construido sobre la ", " built on the "],
+  ["Web Audio API","Web Audio API"],
+  [", la API nativa del navegador para procesar audio en tiempo real. Funciona armando una cadena de nodos de audio (filtros, compresor, waveshaper de saturación, matriz estéreo y un limitador con anticipo/\"lookahead\") que procesan tu archivo en vivo mientras suena, y que también pueden renderizarse completos para exportar un WAV.",
+   ", the browser's native API for processing audio in real time. It works by building a chain of audio nodes (filters, compressor, saturation waveshaper, stereo matrix and a lookahead limiter) that process your file live while it plays, and that can also be rendered in full to export a WAV."],
+  ["// LACQUER - CUT v1 ","// LACQUER - CUT v1 "],
+  ["no es un producto de entrega final profesional","is not a professional final-delivery product"],
+  [". Tampoco es:",". Nor is it:"],
+  ["Un ","A "],
+  ["restaurador de audio","audio restoration tool"],
+  [" (no quita ruido, hum, clicks de vinilo, ni repara grabaciones dañadas)."," (it doesn't remove noise, hum, vinyl clicks, or repair damaged recordings)."],
+  ["Una ","A "],
+  ["herramienta de mezcla","mixing tool"],
+  [" (no balancea pistas, no automatiza, no reemplaza tu DAW)."," (it doesn't balance tracks, automate, or replace your DAW)."],
+  ["Lo que sí hace: te deja ","What it does do: it lets you "],
+  ["escuchar en tiempo real","listen in real time to"],
+  [" el efecto de una cadena de masterización simplificada (EQ, compresión de buss, saturación, imagen estéreo y limitador) sobre un render ya mezclado, para experimentar con presets y exportar un WAV procesado.",
+   " the effect of a simplified mastering chain (EQ, buss compression, saturation, stereo image and limiter) on an already-mixed render, so you can experiment with presets and export a processed WAV."],
+  ["Si tu audio ya viene mal desde el origen — mal grabado, sin claridad en la mezcla, o con problemas de calidad — // LACQUER - CUT v1 no está diseñado para hacer milagros.",
+   "If your audio already has problems at the source — badly recorded, an unclear mix, or quality issues — // LACQUER - CUT v1 isn't designed to work miracles."],
+  ["Notas técnicas y manual:","Technical notes and manual:"],
+  [" arquitectura de la cadena de señal, cómo se calculan las métricas y guía de uso de cada módulo en "," signal chain architecture, how the metrics are calculated, and a usage guide for each module in "],
+  ["el manual de // LACQUER - CUT v1 →","the // LACQUER - CUT v1 manual →"],
+  ["Aceptar","Accept"],
+
+  // ---- Topbar ----
+  ["☕ Apoyá el proyecto","☕ Support the project"],
+  ["📖 Manual","📖 Manual"],
+  ["🏠 Home","🏠 Home"],
+  ["💾 guardar","💾 save"],
+  ["✕ borrar","✕ delete"],
+  ["Guardar los ajustes actuales como preset propio","Save the current settings as your own preset"],
+  ["Borrar este preset propio","Delete this custom preset"],
+  ["Profundidad de bits del WAV exportado","Bit depth of the exported WAV"],
+  ["16-bit (dither TPDF)","16-bit (TPDF dither)"],
+  ["24-bit (sin dither)","24-bit (no dither)"],
+  ["Exportar WAV","Export WAV"],
+  ["A/B (procesado)","A/B (processed)"],
+  ["A/B (original)","A/B (original)"],
+
+  // ---- Módulo 01 Fuente ----
+  ["Fuente","Source"],
+  ["Cargá un render (wav/mp3) para masterizar","Load a render (wav/mp3) to master"],
+  ["Arrastrá tu archivo acá, o ","Drag your file here, or "],
+  ["hacé clic para elegir","click to choose"],
+  [" (.wav / .mp3)"," (.wav / .mp3)"],
+  ["▶ Play","▶ Play"],
+  ["⏸ Pause","⏸ Pause"],
+  ["■ Stop","■ Stop"],
+  ["Sin archivo cargado","No file loaded"],
+  ["Esperando archivo…","Waiting for file…"],
+  ["Decodificando referencia: ","Decoding reference: "],
+  ["Decodificando ","Decoding "],
+  ["No se pudo decodificar el archivo. Probá con otro wav/mp3.","Couldn't decode the file. Try another wav/mp3."],
+  ["No se pudo decodificar la referencia. Probá con otro wav/mp3.","Couldn't decode the reference. Try another wav/mp3."],
+
+  // ---- Módulo 02 Analizador ----
+  ["Analizador de Track","Track Analyzer"],
+  ["Recalcular estimación ahora","Recalculate estimate now"],
+  ["↻ recalcular","↻ recalculate"],
+  ["LUFS, pico, rango dinámico y correlación estéreo","LUFS, peak, dynamic range and stereo correlation"],
+  ["Análisis rápido — archivo original","Quick analysis — original file"],
+  ["Estimación — con los ajustes actuales","Estimate — with the current settings"],
+  ["Cargá un archivo para ver su análisis.","Load a file to see its analysis."],
+  ["Cargá un archivo para ver la estimación.","Load a file to see the estimate."],
+  ["Analizando…","Analyzing…"],
+  ["No se pudo analizar el archivo.","Couldn't analyze the file."],
+  ["Calculando…","Calculating…"],
+  ["No se pudo calcular la estimación.","Couldn't calculate the estimate."],
+  ["LUFS integrado (est.)","Integrated LUFS (est.)"],
+  ["LUFS integrado","Integrated LUFS"],
+  ["con la cadena · gating BS.1770","with the chain · BS.1770 gating"],
+  ["ponderación K + gating BS.1770","K-weighting + BS.1770 gating"],
+  ["True Peak (aprox.)","True Peak (approx.)"],
+  ["dBTP, oversampling 4x","dBTP, 4x oversampling"],
+  ["RMS general","Overall RMS"],
+  ["Rango dinámico (aprox.)","Dynamic range (approx.)"],
+  ["dB, tipo DR","dB, DR-type"],
+  ["Correlación estéreo","Stereo correlation"],
+  ["-1 fuera de fase · +1 mono","-1 out of phase · +1 mono"],
+  ["—(mono)","—(mono)"],
+  ["Lectura rápida:","Quick read:"],
+  ["Así quedaría:","This is how it would turn out:"],
+  ["Métricas derivadas del propio archivo (no comparan contra otro track)","Metrics derived from the file itself (not compared against another track)"],
+
+  // classifyMaster() verdict fragments
+  ["nivel de loudness muy alto (típico de 'guerra del loudness')","very high loudness level (typical of the 'loudness war')"],
+  ["loudness de club/EDM bien arriba","club/EDM loudness, quite high"],
+  ["loudness típico de streaming moderno (pop/rock actual)","typical modern streaming loudness (current pop/rock)"],
+  ["loudness moderado","moderate loudness"],
+  ["loudness bajo, poco procesado","low loudness, lightly processed"],
+  ["loudness muy bajo — sugiere un máster dinámico sin comprimir (clásico, audiófilo)","very low loudness — suggests a dynamic, uncompressed master (classical, audiophile)"],
+  ["rango dinámico muy chico (mucha compresión/limitación)","very small dynamic range (heavy compression/limiting)"],
+  ["compresión notoria","noticeable compression"],
+  ["dinámica moderada","moderate dynamics"],
+  ["dinámica amplia — casi sin compresión","wide dynamics — almost no compression"],
+  ["imagen estéreo muy ancha (revisar compatibilidad mono)","very wide stereo image (check mono compatibility)"],
+  ["buena amplitud estéreo","good stereo width"],
+  ["centrado, casi mono","centered, nearly mono"],
+
+  // ---- Módulo 02b Referencia ----
+  ["Comparación con Referencia","Reference Comparison"],
+  ["Cargá un track de referencia y compará LUFS/espectro contra tu mezcla","Load a reference track and compare LUFS/spectrum against your mix"],
+  ["Arrastrá una canción de referencia acá, o ","Drag a reference song here, or "],
+  ["Sin referencia cargada","No reference loaded"],
+  ["Escuchar la referencia (sin procesar, tal cual el archivo)","Listen to the reference (unprocessed, as-is)"],
+  ["▶ escuchar","▶ listen"],
+  ["⏸ pausar","⏸ pause"],
+  ["Quitar referencia","Remove reference"],
+  ["✕ quitar referencia","✕ remove reference"],
+  ["Comparar mi mezcla:","Compare my mix:"],
+  ["Archivo original","Original file"],
+  ["Estimación procesada (con la cadena actual)","Processed estimate (with the current chain)"],
+  ["Tu mezcla","Your mix"],
+  ["Referencia","Reference"],
+  ["Espectro promedio de todo el track (no en vivo)","Average spectrum of the whole track (not live)"],
+  ["Espectro promedio: tu mezcla (ámbar) vs referencia (azul)","Average spectrum: your mix (amber) vs reference (blue)"],
+  ["Cargá tu mezcla (arriba) y una referencia para comparar.","Load your mix (above) and a reference to compare."],
+  ["Referencia lista — cargá también tu mezcla (módulo 01) para poder comparar.","Reference ready — also load your mix (module 01) so you can compare."],
+  ["Todavía no hay estimación procesada calculada — esperá a que termine o elegí \"Archivo original\".","There's no processed estimate calculated yet — wait for it to finish or choose \"Original file\"."],
+  ["Comparando contra: ","Comparing against: "],
+  ["Analizando referencia…","Analyzing reference…"],
+  ["No se pudo analizar la referencia.","Couldn't analyze the reference."],
+
+  // ---- Módulo 03 EQ ----
+  ["EQ Master","Master EQ"],
+  ["HPF + shelf/peak fijos (120 / 700 / 3k / 9k Hz)","HPF + fixed shelf/peak (120 / 700 / 3k / 9k Hz)"],
+  ["Aplicar EQ a:","Apply EQ to:"],
+  ["Estéreo (L/R, normal)","Stereo (L/R, normal)"],
+  ["Solo Mid (centro) — deja los lados intactos","Mid only (center) — leaves the sides untouched"],
+  ["Solo Side (lados) — deja el centro intacto","Side only (sides) — leaves the center untouched"],
+  ["Curva de EQ (verde) y espectro en vivo (azul, mientras suena)","EQ curve (green) and live spectrum (blue, while playing)"],
+
+  // ---- Módulo 04 Compresor ----
+  ["Compresor Buss","Buss Compressor"],
+  ["Cohesión y control dinámico","Cohesion and dynamic control"],
+  ["Modo:","Mode:"],
+  ["Single-band (buss completo)","Single-band (full buss)"],
+  ["Multibanda (3 bandas)","Multiband (3 bands)"],
+
+  // ---- Módulo 04b Multibanda ----
+  ["Compresor Multibanda","Multiband Compressor"],
+  ["Crossover LR4 fijo en 200Hz / 3kHz — Attack/Release compartidos entre bandas","Fixed LR4 crossover at 200Hz / 3kHz — Attack/Release shared across bands"],
+  ["GRAVES < 200Hz","LOWS < 200Hz"],
+  ["MEDIOS 200Hz–3k","MIDS 200Hz–3k"],
+  ["AGUDOS > 3k","HIGHS > 3k"],
+  ["⚠ El HPF (EQ Master) está por encima de 200Hz — esta banda recibe poca o ninguna señal.","⚠ The HPF (Master EQ) is set above 200Hz — this band receives little or no signal."],
+
+  // ---- Módulo 05/06/07 ----
+  ["Saturación","Saturation"],
+  ["Color armónico sutil (tape/tube)","Subtle harmonic color (tape/tube)"],
+  ["Imagen Estéreo","Stereo Image"],
+  ["Matriz M/S · usar con cuidado en graves","M/S matrix · use carefully on low end"],
+  ["Limitador & Loudness","Limiter & Loudness"],
+  ["LUFS con ponderación K aprox. + gating BS.1770 (abs. -70 / rel. -10 LU)","LUFS with approx. K-weighting + BS.1770 gating (abs. -70 / rel. -10 LU)"],
+  ["LUFS INTEGRADO","INTEGRATED LUFS"],
+  ["LIMITER GR","LIMITER GR"],
+  ["LUFS SHORT-TERM","LUFS SHORT-TERM"],
+  ["PICO (dBTP aprox.)","PEAK (dBTP approx.)"],
+  ["GAIN REDUCTION","GAIN REDUCTION"],
+
+  // ---- Knob labels ----
+  ["Graves 120Hz","Low 120Hz"],
+  ["Medios 700Hz","Mid 700Hz"],
+  ["Presencia 3k","Presence 3k"],
+  ["Brillo 9k","Brightness 9k"],
+  ["Attack (3 bandas)","Attack (3 bands)"],
+  ["Release (3 bandas)","Release (3 bands)"],
+  ["Ancho","Width"],
+  ["Ganancia","Gain"],
+
+  // ---- Footer ----
+  ["Cadena de masterización","Mastering chain"],
+  [" — EQ, compresor buss, saturación, imagen estéreo y limitador con lookahead, todo generado con Web Audio API."," — EQ, buss compressor, saturation, stereo image and lookahead limiter, all built with the Web Audio API."],
+
+  // ---- Presets: nombres ----
+  ["Transparente","Transparent"],
+  ["Dinámico / Audiófilo (~ -20/-25 LUFS)","Dynamic / Audiophile (~ -20/-25 LUFS)"],
+  ["Streaming Suave (~ -16 LUFS)","Soft Streaming (~ -16 LUFS)"],
+  ["Streaming Pop (~ -14 LUFS)","Streaming Pop (~ -14 LUFS)"],
+  ["Dance Ligero (~ -11 LUFS)","Light Dance (~ -11 LUFS)"],
+  ["Club / EDM Loud (~ -8 LUFS)","Club / EDM Loud (~ -8 LUFS)"],
+  ["Voz Natural (~ -18 LUFS)","Natural Voice (~ -18 LUFS)"],
+  ["Podcast / Voz (~ -16 LUFS)","Podcast / Voice (~ -16 LUFS)"],
+  ["Vinilo Ligero (~ -18 LUFS)","Light Vinyl (~ -18 LUFS)"],
+  ["Vinilo Cálido (~ -16 LUFS)","Warm Vinyl (~ -16 LUFS)"],
+  // ---- Presets: descripciones ----
+  ["Procesamiento mínimo, control de picos únicamente.","Minimal processing, peak control only."],
+  ["Casi sin compresión ni saturación — deja pasar la dinámica original del render. El LUFS final depende del material fuente, no lo fuerza este preset.","Almost no compression or saturation — lets the render's original dynamics through. Final LUFS depends on the source material; this preset doesn't force it."],
+  ["Versión más delicada del master de streaming, casi imperceptible.","A more delicate version of the streaming master, almost imperceptible."],
+  ["Balance moderno para plataformas de streaming.","Modern balance for streaming platforms."],
+  ["Energía de club con mano más liviana, menos limitación.","Club energy with a lighter touch, less limiting."],
+  ["Máxima energía y volumen percibido, más limitación.","Maximum energy and perceived loudness, more limiting."],
+  ["Limpieza y presencia suaves, mantiene la dinámica de la voz.","Gentle cleanup and presence, keeps the voice's dynamics."],
+  ["Limpieza de graves y presencia vocal.","Low-end cleanup and vocal presence."],
+  ["Un toque de calidez análoga, sin exagerar la saturación.","A touch of analog warmth, without overdoing the saturation."],
+  ["Saturación generosa, agudos suavizados.","Generous saturation, softened highs."],
+
+  // ---- Presets: grupos del select ----
+  ["De fábrica","Built-in"],
+  ["Tus presets","Your presets"],
+
+  // ---- Status lines / prompts dinámicos ----
+  ["Preset propio, guardado el ","Custom preset, saved on "],
+  ["No se pudo guardar el preset (localStorage no disponible).","Couldn't save the preset (localStorage not available)."],
+  ["Nombre del preset:","Preset name:"],
+  ["Preset \"","Preset \""],
+  ["\" guardado.","\" saved."],
+  ["\" borrado.","\" deleted."],
+  ["¿Borrar el preset \"","Delete the preset \""],
+  ["Renderizando…","Rendering…"],
+  ["Exportado: ","Exported: "],
+  ["Error al exportar: ","Error exporting: "],
+
+  // ---- Warning sin AudioWorklet ----
+  [" · ⚠ abierto sin servidor (file://): el limitador usa un modo de respaldo más propenso a ruidos/glitches — para el motor completo, serví esta página por http(s):// o localhost.",
+   " · ⚠ opened without a server (file://): the limiter is using a fallback mode more prone to noise/glitches — for the full engine, serve this page over http(s):// or localhost."],
+];
+
+// Ordenar de más largo a más corto para evitar que un fragmento corto
+// (ej: "Ganancia") reemplace parte de una frase más larga que aún no se tradujo.
+DICT.sort((a,b)=> b[0].length - a[0].length);
+const REV = DICT.map(([es,en])=>[en,es]).sort((a,b)=> b[0].length - a[0].length);
+
+function applyDict(text, dict){
+  let out = text;
+  for(let i=0;i<dict.length;i++){
+    const from = dict[i][0], to = dict[i][1];
+    if(from && out.indexOf(from) !== -1) out = out.split(from).join(to);
+  }
+  return out;
+}
+
+let LANG = localStorage.getItem('lacquer_lang') === 'en' ? 'en' : 'es';
+let translating = false;
+
+function translateNode(node){
+  if(!node) return;
+  if(node.nodeType === Node.TEXT_NODE){
+    const t = node.nodeValue;
+    if(!t || !t.trim()) return;
+    const dict = LANG === 'en' ? DICT : REV;
+    const translated = applyDict(t, dict);
+    if(translated !== t) node.nodeValue = translated;
+    return;
+  }
+  if(node.nodeType !== Node.ELEMENT_NODE) return;
+  const tag = node.tagName;
+  if(tag === 'SCRIPT' || tag === 'STYLE') return;
+  if(node.hasAttribute && node.hasAttribute('title')){
+    const dict = LANG === 'en' ? DICT : REV;
+    const tt = node.getAttribute('title');
+    const trTt = applyDict(tt, dict);
+    if(trTt !== tt) node.setAttribute('title', trTt);
+  }
+  for(let c = node.firstChild; c; c = c.nextSibling) translateNode(c);
+}
+
+function translateWholeDoc(){
+  translating = true;
+  translateNode(document.body);
+  translating = false;
+}
+
+function setLangButtons(){
+  const label = LANG === 'en' ? 'ES' : 'EN';
+  const b1 = document.getElementById('lang-toggle');
+  const b2 = document.getElementById('lang-toggle-splash');
+  if(b1) b1.textContent = label;
+  if(b2) b2.textContent = label;
+}
+
+function toggleLang(){
+  LANG = LANG === 'en' ? 'es' : 'en';
+  try{ localStorage.setItem('lacquer_lang', LANG); }catch(e){}
+  translateWholeDoc();
+  setLangButtons();
+}
+
+// Traducción continua: cualquier contenido que la app siga regenerando en
+// español (analizador, estimaciones, status-line, etc.) se traduce apenas
+// aparece, sin tener que volver a tocar el botón.
+const mo = new MutationObserver((mutations)=>{
+  if(LANG !== 'en' || translating) return; // el contenido que genera la app siempre nace en español
+  for(const m of mutations){
+    if(m.type === 'characterData'){
+      translateNode(m.target);
+    } else if(m.type === 'childList'){
+      m.addedNodes.forEach(function(n){ translateNode(n); });
+    }
+  }
+});
+mo.observe(document.body, { childList:true, characterData:true, subtree:true });
+
+// Traduce los diálogos nativos (prompt/confirm) según el idioma activo.
+const _prompt = window.prompt, _confirm = window.confirm;
+window.prompt = function(msg, def){ return _prompt.call(window, LANG==='en' ? applyDict(msg, DICT) : msg, def); };
+window.confirm = function(msg){ return _confirm.call(window, LANG==='en' ? applyDict(msg, DICT) : msg); };
+
+document.getElementById('lang-toggle').addEventListener('click', toggleLang);
+document.getElementById('lang-toggle-splash').addEventListener('click', toggleLang);
+
+setLangButtons();
+if(LANG === 'en') translateWholeDoc();
+
+})();
+</script>
+
+</body>
+</html>

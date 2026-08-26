@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual — // LACQUER - CUT v1 // STEMSMAG</title>
+<style>
+  :root{
+    --bg:#07090a; --frame-bg:#10141a; --panel:#151a20; --panel-alt:#1a2029;
+    --border:#232a33; --border-soft:#1a1f27;
+    --accent:#2dd7a0; --accent-soft:#123629; --accent-glow:rgba(45,215,160,.45);
+    --amber:#e0a23e; --amber-glow:rgba(224,162,62,.45); --amber-soft:rgba(224,162,62,.14);
+    --red:#e35a5a; --yellow:#e0c23e; --blue:#4fa3e0; --green:#2dd7a0;
+    --text:#eef2f4; --text-dim:#8a97a0; --text-faint:#54616a;
+    --radius-lg:16px; --radius-md:11px; --radius-sm:7px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:'Segoe UI',system-ui,Arial,sans-serif;
+    line-height:1.6;
+  }
+  a{color:var(--accent);}
+  ::selection{background:var(--accent-soft);}
+
+  .topbar{
+    position:sticky; top:0; z-index:10; display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px; background:rgba(7,9,10,.9); backdrop-filter:blur(8px); border-bottom:1px solid var(--border-soft);
+  }
+  .brand{font-weight:800; font-size:17px; letter-spacing:2px; color:#f4f6fa;}
+  .brand .w{color:var(--accent);}
+  .brand .tag{margin-left:6px; font-size:10px; letter-spacing:1.5px; color:var(--text-faint); font-weight:600;}
+  .back-link{
+    display:flex; align-items:center; gap:6px; font-size:11.5px; font-weight:700; letter-spacing:.4px;
+    color:var(--text-dim); text-decoration:none; border:1px solid var(--border); border-radius:8px; padding:8px 14px;
+  }
+  .back-link:hover{color:var(--text); border-color:var(--text-faint);}
+
+  .hero{max-width:760px; margin:0 auto; padding:56px 24px 28px;}
+  .hero .eyebrow{font-size:10px; letter-spacing:3px; color:var(--accent); text-transform:uppercase; font-weight:700; margin-bottom:10px;}
+  .hero h1{font-size:clamp(26px,4vw,36px); line-height:1.2; margin:0 0 14px; color:#f4f6fa; letter-spacing:.2px;}
+  .hero p{font-size:14px; color:var(--text-dim); max-width:600px; margin:0;}
+
+  .layout{max-width:960px; margin:0 auto; padding:0 24px 80px; display:grid; grid-template-columns:190px 1fr; gap:40px;}
+  @media (max-width:760px){ .layout{grid-template-columns:1fr; gap:8px;} .toc{display:none;} }
+
+  .toc{position:sticky; top:70px; align-self:start; display:flex; flex-direction:column; gap:2px; padding-top:6px;}
+  .toc a{
+    font-size:11.5px; color:var(--text-faint); text-decoration:none; padding:6px 0; border-left:2px solid transparent;
+    padding-left:12px; letter-spacing:.2px;
+  }
+  .toc a:hover{color:var(--text-dim);}
+  .toc a.active{color:var(--accent); border-left-color:var(--accent);}
+
+  section{padding-top:52px; scroll-margin-top:70px; border-top:1px solid var(--border-soft);}
+  section:first-of-type{border-top:none; padding-top:8px;}
+  .sec-eyebrow{font-size:9.5px; letter-spacing:2.5px; color:var(--text-faint); text-transform:uppercase; font-weight:700; margin-bottom:8px;}
+  h2{font-size:21px; color:#f4f6fa; margin:0 0 14px; letter-spacing:.2px;}
+  h3{font-size:14px; color:var(--text); margin:22px 0 8px; letter-spacing:.2px;}
+  p{font-size:13px; color:var(--text-dim); margin:0 0 12px;}
+  strong{color:var(--text); font-weight:700;}
+  ul,ol{margin:0 0 14px; padding-left:20px;}
+  li{font-size:13px; color:var(--text-dim); margin-bottom:5px;}
+  li strong{color:var(--text);}
+  code{background:var(--panel-alt); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:12px; color:var(--accent); font-family:'JetBrains Mono',monospace;}
+
+  .card-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin:16px 0 20px;}
+  .card{background:var(--panel-alt); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px;}
+  .card .card-title{font-size:12.5px; font-weight:700; color:var(--text); letter-spacing:.3px; margin-bottom:6px; display:flex; align-items:center; gap:8px;}
+  .card .card-dot{width:8px; height:8px; border-radius:50%; flex:0 0 auto;}
+  .card p{font-size:11.5px; color:var(--text-faint); margin:0;}
+
+  .spec-table{width:100%; border-collapse:collapse; margin:10px 0 20px; font-size:12px;}
+  .spec-table th{text-align:left; font-size:9.5px; letter-spacing:1.2px; text-transform:uppercase; color:var(--text-faint); font-weight:700; padding:6px 10px; border-bottom:1px solid var(--border);}
+  .spec-table td{padding:9px 10px; border-bottom:1px solid var(--border-soft); color:var(--text-dim); vertical-align:top;}
+  .spec-table td:first-child{color:var(--text); font-weight:600; white-space:nowrap;}
+
+  .callout{
+    background:var(--panel-alt); border:1px solid var(--border); border-left:3px solid var(--accent);
+    border-radius:8px; padding:14px 16px; margin:16px 0; font-size:12.5px; color:var(--text-dim);
+  }
+  .callout strong{color:var(--accent);}
+  .callout.amber{border-left-color:var(--amber);}
+  .callout.amber strong{color:var(--amber);}
+
+  .kbd{display:inline-block; background:var(--panel-alt); border:1px solid var(--border); border-bottom-width:2px; border-radius:4px; padding:1px 7px; font-size:11px; color:var(--text); font-family:'JetBrains Mono',monospace;}
+
+  .footer{max-width:960px; margin:0 auto; padding:30px 24px 60px; border-top:1px solid var(--border-soft); text-align:center;}
+  .footer p{font-size:11px; color:var(--text-faint); margin:4px 0;}
+  .footer .c{color:var(--accent);}
+
+  .support-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-top:16px;}
+  .support-card{background:var(--panel-alt); border:1px solid var(--border); border-radius:var(--radius-md); padding:18px; display:flex; flex-direction:column; align-items:flex-start; gap:6px;}
+  .support-card-title{font-size:13px; font-weight:700; color:var(--text); letter-spacing:.3px;}
+  .support-card p{font-size:11.5px; color:var(--text-faint); margin:0 0 6px;}
+  .paypal-btn{
+    display:inline-block; background:var(--accent-soft); border:1px solid var(--accent); color:var(--accent);
+    border-radius:8px; padding:9px 18px; font-size:12px; font-weight:700; letter-spacing:.3px; text-decoration:none;
+  }
+  .paypal-btn:hover{background:var(--accent); color:#04150f;}
+
+  .topbar-right{display:flex; align-items:center; gap:10px;}
+  .lang-toggle{display:flex; border:1px solid var(--border); border-radius:8px; overflow:hidden;}
+  .lang-btn{
+    background:transparent; border:none; color:var(--text-faint); font-size:10.5px; font-weight:700;
+    letter-spacing:.5px; padding:8px 11px; cursor:pointer; font-family:inherit; transition:background .15s,color .15s;
+  }
+  .lang-btn + .lang-btn{border-left:1px solid var(--border);}
+  .lang-btn.active{background:var(--accent-soft); color:var(--accent);}
+  .lang-btn:hover:not(.active){color:var(--text-dim);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="w">//</span> LACQUER - CUT<span class="brand"> v1</span><span class="tag">by STEMSMAG</span></div>
+  <div class="topbar-right">
+    <a class="back-link" href="lacquer-cut-v1.html" data-en="&larr; Back to the tool">&larr; Volver a la herramienta</a>
+    <div class="lang-toggle" id="langToggle" role="group" aria-label="Language / Idioma">
+      <button type="button" class="lang-btn active" data-lang="es">ES</button>
+      <button type="button" class="lang-btn" data-lang="en">EN</button>
+    </div>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="eyebrow" data-en="Manual &amp; Specifications">Manual &amp; Especificaciones</div>
+  <h1 data-en="How LACQUER - CUT v1 is built, inside and out.">Cómo está armado LACQUER - CUT v1, por dentro y por fuera.</h1>
+  <p data-en="This guide explains the architecture of the mastering chain, what each module does, how the analyzer's metrics are calculated, and how to get the most out of every control. Think of it as the manual that would come in the box, if LACQUER - CUT v1 came in a box.">Esta guía explica la arquitectura de la cadena de masterización, qué hace cada módulo, cómo se calculan las métricas del analizador y cómo sacarle el jugo a todos los controles. Pensala como el manual que vendría en la caja, si LACQUER - CUT v1 viniera en una caja.</p>
+</div>
+
+<div class="layout">
+  <nav class="toc" id="toc">
+    <a href="#overview" data-en="What it is">Qué es</a>
+    <a href="#arquitectura" data-en="Architecture &amp; requirements">Arquitectura &amp; requisitos</a>
+    <a href="#cadena" data-en="Signal chain">Cadena de señal</a>
+    <a href="#fuente" data-en="Source &amp; transport">Fuente &amp; transporte</a>
+    <a href="#analizador" data-en="Track Analyzer">Analizador de Track</a>
+    <a href="#referencia" data-en="Reference Comparison">Comparación con Referencia</a>
+    <a href="#eq" data-en="Master EQ">EQ Master</a>
+    <a href="#compresor" data-en="Buss Compressor">Compresor Buss</a>
+    <a href="#saturacion" data-en="Saturation">Saturación</a>
+    <a href="#estereo" data-en="Stereo Image">Imagen Estéreo</a>
+    <a href="#limitador" data-en="Limiter &amp; Loudness">Limitador &amp; Loudness</a>
+    <a href="#presets" data-en="Presets">Presets</a>
+    <a href="#exportar" data-en="Export">Exportación</a>
+    <a href="#knobs" data-en="Knob interaction">Interacción con knobs</a>
+    <a href="#problemas" data-en="Troubleshooting">Solución de problemas</a>
+    <a href="#limites" data-en="Known limitations">Límites conocidos</a>
+    <a href="#creditos" data-en="License &amp; credits">Licencia &amp; créditos</a>
+    <a href="#revista" data-en="STEMS Magazine">STEMS Magazine</a>
+    <a href="#apoyar" data-en="Support the project">Apoyá el proyecto</a>
+  </nav>
+
+  <div class="content">
+
+    <section id="overview">
+      <div class="sec-eyebrow" data-en="01 — Overview">01 — Panorama general</div>
+      <h2 data-en="What LACQUER - CUT v1 is">Qué es LACQUER - CUT v1</h2>
+      <p data-en="// LACQUER - CUT v1 is an experimental mastering suite that runs entirely in your browser, with nothing to install. It builds a chain of audio nodes (filters, compressor, saturator, stereo matrix, and a lookahead limiter) that processes your file <strong>live while it plays</strong>, and can also be fully rendered to export a WAV.">// LACQUER - CUT v1 es una suite de masterización experimental que corre enteramente en tu navegador, sin instalar nada. Arma una cadena de nodos de audio (filtros, compresor, saturador, matriz estéreo y un limitador con anticipo) que procesa tu archivo <strong>en vivo mientras suena</strong>, y que también se puede renderizar completa para exportar un WAV.</p>
+      <p data-en="It was born as an educational tool from StemsMag to give a hands-on understanding of what each link in a mastering chain does: every knob you move has an immediate, audible effect, and the loudness/true-peak metrics recalculate as you adjust.">Nació como una herramienta educativa de StemsMag para entender de forma práctica qué hace cada eslabón de una cadena de máster: cada knob que movés tiene un efecto audible inmediato, y las métricas de loudness/true-peak se recalculan a medida que ajustás.</p>
+      <div class="callout amber" data-en='<strong>Honesty first:</strong> this isn&rsquo;t a professional final-delivery product, it doesn&rsquo;t restore damaged audio, and it doesn&rsquo;t replace a mastering engineer. It&rsquo;s a testbed for experimenting and learning — see <a href="#limites">Known limitations</a>.'><strong>Honestidad primero:</strong> no es un producto de entrega final profesional, no restaura audio dañado y no reemplaza a un ingeniero de mastering. Es un banco de pruebas para experimentar y aprender — ver <a href="#limites">Límites conocidos</a>.</div>
+    </section>
+
+    <section id="arquitectura">
+      <div class="sec-eyebrow" data-en="02 — Audio engine">02 — Motor de audio</div>
+      <h2 data-en="Architecture &amp; requirements">Arquitectura &amp; requisitos</h2>
+      <p data-en="All processing is done with the browser's native <strong>Web Audio API</strong>: no plugins, no servers, no file uploads — your audio never leaves your machine. The most sensitive piece of the chain is the <strong>lookahead limiter</strong>, implemented as an <code>AudioWorkletNode</code>, which runs on a dedicated audio thread, separate from the browser's main thread.">Todo el procesamiento se hace con la <strong>Web Audio API</strong> nativa del navegador: no hay plugins, servidores ni subida de archivos — tu audio nunca sale de tu máquina. La pieza más sensible de la cadena es el <strong>limitador con lookahead</strong>, implementado como <code>AudioWorkletNode</code>, que corre en un hilo de audio dedicado, separado del hilo principal del navegador.</p>
+      <div class="callout amber" data-en="<strong>Why this matters:</strong> <code>AudioWorklet</code> requires a <em>secure context</em> (HTTPS or <code>http://localhost</code>). If you open the <code>.html</code> file with a double-click (<code>file://</code> protocol), the browser blocks it and the app falls back to a backup mode (<code>ScriptProcessorNode</code>) that runs on the main thread — more prone to noise/glitches when there's CPU activity (moving knobs, recalculating the analyzer). The app warns you on screen if it detects this mode. For the full engine, serve the page over local HTTP (for example with the included launcher) instead of opening it directly from disk."><strong>Por qué importa esto:</strong> <code>AudioWorklet</code> requiere un <em>contexto seguro</em> (HTTPS o <code>http://localhost</code>). Si abrís el archivo <code>.html</code> con doble clic (protocolo <code>file://</code>), el navegador lo bloquea y la app cae a un modo de respaldo (<code>ScriptProcessorNode</code>) que corre en el hilo principal — más propenso a ruidos/glitches cuando hay actividad de CPU (mover knobs, recalcular el analizador). La app te avisa en pantalla si detecta este modo. Para el motor completo, serví la página por HTTP local (por ejemplo con el lanzador incluido) en vez de abrirla directo del disco.</div>
+    </section>
+
+    <section id="cadena">
+      <div class="sec-eyebrow" data-en="02 — Audio engine">02 — Motor de audio</div>
+      <h2 data-en="Signal chain">Cadena de señal</h2>
+      <p data-en="The processing order is fixed and cannot be reordered:">El orden de procesamiento es fijo, no reordenable:</p>
+      <p style="color:var(--text); font-weight:600; letter-spacing:.3px;" data-en="HPF &rarr; EQ (5 bands) &rarr; Compressor (single or multiband) &rarr; Saturation &rarr; Stereo Image &rarr; Limiter">HPF &rarr; EQ (5 bandas) &rarr; Compresor (single o multibanda) &rarr; Saturación &rarr; Imagen Estéreo &rarr; Limitador</p>
+      <p data-en="Each module in the interface corresponds to a stretch of that chain. Changing a numeric value (gain, threshold, drive, etc.) is a live parameter tweak; changing the EQ's <strong>M/S mode</strong> or the compressor's <strong>single/multiband mode</strong> is a <em>routing</em> change — it rebuilds that stretch of the node graph and can produce a brief click if audio is playing, which is expected.">Cada módulo de la interfaz corresponde a un tramo de esa cadena. Cambiar un valor numérico (ganancia, threshold, drive, etc.) es un ajuste de parámetro en vivo; cambiar el <strong>modo M/S del EQ</strong> o el <strong>modo single/multibanda del compresor</strong> es un cambio de <em>routing</em> — reconstruye ese tramo del grafo de nodos y puede generar un click breve si está sonando, que es esperable.</p>
+    </section>
+
+    <section id="fuente">
+      <div class="sec-eyebrow" data-en="03 — Modules">03 — Módulos</div>
+      <h2 data-en="01 · Source">01 · Fuente</h2>
+      <ul>
+        <li data-en="<strong>Load file:</strong> drag a <code>.wav</code> or <code>.mp3</code>, or click to choose one."><strong>Cargar archivo:</strong> arrastrá un <code>.wav</code> o <code>.mp3</code>, o hacé clic para elegirlo.</li>
+        <li data-en="<strong>Waveform:</strong> drawn as soon as the file is decoded. Clicking it jumps playback to that position."><strong>Forma de onda:</strong> se dibuja apenas se decodifica el archivo. Clic sobre ella salta la reproducción a esa posición.</li>
+        <li data-en="<strong>Transport:</strong> Play/Pause share the same button; Stop returns to 00:00 and disconnects the whole chain."><strong>Transporte:</strong> Play/Pausa con el mismo botón; Stop vuelve a 00:00 y desconecta toda la cadena.</li>
+        <li data-en="<strong>Status line:</strong> duration, sample rate, channels, and the fallback-mode warning if applicable."><strong>Línea de estado:</strong> duración, sample rate, canales, y el aviso de modo de respaldo si corresponde.</li>
+      </ul>
+    </section>
+
+    <section id="analizador">
+      <div class="sec-eyebrow" data-en="03 — Modules">03 — Módulos</div>
+      <h2 data-en="02 · Track Analyzer">02 · Analizador de Track</h2>
+      <p data-en='It runs on the file exactly as loaded ("Quick Analysis") and also on an offline-rendered version with the knobs&rsquo; current settings ("Estimate"), recalculated with a ~700ms debounce every time you change a parameter.'>Corre sobre el archivo tal cual se cargó ("Análisis rápido") y también sobre una versión renderizada offline con los ajustes actuales de los knobs ("Estimación"), recalculada con un debounce de ~700ms cada vez que cambiás un parámetro.</p>
+      <table class="spec-table">
+        <tr><th data-en="Metric">Métrica</th><th data-en="What it measures">Qué mide</th></tr>
+        <tr><td data-en="Integrated LUFS">LUFS integrado</td><td data-en="Perceived loudness with approximate K-weighting + BS.1770 gating (absolute gate -70 LUFS, relative gate -10 LU) — the same criterion used by Spotify/YouTube.">Loudness percibido con ponderación K aproximada + gating BS.1770 (gate absoluto -70 LUFS, gate relativo -10 LU) — el mismo criterio que usan Spotify/YouTube.</td></tr>
+        <tr><td>True Peak (dBTP)</td><td data-en="Estimate of inter-sample peaks via 4x oversampling with cubic Catmull-Rom interpolation. This is what the limiter's Ceiling promises to control.">Estimación de picos entre muestras vía sobremuestreo 4x con interpolación cúbica Catmull-Rom. Es lo que promete controlar el Ceiling del limitador.</td></tr>
+        <tr><td data-en="Overall RMS">RMS general</td><td data-en="Average energy of the whole signal, unweighted.">Energía promedio de toda la señal, sin ponderar.</td></tr>
+        <tr><td data-en="Dynamic range (approx., DR-style)">Rango dinámico (aprox., tipo DR)</td><td data-en="Difference between the peak and the average of the loudest 20% of blocks (3s blocks) — a simplification of the real DR14.">Diferencia entre el pico y el promedio del 20% de bloques más fuertes (bloques de 3s) — simplificación del DR14 real.</td></tr>
+        <tr><td data-en="Stereo correlation">Correlación estéreo</td><td data-en="-1 (out of phase) to +1 (mono). Very low values warn of possible mono-compatibility issues.">-1 (fuera de fase) a +1 (mono). Valores muy bajos avisan de posibles problemas de compatibilidad mono.</td></tr>
+        <tr><td>ΔLUFS (PLR)</td><td data-en="True Peak minus integrated LUFS. A small PLR indicates a very compressed/flat master; a large one indicates uncompressed dynamics.">True Peak menos LUFS integrado. Un PLR chico indica un máster muy comprimido/plano; uno grande indica dinámica sin comprimir.</td></tr>
+      </table>
+    </section>
+
+    <section id="referencia">
+      <div class="sec-eyebrow" data-en="03 — Modules">03 — Módulos</div>
+      <h2 data-en="02b · Reference Comparison">02b · Comparación con Referencia</h2>
+      <p data-en="Load an already-mastered track to compare LUFS, peak, dynamic range, and average spectrum against your own track.">Cargá una canción ya masterizada para comparar LUFS, pico, rango dinámico y espectro promedio contra tu propio track.</p>
+      <ul>
+        <li data-en="<strong>Compare my mix:</strong> choose whether the comparison uses the original file or the processed Estimate."><strong>Comparar mi mezcla:</strong> elegí si la comparación usa el archivo original o la Estimación procesada.</li>
+        <li data-en="<strong>Overlaid spectrum:</strong> average of the whole track via real FFT (radix-2) over 4096-sample Hann windows with 50% overlap, mixed down to mono before analysis."><strong>Espectro superpuesto:</strong> promedio de todo el track vía FFT real (radix-2) sobre ventanas Hann de 4096 muestras con 50% de solape, mezclado a mono antes de analizar.</li>
+        <li data-en="<strong>▶ Listen:</strong> plays the reference unprocessed, exactly as the file is, for an ear A/B — it doesn't go through the mastering chain."><strong>▶ Escuchar:</strong> reproduce la referencia sin procesar, tal cual el archivo, para A/B de oído — no pasa por la cadena de masterización.</li>
+      </ul>
+      <p data-en="Analyzing and computing the reference spectrum is CPU-heavy work; it runs in batches that periodically yield the main thread so it doesn't cause UI hitches or compete with audio playback.">El análisis y el espectro de la referencia son trabajo pesado de CPU; corren en tandas que ceden el hilo principal periódicamente para no generar hitches en la UI ni competir con audio en reproducción.</p>
+    </section>
+
+    <section id="eq">
+      <div class="sec-eyebrow" data-en="03 — Modules">03 — Módulos</div>
+      <h2 data-en="03 · Master EQ">03 · EQ Master</h2>
+      <p data-en="Five bands fixed in frequency, only gain is adjustable (plus the HPF cutoff):">Cinco bandas fijas en frecuencia, solo se ajusta la ganancia (y el corte del HPF):</p>
+      <table class="spec-table">
+        <tr><th data-en="Band">Banda</th><th data-en="Frequency">Frecuencia</th><th data-en="Type">Tipo</th></tr>
+        <tr><td>HPF</td><td data-en="20–300 Hz (adjustable)">20–300 Hz (ajustable)</td><td>High-pass, Q=0.707</td></tr>
+        <tr><td data-en="Low">Graves</td><td>120 Hz</td><td>Low shelf</td></tr>
+        <tr><td data-en="Mid">Medios</td><td>700 Hz</td><td>Peak, Q=0.9</td></tr>
+        <tr><td data-en="Presence">Presencia</td><td>3 kHz</td><td>Peak, Q=0.9</td></tr>
+        <tr><td data-en="Brilliance">Brillo</td><td>9 kHz</td><td>High shelf</td></tr>
+      </table>
+      <h3 data-en="Apply EQ to (M/S mode)">Aplicar EQ a (modo M/S)</h3>
+      <ul>
+        <li data-en="<strong>Stereo (normal):</strong> the EQ acts equally on both channels."><strong>Estéreo (normal):</strong> el EQ actúa igual sobre ambos canales.</li>
+        <li data-en="<strong>Mid only:</strong> applied only to the center content (mono); the sides stay untouched."><strong>Solo Mid:</strong> se aplica solo al contenido central (mono); los lados quedan intactos.</li>
+        <li data-en="<strong>Side only:</strong> applied only to the lateral content; the center stays untouched."><strong>Solo Side:</strong> se aplica solo al contenido lateral; el centro queda intacto.</li>
+      </ul>
+      <p data-en="The graphic panel shows the real response curve (calculated with <code>getFrequencyResponse</code> on the same filters the chain uses) and, while playing, overlays the signal's live spectrum.">El panel gráfico muestra la curva de respuesta real (calculada con <code>getFrequencyResponse</code> sobre los mismos filtros que usa la cadena) y, mientras suena, superpone el espectro en vivo de la señal.</p>
+    </section>
+
+    <section id="compresor">
+      <div class="sec-eyebrow" data-en="03 — Modules">03 — Módulos</div>
+      <h2 data-en="04 · Buss Compressor">04 · Compresor Buss</h2>
+      <p data-en="<strong>Single-band:</strong> a <code>DynamicsCompressorNode</code> with Threshold, Ratio, Attack, Release, and Makeup, over the whole signal."><strong>Single-band:</strong> un <code>DynamicsCompressorNode</code> con Threshold, Ratio, Attack, Release y Makeup, sobre toda la señal.</p>
+      <p data-en="<strong>Multiband (3 bands):</strong> 4th-order Linkwitz-Riley crossover (-24dB/oct) at fixed 200&nbsp;Hz and 3&nbsp;kHz. Each band (Low / Mid / High) has its own Threshold/Ratio/Makeup; Attack and Release are shared across all three."><strong>Multibanda (3 bandas):</strong> crossover Linkwitz-Riley de 4to orden (-24dB/oct) en 200&nbsp;Hz y 3&nbsp;kHz, fijos. Cada banda (Graves / Medios / Agudos) tiene su propio Threshold/Ratio/Makeup; Attack y Release se comparten entre las tres.</p>
+      <div class="callout" data-en="<strong>Phase compensation:</strong> the Low band goes through only one crossover stage (less group delay), so an all-pass at 3&nbsp;kHz is added to align all three bands before summing them."><strong>Compensación de fase:</strong> la banda de Graves pasa por una sola etapa de crossover (menos retardo de grupo), así que se le agrega un all-pass en 3&nbsp;kHz para alinear las tres bandas antes de sumarlas.</div>
+      <div class="callout amber" data-en="<strong>HPF warning:</strong> if the EQ's HPF cuts above 200&nbsp;Hz, the multiband's Low band receives little or no signal — the app warns with an amber banner on that band."><strong>Aviso de HPF:</strong> si el HPF del EQ corta por encima de 200&nbsp;Hz, la banda de Graves del multibanda recibe poca o ninguna señal — la app avisa con un banner ámbar en esa banda.</div>
+    </section>
+
+    <section id="saturacion">
+      <div class="sec-eyebrow" data-en="03 — Modules">03 — Módulos</div>
+      <h2 data-en="05 · Saturation">05 · Saturación</h2>
+      <p data-en="Waveshaper with a <code>tanh</code>-type curve, mixed in parallel dry/wet: <strong>Drive</strong> (curve intensity) and <strong>Mix</strong> (dry/saturated balance). Uses the <code>WaveShaperNode</code>'s native 4x oversampling to avoid audible aliasing when generating harmonics.">Waveshaper con curva tipo <code>tanh</code>, mezclado en paralelo dry/wet: <strong>Drive</strong> (intensidad de la curva) y <strong>Mix</strong> (balance seco/saturado). Usa oversampling 4x nativo del <code>WaveShaperNode</code> para evitar aliasing audible al generar armónicos.</p>
+    </section>
+
+    <section id="estereo">
+      <div class="sec-eyebrow" data-en="03 — Modules">03 — Módulos</div>
+      <h2 data-en="06 · Stereo Image">06 · Imagen Estéreo</h2>
+      <p data-en="One knob, <strong>Width</strong> (0%–200%, 100% = no change), that widens or narrows stereo separation via an M/S matrix. Widening the low end too much can cause phase/mono-compatibility issues.">Un knob, <strong>Ancho</strong> (0%–200%, 100% = sin cambios), que amplía o reduce la separación estéreo vía matriz M/S. Anchar demasiado el bajo puede generar problemas de fase/compatibilidad mono.</p>
+    </section>
+
+    <section id="limitador">
+      <div class="sec-eyebrow" data-en="03 — Modules">03 — Módulos</div>
+      <h2 data-en="07 · Limiter &amp; Loudness">07 · Limitador &amp; Loudness</h2>
+      <p data-en="Limiter with real lookahead (~5&nbsp;ms) in <code>AudioWorklet</code>: anticipates peaks and applies gain reduction before they happen, instead of reacting afterward. 60&nbsp;ms release.">Limitador con lookahead real (~5&nbsp;ms) en <code>AudioWorklet</code>: anticipa picos y aplica reducción de ganancia antes de que ocurran, en vez de reaccionar después. Release de 60&nbsp;ms.</p>
+      <table class="spec-table">
+        <tr><th data-en="Control / meter">Control / medidor</th><th data-en="Detail">Detalle</th></tr>
+        <tr><td>Ceiling</td><td data-en="Maximum true-peak level allowed, in dBTP (-3 to 0 dB).">Nivel máximo de true peak permitido, en dBTP (-3 a 0 dB).</td></tr>
+        <tr><td data-en="Gain (drive)">Ganancia (drive)</td><td data-en="How hard the signal is pushed against the limiter before the ceiling.">Cuánto se empuja la señal contra el limitador antes del ceiling.</td></tr>
+        <tr><td data-en="Integrated LUFS">LUFS integrado</td><td data-en="Accumulated since the current playback started, with BS.1770 gating.">Acumulado desde que arrancó la reproducción actual, con gating BS.1770.</td></tr>
+        <tr><td>LUFS short-term</td><td data-en="~2s window, ungated.">Ventana de ~2s, sin gatear.</td></tr>
+        <tr><td data-en="Peak (dBTP)">Pico (dBTP)</td><td data-en="Live post-limiter true peak; flashes red when it approaches 0 dBTP.">True peak post-limitador en vivo; flashea en rojo si se acerca a 0 dBTP.</td></tr>
+        <tr><td>Limiter GR</td><td data-en="Gain reduction applied at that instant.">Reducción de ganancia aplicada en ese instante.</td></tr>
+      </table>
+    </section>
+
+    <section id="presets">
+      <div class="sec-eyebrow" data-en="04 — Workflow">04 — Flujo de trabajo</div>
+      <h2>Presets</h2>
+      <p data-en="Ten factory presets (Transparent, Dynamic/Audiophile, Streaming, Club/EDM, Vocal, Podcast, Vinyl, etc.), each with an approximate reference LUFS in the name. You can save your own presets (💾) — it takes a snapshot of every parameter, including M/S mode and single/multiband — and delete them whenever you want (only yours, not the factory ones).">Diez presets de fábrica (Transparente, Dinámico/Audiófilo, Streaming, Club/EDM, Voz, Podcast, Vinilo, etc.), cada uno con un LUFS de referencia aproximado en el nombre. Podés guardar tus propios presets (💾) — toma una foto de todos los parámetros, incluido el modo M/S y single/multibanda — y borrarlos cuando quieras (solo los tuyos, no los de fábrica).</p>
+      <div class="callout amber" data-en="<strong>Keep in mind:</strong> the factory presets are designed for the single-band compressor. If you apply one while in multiband mode, the app automatically switches back to single-band so the parameters actually take effect."><strong>A tener en cuenta:</strong> los presets de fábrica están pensados para el compresor single-band. Si aplicás uno estando en modo multibanda, la app vuelve automáticamente a single-band para que los parámetros tengan efecto real.</div>
+    </section>
+
+    <section id="exportar">
+      <div class="sec-eyebrow" data-en="04 — Workflow">04 — Flujo de trabajo</div>
+      <h2 data-en="A/B &amp; Export">A/B &amp; Exportación</h2>
+      <p data-en="<strong>A/B (bypass):</strong> toggles between the processed signal and the original, with a 20ms ramp to avoid clicks (the processed path carries the limiter's lookahead delay)."><strong>A/B (bypass):</strong> alterna entre la señal procesada y el original, con una rampa de 20ms para evitar clicks (el camino procesado tiene el delay del lookahead del limitador).</p>
+      <p data-en="<strong>Export WAV:</strong> renders the full chain offline over the loaded file. The bit-depth selector offers <strong>16-bit</strong> (with TPDF dither) or <strong>24-bit</strong> (no dither, unnecessary at that resolution). The render is trimmed to compensate for the lookahead delay, so the final WAV is sample-accurate with the original duration."><strong>Exportar WAV:</strong> renderiza offline la cadena completa sobre el archivo cargado. El selector de bit depth ofrece <strong>16-bit</strong> (con dither TPDF) o <strong>24-bit</strong> (sin dither, innecesario a esa resolución). El render se recorta para compensar el delay del lookahead, así el WAV final queda sample-accurate con la duración original.</p>
+    </section>
+
+    <section id="knobs">
+      <div class="sec-eyebrow" data-en="04 — Workflow">04 — Flujo de trabajo</div>
+      <h2 data-en="Knob interaction">Interacción con los knobs</h2>
+      <ul>
+        <li data-en="<strong>Drag vertically:</strong> raises/lowers the value, capped at ~60 updates/sec via <code>requestAnimationFrame</code>."><strong>Arrastrar verticalmente:</strong> sube/baja el valor, limitado a ~60 actualizaciones/seg vía <code>requestAnimationFrame</code>.</li>
+        <li data-en="<strong>Double-click:</strong> resets that specific knob to its factory value (not the active preset's)."><strong>Doble clic:</strong> resetea ese knob puntual a su valor de fábrica (no al del preset activo).</li>
+      </ul>
+      <div class="callout" data-en='<strong>Tip:</strong> if you&rsquo;ve lost track of a parameter after a lot of experimenting, <span class="kbd">double-click</span> the knob is faster than reloading an entire preset.'><strong>Tip:</strong> si perdiste la referencia de un parámetro después de mucho experimentar, <span class="kbd">doble clic</span> en el knob es más rápido que recargar un preset entero.</div>
+    </section>
+
+    <section id="problemas">
+      <div class="sec-eyebrow" data-en="05 — Help">05 — Ayuda</div>
+      <h2 data-en="Troubleshooting">Solución de problemas</h2>
+      <table class="spec-table">
+        <tr><th data-en="Symptom">Síntoma</th><th data-en="Likely cause / solution">Causa probable / solución</th></tr>
+        <tr><td data-en="Noise/glitches when moving parameters">Ruidos/glitches al mover parámetros</td><td data-en="<code>AudioWorklet</code> unavailable (you opened it with <code>file://</code>). Serve the file over HTTP/localhost."><code>AudioWorklet</code> no disponible (abriste con <code>file://</code>). Serví el archivo por HTTP/localhost.</td></tr>
+        <tr><td data-en="Brief click when switching M/S or multiband mode">Click breve al cambiar modo M/S o multibanda</td><td data-en="Routing change, restarts playback at the same position — expected.">Cambio de routing, reinicia la reproducción en la misma posición — esperable.</td></tr>
+        <tr><td data-en='"Could not save the preset"'>"No se pudo guardar el preset"</td><td data-en="<code>localStorage</code> unavailable (incognito mode or browser restrictions)."><code>localStorage</code> no disponible (modo incógnito o restricciones del navegador).</td></tr>
+        <tr><td data-en="The Estimate takes a while to update">La Estimación tarda en actualizar</td><td data-en="Offline render + full analysis with a 700ms debounce; on long tracks it can take a few seconds.">Render offline + análisis completo con debounce de 700ms; en tracks largos puede tardar unos segundos.</td></tr>
+      </table>
+    </section>
+
+    <section id="limites">
+      <div class="sec-eyebrow" data-en="05 — Help">05 — Ayuda</div>
+      <h2 data-en="Known limitations">Límites conocidos</h2>
+      <p data-en="// LACQUER - CUT v1 is not a studio product and doesn't replace a mastering engineer:">// LACQUER - CUT v1 no es un producto de estudio ni reemplaza un ingeniero de mastering:</p>
+      <ul>
+        <li data-en="It doesn't restore audio (no noise, hum, or click removal, and no repair of damaged recordings).">No restaura audio (no quita ruido, hum, clicks, ni repara grabaciones dañadas).</li>
+        <li data-en="It's not a mixing tool (it doesn't balance tracks or replace your DAW).">No es una herramienta de mezcla (no balancea pistas ni reemplaza tu DAW).</li>
+        <li data-en="The metrics (LUFS, DR, true peak) are reasonable approximations, not broadcast certifications.">Las métricas (LUFS, DR, true peak) son aproximaciones razonables, no certificaciones de broadcast.</li>
+        <li data-en="Performance depends on your browser and hardware, especially in the fallback mode without <code>AudioWorklet</code>.">El rendimiento depende de tu navegador y equipo, especialmente en el modo de respaldo sin <code>AudioWorklet</code>.</li>
+      </ul>
+    </section>
+
+    <section id="creditos">
+      <div class="sec-eyebrow" data-en="06 — Legal">06 — Legal</div>
+      <h2 data-en="License &amp; credits">Licencia &amp; créditos</h2>
+      <p data-en="&copy; 2026 StemsMag. // LACQUER - CUT v1 is distributed under a <strong>Creative Commons BY-NC 4.0</strong> license (Attribution — NonCommercial): you can use, share, and adapt it freely for non-commercial purposes, as long as you credit the source.">&copy; 2026 StemsMag. // LACQUER - CUT v1 se distribuye bajo licencia <strong>Creative Commons BY-NC 4.0</strong> (Atribución — No Comercial): podés usarlo, compartirlo y adaptarlo libremente para fines no comerciales, siempre citando la fuente.</p>
+      <p data-en="We don't collect personal data or use tracking cookies; your audio is processed entirely in your browser and never uploaded to any server.">No recolectamos datos personales ni usamos cookies de seguimiento; tu audio se procesa enteramente en tu navegador y nunca se sube a ningún servidor.</p>
+      <p data-en='Designed by <strong>Gerardo Ventura</strong> — <a href="https://www.instagram.com/thegeco_sv/" target="_blank" rel="noopener">@thegeco_sv</a>'>Diseñado por <strong>Gerardo Ventura</strong> — <a href="https://www.instagram.com/thegeco_sv/" target="_blank" rel="noopener">@thegeco_sv</a></p>
+    </section>
+
+    <section id="revista">
+      <div class="sec-eyebrow" data-en="07 — The project behind it">07 — El proyecto detrás</div>
+      <h2 data-en="What is STEMS Magazine?">¿Qué es STEMS Magazine?</h2>
+      <p data-en="<strong>STEMS — La música que nos une</strong> (&ldquo;the music that unites us&rdquo;) is a Spanish-language digital magazine about electronic music: articles, an events calendar, playlists, and content for people who make and listen to this genre. // LACQUER - CUT v1 was born inside that project, as a way for the magazine to not just be read but also <em>used</em> — a free tool to experiment with mastering without leaving the site."><strong>STEMS — La música que nos une</strong> es una revista digital en español sobre música electrónica: artículos, agenda de eventos, playlists y contenido para quienes hacen y escuchan este género. // LACQUER - CUT v1 nació dentro de ese proyecto, como una manera de que la revista no solo se lea, sino que también se pueda <em>usar</em> — una herramienta gratuita para experimentar con masterización sin salir del sitio.</p>
+      <p data-en="It's a project made in El Salvador with an educational focus: the idea is that the same tools and explanations in this manual can serve both to produce and to understand what's technically happening when you turn a knob.">Es un proyecto hecho en El Salvador, con vocación educativa: la idea es que las mismas herramientas y explicaciones de este manual sirvan tanto para producir como para entender qué está pasando técnicamente cuando movés una perilla.</p>
+    </section>
+
+    <section id="apoyar">
+      <div class="sec-eyebrow" data-en="08 — Optional, no pressure">08 — Opcional, sin presión</div>
+      <h2 data-en="Support the project">Apoyá el proyecto</h2>
+      <p data-en='// LACQUER - CUT v1 was made to be free, and it&rsquo;s staying that way. But keeping it going — adding improvements, fixing bugs, building the next tool — takes time and the occasional late-night coffee.
+
+If it helped you learn, finish a mix, or simply understand what a limiter does, your support (big or small, one-time or monthly) goes straight toward Stems Magazine putting out more tools like this one.
+
+None of this unlocks extra features or exclusive content — // LACQUER - CUT v1 stays 100% free for everyone, donations or not. It&rsquo;s simply a way of saying "this is worth continuing to do."'>// LACQUER - CUT v1 nació para ser gratis, y ahí se queda. Pero mantenerlo — sumar mejoras, arreglar bugs, construir la próxima herramienta — lleva tiempo y algún que otro café de madrugada.
+
+Si te sirvió para aprender, terminar una mezcla o simplemente entender mejor qué hace un limitador, tu apoyo (grande o chico, puntual o mensual) va directo a que Stems Magazine siga sacando herramientas como esta.
+
+Nada de esto desbloquea funciones extra ni contenido exclusivo — // LACQUER - CUT v1 sigue siendo 100% gratis para todos, dones o no. Es simplemente una forma de decir "esto vale la pena seguir haciéndolo".</p>
+      <div class="support-grid">
+        <div class="support-card">
+          <div class="support-card-title">Ko-fi</div>
+          <p data-en="A one-time donation, no account or sign-up needed.">Una donación puntual, sin cuenta ni registro.</p>
+          <div id="kofi-widget-container">
+            <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
+            <script type='text/javascript'>kofiwidget2.init('El cafecito', '#123629', 'E1E21FM5MW');kofiwidget2.draw();</script>
+          </div>
+        </div>
+        <div class="support-card">
+          <div class="support-card-title">PayPal</div>
+          <p data-en="If you already have a PayPal account, it's direct.">Si ya tenés cuenta de PayPal, es directo.</p>
+          <a class="paypal-btn" href="https://paypal.me/stemsmag?locale.x=es_XC&country.x=SV" target="_blank" rel="noopener" data-en="Donate via PayPal &rarr;">Donar por PayPal &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div class="footer">
+  <p><span class="c">//</span> <span data-en="LACQUER - CUT v1 // STEMSMAG — made for learning, experimenting, and mastering with judgment.">LACQUER - CUT v1 // STEMSMAG — hecho para aprender, experimentar y masterizar con criterio.</span></p>
+  <p><a href="lacquer-cut-v1.html" data-en="&larr; Back to the tool">&larr; Volver a la herramienta</a></p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var links = Array.prototype.slice.call(document.querySelectorAll('#toc a'));
+  var sections = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function onScroll(){
+    var pos = window.scrollY + 100;
+    var activeIdx = 0;
+    sections.forEach(function(sec, i){ if(sec && sec.offsetTop <= pos) activeIdx = i; });
+    links.forEach(function(a, i){ a.classList.toggle('active', i === activeIdx); });
+  }
+  document.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+</script>
+
+<script>
+(function(){
+  "use strict";
+  var nodes = Array.prototype.slice.call(document.querySelectorAll('[data-en]'));
+  nodes.forEach(function(el){ el.dataset.es = el.innerHTML; });
+
+  var buttons = Array.prototype.slice.call(document.querySelectorAll('.lang-btn'));
+  var current = 'es';
+
+  function setLang(lang){
+    if(lang === current) return;
+    current = lang;
+    nodes.forEach(function(el){
+      el.innerHTML = lang === 'en' ? el.dataset.en : el.dataset.es;
+    });
+    buttons.forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-lang') === lang); });
+    document.documentElement.setAttribute('lang', lang);
+  }
+
+  buttons.forEach(function(b){
+    b.addEventListener('click', function(){ setLang(b.getAttribute('data-lang')); });
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -101,7 +101,7 @@
   .mixer-brand{display:flex; flex-direction:column; align-items:flex-start; gap:2px; margin-right:4px;}
   .support-link{font-size:8.5px; letter-spacing:.5px; color:var(--text-faint); text-decoration:none; margin-top:1px;}
   .support-link:hover{color:var(--accent);}
-  .mixer-nav{display:flex; align-items:center; gap:6px;}
+  .mixer-nav{display:flex; align-items:center; gap:10px; margin-top:2px;}
   .mixer-nav-btn{display:flex; align-items:center; gap:5px; font-size:9.5px; letter-spacing:.5px; color:var(--text-faint); text-decoration:none; text-transform:uppercase; font-weight:700; padding:6px 10px; border:1px solid var(--border); border-radius:6px; background:transparent; white-space:nowrap;}
   .mixer-nav-btn:hover{color:var(--accent); border-color:var(--accent);}
   .mixer-brand .brand{font-size:17px;}
@@ -154,7 +154,7 @@
     color:var(--accent); cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px;
   }
   .preset-modal-close:hover{background:var(--accent-soft); border-color:var(--accent);}
-  .preset-modal-body{display:flex; height:min(360px,60vh); overflow:hidden; padding:0;}
+  .preset-modal-body{display:flex; height:min(460px,70vh); overflow:hidden; padding:0;}
   .preset-cat-sidebar{
     flex:0 0 150px; overflow-y:auto; padding:8px 6px; display:flex; flex-direction:column; gap:2px;
     border-right:1px solid var(--border-soft);
@@ -930,12 +930,11 @@
     <div class="mixer-brand">
       <div class="brand">TETRA<span class="w">WAVE</span><span class="tag">//STEMSMAG</span></div>
       <div class="subtitle">Poly Synthesizer</div>
-      <a class="support-link" href="tetrawave-manual.html#apoyar" target="_blank" rel="noopener">☕ Apoyá el proyecto</a>
-    </div>
-    <div class="mixer-sep"></div>
-    <div class="mixer-nav">
-      <a class="mixer-nav-btn" href="../index.html">🏠 Home</a>
-      <a class="mixer-nav-btn" href="tetrawave-manual.html" target="_blank" rel="noopener">📖 Ver Manual</a>
+      <div class="mixer-nav">
+        <a class="support-link" href="tetrawave-manual.html#apoyar" target="_blank" rel="noopener">☕ Apoyá el proyecto</a>
+        <a class="support-link" href="../index.html">🏠 Home</a>
+        <a class="support-link" href="tetrawave-manual.html" target="_blank" rel="noopener">📖 Ver Manual</a>
+      </div>
     </div>
     <div class="mixer-sep"></div>
     <span class="mixer-title">Master Mixer</span>
@@ -28800,7 +28799,7 @@ const PRESET_CATEGORIES=[
   const presetPillBtn=document.getElementById('presetPillBtn-a');
   const modalOverlay=document.getElementById('presetModalOverlay-a');
   const modalBody=document.getElementById('presetModalBody-a');
-  const names=Object.keys(FACTORY_PRESETS);
+  const names=PRESET_CATEGORIES.reduce((acc,cat)=>acc.concat(cat.items.filter(n=>FACTORY_PRESETS[n])),[]);
   names.forEach(n=>{ const op=document.createElement('option'); op.value=n; op.textContent=n; presetSelect.appendChild(op); });
 
   function setActiveInModal(name){
@@ -56109,7 +56108,7 @@ const PRESET_CATEGORIES=[
   const presetPillBtn=document.getElementById('presetPillBtn-b');
   const modalOverlay=document.getElementById('presetModalOverlay-b');
   const modalBody=document.getElementById('presetModalBody-b');
-  const names=Object.keys(FACTORY_PRESETS);
+  const names=PRESET_CATEGORIES.reduce((acc,cat)=>acc.concat(cat.items.filter(n=>FACTORY_PRESETS[n])),[]);
   names.forEach(n=>{ const op=document.createElement('option'); op.value=n; op.textContent=n; presetSelect.appendChild(op); });
 
   function setActiveInModal(name){
@@ -56892,7 +56891,7 @@ const DRUM_PRESET_CATEGORIES=[
   const pillBtn = $('drum-preset-btn');
   const modalOverlay = $('presetModalOverlay-pulse');
   const modalBody = $('presetModalBody-pulse');
-  const names = Object.keys(FACTORY_DRUM_PRESETS);
+  const names = DRUM_PRESET_CATEGORIES.reduce((acc,cat)=>acc.concat(cat.items.filter(n=>FACTORY_DRUM_PRESETS[n])),[]);
   names.forEach(name=>{
     const op=document.createElement('option'); op.value=name; op.textContent=name;
     sel.appendChild(op);
@@ -57404,7 +57403,7 @@ $('drum-clear').addEventListener('click', ()=>{
 (function(){
   if(typeof BroadcastChannel === 'undefined') return; // navegador sin soporte: no rompe nada, simplemente no sincroniza
 
-  const SYNC_CHANNEL = 'tetrawave-sync-v1';
+  const SYNC_CHANNEL = 'stemsmag';
   const PRESENCE_INTERVAL = 3000;
   const PRESENCE_TIMEOUT = 8000;
   const INSTRUMENT_LABEL = 'TetraWave';

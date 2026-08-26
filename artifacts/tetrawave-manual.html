@@ -98,50 +98,67 @@
     border-radius:8px; padding:9px 18px; font-size:12px; font-weight:700; letter-spacing:.3px; text-decoration:none;
   }
   .paypal-btn:hover{background:var(--accent); color:#1a0f04;}
+
+  .topbar-right{display:flex; align-items:center; gap:10px;}
+  .lang-toggle{
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:10.5px; font-weight:800; letter-spacing:.6px;
+    color:var(--accent); background:transparent; border:1px solid var(--accent-soft);
+    border-radius:20px; padding:7px 13px; cursor:pointer; text-transform:uppercase;
+    font-family:inherit; transition:background .15s, color .15s, border-color .15s;
+  }
+  .lang-toggle:hover{background:var(--accent-soft); border-color:var(--accent);}
+  .lang-toggle:active{color:#1a0f04; background:var(--accent);}
 </style>
 </head>
 <body>
 
 <div class="topbar">
   <div class="brand">TETRA<span class="w">WAVE</span><span class="brand">//STEMSMAG</span><span class="tag"> V1</span></div>
-  <a class="back-link" href="tetrawavev1.html">&larr; Volver al instrumento</a>
+  <div class="topbar-right">
+    <button type="button" class="lang-toggle" id="lang-toggle-btn" aria-label="Switch language">EN</button>
+    <a class="back-link" id="back-link-top" href="tetrawavev1.html">&larr; Volver al instrumento</a>
+  </div>
 </div>
 
 <div class="hero">
-  <div class="eyebrow">Manual &amp; Especificaciones</div>
-  <h1>Cómo está armado TetraWave, por dentro y por fuera.</h1>
-  <p>Esta guía explica la arquitectura del motor de audio, qué hace cada módulo de los tres instrumentos y cómo sacarles el jugo. Pensala como el manual que vendría en la caja, si TetraWave viniera en una caja.</p>
+  <div class="eyebrow" id="hero-eyebrow">Manual &amp; Especificaciones</div>
+  <h1 id="hero-h1">Cómo está armado TetraWave, por dentro y por fuera.</h1>
+  <p id="hero-p">Esta guía explica la arquitectura del motor de audio, cómo funcionan los osciladores de cada voz, qué hace cada módulo de los tres instrumentos, cómo sincronizar varias pestañas entre sí y cómo sacarles el jugo a todos los controles. Pensala como el manual que vendría en la caja, si TetraWave viniera en una caja.</p>
 </div>
 
 <div class="layout">
   <nav class="toc" id="toc">
-    <a href="#overview">Qué es</a>
-    <a href="#arquitectura">Arquitectura</a>
-    <a href="#tetra">Tetra 1 / Tetra 2</a>
-    <a href="#pulse">Pulse-9</a>
-    <a href="#paginas">Páginas &amp; transporte</a>
-    <a href="#mixer">Mixer maestro</a>
-    <a href="#guardar">Guardar tu trabajo</a>
-    <a href="#consejos">Consejos de uso</a>
-    <a href="#limites">Límites conocidos</a>
-    <a href="#creditos">Licencia &amp; créditos</a>
-    <a href="#apoyar">Apoyá el proyecto</a>
+    <a href="#overview" id="toc-1">Qué es</a>
+    <a href="#arquitectura" id="toc-2">Arquitectura</a>
+    <a href="#sintesis" id="toc-3">Los 3 osciladores</a>
+    <a href="#tetra" id="toc-4">Tetra 1 / Tetra 2</a>
+    <a href="#pulse" id="toc-5">Pulse-9</a>
+    <a href="#paginas" id="toc-6">Páginas &amp; transporte</a>
+    <a href="#sync" id="toc-7">Sync entre pestañas</a>
+    <a href="#mixer" id="toc-8">Mixer maestro</a>
+    <a href="#guardar" id="toc-9">Guardar tu trabajo</a>
+    <a href="#consejos" id="toc-10">Consejos de uso</a>
+    <a href="#limites" id="toc-11">Límites conocidos</a>
+    <a href="#creditos" id="toc-12">Licencia &amp; créditos</a>
+    <a href="#revista" id="toc-13">STEMS Magazine</a>
+    <a href="#apoyar" id="toc-14">Apoyá el proyecto</a>
   </nav>
 
   <div class="content">
 
     <section id="overview">
-      <div class="sec-eyebrow">01 — Panorama general</div>
-      <h2>Qué es TetraWave</h2>
-      <p>TetraWave es un instrumento virtual que corre enteramente en tu navegador, sin instalar nada. Combina <strong>dos sintetizadores poly-paraphonic</strong> (TETRA 1 y TETRA 2) y una <strong>caja de ritmos</strong> (PULSE-9), pensados para sonar juntos: los tres comparten un mismo reloj de audio y un mismo sistema de páginas, así que podés armar una base rítmica en Pulse-9 y tocar o secuenciar melodías por encima con los dos Tetra.</p>
-      <p>Nació como una herramienta educativa de StemsMag para aprender síntesis sustractiva de forma práctica: cada perilla que movés tiene un efecto audible inmediato, y la cadena de señal completa está siempre a la vista.</p>
+      <div class="sec-eyebrow" id="ov-eyebrow">01 — Panorama general</div>
+      <h2 id="ov-h2">Qué es TetraWave</h2>
+      <p id="ov-p1">TetraWave es un instrumento virtual que corre enteramente en tu navegador, sin instalar nada. Combina <strong>dos sintetizadores poly-paraphonic</strong> (TETRA 1 y TETRA 2) y una <strong>caja de ritmos</strong> (PULSE-9), pensados para sonar juntos: los tres comparten un mismo reloj de audio y un mismo sistema de páginas, así que podés armar una base rítmica en Pulse-9 y tocar o secuenciar melodías por encima con los dos Tetra.</p>
+      <p id="ov-p2">Nació como una herramienta educativa de StemsMag para aprender síntesis sustractiva de forma práctica: cada perilla que movés tiene un efecto audible inmediato, y la cadena de señal completa está siempre a la vista.</p>
     </section>
 
     <section id="arquitectura">
-      <div class="sec-eyebrow">02 — Motor de audio</div>
-      <h2>Arquitectura</h2>
-      <p>Todo el sonido se genera con la <strong>Web Audio API</strong> nativa del navegador: no hay samples de por medio en los sintetizadores (sí en algunas voces de percusión de Pulse-9, sintetizadas también por código). Cada instrumento arma su propia cadena de nodos de audio en tiempo real:</p>
-      <ul>
+      <div class="sec-eyebrow" id="arch-eyebrow">02 — Motor de audio</div>
+      <h2 id="arch-h2">Arquitectura</h2>
+      <p id="arch-p1">Todo el sonido se genera con la <strong>Web Audio API</strong> nativa del navegador: no hay samples de por medio en los sintetizadores (sí en algunas voces de percusión de Pulse-9, sintetizadas también por código). Cada instrumento arma su propia cadena de nodos de audio en tiempo real:</p>
+      <ul id="arch-ul">
         <li><strong>Osciladores →</strong> hasta 3 osciladores por voz más una fuente de ruido, con forma de onda, rango de octava, detune y unísono configurables.</li>
         <li><strong>Filtro →</strong> un filtro biquad (lowpass / highpass / bandpass) con resonancia (Q), seguimiento de teclado y modulación por envolvente propia y por LFO.</li>
         <li><strong>Envolventes →</strong> ADSR de amplitud y ADS de filtro, cada una con su propio gráfico en pantalla.</li>
@@ -149,14 +166,50 @@
         <li><strong>Efectos →</strong> chorus, phaser, distorsión, auto-wah, delay y reverb (convolución), en cadena antes del mixer.</li>
         <li><strong>Mixer maestro →</strong> ecualizador de 3 bandas y compresor final antes de la salida.</li>
       </ul>
-      <div class="callout"><strong>Por qué importa:</strong> como es una cadena de nodos real (no un sample reproducido), todo lo que cambiés — hasta a mitad de una nota sostenida — se escucha al instante.</div>
+      <div class="callout" id="arch-callout"><strong>Por qué importa:</strong> como es una cadena de nodos real (no un sample reproducido), todo lo que cambiés — hasta a mitad de una nota sostenida — se escucha al instante.</div>
+    </section>
+
+    <section id="sintesis">
+      <div class="sec-eyebrow" id="syn-eyebrow">02 — Motor de audio</div>
+      <h2 id="syn-h2">Cómo funcionan los tres osciladores</h2>
+      <p id="syn-p1">Cada Tetra es un sintetizador <strong>subtractivo</strong>: en vez de partir de un sonido grabado, arranca de una forma de onda simple y muy rica en armónicos, y después la "esculpe" quitándole frecuencias con un filtro. Por voz, hay <strong>3 osciladores sonoros</strong> (OSC1, OSC2, OSC3) más un cuarto oscilador de baja frecuencia dedicado a modulación (OSC4 / LFO). Entender qué hace cada uno ayuda a programar sonidos con intención en vez de a los tumbos.</p>
+
+      <h3 id="syn-h3-1">Formas de onda: de dónde salen los armónicos</h3>
+      <p id="syn-p2">Cada oscilador puede tomar una de estas formas, generadas en tiempo real por la <code>OscillatorNode</code> del navegador (o por una <code>PeriodicWave</code> propia para las formas que no son nativas):</p>
+      <table class="spec-table" id="syn-table">
+        <tr><th>Forma</th><th>Contenido armónico</th><th>Carácter</th></tr>
+        <tr><td>Sine</td><td>Solo la fundamental, sin armónicos</td><td>Pura, suave, ideal para subs y para el propio LFO</td></tr>
+        <tr><td>Triangle</td><td>Armónicos impares, caída rápida (1/n²)</td><td>Dulce, hueca, buena base para flautas y pads simples</td></tr>
+        <tr><td>Sawtooth</td><td>Todos los armónicos (pares e impares), caída lenta (1/n)</td><td>Brillante y densa — la base clásica de bajos y leads</td></tr>
+        <tr><td>Square</td><td>Solo armónicos impares, caída lenta (1/n)</td><td>Hueca pero más presente que la triangular; base del PWM</td></tr>
+        <tr><td>Pulse 25 / Pulse 12</td><td>Cuadrada asimétrica (ancho de pulso fijo al 25% / 12%)</td><td>Más nasal y delgada cuanto más angosto el pulso</td></tr>
+        <tr><td>Warm Sqr</td><td>Cuadrada con armónicos superiores atenuados a mano</td><td>Versión "limada", menos áspera en agudos</td></tr>
+      </table>
+      <p id="syn-p3">Las tres últimas (Pulse 25, Pulse 12, Warm Sqr) no existen como tipo nativo del navegador: TetraWave las arma construyendo su propia <code>PeriodicWave</code> a partir de coeficientes de Fourier (arrays de senos/cosenos), una por forma y por <code>AudioContext</code>, para no tener que recalcularla en cada nota.</p>
+
+      <h3 id="syn-h3-2">Detune, rango de octava y PWM</h3>
+      <ul id="syn-ul-1">
+        <li><strong>Rango</strong> — multiplica la frecuencia base de la voz por una potencia de 2 (una octava completa arriba o abajo), para que cada oscilador ocupe un registro distinto (grave / medio / agudo) dentro de la misma nota.</li>
+        <li><strong>Detune (FREQ)</strong> — desafina el oscilador en <strong>cents</strong> (1/100 de semitono, hasta ±1200c) respecto a la nota tocada. Un OSC2 desafinado unos cents contra el OSC1 es la manera clásica de engordar un sonido sin llegar al unísono.</li>
+        <li><strong>PWM (Pulse Width Modulation)</strong> — cuando un oscilador usa forma <code>square</code>, el LFO compartido puede modular en tiempo real el ancho de pulso reconstruyendo su <code>PeriodicWave</code> muestra a muestra a partir de la fase del LFO. Esto barre el timbre entre cuadrada simétrica y pulso angosto, generando ese movimiento característico de "respiración" tímbrica.</li>
+      </ul>
+
+      <h3 id="syn-h3-3">Unísono: apilar voces por nota</h3>
+      <p id="syn-p4">El OSC1 puede desdoblarse en hasta <strong>6 voces por nota</strong> (parámetro UNISON), cada una desafinada en pasos de <strong>9 cents</strong> respecto a la anterior y con su ganancia compensada (<code>1/√n</code>) para que el volumen total no se dispare al sumar voces. El resultado es el clásico "supersaw": más ancho, más grueso, con un leve batido (beating) entre las voces que da sensación de movimiento sin usar ningún efecto.</p>
+
+      <h3 id="syn-h3-4">El cuarto oscilador: LFO compartido</h3>
+      <p id="syn-p5">OSC4 no suena directo — es una fuente de modulación de baja frecuencia con su propia forma de onda (sine / triangle / sawtooth / square) y su propio RATE, enrutable a <strong>pitch</strong> (vibrato), <strong>filtro</strong> (wah rítmico) o <strong>PWM</strong> (ver arriba). El modo <strong>LFO Retrig</strong> decide si arranca de fase 0 en cada nota nueva (para modulaciones sincronizadas y repetibles) o si sigue corriendo libre por detrás de todo el teclado (para movimiento más orgánico y menos predecible).</p>
+
+      <h3 id="syn-h3-5">De ahí al filtro</h3>
+      <p id="syn-p6">Las señales de los tres osciladores (más ruido, si está activo) se suman y pasan por un único <strong>filtro biquad</strong> (lowpass, highpass o bandpass) con resonancia (Q) ajustable entre 0.1 y 20 — con topes más conservadores según la categoría del preset, para evitar que la auto-oscilación en Q alto sature el bus. El filtro tiene seguimiento de teclado (más brillo en notas agudas) y dos moduladores propios: una envolvente ADS dedicada y el LFO compartido. Ahí es donde la mezcla "cruda" de armónicos de los osciladores se convierte en el timbre final.</p>
+      <div class="callout" id="syn-callout"><strong>En una frase:</strong> los osciladores deciden <em>cuántos armónicos hay</em> y el filtro decide <em>cuáles sobreviven</em> — esa es toda la síntesis sustractiva.</div>
     </section>
 
     <section id="tetra">
-      <div class="sec-eyebrow">03 — Los instrumentos</div>
+      <div class="sec-eyebrow" id="tetra-eyebrow">03 — Los instrumentos</div>
       <h2>Tetra 1 / Tetra 2</h2>
-      <p>Dos instancias idénticas y completamente independientes del mismo sintetizador, para poder capear dos partes a la vez (por ejemplo, un bajo en Tetra 1 y un pad en Tetra 2).</p>
-      <table class="spec-table">
+      <p id="tetra-p1">Dos instancias idénticas y completamente independientes del mismo sintetizador, para poder capear dos partes a la vez (por ejemplo, un bajo en Tetra 1 y un pad en Tetra 2).</p>
+      <table class="spec-table" id="tetra-table">
         <tr><th>Módulo</th><th>Detalle</th></tr>
         <tr><td>Osciladores</td><td>3 osc + ruido, waveforms clásicas, rango de octava, unísono con detune, PWM real vía PeriodicWave</td></tr>
         <tr><td>Filtro</td><td>Lowpass / Highpass / Bandpass, resonancia 0.1–20 (con topes por categoría de preset para evitar auto-oscilación), seguimiento de teclado</td></tr>
@@ -171,17 +224,17 @@
     </section>
 
     <section id="pulse">
-      <div class="sec-eyebrow">03 — Los instrumentos</div>
+      <div class="sec-eyebrow" id="pulse-eyebrow">03 — Los instrumentos</div>
       <h2>Pulse-9</h2>
-      <p>La caja de ritmos: 8 voces de percusión sintetizadas, cada una con su propio patrón de 16 pasos por página.</p>
+      <p id="pulse-p1">La caja de ritmos: 8 voces de percusión sintetizadas, cada una con su propio patrón de 16 pasos por página.</p>
       <div class="card-grid">
-        <div class="card"><div class="card-title"><span class="card-dot" style="background:#e35a5a"></span>Kick / Snare / Clap</div><p>Núcleo del groove: bombo con pitch envelope, caja con cuerpo + ruido, clap con múltiples ráfagas de ruido.</p></div>
-        <div class="card"><div class="card-title"><span class="card-dot" style="background:#ef8c42"></span>Hi-hats (cerrado/abierto)</div><p>Banco de osciladores metálicos filtrados en agudos, con decaimiento independiente por tipo.</p></div>
-        <div class="card"><div class="card-title"><span class="card-dot" style="background:#5eead4"></span>Low Tom / Shaker</div><p>Tom grave con pitch envelope; shaker de ruido filtrado, sin componente metálico, para percusión suelta.</p></div>
-        <div class="card"><div class="card-title"><span class="card-dot" style="background:#c9a6ff"></span>Wood Clack</div><p>"Tock" corto tipo clave/woodblock: tono cuadrado con caída rápida de pitch más un golpe de ruido resonante.</p></div>
+        <div class="card"><div class="card-title"><span class="card-dot" style="background:#e35a5a"></span>Kick / Snare / Clap</div><p id="pulse-card1-p">Núcleo del groove: bombo con pitch envelope, caja con cuerpo + ruido, clap con múltiples ráfagas de ruido.</p></div>
+        <div class="card"><div class="card-title"><span class="card-dot" style="background:#ef8c42"></span><span id="pulse-card2-title">Hi-hats (cerrado/abierto)</span></div><p id="pulse-card2-p">Banco de osciladores metálicos filtrados en agudos, con decaimiento independiente por tipo.</p></div>
+        <div class="card"><div class="card-title"><span class="card-dot" style="background:#5eead4"></span>Low Tom / Shaker</div><p id="pulse-card3-p">Tom grave con pitch envelope; shaker de ruido filtrado, sin componente metálico, para percusión suelta.</p></div>
+        <div class="card"><div class="card-title"><span class="card-dot" style="background:#c9a6ff"></span>Wood Clack</div><p id="pulse-card4-p">"Tock" corto tipo clave/woodblock: tono cuadrado con caída rápida de pitch más un golpe de ruido resonante.</p></div>
       </div>
-      <h3>Controles de performance</h3>
-      <ul>
+      <h3 id="pulse-h3">Controles de performance</h3>
+      <ul id="pulse-ul">
         <li><strong>Roll</strong> — mantenido presionado, hace stutter de todo el patrón a 4&times; velocidad.</li>
         <li><strong>Break</strong> — mantenido presionado, silencia bombo/caja/clap/tom y deja solo hats y percusión (breakdown).</li>
         <li><strong>Retrigger</strong> — mantenido presionado, repite el paso actual acelerando progresivamente (build-up).</li>
@@ -191,33 +244,54 @@
     </section>
 
     <section id="paginas">
-      <div class="sec-eyebrow">04 — Flujo de trabajo</div>
-      <h2>Páginas &amp; transporte maestro</h2>
-      <p>Los tres instrumentos comparten un sistema de <strong>8 páginas fijas</strong>, presentado como una botonera estilo launcher: cada pad representa un compás. Los pads se encienden solos en cuanto tienen contenido cargado (en cualquiera de los tres motores) y se apagan si están vacíos — así siempre ves de un vistazo qué páginas tienen algo armado.</p>
-      <p><strong>Pulse-9 es el maestro del transporte:</strong> su botón de Play arranca (y su Stop detiene) los tres motores a la vez, todos en fase sobre el mismo reloj de audio. Cada Tetra conserva su propio botón de Play/Stop para ensayar una parte a solas, pero apenas tocás Play en Pulse-9, todo se realinea al maestro.</p>
+      <div class="sec-eyebrow" id="pag-eyebrow">04 — Flujo de trabajo</div>
+      <h2 id="pag-h2">Páginas &amp; transporte maestro</h2>
+      <p id="pag-p1">Los tres instrumentos comparten un sistema de <strong>8 páginas fijas</strong>, presentado como una botonera estilo launcher: cada pad representa un compás. Los pads se encienden solos en cuanto tienen contenido cargado (en cualquiera de los tres motores) y se apagan si están vacíos — así siempre ves de un vistazo qué páginas tienen algo armado.</p>
+      <p id="pag-p2"><strong>Pulse-9 es el maestro del transporte:</strong> su botón de Play arranca (y su Stop detiene) los tres motores a la vez, todos en fase sobre el mismo reloj de audio. Cada Tetra conserva su propio botón de Play/Stop para ensayar una parte a solas, pero apenas tocás Play en Pulse-9, todo se realinea al maestro.</p>
+    </section>
+
+    <section id="sync">
+      <div class="sec-eyebrow" id="sync-eyebrow">04 — Flujo de trabajo</div>
+      <h2 id="sync-h2">Sincronización entre pestañas</h2>
+      <p id="sync-p1">TetraWave puede sincronizarse con otras pestañas o ventanas del mismo instrumento abiertas en tu navegador, sin pasar por ningún servidor. La técnica usada es <code>BroadcastChannel</code>, una API nativa del navegador para mensajes entre contextos del mismo origen — no viaja nada por internet ni se guarda en ningún lado.</p>
+      <h3 id="sync-h3-1">Qué se sincroniza</h3>
+      <ul id="sync-ul-1">
+        <li><strong>Transporte (Play / Stop):</strong> arrancar o detener Pulse-9 en una pestaña arranca o detiene también las demás, todas contra el mismo instante.</li>
+        <li><strong>BPM:</strong> cambiar el tempo en una pestaña actualiza el tempo en todas las demás.</li>
+        <li><strong>Presencia:</strong> el indicador <span class="kbd">● Conectados</span> del Mixer Maestro muestra cuántas otras pestañas de TetraWave están abiertas ahora mismo, con un pulso ("latido") cada 3 segundos para saber que siguen vivas. Si una pestaña no se reporta durante 8 segundos, se la da de baja automáticamente de la lista.</li>
+      </ul>
+      <h3 id="sync-h3-2">Cómo funciona por dentro</h3>
+      <p id="sync-p2">Cada pestaña se identifica con un ID aleatorio propio (<code>crypto.randomUUID</code> cuando está disponible) y anuncia su presencia con mensajes tipo <code>hello</code> / <code>presence</code> / <code>bye</code>. Cuando cambiás Play/Stop o el BPM desde tu propia pestaña, se emite un mensaje <code>transport</code> o <code>bpm</code> al canal; las demás pestañas lo reciben y aplican el cambio directamente (sin volver a disparar sus propios eventos de click/change), así que no hay eco ni loops entre pestañas.</p>
+      <div class="callout amber" id="sync-callout"><strong>Para qué sirve en la práctica:</strong> abrí varias pestañas de TetraWave para tocar varias partes en simultáneo (por ejemplo, un compañero en otra pestaña/ventana tocando Tetra 2 mientras vos manejás Pulse-9), todas cuantizadas al mismo reloj de audio, sin necesidad de ningún servidor ni cuenta.</div>
+      <h3 id="sync-h3-3">Limitaciones a tener en cuenta</h3>
+      <ul id="sync-ul-2">
+        <li>Solo sincroniza pestañas <strong>del mismo navegador y mismo origen</strong> (no funciona entre navegadores distintos ni entre tu compu y tu celular).</li>
+        <li>Por las políticas de autoplay de los navegadores, una pestaña que todavía no tuvo ninguna interacción propia (click, tecla) puede no reproducir sonido al recibir un Play remoto hasta que se haga algún gesto en ella — es una limitación del navegador, no de la sincronización.</li>
+        <li>Los navegadores sin soporte para <code>BroadcastChannel</code> simplemente no sincronizan: el resto del instrumento sigue funcionando normal.</li>
+      </ul>
     </section>
 
     <section id="mixer">
-      <div class="sec-eyebrow">04 — Flujo de trabajo</div>
-      <h2>Mixer maestro</h2>
-      <p>Arriba de todo, una consola resume el volumen de cada fuente — Pulse-9, Tetra 1, Tetra 2 — más tres bandas (graves / medios / agudos) del bus general, todo antes del compresor final. Es el lugar para balancear rápido sin entrar a cada instrumento por separado.</p>
+      <div class="sec-eyebrow" id="mixer-eyebrow">04 — Flujo de trabajo</div>
+      <h2 id="mixer-h2">Mixer maestro</h2>
+      <p id="mixer-p1">Arriba de todo, una consola resume el volumen de cada fuente — Pulse-9, Tetra 1, Tetra 2 — más tres bandas (graves / medios / agudos) del bus general vía filtros biquad (lowshelf / peaking / highshelf), todo antes de un <code>DynamicsCompressor</code> final que evita que los picos saturen la salida. Ahí mismo vive el indicador de <a href="#sync">pestañas conectadas</a>. Es el lugar para balancear rápido sin entrar a cada instrumento por separado.</p>
     </section>
 
     <section id="guardar">
-      <div class="sec-eyebrow">05 — Tu trabajo</div>
-      <h2>Guardar y exportar</h2>
-      <p>Nada se guarda solo en el servidor: TetraWave corre por completo en tu navegador, así que sos vos quien decide qué conservar.</p>
-      <ul>
+      <div class="sec-eyebrow" id="guardar-eyebrow">05 — Tu trabajo</div>
+      <h2 id="guardar-h2">Guardar y exportar</h2>
+      <p id="guardar-p1">Nada se guarda solo en el servidor: TetraWave corre por completo en tu navegador, así que sos vos quien decide qué conservar.</p>
+      <ul id="guardar-ul">
         <li><strong>Páginas (💾 Páginas):</strong> exporta las 8 páginas de patrones (Pulse-9 y ambos Tetra) a un archivo <code>.json</code> que después podés volver a cargar con 📂 Páginas.</li>
         <li><strong>Presets de sonido:</strong> guardá tus propios patches desde el panel de presets de cada Tetra.</li>
       </ul>
-      <div class="callout amber"><strong>Importante:</strong> si cerrás o recargás la pestaña sin exportar, tu composición se pierde. Exportá seguido, sobre todo antes de experimentar con cambios grandes.</div>
+      <div class="callout amber" id="guardar-callout"><strong>Importante:</strong> si cerrás o recargás la pestaña sin exportar, tu composición se pierde. Exportá seguido, sobre todo antes de experimentar con cambios grandes.</div>
     </section>
 
     <section id="consejos">
-      <div class="sec-eyebrow">06 — Tips</div>
-      <h2>Consejos rápidos de uso</h2>
-      <ol>
+      <div class="sec-eyebrow" id="consejos-eyebrow">06 — Tips</div>
+      <h2 id="consejos-h2">Consejos rápidos de uso</h2>
+      <ol id="consejos-ol">
         <li>Empezá por un patrón simple en Pulse-9 (página 1 ya trae uno de fábrica) y andá agregando capas de a poco.</li>
         <li>Usá <span class="kbd">OCT ◄ ►</span> en el secuenciador de cada Tetra para transponer en vivo sin tocar las notas grabadas.</li>
         <li>El botón <span class="kbd">Break</span> de Pulse-9 es ideal para generar tensión antes de un fill o un cambio de sección.</li>
@@ -227,10 +301,10 @@
     </section>
 
     <section id="limites">
-      <div class="sec-eyebrow">07 — Honestidad primero</div>
-      <h2>Límites conocidos</h2>
-      <p>TetraWave no es un producto de estudio ni reemplaza un DAW profesional:</p>
-      <ul>
+      <div class="sec-eyebrow" id="limites-eyebrow">07 — Honestidad primero</div>
+      <h2 id="limites-h2">Límites conocidos</h2>
+      <p id="limites-p1">TetraWave no es un producto de estudio ni reemplaza un DAW profesional:</p>
+      <ul id="limites-ul">
         <li>No exporta audio multipista ni renderiza a WAV/MP3 todavía.</li>
         <li>No tiene automatización avanzada de parámetros a lo largo del tiempo.</li>
         <li>El rendimiento depende de tu navegador y equipo: en dispositivos más viejos, patrones muy densos con muchos efectos pueden generar cortes o retrasos.</li>
@@ -238,16 +312,24 @@
     </section>
 
     <section id="creditos">
-      <div class="sec-eyebrow">08 — Legal</div>
-      <h2>Licencia &amp; créditos</h2>
-      <p>&copy; 2026 StemsMag. TetraWave se distribuye bajo licencia <strong>Creative Commons BY-NC 4.0</strong> (Atribución — No Comercial): podés usarlo, compartirlo y adaptarlo libremente para fines no comerciales, siempre citando la fuente.</p>
-      <p>Por ahora no recolectamos datos personales ni usamos cookies de seguimiento; solo métricas agregadas y anónimas de uso general. Si en el futuro sumamos publicidad para sostener el proyecto, esta sección se actualizará con el detalle correspondiente.</p>
+      <div class="sec-eyebrow" id="creditos-eyebrow">08 — Legal</div>
+      <h2 id="creditos-h2">Licencia &amp; créditos</h2>
+      <p id="creditos-p1">&copy; 2026 StemsMag. TetraWave se distribuye bajo licencia <strong>Creative Commons BY-NC 4.0</strong> (Atribución — No Comercial): podés usarlo, compartirlo y adaptarlo libremente para fines no comerciales, siempre citando la fuente.</p>
+      <p id="creditos-p2">Por ahora no recolectamos datos personales ni usamos cookies de seguimiento; solo métricas agregadas y anónimas de uso general. Si en el futuro sumamos publicidad para sostener el proyecto, esta sección se actualizará con el detalle correspondiente.</p>
+      <p id="creditos-p3">Diseñado por <strong>Gerardo Ventura</strong> — <a href="https://www.instagram.com/thegeco_sv/" target="_blank" rel="noopener">@thegeco_sv</a></p>
+    </section>
+
+    <section id="revista">
+      <div class="sec-eyebrow" id="revista-eyebrow">09 — El proyecto detrás</div>
+      <h2 id="revista-h2">¿Qué es STEMS Magazine?</h2>
+      <p id="revista-p1"><strong>STEMS — La música que nos une</strong> es una revista digital en español sobre música electrónica: artículos, agenda de eventos, playlists y contenido para quienes hacen y escuchan este género. TetraWave nació dentro de ese proyecto, como una manera de que la revista no solo se lea, sino que también se pueda <em>usar</em> — un instrumento gratuito para experimentar con síntesis sin salir del sitio.</p>
+      <p id="revista-p2">Es un proyecto hecho en El Salvador, con vocación educativa: la idea es que las mismas herramientas y explicaciones que encontrás en este manual sirvan tanto para producir como para entender qué está pasando técnicamente cuando movés una perilla.</p>
     </section>
 
     <section id="apoyar">
-      <div class="sec-eyebrow">09 — Opcional, sin presión</div>
-      <h2>Apoyá el proyecto</h2>
-      <p>TetraWave nació para ser gratis, y ahí se queda. Pero mantenerlo — sumar nuevos presets, arreglar bugs, agregar exportación de audio, construir el próximo instrumento — lleva tiempo y algún que otro café de madrugada.
+      <div class="sec-eyebrow" id="apoyar-eyebrow">10 — Opcional, sin presión</div>
+      <h2 id="apoyar-h2">Apoyá el proyecto</h2>
+      <p id="apoyar-p1">TetraWave nació para ser gratis, y ahí se queda. Pero mantenerlo — sumar nuevos presets, arreglar bugs, agregar exportación de audio, construir el próximo instrumento — lleva tiempo y algún que otro café de madrugada.
 
 Si el sinte te sirvió para aprender, componer o simplemente perder una tarde jugando con perillas, tu apoyo (grande o chico, puntual o mensual) va directo a que Stems Magazine siga sacando herramientas como esta.
 
@@ -255,7 +337,7 @@ Nada de esto desbloquea funciones extra ni contenido exclusivo — TetraWave sig
       <div class="support-grid">
         <div class="support-card">
           <div class="support-card-title">Ko-fi</div>
-          <p>Una donación puntual, sin cuenta ni registro.</p>
+          <p id="apoyar-card1-p">Una donación puntual, sin cuenta ni registro.</p>
           <div id="kofi-widget-container">
             <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
             <script type='text/javascript'>kofiwidget2.init('El cafecito', '#362473', 'E1E21FM5MW');kofiwidget2.draw();</script>
@@ -263,8 +345,8 @@ Nada de esto desbloquea funciones extra ni contenido exclusivo — TetraWave sig
         </div>
         <div class="support-card">
           <div class="support-card-title">PayPal</div>
-          <p>Si ya tenés cuenta de PayPal, es directo.</p>
-          <a class="paypal-btn" href="https://paypal.me/stemsmag?locale.x=es_XC&country.x=SV" target="_blank" rel="noopener">Donar por PayPal &rarr;</a>
+          <p id="apoyar-card2-p">Si ya tenés cuenta de PayPal, es directo.</p>
+          <a class="paypal-btn" id="apoyar-btn" href="https://paypal.me/stemsmag?locale.x=es_XC&country.x=SV" target="_blank" rel="noopener">Donar por PayPal &rarr;</a>
         </div>
       </div>
     </section>
@@ -273,8 +355,8 @@ Nada de esto desbloquea funciones extra ni contenido exclusivo — TetraWave sig
 </div>
 
 <div class="footer">
-  <p>TETRA<span class="c">WAVE</span> // STEMSMAG — hecho para aprender, experimentar y pasarla bien.</p>
-  <p><a href="tetrawavev1.html">&larr; Volver al instrumento</a></p>
+  <p id="footer-p1">TETRA<span class="c">WAVE</span> // STEMSMAG — hecho para aprender, experimentar y pasarla bien.</p>
+  <p><a href="tetrawavev1.html" id="footer-back-link">&larr; Volver al instrumento</a></p>
 </div>
 
 <script>
@@ -290,6 +372,186 @@ Nada de esto desbloquea funciones extra ni contenido exclusivo — TetraWave sig
   }
   document.addEventListener('scroll', onScroll, {passive:true});
   onScroll();
+})();
+</script>
+
+<script>
+(function(){
+  "use strict";
+
+  var EN = {
+    "back-link-top": "\u2190 Back to the instrument",
+    "hero-eyebrow": "Manual &amp; Specifications",
+    "hero-h1": "How TetraWave is built, inside and out.",
+    "hero-p": "This guide explains the audio engine architecture, how each voice's oscillators work, what each module in the three instruments does, how to sync multiple tabs together, and how to get the most out of every control. Think of it as the manual that would come in the box, if TetraWave came in a box.",
+
+    "toc-1": "What it is", "toc-2": "Architecture", "toc-3": "The 3 oscillators",
+    "toc-4": "Tetra 1 / Tetra 2", "toc-5": "Pulse-9", "toc-6": "Pages &amp; transport",
+    "toc-7": "Tab sync", "toc-8": "Master mixer", "toc-9": "Saving your work",
+    "toc-10": "Usage tips", "toc-11": "Known limitations", "toc-12": "License &amp; credits",
+    "toc-13": "STEMS Magazine", "toc-14": "Support the project",
+
+    "ov-eyebrow": "01 &mdash; Overview",
+    "ov-h2": "What TetraWave is",
+    "ov-p1": "TetraWave is a virtual instrument that runs entirely in your browser, no install required. It combines <strong>two poly-paraphonic synthesizers</strong> (TETRA 1 and TETRA 2) and a <strong>drum machine</strong> (PULSE-9), designed to work together: all three share the same audio clock and the same page system, so you can build a rhythmic base in Pulse-9 and play or sequence melodies over it with the two Tetras.",
+    "ov-p2": "It was born as a StemsMag educational tool for learning subtractive synthesis hands-on: every knob you turn has an immediate, audible effect, and the full signal chain is always visible.",
+
+    "arch-eyebrow": "02 &mdash; Audio engine",
+    "arch-h2": "Architecture",
+    "arch-p1": "All sound is generated with the browser's native <strong>Web Audio API</strong>: there are no samples involved in the synthesizers (some Pulse-9 percussion voices are sample-based too, but also synthesized in code). Each instrument builds its own real-time audio node chain:",
+    "arch-ul": "<li><strong>Oscillators &rarr;</strong> up to 3 oscillators per voice plus a noise source, with configurable waveform, octave range, detune, and unison.</li>"
+      + "<li><strong>Filter &rarr;</strong> a biquad filter (lowpass / highpass / bandpass) with resonance (Q), keyboard tracking, and modulation from its own envelope and the LFO.</li>"
+      + "<li><strong>Envelopes &rarr;</strong> amplitude ADSR and filter ADS, each with its own on-screen graph.</li>"
+      + "<li><strong>Modulation &rarr;</strong> a shared LFO routable to different destinations (pitch, filter, PWM).</li>"
+      + "<li><strong>Effects &rarr;</strong> chorus, phaser, distortion, auto-wah, delay, and reverb (convolution), chained before the mixer.</li>"
+      + "<li><strong>Master mixer &rarr;</strong> a 3-band EQ and a final compressor before the output.</li>",
+    "arch-callout": "<strong>Why it matters:</strong> because it's a real node chain (not a played-back sample), anything you change &mdash; even mid-way through a held note &mdash; is heard instantly.",
+
+    "syn-eyebrow": "02 &mdash; Audio engine",
+    "syn-h2": "How the three oscillators work",
+    "syn-p1": "Each Tetra is a <strong>subtractive</strong> synthesizer: instead of starting from a recorded sound, it starts from a simple waveform rich in harmonics, then \"sculpts\" it by removing frequencies with a filter. Per voice, there are <strong>3 sound-producing oscillators</strong> (OSC1, OSC2, OSC3) plus a fourth low-frequency oscillator dedicated to modulation (OSC4 / LFO). Understanding what each one does helps you program sounds with intention instead of by trial and error.",
+    "syn-h3-1": "Waveforms: where the harmonics come from",
+    "syn-p2": "Each oscillator can take one of these shapes, generated in real time by the browser's <code>OscillatorNode</code> (or by a custom <code>PeriodicWave</code> for the non-native shapes):",
+    "syn-table": "<tr><th>Shape</th><th>Harmonic content</th><th>Character</th></tr>"
+      + "<tr><td>Sine</td><td>Only the fundamental, no harmonics</td><td>Pure, smooth, ideal for subs and the LFO itself</td></tr>"
+      + "<tr><td>Triangle</td><td>Odd harmonics, fast rolloff (1/n&sup2;)</td><td>Sweet, hollow, a good base for flutes and simple pads</td></tr>"
+      + "<tr><td>Sawtooth</td><td>All harmonics (even and odd), slow rolloff (1/n)</td><td>Bright and dense &mdash; the classic basis for basses and leads</td></tr>"
+      + "<tr><td>Square</td><td>Only odd harmonics, slow rolloff (1/n)</td><td>Hollow but more present than the triangle; the basis for PWM</td></tr>"
+      + "<tr><td>Pulse 25 / Pulse 12</td><td>Asymmetric square (pulse width fixed at 25% / 12%)</td><td>More nasal and thin the narrower the pulse</td></tr>"
+      + "<tr><td>Warm Sqr</td><td>Square with upper harmonics manually attenuated</td><td>A \"filed down\" version, less harsh in the highs</td></tr>",
+    "syn-p3": "The last three (Pulse 25, Pulse 12, Warm Sqr) don't exist as a native browser type: TetraWave builds them by constructing its own <code>PeriodicWave</code> from Fourier coefficients (sine/cosine arrays), one per shape and per <code>AudioContext</code>, so it doesn't need to recompute it on every note.",
+    "syn-h3-2": "Detune, octave range, and PWM",
+    "syn-ul-1": "<li><strong>Range</strong> &mdash; multiplies the voice's base frequency by a power of 2 (a full octave up or down), so each oscillator occupies a different register (low / mid / high) within the same note.</li>"
+      + "<li><strong>Detune (FREQ)</strong> &mdash; detunes the oscillator in <strong>cents</strong> (1/100 of a semitone, up to &plusmn;1200c) relative to the note played. Detuning OSC2 a few cents against OSC1 is the classic way to fatten a sound without going all the way to unison.</li>"
+      + "<li><strong>PWM (Pulse Width Modulation)</strong> &mdash; when an oscillator uses the <code>square</code> shape, the shared LFO can modulate the pulse width in real time by rebuilding its <code>PeriodicWave</code> sample by sample from the LFO phase. This sweeps the timbre between a symmetric square and a narrow pulse, producing that characteristic timbral \"breathing\" motion.</li>",
+    "syn-h3-3": "Unison: stacking voices per note",
+    "syn-p4": "OSC1 can split into up to <strong>6 voices per note</strong> (the UNISON parameter), each detuned in <strong>9-cent</strong> steps from the previous one, with gain compensation (<code>1/&radic;n</code>) so total volume doesn't spike as voices are added. The result is the classic \"supersaw\": wider, thicker, with a slight beating between voices that creates a sense of motion without using any effect.",
+    "syn-h3-4": "The fourth oscillator: shared LFO",
+    "syn-p5": "OSC4 doesn't produce direct sound &mdash; it's a low-frequency modulation source with its own waveform (sine / triangle / sawtooth / square) and its own RATE, routable to <strong>pitch</strong> (vibrato), <strong>filter</strong> (rhythmic wah), or <strong>PWM</strong> (see above). The <strong>LFO Retrig</strong> mode decides whether it restarts at phase 0 on every new note (for synchronized, repeatable modulation) or keeps running freely behind the whole keyboard (for more organic, less predictable motion).",
+    "syn-h3-5": "From there to the filter",
+    "syn-p6": "The signals from the three oscillators (plus noise, if active) are summed and pass through a single <strong>biquad filter</strong> (lowpass, highpass, or bandpass) with resonance (Q) adjustable from 0.1 to 20 &mdash; with more conservative caps depending on the preset category, to keep self-oscillation at high Q from saturating the bus. The filter has keyboard tracking (brighter on higher notes) and two modulators of its own: a dedicated ADS envelope and the shared LFO. This is where the oscillators' \"raw\" mix of harmonics becomes the final timbre.",
+    "syn-callout": "<strong>In one sentence:</strong> the oscillators decide <em>how many harmonics there are</em> and the filter decides <em>which ones survive</em> &mdash; that's all of subtractive synthesis.",
+
+    "tetra-eyebrow": "03 &mdash; The instruments",
+    "tetra-p1": "Two identical, fully independent instances of the same synthesizer, so you can cover two parts at once (for example, a bass on Tetra 1 and a pad on Tetra 2).",
+    "tetra-table": "<tr><th>Module</th><th>Detail</th></tr>"
+      + "<tr><td>Oscillators</td><td>3 osc + noise, classic waveforms, octave range, unison with detune, real PWM via PeriodicWave</td></tr>"
+      + "<tr><td>Filter</td><td>Lowpass / Highpass / Bandpass, resonance 0.1&ndash;20 (capped by preset category to avoid self-oscillation), keyboard tracking</td></tr>"
+      + "<tr><td>Envelopes</td><td>Amp (A/D/S/R) and Filter (A/D/S), with a live ADSR graph</td></tr>"
+      + "<tr><td>Modulation</td><td>Shared LFO &rarr; pitch / filter / PWM</td></tr>"
+      + "<tr><td>Effects</td><td>Chorus, Phaser, Distortion, Auto-Wah, Delay, Reverb (convolution)</td></tr>"
+      + "<tr><td>Polyphony</td><td>Poly / Mono / Unison modes, with portamento (glide) and legato</td></tr>"
+      + "<tr><td>Arpeggiator</td><td>Up / Down / Up-Down patterns and variants, with its own RATE</td></tr>"
+      + "<tr><td>Sequencer</td><td>16 steps per page &times; 8 pages, TIE, chords, swing, live octave jump, 40+ pattern presets (24 of them Arpeggio patterns)</td></tr>"
+      + "<tr><td>Sound presets</td><td>1700+ factory patches, organized by category (Bass, Lead, Pad, Pluck, FX, etc.)</td></tr>",
+
+    "pulse-eyebrow": "03 &mdash; The instruments",
+    "pulse-p1": "The drum machine: 8 synthesized percussion voices, each with its own 16-step pattern per page.",
+    "pulse-card1-p": "The core of the groove: kick with a pitch envelope, snare with body + noise, clap with multiple noise bursts.",
+    "pulse-card2-title": "Hi-hats (closed/open)",
+    "pulse-card2-p": "A bank of metallic oscillators filtered in the highs, with independent decay per type.",
+    "pulse-card3-p": "Low tom with pitch envelope; filtered-noise shaker, with no metallic component, for loose percussion.",
+    "pulse-card4-p": "A short clave/woodblock-style \"tock\": a square tone with a fast pitch drop plus a resonant noise hit.",
+    "pulse-h3": "Performance controls",
+    "pulse-ul": "<li><strong>Roll</strong> &mdash; held down, stutters the whole pattern at 4&times; speed.</li>"
+      + "<li><strong>Break</strong> &mdash; held down, mutes kick/snare/clap/tom and leaves only hats and percussion (breakdown).</li>"
+      + "<li><strong>Retrigger</strong> &mdash; held down, repeats the current step at a progressively faster rate (build-up).</li>"
+      + "<li><strong>Fill In</strong> &mdash; on release, inserts a generated 2-, 4-, or 8-bar fill and returns on its own to the normal pattern.</li>"
+      + "<li><strong>Swing / Shuffle / Nudge</strong> &mdash; three humanization knobs: swing delays the off-beat, shuffle accents the \"and\" of each beat, and Nudge adds subtle random variation so the rhythm doesn't sound robotic.</li>",
+
+    "pag-eyebrow": "04 &mdash; Workflow",
+    "pag-h2": "Pages &amp; master transport",
+    "pag-p1": "All three instruments share a system of <strong>8 fixed pages</strong>, presented as a launcher-style pad grid: each pad represents one bar. Pads light up on their own as soon as they have content loaded (in any of the three engines) and turn off when empty &mdash; so you can always see at a glance which pages have something built.",
+    "pag-p2": "<strong>Pulse-9 is the transport master:</strong> its Play button starts (and its Stop stops) all three engines at once, all in phase on the same audio clock. Each Tetra keeps its own Play/Stop button for rehearsing a part on its own, but as soon as you hit Play on Pulse-9, everything realigns to the master.",
+
+    "sync-eyebrow": "04 &mdash; Workflow",
+    "sync-h2": "Syncing across tabs",
+    "sync-p1": "TetraWave can sync with other tabs or windows of the same instrument open in your browser, with no server involved. The technique used is <code>BroadcastChannel</code>, a native browser API for messaging between same-origin contexts &mdash; nothing travels over the internet or gets stored anywhere.",
+    "sync-h3-1": "What gets synced",
+    "sync-ul-1": "<li><strong>Transport (Play / Stop):</strong> starting or stopping Pulse-9 in one tab also starts or stops the others, all against the same instant.</li>"
+      + "<li><strong>BPM:</strong> changing the tempo in one tab updates the tempo in all the others.</li>"
+      + "<li><strong>Presence:</strong> the <span class=\"kbd\">&#9679; Connected</span> indicator on the Master Mixer shows how many other TetraWave tabs are currently open, with a \"heartbeat\" pulse every 3 seconds to confirm they're still alive. If a tab doesn't report in for 8 seconds, it's automatically dropped from the list.</li>",
+    "sync-h3-2": "How it works under the hood",
+    "sync-p2": "Each tab identifies itself with its own random ID (<code>crypto.randomUUID</code> when available) and announces its presence with <code>hello</code> / <code>presence</code> / <code>bye</code> messages. When you change Play/Stop or the BPM from your own tab, a <code>transport</code> or <code>bpm</code> message is emitted to the channel; the other tabs receive it and apply the change directly (without re-firing their own click/change events), so there's no echo or loops between tabs.",
+    "sync-callout": "<strong>What it's useful for in practice:</strong> open several TetraWave tabs to play multiple parts at once (for example, someone else in another tab/window playing Tetra 2 while you handle Pulse-9), all quantized to the same audio clock, with no server or account needed.",
+    "sync-h3-3": "Limitations to keep in mind",
+    "sync-ul-2": "<li>It only syncs tabs <strong>in the same browser and same origin</strong> (it doesn't work across different browsers or between your computer and your phone).</li>"
+      + "<li>Because of browser autoplay policies, a tab that hasn't had any interaction of its own yet (click, key press) may not play sound when it receives a remote Play until some gesture happens in it &mdash; this is a browser limitation, not a syncing one.</li>"
+      + "<li>Browsers without <code>BroadcastChannel</code> support simply don't sync: the rest of the instrument keeps working normally.</li>",
+
+    "mixer-eyebrow": "04 &mdash; Workflow",
+    "mixer-h2": "Master mixer",
+    "mixer-p1": "At the top, a console summarizes each source's volume &mdash; Pulse-9, Tetra 1, Tetra 2 &mdash; plus three bands (low / mid / high) of the overall bus via biquad filters (lowshelf / peaking / highshelf), all before a final <code>DynamicsCompressor</code> that keeps peaks from saturating the output. That's also where the <a href=\"#sync\">connected tabs</a> indicator lives. It's the place to balance things quickly without going into each instrument separately.",
+
+    "guardar-eyebrow": "05 &mdash; Your work",
+    "guardar-h2": "Saving and exporting",
+    "guardar-p1": "Nothing is saved automatically to a server: TetraWave runs entirely in your browser, so it's up to you to decide what to keep.",
+    "guardar-ul": "<li><strong>Pages (\ud83d\udcbe Pages):</strong> exports all 8 pattern pages (Pulse-9 and both Tetras) to a <code>.json</code> file you can later reload with \ud83d\udcc2 Pages.</li>"
+      + "<li><strong>Sound presets:</strong> save your own patches from each Tetra's preset panel.</li>",
+    "guardar-callout": "<strong>Important:</strong> if you close or reload the tab without exporting, your composition is lost. Export often, especially before experimenting with big changes.",
+
+    "consejos-eyebrow": "06 &mdash; Tips",
+    "consejos-h2": "Quick usage tips",
+    "consejos-ol": "<li>Start with a simple pattern on Pulse-9 (page 1 already ships with one) and add layers little by little.</li>"
+      + "<li>Use <span class=\"kbd\">OCT &#9668; &#9658;</span> in each Tetra's sequencer to transpose live without touching the recorded notes.</li>"
+      + "<li>Pulse-9's <span class=\"kbd\">Break</span> button is great for building tension before a fill or a section change.</li>"
+      + "<li>Bump up <span class=\"kbd\">Nudge</span> (micro-timing) a bit if your rhythm sounds too quantized or \"machine-like\".</li>"
+      + "<li>Try each Tetra's 1700+ factory presets as a starting point before programming a sound from scratch.</li>",
+
+    "limites-eyebrow": "07 &mdash; Honesty first",
+    "limites-h2": "Known limitations",
+    "limites-p1": "TetraWave isn't a studio product and doesn't replace a professional DAW:",
+    "limites-ul": "<li>It doesn't export multitrack audio or render to WAV/MP3 yet.</li>"
+      + "<li>It has no advanced parameter automation over time.</li>"
+      + "<li>Performance depends on your browser and hardware: on older devices, very dense patterns with lots of effects can cause glitches or lag.</li>",
+
+    "creditos-eyebrow": "08 &mdash; Legal",
+    "creditos-h2": "License &amp; credits",
+    "creditos-p1": "&copy; 2026 StemsMag. TetraWave is distributed under a <strong>Creative Commons BY-NC 4.0</strong> license (Attribution &mdash; NonCommercial): you can use, share, and adapt it freely for non-commercial purposes, as long as you credit the source.",
+    "creditos-p2": "For now we don't collect personal data or use tracking cookies; only aggregated, anonymous general usage metrics. If we add advertising in the future to help sustain the project, this section will be updated with the relevant details.",
+    "creditos-p3": "Designed by <strong>Gerardo Ventura</strong> &mdash; <a href=\"https://www.instagram.com/thegeco_sv/\" target=\"_blank\" rel=\"noopener\">@thegeco_sv</a>",
+
+    "revista-eyebrow": "09 &mdash; The project behind it",
+    "revista-h2": "What is STEMS Magazine?",
+    "revista-p1": "<strong>STEMS &mdash; The music that unites us</strong> is a Spanish-language digital magazine about electronic music: articles, an events calendar, playlists, and content for people who make and listen to this genre. TetraWave was born within that project, as a way for the magazine to not only be read but also be <em>used</em> &mdash; a free instrument for experimenting with synthesis without leaving the site.",
+    "revista-p2": "It's a project made in El Salvador with an educational focus: the idea is that the same tools and explanations you find in this manual serve both for producing music and for understanding what's technically happening when you turn a knob.",
+
+    "apoyar-eyebrow": "10 &mdash; Optional, no pressure",
+    "apoyar-h2": "Support the project",
+    "apoyar-p1": "TetraWave was born to be free, and that's where it stays. But maintaining it &mdash; adding new presets, fixing bugs, adding audio export, building the next instrument &mdash; takes time and the occasional late-night coffee.\n\nIf the synth helped you learn, compose, or just spend an afternoon playing with knobs, your support (big or small, one-time or monthly) goes straight toward Stems Magazine putting out more tools like this one.\n\nNone of this unlocks extra features or exclusive content &mdash; TetraWave stays 100% free for everyone, donations or not. It's simply a way of saying \"this is worth continuing to make\".",
+    "apoyar-card1-p": "A one-time donation, no account or sign-up needed.",
+    "apoyar-card2-p": "If you already have a PayPal account, it's straightforward.",
+    "apoyar-btn": "Donate via PayPal &rarr;",
+
+    "footer-p1": "TETRA<span class=\"c\">WAVE</span> // STEMSMAG &mdash; made for learning, experimenting, and having fun.",
+    "footer-back-link": "\u2190 Back to the instrument"
+  };
+
+  var esCache = {};
+  var STORAGE_KEY = 'tetrawave-manual-lang';
+  var current = localStorage.getItem(STORAGE_KEY) || 'es';
+
+  function applyLang(lang){
+    Object.keys(EN).forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      if(!(id in esCache)) esCache[id] = el.innerHTML;
+      el.innerHTML = (lang === 'en') ? EN[id] : esCache[id];
+    });
+    document.documentElement.lang = lang;
+    var btn = document.getElementById('lang-toggle-btn');
+    if(btn) btn.textContent = (lang === 'en') ? 'ES' : 'EN';
+    try { localStorage.setItem(STORAGE_KEY, lang); } catch(e){}
+    current = lang;
+  }
+
+  var toggleBtn = document.getElementById('lang-toggle-btn');
+  if(toggleBtn){
+    toggleBtn.addEventListener('click', function(){
+      applyLang(current === 'es' ? 'en' : 'es');
+    });
+  }
+  if(current === 'en') applyLang('en');
 })();
 </script>
 
