@@ -51,13 +51,23 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://stemsmag.fyi/artifacts/lacquer-cut-manual.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://stemsmag.fyi/artifacts/lacquer-cut-v1.html</loc>
+    <lastmod>2026-08-25</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://stemsmag.fyi/artifacts/tetrawave-manual.html</loc>
-    <lastmod>2026-08-12</lastmod>
+    <lastmod>2026-08-25</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://stemsmag.fyi/artifacts/tetrawavev1.html</loc>
-    <lastmod>2026-08-12</lastmod>
+    <lastmod>2026-08-25</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
