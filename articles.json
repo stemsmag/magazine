@@ -1,6 +1,26 @@
 [
   {
     "featured": false,
+    "pinned": true,
+    "date": "2026-08-25",
+    "category": "Review",
+    "categoryPill": "Herramientas de audio",
+    "titleLines": [
+      "LACQUER"
+    ],
+    "title": "LACQUER // CUT-1 // StemsMag — a prueba: masterizar un track entero sin salir del navegador",
+    "artistLine": "STEMS LAB",
+    "dek": "Le pasamos un mismo render por los diez presets de fábrica, medimos LUFS y true peak antes y después, y probamos hasta dónde aguanta la cadena antes de romperse. Esto es lo que encontramos.",
+    "tag": "Review",
+    "tagColor": "mint",
+    "meta": "Review · 8 min",
+    "image": "articulos/images/lacquer.jpg",
+    "seed": 5,
+    "slug": "articulos/articulo-lacquer-review.html",
+    "comingSoon": false
+  },
+  {
+    "featured": false,
     "pinned": false,
     "date": "2026-08-12",
     "category": "Perfil",
