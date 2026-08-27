@@ -86,7 +86,8 @@
   .top-band{
     position:fixed; top:0; left:0; right:0; z-index:130;
     height:var(--top-band-h);
-    display:flex; align-items:center; justify-content:center;
+    display:flex; align-items:center; justify-content:flex-start;
+    overflow:hidden;
     background:linear-gradient(90deg,
       rgba(232,35,107, var(--band-overlay-opacity)) 0%,
       rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 18%,
@@ -95,6 +96,24 @@
     border-bottom:1px solid var(--line);
     font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:2px;
     text-transform:uppercase; color:var(--amber);
+  }
+  /* ============ MARQUESINA DEL TOP-BAND ============ */
+  .marquee-track{
+    display:flex; align-items:center; width:max-content;
+    will-change:transform;
+    animation:marquee-scroll linear infinite;
+    animation-duration:var(--marquee-duration, 22s);
+  }
+  .top-band:hover .marquee-track{animation-play-state:paused;}
+  .marquee-set{display:flex; align-items:center; flex:0 0 auto;}
+  .marquee-item{padding:0 10px;}
+  .marquee-sep{opacity:0.55;}
+  @keyframes marquee-scroll{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .marquee-track{animation:none;}
   }
   .site-navbar{
     position:fixed; top:calc(var(--top-band-h) + var(--header-h)); left:0; right:0; z-index:125;
@@ -643,7 +662,12 @@
 
 <div class="grain"></div>
 
-<div class="top-band">La música que nos une</div>
+<div class="top-band" id="top-band">
+  <div class="marquee-track" id="marquee-track">
+    <div class="marquee-set" id="marquee-set-1"></div>
+    <div class="marquee-set" id="marquee-set-2" aria-hidden="true"></div>
+  </div>
+</div>
 
 <header>
   <img class="header-bg" src="img/fondo-head.jpg" alt="">
@@ -668,6 +692,44 @@
     </button>
   </div>
 </nav>
+
+<script>
+  /* =========================================================
+     MARQUESINA DEL TOP-BAND — texto en loop infinito desde un JSON
+     Bloque autocontenido: copiar el <div id="top-band"> de arriba +
+     este <script> a otra página para reusarlo igual.
+     ticker.json = simple array de strings, ej: ["Frase 1", "Frase 2"]
+     ========================================================= */
+  (function(){
+    const track = document.getElementById('marquee-track');
+    const set1  = document.getElementById('marquee-set-1');
+    const set2  = document.getElementById('marquee-set-2');
+    if(!track || !set1 || !set2) return;
+
+    const FALLBACK = ['La música que nos une'];
+    const SPEED_PX_PER_SEC = 55; // velocidad constante, sin importar cuánto texto haya
+
+    function buildItems(items){
+      return items.map(t => `<span class="marquee-item">${t}</span><span class="marquee-sep">•</span>`).join('');
+    }
+
+    function start(items){
+      const html = buildItems(items.length ? items : FALLBACK);
+      set1.innerHTML = html;
+      set2.innerHTML = html;
+      requestAnimationFrame(() => {
+        const width = set1.getBoundingClientRect().width;
+        const duration = Math.max(8, width / SPEED_PX_PER_SEC);
+        track.style.setProperty('--marquee-duration', duration + 's');
+      });
+    }
+
+    fetch('ticker.json' + '?_=' + Date.now())
+      .then(r => r.json())
+      .then(items => start(Array.isArray(items) ? items : FALLBACK))
+      .catch(() => start(FALLBACK));
+  })();
+</script>
 
 <!-- ============ SUBMENU DE ARTIFACTS (horizontal, con loop) ============ -->
 <!-- Bloque reutilizable: copiar este <nav> + su <script> a cualquier otra página del sitio para reusarlo tal cual. -->
