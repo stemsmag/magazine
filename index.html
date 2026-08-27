@@ -173,24 +173,29 @@
     padding:0 16px;
   }
   .subnav-track::-webkit-scrollbar{display:none;}
-  .subnav-track .subnav-label{
-    flex:0 0 auto; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:2px;
-    text-transform:uppercase; color:var(--muted); padding-right:6px; border-right:1px solid var(--line);
+  .subnav-pin{
+    flex:0 0 auto; display:flex; align-items:center;
+    font-family:'Anton',sans-serif; font-weight:400; font-size:13px; letter-spacing:0.5px;
+    text-transform:uppercase; color:var(--amber); white-space:nowrap;
+    padding:0 16px; border-right:1px solid var(--line);
+    transition:color .2s;
   }
-  .subnav-track a{
+  .subnav-pin:hover, .subnav-pin.active{color:var(--orange);}
+  .subnav-track a, .subnav-track .soon-item{
     flex:0 0 auto; display:inline-flex; align-items:center; gap:6px;
     font-family:'Anton',sans-serif; font-weight:400; font-size:13px; letter-spacing:0.4px;
     text-transform:uppercase; color:var(--cream-dim); white-space:nowrap;
     padding:5px 14px; border:1px solid var(--line); border-radius:20px;
     transition:color .2s, background .2s, border-color .2s;
   }
-  .subnav-track a .subnav-soon{font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:0.5px; opacity:0.7; text-transform:uppercase;}
+  .subnav-track .subnav-soon{font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:0.5px; opacity:0.7; text-transform:uppercase;}
   .subnav-track a:hover{color:var(--cream); border-color:var(--orange);}
-  .subnav-track a.active{color:var(--bg); background:var(--orange); border-color:var(--orange);}
+  .subnav-track .soon-item{color:var(--muted); border-style:dashed; opacity:0.75; cursor:default;}
   @media (max-width:640px){
     .subnav-arrow{flex-basis:28px;}
+    .subnav-pin{padding:0 12px; font-size:12px;}
     .subnav-track{padding:0 10px; gap:6px;}
-    .subnav-track a{padding:5px 12px; font-size:12px;}
+    .subnav-track a, .subnav-track .soon-item{padding:5px 12px; font-size:12px;}
   }
 
   .header-bg{
@@ -667,10 +672,9 @@
 <!-- ============ SUBMENU DE ARTIFACTS (horizontal, con loop) ============ -->
 <!-- Bloque reutilizable: copiar este <nav> + su <script> a cualquier otra página del sitio para reusarlo tal cual. -->
 <nav class="artifacts-subnav" id="artifacts-subnav" aria-label="Artifacts">
+  <a class="subnav-pin" id="subnav-pin" href="index.html#artifacts">Artifacts</a>
   <button class="subnav-arrow subnav-arrow--prev" id="subnav-prev" type="button" aria-label="Anteriores">‹</button>
-  <div class="subnav-track" id="subnav-track">
-    <span class="subnav-label">Artifacts</span>
-  </div>
+  <div class="subnav-track" id="subnav-track"></div>
   <button class="subnav-arrow subnav-arrow--next" id="subnav-next" type="button" aria-label="Siguientes">›</button>
 </nav>
 
@@ -727,12 +731,14 @@
      SUBMENU DE ARTIFACTS — horizontal, con flechas + loop infinito
      Bloque autocontenido: si se copia a otra página junto con el
      <nav id="artifacts-subnav"> de arriba, funciona igual.
-     Los links apuntan siempre a index.html#artifact-<id>, así que
-     funcionan desde cualquier página del sitio.
+     - El pin fijo "Artifacts" (fuera del scroll) apunta a index.html#artifacts.
+     - Cada item dinámico abre el link real del artifact (a.link) en pestaña
+       nueva. Si no tiene link (ej. status "soon"), se muestra sin click.
      ========================================================= */
   (function(){
     const subnav = document.getElementById('artifacts-subnav');
     const track  = document.getElementById('subnav-track');
+    const pin     = document.getElementById('subnav-pin');
     const prevBtn = document.getElementById('subnav-prev');
     const nextBtn = document.getElementById('subnav-next');
     if(!subnav || !track) return;
@@ -743,10 +749,7 @@
     }
 
     function markActive(){
-      const hash = window.location.hash;
-      track.querySelectorAll('a').forEach(a=>{
-        a.classList.toggle('active', hash && a.getAttribute('href') === 'index.html' + hash);
-      });
+      if(pin) pin.classList.toggle('active', window.location.hash === '#artifacts');
     }
 
     // Avanza/retrocede un "tramo" (80% del ancho visible). Si ya está al final
@@ -775,10 +778,17 @@
       .then(r => r.json())
       .then(artifacts => {
         artifacts.forEach(a=>{
-          const link = document.createElement('a');
-          link.href = `index.html#artifact-${a.id}`;
-          link.innerHTML = a.name + (a.status !== 'live' ? ' <span class="subnav-soon">(próx.)</span>' : '');
-          track.appendChild(link);
+          const hasLink = a.status === 'live' && !!a.link;
+          const item = document.createElement(hasLink ? 'a' : 'span');
+          if(hasLink){
+            item.href = a.link;
+            item.target = '_blank';
+            item.rel = 'noopener noreferrer';
+          } else {
+            item.className = 'soon-item';
+          }
+          item.innerHTML = a.name + (a.status !== 'live' ? ' <span class="subnav-soon">(próx.)</span>' : '');
+          track.appendChild(item);
         });
         checkOverflow();
         markActive();
