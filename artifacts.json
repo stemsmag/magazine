@@ -4,7 +4,7 @@
     "kind": "synth",
     "seed": 9,
     "id": "ART.01",
-    "name": "TETRAWAVE",
+    "name": "TETRAWAVE// v1",
     "desc": "Dual Poly Synthesizer &  rhythm engine.",
     "specs": ["DUAL OSC", "MIDI IN", "SECUENCIADOR"],
     "cta": "ABRIR INSTRUMENTO",
@@ -16,11 +16,23 @@
     "kind": "mastering",
     "seed": 21,
     "id": "ART.02",
-    "name": "LAQUER",
+    "name": "//LAQUER-CUT v1",
     "desc": "Escucha en tiempo real el efecto de una cadena de masterización.",
     "specs": ["LUFS METER", "EQ", "COMPRESOR"],
     "cta": "ABRIR INSTRUMENTO",
     "img": "img/laquer.jpg",
     "link": "https://stemsmag.fyi/artifacts/lacquer-cut-v1.html"
+  },
+     {
+    "status": "soon",
+    "kind": "widget",
+    "seed": 22,
+    "id": "ART.03",
+    "name": "//RELAXtheCHUNK v1",
+    "desc": "Un doodle audio-visual que genera una atmosfera relajante.",
+    "specs": ["AMBIENT", "CHUNKS", "RELAX"],
+    "cta": "PROXIMAMENTE",
+    "img": "img/CHUNK.jpg",
+    "link": ""
   }
 ]
