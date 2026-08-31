@@ -377,11 +377,20 @@
   .poster-venue{
     font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); margin-bottom:10px;
   }
+  .poster-meta{
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); margin-bottom:4px;
+  }
   .poster-desc{font-size:13px; color:var(--cream-dim); line-height:1.55;}
   .poster-status{
     margin-top:14px; font-family:'JetBrains Mono',monospace; font-size:10px;
     text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
   }
+  .poster-link{
+    margin-top:14px; display:inline-flex; align-items:center; gap:6px;
+    font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase;
+    letter-spacing:.06em; color:var(--accent);
+  }
+  .poster-link:hover{text-decoration:underline;}
 
   .empty{
     grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--muted);
@@ -422,6 +431,16 @@
   }
   .modal-body h3{font-size:22px; margin-bottom:8px;}
   .modal-body p{color:var(--cream-dim); font-size:14px; line-height:1.55; margin-bottom:16px;}
+  .modal-meta{
+    font-family:'JetBrains Mono',monospace; color:var(--muted) !important;
+    font-size:12px !important; margin-bottom:4px !important; line-height:1.5 !important;
+  }
+  .modal-link{
+    display:inline-flex; align-items:center; gap:6px; margin-bottom:20px;
+    font-family:'JetBrains Mono',monospace; font-size:12px; text-transform:uppercase;
+    letter-spacing:.06em; color:var(--accent); border-bottom:1px solid var(--accent);
+    padding-bottom:2px;
+  }
   .modal-close{
     background:none; border:1px solid var(--line); color:var(--cream);
     padding:8px 16px; border-radius:6px; cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:12px;
@@ -607,8 +626,10 @@
     <div class="modal-body">
       <p class="poster-tag script" id="modalTag"></p>
       <h3 class="display" id="modalTitle" style="text-transform:none;"></h3>
+      <p class="mono modal-meta" id="modalArtist" style="display:none;"></p>
       <p id="modalDesc"></p>
       <p class="mono" id="modalDate" style="color:var(--muted); font-size:12px; margin-bottom:16px;"></p>
+      <a id="modalLink" class="modal-link" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">Ver enlace →</a>
       <button class="modal-close" id="modalClose">Cerrar</button>
     </div>
   </div>
@@ -650,8 +671,11 @@ function buildCard(e, isPast){
     <p class="poster-tag script">${TYPE_LABEL[e.type] || e.type}</p>
     <p class="poster-title">${escapeHtml(e.title)}</p>
     ${e.venue ? `<p class="poster-venue">${escapeHtml(e.venue)}</p>` : ''}
+    ${e.dj ? `<p class="poster-meta">DJ: ${escapeHtml(e.dj)}</p>` : ''}
+    ${e.productor ? `<p class="poster-meta">Prod.: ${escapeHtml(e.productor)}</p>` : ''}
     <p class="poster-desc">${escapeHtml(e.description || '')}</p>
     ${e.status === 'pendiente' ? '<p class="poster-status">Pendiente de confirmar</p>' : ''}
+    ${e.link ? `<a class="poster-link" href="${escapeAttr(e.link)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">Ver enlace →</a>` : ''}
   `;
   card.addEventListener('click', () => openModal(e));
   return card;
@@ -696,9 +720,32 @@ function openModal(e){
   document.getElementById('modalMedia').style.display = e.image ? 'flex' : 'none';
   document.getElementById('modalTag').textContent = TYPE_LABEL[e.type] || e.type;
   document.getElementById('modalTitle').textContent = e.title;
+
+  const artistEl = document.getElementById('modalArtist');
+  if(e.dj){
+    artistEl.textContent = 'DJ: ' + e.dj;
+    artistEl.style.display = '';
+  } else if(e.productor){
+    artistEl.textContent = 'Productor: ' + e.productor;
+    artistEl.style.display = '';
+  } else {
+    artistEl.textContent = '';
+    artistEl.style.display = 'none';
+  }
+
   document.getElementById('modalDesc').textContent = e.description || '';
   const fmt = new Intl.DateTimeFormat('es-ES', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
   document.getElementById('modalDate').textContent = fmt.format(e.dateObj) + (e.venue ? ' · ' + e.venue : '');
+
+  const linkEl = document.getElementById('modalLink');
+  if(e.link){
+    linkEl.href = e.link;
+    linkEl.style.display = 'inline-flex';
+  } else {
+    linkEl.removeAttribute('href');
+    linkEl.style.display = 'none';
+  }
+
   document.getElementById('overlay').classList.add('open');
 }
 document.getElementById('modalClose').addEventListener('click', () => document.getElementById('overlay').classList.remove('open'));
@@ -717,6 +764,10 @@ function escapeHtml(str){
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
+}
+
+function escapeAttr(str){
+  return String(str).replace(/"/g, '&quot;');
 }
 
 loadEvents();
