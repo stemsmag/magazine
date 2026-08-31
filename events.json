@@ -1,5 +1,18 @@
 { "events": [
   {
+  "id": "toque-lost-paradise",
+  "type": "toque",
+  "title": "Lost Paradise",
+  "date": "2026-09-05",
+  "time": "5:00 PM CT",
+  "description": "OCTA llega a Lost Paradise con una propuesta diferente: otro escenario, talento fresco y una noche diseñada para bailar frente al mar.\n\nVenimos con la misma esencia de siempre: música, conexión y momentos que se quedan.",
+  "image": "img-ev/lost.jpg",
+  "link": "https://lostparadise2026.funcapital.com/checkout/AZN8NZRDiBH6N4vPsjv",
+  "status": "confirmado",
+  "venue": "Santa Emilia, Playa El Cocal",
+  "dj": "Octa-ConCept"
+},
+  {
   "id": "single-until-we-meet-again",
   "type": "single",
   "title": "Until We Meet Again",
