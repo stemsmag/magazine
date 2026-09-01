@@ -24,15 +24,15 @@
     "link": "https://stemsmag.fyi/artifacts/lacquer-cut-v1.html"
   },
      {
-    "status": "soon",
+    "status": "live",
     "kind": "widget",
     "seed": 22,
     "id": "ART.03",
     "name": "//RELAXtheCHUNK v1",
     "desc": "Un doodle audio-visual que genera una atmosfera relajante.",
     "specs": ["AMBIENT", "CHUNKS", "RELAX"],
-    "cta": "PROXIMAMENTE",
+    "cta": "CREAR NUEVO MUNDO",
     "img": "img/CHUNK.jpg",
-    "link": ""
+    "link": "https://stemsmag.fyi/artifacts/relaxthechunkv1.html"
   }
 ]
