@@ -1,0 +1,3884 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>//RELAXTHECHUNK by Stemsmag</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            image-rendering: pixelated;
+        }
+        
+        body {
+            overflow: hidden;
+            background: #0a0a1a;
+            font-family: 'Pixelify Sans', monospace; font-weight: 600;
+            color: #e0e0e0;
+            font-size: 12px;
+        }
+        
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        #ui {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 100;
+            background: rgba(20, 20, 40, 0.92);
+            padding: 12px;
+            border: 4px solid #4a5568;
+            border-radius: 0;
+            max-width: 260px;
+            max-height: 92vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #4a5568 transparent;
+            box-shadow: 
+                inset -4px -4px 0px 0px #2d3748,
+                inset 4px 4px 0px 0px #718096;
+        }
+        
+        #ui::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #ui::-webkit-scrollbar-thumb {
+            background: #4a5568;
+            border: 2px solid #2d3748;
+        }
+        
+        #ui.hidden {
+            display: none !important;
+        }
+        
+        #ui h1 {
+            font-size: 13px;
+            margin-bottom: 12px;
+            color: #a8d8ea;
+            text-shadow: 2px 2px 0px #2d3748;
+            text-align: center;
+            line-height: 1.5;
+        }
+        
+        .section {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px dashed #4a5568;
+        }
+        
+        .section-title {
+            font-size: 11px;
+            color: #ffd54f;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 0px #5d4037;
+        }
+        
+        .control-group {
+            margin: 6px 0;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 10px;
+            color: #d4e5ed;
+            line-height: 1.4;
+        }
+        
+        .slider-container {
+            position: relative;
+            margin: 4px 0;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 12px;
+            background: #2d3748;
+            outline: none;
+            -webkit-appearance: none;
+            border: 2px solid #4a5568;
+            cursor: pointer;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 20px;
+            background: #a8d8ea;
+            border: 2px solid #2d3748;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px #1a202c;
+            image-rendering: pixelated;
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 20px;
+            background: #a8d8ea;
+            border: 2px solid #2d3748;
+            cursor: pointer;
+            box-shadow: 2px 2px 0px #1a202c;
+            image-rendering: pixelated;
+        }
+        
+        .intensity-bar {
+            display: flex;
+            height: 6px;
+            margin-top: 2px;
+            gap: 1px;
+        }
+        
+        .intensity-segment {
+            flex: 1;
+            background: #2d3748;
+            border: 1px solid #1a202c;
+            transition: background 0.2s;
+        }
+        
+        .intensity-segment.active {
+            background: #4a90e2;
+        }
+        
+        .intensity-segment.active.high {
+            background: #e53e3e;
+        }
+        
+        .intensity-segment.active.medium {
+            background: #d69e2e;
+        }
+        
+        button {
+            background: #4a5568;
+            color: #e2e8f0;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 10px;
+            font-family: 'Pixelify Sans', monospace; font-weight: 600;
+            margin: 2px;
+            transition: all 0.1s;
+            border: 2px solid #718096;
+            box-shadow: 
+                inset -2px -2px 0px 0px #2d3748,
+                inset 2px 2px 0px 0px #a0aec0;
+            line-height: 1.4;
+        }
+        
+        button:hover {
+            background: #556575;
+            transform: translateY(-1px);
+        }
+        
+        button:active {
+            box-shadow: 
+                inset 2px 2px 0px 0px #2d3748,
+                inset -2px -2px 0px 0px #a0aec0;
+            transform: translateY(1px);
+        }
+        
+        button.active {
+            background: #2d6a4f;
+            border-color: #40916c;
+            color: #d8f3dc;
+            box-shadow: 
+                inset -2px -2px 0px 0px #1b4332,
+                inset 2px 2px 0px 0px #52b788;
+        }
+        
+        button.full-width {
+            width: calc(100% - 4px);
+        }
+        
+        button.half-width {
+            width: calc(50% - 4px);
+        }
+        
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 4px 0;
+            padding: 3px 0;
+        }
+        
+        .toggle {
+            width: 40px;
+            height: 20px;
+            background: #2d3748;
+            border: 2px solid #4a5568;
+            position: relative;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: inset 2px 2px 0px 0px #1a202c;
+        }
+        
+        .toggle.active {
+            background: #2d6a4f;
+            border-color: #40916c;
+        }
+        
+        .toggle::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #a0aec0;
+            border: 2px solid #4a5568;
+            top: 2px;
+            left: 2px;
+            transition: 0.2s;
+            box-shadow: 1px 1px 0px #1a202c;
+        }
+        
+        .toggle.active::after {
+            left: 22px;
+            background: #d8f3dc;
+            border-color: #40916c;
+        }
+        
+        .toggle-label {
+            font-size: 8px;
+            color: #d4e5ed;
+            margin-right: 8px;
+            line-height: 1.4;
+        }
+        
+        select {
+            width: 100%;
+            padding: 6px;
+            background: #2d3748;
+            color: #e2e8f0;
+            border: 2px solid #4a5568;
+            font-family: 'Pixelify Sans', monospace; font-weight: 600;
+            font-size: 10px;
+            cursor: pointer;
+            box-shadow: inset 2px 2px 0px 0px #1a202c;
+        }
+        
+        select option {
+            background: #1a202c;
+            font-family: 'Pixelify Sans', monospace; font-weight: 600;
+        }
+
+        .preset-desc {
+            font-size: 10px;
+            line-height: 1.6;
+            color: #a0aec0;
+            font-family: 'Pixelify Sans', monospace; font-weight: 600;
+            margin: 6px 0 10px;
+            padding: 6px;
+            background: rgba(0,0,0,0.25);
+            border-left: 2px solid #48bb78;
+        }
+        
+        .color-picker {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+        
+        .color-option {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            border: 2px solid #4a5568;
+            transition: 0.2s;
+            box-shadow: 2px 2px 0px #1a202c;
+        }
+        
+        .color-option:hover, .color-option.selected {
+            border-color: #e2e8f0;
+            transform: scale(1.15);
+            box-shadow: 0 0 8px rgba(255,255,255,0.4);
+        }
+        
+        #loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #a8d8ea;
+            font-size: 14px;
+            z-index: 200;
+            text-align: center;
+            font-family: 'Pixelify Sans', monospace; font-weight: 600;
+            text-shadow: 2px 2px 0px #2d3748;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #2d3748;
+            border-top: 4px solid #a8d8ea;
+            margin: 15px auto;
+            animation: spin 1s steps(8) infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        #stats {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: #a0aec0;
+            font-size: 10px;
+            background: rgba(20, 20, 40, 0.85);
+            padding: 8px;
+            border: 2px solid #4a5568;
+            box-shadow: 
+                inset -2px -2px 0px 0px #2d3748,
+                inset 2px 2px 0px 0px #718096;
+            line-height: 1.6;
+        }
+        
+        #stats.hidden {
+            display: none !important;
+        }
+        
+        #music-visualizer {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 200px;
+            height: 50px;
+            background: rgba(20, 20, 40, 0.85);
+            border: 2px solid #4a5568;
+            padding: 8px;
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            box-shadow: 
+                inset -2px -2px 0px 0px #2d3748,
+                inset 2px 2px 0px 0px #718096;
+        }
+        
+        #music-visualizer.hidden {
+            display: none !important;
+        }
+        
+        .bar {
+            flex: 1;
+            background: linear-gradient(to top, #4a90e2, #a8d8ea, #ffd54f);
+            min-height: 2px;
+            border: 1px solid #2d3748;
+        }
+        
+        .biome-indicator {
+            display: inline-block;
+            padding: 4px 8px;
+            border: 2px solid #4a5568;
+            font-size: 10px;
+            margin-top: 4px;
+            background: rgba(255,255,255,0.05);
+            box-shadow: inset 2px 2px 0px 0px #1a202c;
+        }
+        
+        #top-left-controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 101;
+            display: flex;
+            gap: 8px;
+            transition: opacity 0.5s ease;
+        }
+        
+        #top-left-controls.faded,
+        #btn-disclaimer.faded {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        #btn-hide-ui {
+            background: #4a5568;
+            color: #e2e8f0;
+            border: 2px solid #718096;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-family: 'Pixelify Sans', monospace; font-weight: 600;
+            font-size: 10px;
+            box-shadow: 
+                inset -2px -2px 0px 0px #2d3748,
+                inset 2px 2px 0px 0px #a0aec0;
+            display: none;
+        }
+        
+        #btn-hide-ui:hover {
+            background: #556575;
+        }
+        
+        #btn-fullscreen-floating {
+            background: #2d3748;
+            color: #a8d8ea;
+            border: 2px solid #4a6b7a;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-family: 'Pixelify Sans', monospace; font-weight: 600;
+            font-size: 10px;
+            box-shadow: 
+                inset -2px -2px 0px 0px #1a202c,
+                inset 2px 2px 0px 0px #6b8f9e;
+            display: none;
+        }
+        
+        #btn-fullscreen-floating:hover {
+            background: #37475a;
+        }
+        
+        #btn-disclaimer {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 101;
+            background: #5d4037;
+            color: #ffe0b2;
+            border: 2px solid #8d6e63;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-family: 'Pixelify Sans', monospace; font-weight: 600;
+            font-size: 10px;
+            box-shadow: 
+                inset -2px -2px 0px 0px #3e2723,
+                inset 2px 2px 0px 0px #a1887f;
+            transition: opacity 0.5s ease;
+        }
+        
+        #btn-disclaimer:hover {
+            background: #6d4c41;
+        }
+        
+        #disclaimer-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 15, 0.75);
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #disclaimer-overlay.visible {
+            display: flex;
+        }
+        
+        #disclaimer-modal {
+            background: rgba(20, 20, 40, 0.97);
+            border: 4px solid #8d6e63;
+            max-width: 420px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 18px;
+            box-shadow: 
+                inset -4px -4px 0px 0px #3e2723,
+                inset 4px 4px 0px 0px #a1887f;
+            scrollbar-width: thin;
+            scrollbar-color: #4a5568 transparent;
+        }
+        
+        #disclaimer-modal::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #disclaimer-modal::-webkit-scrollbar-thumb {
+            background: #4a5568;
+            border: 2px solid #2d3748;
+        }
+        
+        #disclaimer-modal h2 {
+            font-size: 13px;
+            color: #ffd54f;
+            text-shadow: 2px 2px 0px #5d4037;
+            text-align: center;
+            margin-bottom: 14px;
+            line-height: 1.5;
+        }
+        
+        .disclaimer-item {
+            margin-bottom: 12px;
+            padding: 8px 10px;
+            background: rgba(255,255,255,0.04);
+            border-left: 3px solid #a8d8ea;
+        }
+        
+        .disclaimer-item-title {
+            font-size: 10px;
+            color: #a8d8ea;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .disclaimer-item p {
+            font-size: 9px;
+            line-height: 1.6;
+            color: #d4e5ed;
+        }
+        
+        #btn-close-disclaimer {
+            margin-top: 8px;
+            width: 100%;
+        }
+        
+        .disclaimer-divider {
+            border: none;
+            border-top: 2px dashed #4a5568;
+            margin: 16px 0;
+        }
+        
+        .support-intro {
+            font-size: 9px;
+            line-height: 1.7;
+            color: #d4e5ed;
+            margin-bottom: 12px;
+        }
+        
+        .support-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .support-card {
+            background: rgba(255,255,255,0.04);
+            border: 2px solid #4a5568;
+            padding: 10px;
+            box-shadow: inset 2px 2px 0px 0px #1a202c;
+        }
+        
+        .support-card-title {
+            font-size: 10px;
+            color: #ffd54f;
+            text-shadow: 1px 1px 0px #5d4037;
+            margin-bottom: 4px;
+        }
+        
+        .support-card p {
+            font-size: 9px;
+            color: #a0aec0;
+            line-height: 1.5;
+            margin: 0 0 6px;
+        }
+        
+        .support-btn {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+            background: #2d6a4f;
+            color: #d8f3dc;
+            border: 2px solid #40916c;
+            padding: 8px 12px;
+            font-family: 'Pixelify Sans', monospace; font-weight: 600;
+            font-size: 9px;
+            text-decoration: none;
+            box-shadow: 
+                inset -2px -2px 0px 0px #1b4332,
+                inset 2px 2px 0px 0px #52b788;
+        }
+        
+        .support-btn:hover {
+            background: #35815c;
+        }
+        
+        .credits-p {
+            font-size: 9px;
+            line-height: 1.6;
+            color: #d4e5ed;
+            margin-bottom: 8px;
+        }
+        
+        .credits-p a {
+            color: #a8d8ea;
+        }
+        
+        .time-mode-btn {
+            font-size: 9px;
+            padding: 6px 8px;
+        }
+        
+        .time-mode-btn.active-time {
+            background: #2d6a4f;
+            border-color: #40916c;
+        }
+        
+        .music-layer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 3px 0;
+            padding: 4px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid #4a5568;
+        }
+        
+        .layer-label {
+            font-size: 9px;
+            color: #d4e5ed;
+        }
+        
+        .layer-controls {
+            display: flex;
+            gap: 4px;
+        }
+        
+        .layer-btn {
+            font-size: 8px;
+            padding: 4px 6px;
+            width: auto;
+        }
+        
+        .layer-btn.active-layer {
+            background: #2d6a4f;
+        }
+        
+        .waveform-select {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            margin: 4px 0;
+        }
+        
+        .wave-btn {
+            font-size: 8px;
+            padding: 3px 5px;
+            width: auto;
+            margin: 0;
+            background: #2d3748;
+            border-color: #4a5568;
+            color: #8ea0ac;
+            opacity: 0.85;
+            box-shadow: none;
+        }
+        
+        .wave-btn:hover {
+            background: #3a4759;
+            color: #d4e5ed;
+        }
+        
+        .wave-btn.active-wave {
+            background: #2d6a4f;
+            border-color: #52b788;
+            color: #d8f3dc;
+            opacity: 1;
+            box-shadow: 
+                inset -2px -2px 0px 0px #1b4332,
+                inset 2px 2px 0px 0px #52b788;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div>GENERANDO MUNDO ÉPICO...</div>
+        <div class="spinner"></div>
+    </div>
+    
+    <div id="top-left-controls">
+        <button id="btn-hide-ui">📋 MOSTRAR PANEL</button>
+        <button id="btn-fullscreen-floating">⛶ PANTALLA COMPLETA</button>
+    </div>
+    <button id="btn-disclaimer">⚠️ AVISO</button>
+    
+    <div id="canvas-container"></div>
+    
+    <div id="disclaimer-overlay">
+        <div id="disclaimer-modal">
+            <h2>⚠️ AVISO<br><span style="font-size:9px; color:#a8d8ea; opacity:0.8;">//RELAX<span style="color:#ff6b6b;">THE</span>CHUNK by Stemsmag</span></h2>
+            
+            <div class="disclaimer-item">
+                <div class="disclaimer-item-title">🎧 Uso de audio</div>
+                <p>Esta app usa Web Audio API y genera sonido en tiempo real. Se recomienda usar auriculares y ajustar el volumen a un nivel cómodo antes de reproducir, ya que algunos presets pueden variar en intensidad.</p>
+            </div>
+            
+            <div class="disclaimer-item">
+                <div class="disclaimer-item-title">🧘 Bienestar</div>
+                <p>Los presets de meditación, sueño y relajación son una ayuda ambiental y no reemplazan asesoramiento médico, psicológico o terapéutico profesional. Si estás atravesando una dificultad de salud mental, consultá a un profesional.</p>
+            </div>
+            
+            <div class="disclaimer-item">
+                <div class="disclaimer-item-title">🔒 Privacidad</div>
+                <p>Todo el mundo, el audio y los ajustes se generan y procesan localmente en tu navegador. No se envía ningún dato a servidores externos.</p>
+            </div>
+            
+            <div class="disclaimer-item">
+                <div class="disclaimer-item-title">💻 Compatibilidad</div>
+                <p>Requiere un navegador moderno con soporte para WebGL y Web Audio. El rendimiento puede variar según tu dispositivo.</p>
+            </div>
+            
+            <div class="disclaimer-item">
+                <div class="disclaimer-item-title">✨ Proyecto</div>
+                <p>Proyecto experimental sin fines comerciales. Todos los sonidos son generados proceduralmente por el motor de la app.</p>
+            </div>
+            
+            <hr class="disclaimer-divider">
+            
+            <h2 style="font-size:11px;">📜 LICENCIA &amp; CRÉDITOS</h2>
+            
+            <p class="credits-p">&copy; 2026 StemsMag. Se distribuye bajo licencia <strong>Creative Commons BY-NC 4.0</strong> (Atribución — No Comercial): podés usarlo, compartirlo y adaptarlo libremente para fines no comerciales, siempre citando la fuente.</p>
+            
+            <p class="credits-p">Diseñado por <strong>Gerardo Ventura</strong> — <a href="https://www.instagram.com/thegeco_sv/" target="_blank" rel="noopener">@thegeco_sv</a></p>
+            
+            <hr class="disclaimer-divider">
+            
+            <h2 style="font-size:11px;">💛 APOYÁ EL PROYECTO</h2>
+            
+            <p class="support-intro">Esta herramienta nació para ser gratis, y ahí se queda. Pero mantenerla — sumar biomas, presets, arreglar bugs — lleva tiempo y algún que otro café de madrugada. Si te sirvió para relajarte, estudiar o simplemente perder una tarde jugando con los controles, tu apoyo va directo a que Stems Magazine siga sacando herramientas como esta. Nada de esto desbloquea funciones extra — todo sigue siendo 100% gratis, dones o no.</p>
+            
+            <div class="support-grid">
+                <div class="support-card">
+                    <div class="support-card-title">☕ KO-FI</div>
+                    <p>Una donación puntual, sin cuenta ni registro.</p>
+                    <a class="support-btn" href="https://ko-fi.com/E1E21FM5MW" target="_blank" rel="noopener">EL CAFECITO →</a>
+                </div>
+                <div class="support-card">
+                    <div class="support-card-title">💳 PAYPAL</div>
+                    <p>Si ya tenés cuenta de PayPal, es directo.</p>
+                    <a class="support-btn" href="https://paypal.me/stemsmag?locale.x=es_XC&country.x=SV" target="_blank" rel="noopener">DONAR POR PAYPAL →</a>
+                </div>
+            </div>
+            
+            <button id="btn-close-disclaimer">CERRAR</button>
+        </div>
+    </div>
+    
+    <div id="ui" style="display:none;">
+        <h1>🌿 //RELAX<span style="color:#ff6b6b;">THE</span>CHUNK<br><span style="font-size:8px; letter-spacing:1px; color:#a8d8ea; opacity:0.8;">by Stemsmag</span></h1>
+        
+        <div class="section">
+            <div class="section-title">🌍 MUNDO</div>
+            <button id="btn-regenerate" class="full-width">🔄 NUEVO CHUNK</button>
+            <div class="control-group" style="margin-top:8px;">
+                <label>BIOMA</label>
+                <select id="biome-select">
+                    <option value="random">🎲 ALEATORIO</option>
+                    <option value="plains">🌱 LLANURAS</option>
+                    <option value="forest">🌲 BOSQUE</option>
+                    <option value="desert">🏜️ DESIERTO</option>
+                    <option value="snow">❄️ TAIGA NEVADA</option>
+                    <option value="jungle">🌴 JUNGLA</option>
+                    <option value="crystal">💎 CRISTAL</option>
+                    <option value="mesa">🏔️ MESA</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>ALTURA DEL TERRENO</label>
+                <div class="slider-container">
+                    <input type="range" id="terrain-height" min="1" max="15" value="5">
+                    <div class="intensity-bar" id="terrain-intensity"></div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>TAMAÑO DEL CHUNK</label>
+                <div class="slider-container">
+                    <input type="range" id="chunk-size" min="8" max="64" value="16">
+                    <div class="intensity-bar" id="chunk-intensity"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">🎹 MÁQUINA DE PADS</div>
+            <button id="btn-music" class="active full-width">🎹 PADS ACTIVOS</button>
+
+            <div class="control-group" style="margin-top:8px;">
+                <label>PRESET</label>
+                <select id="ambient-preset-select"></select>
+            </div>
+            <div class="preset-desc" id="ambient-preset-desc"></div>
+
+            <div class="control-group">
+                <label>VOLUMEN MASTER</label>
+                <div class="slider-container">
+                    <input type="range" id="master-volume" min="0" max="100" value="50">
+                    <div class="intensity-bar" id="volume-intensity"></div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>INSTRUMENTOS DEL PAD (varios = mezcla y varía)</label>
+                <div class="waveform-select" id="pad-instrument-select">
+                    <button class="wave-btn" data-pad-inst="soft">🌫️ Suave</button>
+                    <button class="wave-btn" data-pad-inst="glass">💎 Cristal</button>
+                    <button class="wave-btn" data-pad-inst="warm">🔥 Cálido</button>
+                    <button class="wave-btn" data-pad-inst="airy">🌬️ Etéreo</button>
+                    <button class="wave-btn" data-pad-inst="organ">🎹 Órgano</button>
+                </div>
+            </div>
+
+            <div class="music-layer">
+                <span class="layer-label">🎼 CAPA DE ARPEGIOS</span>
+                <div class="layer-controls">
+                    <button class="layer-btn" id="btn-arp-toggle">OFF</button>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>INSTRUMENTOS DEL ARPEGIO</label>
+                <div class="waveform-select" id="arp-instrument-select">
+                    <button class="wave-btn" data-arp-inst="soft">🌫️ Suave</button>
+                    <button class="wave-btn active-wave" data-arp-inst="glass">💎 Cristal</button>
+                    <button class="wave-btn" data-arp-inst="warm">🔥 Cálido</button>
+                    <button class="wave-btn" data-arp-inst="airy">🌬️ Etéreo</button>
+                    <button class="wave-btn" data-arp-inst="organ">🎹 Órgano</button>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>VOLUMEN ARPEGIO</label>
+                <div class="slider-container">
+                    <input type="range" id="arp-volume" min="0" max="100" value="35">
+                    <div class="intensity-bar" id="arp-volume-intensity"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">🔊 SONIDOS AMBIENTALES</div>
+            <div class="toggle-container">
+                <span class="toggle-label">🌬️ VIENTO</span>
+                <div class="toggle active" id="toggle-wind"></div>
+            </div>
+            <div class="toggle-container">
+                <span class="toggle-label">🐦 PÁJAROS (DÍA)</span>
+                <div class="toggle active" id="toggle-birds"></div>
+            </div>
+            <div class="toggle-container">
+                <span class="toggle-label">🐸 RANITAS</span>
+                <div class="toggle" id="toggle-frogs"></div>
+            </div>
+            <div class="toggle-container">
+                <span class="toggle-label">🌧️ LLUVIA</span>
+                <div class="toggle" id="toggle-rain"></div>
+            </div>
+            <div class="toggle-container">
+                <span class="toggle-label">🦗 GRILLOS (NOCHE)</span>
+                <div class="toggle" id="toggle-cricket"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">🌤️ CICLO DÍA/NOCHE</div>
+            <div style="display:flex; gap:4px; margin-bottom:8px;">
+                <button class="time-mode-btn active-time" data-time="cycle">🔄 CICLO</button>
+                <button class="time-mode-btn" data-time="day">☀️ DÍA</button>
+                <button class="time-mode-btn" data-time="night">🌙 NOCHE</button>
+                <button class="time-mode-btn" data-time="sunset">🌅 OCASO</button>
+            </div>
+            <div class="control-group">
+                <label>VELOCIDAD DEL TIEMPO</label>
+                <div class="slider-container">
+                    <input type="range" id="time-speed" min="0" max="100" value="20">
+                    <div class="intensity-bar" id="time-intensity"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">📷 CÁMARA</div>
+            <div class="toggle-container">
+                <span class="toggle-label">🔄 ÓRBITA AUTO</span>
+                <div class="toggle active" id="toggle-orbit"></div>
+            </div>
+            <div class="control-group">
+                <label>VELOCIDAD ÓRBITA</label>
+                <div class="slider-container">
+                    <input type="range" id="orbit-speed" min="1" max="100" value="10">
+                    <div class="intensity-bar" id="orbit-intensity"></div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>DISTANCIA CÁMARA</label>
+                <div class="slider-container">
+                    <input type="range" id="camera-distance" min="10" max="200" value="45">
+                    <div class="intensity-bar" id="cam-intensity"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">✨ PARTÍCULAS</div>
+            <div class="control-group">
+                <label>DENSIDAD</label>
+                <div class="slider-container">
+                    <input type="range" id="particle-density" min="0" max="100" value="50">
+                    <div class="intensity-bar" id="particle-d-intensity"></div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label>VELOCIDAD</label>
+                <div class="slider-container">
+                    <input type="range" id="particle-speed" min="1" max="100" value="30">
+                    <div class="intensity-bar" id="particle-s-intensity"></div>
+                </div>
+            </div>
+            <div class="toggle-container">
+                <span class="toggle-label">☁️ NUBES</span>
+                <div class="toggle active" id="toggle-clouds"></div>
+            </div>
+            <div class="toggle-container">
+                <span class="toggle-label">✨ POLEN/LUCIÉRNAGAS</span>
+                <div class="toggle active" id="toggle-particles"></div>
+            </div>
+            <div class="toggle-container">
+                <span class="toggle-label">🌧️ LLUVIA VISUAL</span>
+                <div class="toggle" id="toggle-rain-visual"></div>
+            </div>
+            <div class="toggle-container">
+                <span class="toggle-label">⭐ ESTRELLAS</span>
+                <div class="toggle active" id="toggle-stars"></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">🎨 CIELO</div>
+            <div class="control-group">
+                <label>INTENSIDAD ESTRELLAS</label>
+                <div class="slider-container">
+                    <input type="range" id="stars-intensity" min="0" max="100" value="30">
+                    <div class="intensity-bar" id="stars-intensity-bar"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <div class="section-title">✨ SHADERS ÉPICOS</div>
+            <div class="toggle-container">
+                <span class="toggle-label">🌟 BLOOM (BRILLO)</span>
+                <div class="toggle active" id="toggle-bloom"></div>
+            </div>
+            <div class="toggle-container">
+                <span class="toggle-label">☀️ GOD RAYS</span>
+                <div class="toggle active" id="toggle-godrays"></div>
+            </div>
+            <div class="control-group" style="margin-top:4px;">
+                <label>🎞️ FILM GRAIN</label>
+                <div class="waveform-select">
+                    <button class="wave-btn active-wave" data-grain="off">OFF</button>
+                    <button class="wave-btn" data-grain="low">LOW</button>
+                    <button class="wave-btn" data-grain="mid">MID</button>
+                    <button class="wave-btn" data-grain="hi">HI</button>
+                </div>
+            </div>
+            <div class="toggle-container">
+                <span class="toggle-label">🌈 CHROMATIC AB</span>
+                <div class="toggle" id="toggle-chromatic"></div>
+            </div>
+            <div class="toggle-container">
+                <span class="toggle-label">🌌 AURORA BOREAL</span>
+                <div class="toggle" id="toggle-aurora"></div>
+            </div>
+            <div class="control-group">
+                <label>INTENSIDAD BLOOM</label>
+                <div class="slider-container">
+                    <input type="range" id="bloom-intensity" min="0" max="100" value="50">
+                    <div class="intensity-bar" id="bloom-int-bar"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section" style="border-bottom:none;">
+            <div class="section-title">💾 GUARDAR/CARGAR</div>
+            <button id="btn-save" class="half-width">💾 GUARDAR</button>
+            <button id="btn-load" class="half-width">📂 CARGAR</button>
+            <button id="btn-fullscreen-panel" class="full-width" style="margin-top:8px; background:#2d3748; border-color:#4a6b7a;">⛶ PANTALLA COMPLETA</button>
+            <button id="btn-hide" class="full-width" style="margin-top:8px; background:#742a2a;">👁️ ESCONDER PANEL</button>
+        </div>
+
+        <div id="ui-footer" style="margin-top:14px; padding-top:12px; border-top:2px dashed #4a5568; text-align:center; font-size:9px; color:#8ea0ac; line-height:1.6;">
+            //RELAX<span style="color:#ff6b6b;">THE</span>CHUNK by Stemsmag
+        </div>
+    </div>
+    
+    <div id="music-visualizer" style="display:none;"></div>
+    
+    <div id="stats" style="display:none;">
+        BIOMA: <span id="current-biome" class="biome-indicator">ALEATORIO</span><br>
+        BLOQUES: <span id="block-count">0</span><br>
+        FPS: <span id="fps">0</span><br>
+        HORA: <span id="time-display">DÍA</span>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
+
+    <script>
+        // ==========================================
+        // CONFIGURACIÓN
+        // ==========================================
+        const CONFIG = {
+            CHUNK_SIZE: 16,
+            MAX_HEIGHT: 60,
+            WATER_LEVEL: 8,
+            BLOCK_SIZE: 1,
+            COLORS: {
+                grass: [0x7cb342, 0x8bc34a, 0x689f38, 0x9ccc65],
+                dirt: [0x795548, 0x6d4c41, 0x8d6e63, 0x5d4037],
+                stone: [0x9e9e9e, 0x757575, 0xbdbdbd, 0x616161],
+                water: [0x29b6f6, 0x4fc3f7, 0x039be5, 0x81d4fa],
+                sand: [0xffe082, 0xffd54f, 0xffca28, 0xffb300],
+                wood: [0x5d4037, 0x4e342e, 0x6d4c41, 0x3e2723],
+                leaves: [0x43a047, 0x388e3c, 0x66bb6a, 0x2e7d32],
+                snow: [0xe0e0e0, 0xf5f5f5, 0xbdbdbd, 0xffffff],
+                flower: [0xe91e63, 0x9c27b0, 0xff5722, 0xffeb3b, 0x00bcd4],
+                cactus: [0x2e7d32, 0x388e3c, 0x1b5e20],
+                ice: [0xb3e5fc, 0x81d4fa, 0x4fc3f7, 0xe1f5fe],
+                crystal: [0xe040fb, 0xea80fc, 0xce93d8, 0xab47bc],
+                red_sand: [0xff7043, 0xff8a65, 0xff5722, 0xd84315],
+                terracotta: [0x8d6e63, 0xa1887f, 0x6d4c41, 0x5d4037],
+                jungle_wood: [0x4e342e, 0x3e2723, 0x5d4037, 0x6d4c41],
+                jungle_leaves: [0x1b5e20, 0x2e7d32, 0x388e3c, 0x004d40],
+                vine: [0x2e7d32, 0x1b5e20, 0x43a047, 0x66bb6a],
+                ore: [0xffd54f, 0xffb300, 0xb0bec5, 0x90caf9],
+                mushroom: [0xe53935, 0xff7043, 0xffca28, 0x8d6e63, 0xf06292],
+                cave_crystal: [0x64b5f6, 0x4fc3f7, 0xba68c8, 0x9575cd, 0x4dd0e1]
+            },
+            BIOMES: {
+                plains: { name: 'LLANURAS', height: 1, water: 8, trees: 0.08, snow: false, cactus: false, jungle: false },
+                forest: { name: 'BOSQUE', height: 1.2, water: 7, trees: 0.25, snow: false, cactus: false, jungle: false },
+                desert: { name: 'DESIERTO', height: 0.8, water: 3, trees: 0, snow: false, cactus: 0.15, jungle: false },
+                snow: { name: 'TAIGA NEVADA', height: 1.5, water: 6, trees: 0.2, snow: true, cactus: false, jungle: false },
+                jungle: { name: 'JUNGLA', height: 1.3, water: 10, trees: 0.35, snow: false, cactus: false, jungle: true },
+                crystal: { name: 'CRISTAL', height: 1, water: 5, trees: 0.05, snow: false, cactus: false, jungle: false },
+                mesa: { name: 'MESA', height: 2, water: 2, trees: 0.02, snow: false, cactus: 0.05, jungle: false }
+            }
+        };
+
+        const SKY_COLORS = {
+            day: 0x87CEEB,
+            rain: 0x708090,
+            sunrise: 0xFF8C00,
+            sunset: 0xFF6347,
+            night: 0x0a0a1a,
+            indigo: 0x1a1a3a
+        };
+
+        // ==========================================
+        // VARIABLES
+        // ==========================================
+        let scene, camera, renderer, controls;
+        let chunk = [], meshes = {};
+        let waterMesh, cloudMesh, overcastMesh, particleSystem, rainSystem, starSystem;
+        let godRaysMesh, auroraMesh;
+        let simplex, time = 0, dayTime = 0;
+        let musicPlaying = true;
+        let audioContext, musicNodes = [], ambientNodes = [];
+        let animationId, blockCount = 0;
+        let lastTime = 0, frameCount = 0, fps = 0;
+        let currentBiome = 'random';
+        let savedChunk = null;
+        let uiVisible = true;
+        
+        let timeMode = 'cycle';
+        let isDaytime = true;
+        
+        // Ambiente sonoro (motor de presets)
+        let currentAmbientPresetId = null;
+        let preRainSoundState = null;
+        
+        // Options
+        let showClouds = true, showParticles = true;
+        let showRain = false, showStars = true, autoOrbit = true;
+        let timeSpeed = 0.2, terrainHeightMultiplier = 1;
+        let terrainBaseOffset = 0; // eleva toda la isla para darle aire al cono de abajo
+        let terrainPeakHeight = 0; // punto más alto real del terreno (incluye terrainBaseOffset); usado para que nubes/rayos/aurora siempre floten por encima aunque el chunk crezca mucho
+        let orbitSpeed = 10, cameraDistance = 45;
+        let starsIntensity = 0.3, masterVolume = 0.5;
+        let particleDensity = 0.5, particleSpeed = 0.3;
+        
+        // Shader options
+        let bloomEnabled = true;
+        let godRaysEnabled = true;
+        let filmGrainLevel = 'off';
+        const FILM_GRAIN_INTENSITY = { off: 0, low: 0.06, mid: 0.15, hi: 0.32 };
+        let chromaticEnabled = false;
+        let auroraEnabled = false;
+        let bloomIntensity = 0.5;
+        
+        // Sound layers
+        let soundLayers = {
+            wind: true, birds: true, frogs: false,
+            rain: false, cricket: false
+        };
+
+        // Post-processing
+        let composer, renderTarget, postScene, postCamera, postMaterial;
+
+        // ==========================================
+        // INICIALIZACIÓN
+        // ==========================================
+        function init() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(SKY_COLORS.day);
+            scene.fog = new THREE.Fog(SKY_COLORS.day, 20, 100);
+
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(25, 20, 25);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxPolarAngle = Math.PI * 0.97;
+            controls.minDistance = 5;
+            controls.maxDistance = 250;
+            controls.target.set(CONFIG.CHUNK_SIZE / 2, 8, CONFIG.CHUNK_SIZE / 2);
+
+            setupLights();
+            generateChunk();
+            camera.position.set(25, terrainBaseOffset + 20, 25);
+            createWater();
+            createClouds();
+            createOvercastMist();
+            createParticles();
+            createRain();
+            createStars();
+            createGodRays();
+            createAurora();
+            setupPostProcessing();
+            initMusic();
+            setupUI();
+            setupIntensityBars();
+
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('ui').style.display = 'block';
+            document.getElementById('stats').style.display = 'block';
+            document.getElementById('music-visualizer').style.display = 'flex';
+            document.getElementById('btn-hide-ui').style.display = 'none';
+
+            window.addEventListener('resize', onWindowResize);
+            animate();
+        }
+
+        function setupLights() {
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+            scene.add(ambientLight);
+
+            const sunLight = new THREE.DirectionalLight(0xfff5e6, 1.2);
+            sunLight.position.set(50, 50, 30);
+            sunLight.castShadow = true;
+            sunLight.shadow.mapSize.width = 2048;
+            sunLight.shadow.mapSize.height = 2048;
+            sunLight.shadow.camera.near = 0.5;
+            sunLight.shadow.camera.far = 120;
+            const d = 40;
+            sunLight.shadow.camera.left = -d;
+            sunLight.shadow.camera.right = d;
+            sunLight.shadow.camera.top = d;
+            sunLight.shadow.camera.bottom = -d;
+            sunLight.shadow.bias = -0.0005;
+            scene.add(sunLight);
+            scene.userData.sunLight = sunLight;
+
+            const fillLight = new THREE.DirectionalLight(0x99ccff, 0.3);
+            fillLight.position.set(-30, 20, -30);
+            scene.add(fillLight);
+            scene.userData.fillLight = fillLight;
+
+            const hemiLight = new THREE.HemisphereLight(0x87CEEB, 0x362d1d, 0.4);
+            scene.add(hemiLight);
+            scene.userData.hemiLight = hemiLight;
+        }
+
+        // ==========================================
+        // POST-PROCESSING
+        // ==========================================
+        function setupPostProcessing() {
+            // Crear render target para post-procesado
+            renderTarget = new THREE.WebGLRenderTarget(
+                window.innerWidth,
+                window.innerHeight,
+                {
+                    minFilter: THREE.LinearFilter,
+                    magFilter: THREE.LinearFilter,
+                    format: THREE.RGBAFormat
+                }
+            );
+
+            // Scene y camera para post-procesado (fullscreen quad)
+            postScene = new THREE.Scene();
+            postCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+            
+            const postGeometry = new THREE.PlaneGeometry(2, 2);
+            postMaterial = new THREE.ShaderMaterial({
+                uniforms: {
+                    tDiffuse: { value: null },
+                    time: { value: 0 },
+                    bloomIntensity: { value: 0.5 },
+                    bloomEnabled: { value: true },
+                    filmGrainIntensity: { value: 0 },
+                    chromaticEnabled: { value: false },
+                    resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) }
+                },
+                vertexShader: `
+                    varying vec2 vUv;
+                    void main() {
+                        vUv = uv;
+                        gl_Position = vec4(position, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    uniform sampler2D tDiffuse;
+                    uniform float time;
+                    uniform float bloomIntensity;
+                    uniform bool bloomEnabled;
+                    uniform float filmGrainIntensity;
+                    uniform bool chromaticEnabled;
+                    uniform vec2 resolution;
+                    varying vec2 vUv;
+                    
+                    // Simplex noise
+                    vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+                    vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+                    vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+                    
+                    float snoise(vec2 v) {
+                        const vec4 C = vec4(0.211324865405187, 0.366025403784439,
+                                           -0.577350269189626, 0.024390243902439);
+                        vec2 i  = floor(v + dot(v, C.yy));
+                        vec2 x0 = v -   i + dot(i, C.xx);
+                        vec2 i1;
+                        i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+                        vec4 x12 = x0.xyxy + C.xxzz;
+                        x12.xy -= i1;
+                        i = mod289(i);
+                        vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0))
+                            + i.x + vec3(0.0, i1.x, 1.0));
+                        vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy),
+                            dot(x12.zw,x12.zw)), 0.0);
+                        m = m*m;
+                        m = m*m;
+                        vec3 x = 2.0 * fract(p * C.www) - 1.0;
+                        vec3 h = abs(x) - 0.5;
+                        vec3 ox = floor(x + 0.5);
+                        vec3 a0 = x - ox;
+                        m *= 1.79284291400159 - 0.85373472095314 * (a0*a0 + h*h);
+                        vec3 g;
+                        g.x  = a0.x  * x0.x  + h.x  * x0.y;
+                        g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+                        return 130.0 * dot(m, g);
+                    }
+                    
+                    // Bloom - blur gaussiano simplificado
+                    vec4 getBloom(vec2 uv, sampler2D tex, float intensity) {
+                        vec4 sum = vec4(0.0);
+                        float blur = 0.003 * intensity;
+                        
+                        sum += texture2D(tex, uv + vec2(-blur, -blur)) * 0.1;
+                        sum += texture2D(tex, uv + vec2(0.0, -blur)) * 0.1;
+                        sum += texture2D(tex, uv + vec2(blur, -blur)) * 0.1;
+                        sum += texture2D(tex, uv + vec2(-blur, 0.0)) * 0.1;
+                        sum += texture2D(tex, uv) * 0.2;
+                        sum += texture2D(tex, uv + vec2(blur, 0.0)) * 0.1;
+                        sum += texture2D(tex, uv + vec2(-blur, blur)) * 0.1;
+                        sum += texture2D(tex, uv + vec2(0.0, blur)) * 0.1;
+                        sum += texture2D(tex, uv + vec2(blur, blur)) * 0.1;
+                        
+                        return sum;
+                    }
+                    
+                    void main() {
+                        vec2 uv = vUv;
+                        vec4 color = texture2D(tDiffuse, uv);
+                        
+                        // Chromatic aberration
+                        if (chromaticEnabled) {
+                            float ab = 0.003;
+                            color.r = texture2D(tDiffuse, uv + vec2(ab, 0.0)).r;
+                            color.b = texture2D(tDiffuse, uv - vec2(ab, 0.0)).b;
+                        }
+                        
+                        // Bloom
+                        if (bloomEnabled) {
+                            vec4 bloom = getBloom(uv, tDiffuse, bloomIntensity);
+                            color = mix(color, bloom, bloomIntensity * 0.5);
+                        }
+                        
+                        // Film grain
+                        if (filmGrainIntensity > 0.0) {
+                            float grain = snoise(uv * resolution * 0.5 + time * 10.0) * filmGrainIntensity;
+                            color.rgb += grain;
+                        }
+                        
+                        // Vignette
+                        float dist = distance(uv, vec2(0.5));
+                        color.rgb *= smoothstep(0.8, 0.3, dist);
+                        
+                        gl_FragColor = color;
+                    }
+                `
+            });
+            
+            const postMesh = new THREE.Mesh(postGeometry, postMaterial);
+            postScene.add(postMesh);
+        }
+
+        // ==========================================
+        // GOD RAYS - RAYOS DE LUZ
+        // ==========================================
+        function createGodRays() {
+            if (godRaysMesh) scene.remove(godRaysMesh);
+            godRaysMesh = new THREE.Group();
+
+            // En vez de un cono estrecho y facetado, se arman varios "cortinajes"
+            // de luz anchos con difuminado suave en los bordes (mismo enfoque que
+            // la aurora: alpha por seno + ondulación lenta), en vez de un corte duro.
+            const rayCount = 4;
+            const width = 22;
+            const height = 44;
+
+            for (let i = 0; i < rayCount; i++) {
+                const geometry = new THREE.PlaneGeometry(width, height, 20, 24);
+
+                const material = new THREE.ShaderMaterial({
+                    uniforms: {
+                        time: { value: 0 },
+                        color: { value: new THREE.Color(0xfff5e6) },
+                        opacity: { value: 0.10 },
+                        seed: { value: i * 17.0 }
+                    },
+                    vertexShader: `
+                        varying vec2 vUv;
+                        uniform float time;
+                        uniform float seed;
+                        
+                        void main() {
+                            vUv = uv;
+                            vec3 pos = position;
+                            
+                            // Ondulación lenta y flotante, igual que la aurora
+                            pos.x += sin(pos.y * 0.08 + time * 0.3 + seed) * 2.0;
+                            pos.z += cos(pos.y * 0.06 + time * 0.25 + seed) * 1.2;
+                            
+                            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                        }
+                    `,
+                    fragmentShader: `
+                        uniform vec3 color;
+                        uniform float opacity;
+                        uniform float time;
+                        varying vec2 vUv;
+                        
+                        void main() {
+                            // Difuminado ancho: se apaga suavemente hacia los bordes
+                            // laterales y hacia arriba/abajo, sin cortes duros.
+                            float edgeX = sin(vUv.x * 3.14159);
+                            float edgeY = smoothstep(0.0, 0.3, vUv.y) * smoothstep(1.0, 0.55, vUv.y);
+                            float shimmer = 0.7 + 0.3 * sin(vUv.x * 5.0 - time * 0.5);
+                            
+                            float alpha = edgeX * edgeX * edgeY * shimmer * opacity;
+                            gl_FragColor = vec4(color, alpha);
+                        }
+                    `,
+                    transparent: true,
+                    blending: THREE.AdditiveBlending,
+                    side: THREE.DoubleSide,
+                    depthWrite: false
+                });
+                
+                const mesh = new THREE.Mesh(geometry, material);
+                mesh.rotation.x = -Math.PI / 2.4;
+                mesh.rotation.y = (i / rayCount) * Math.PI;
+                godRaysMesh.add(mesh);
+            }
+            
+            godRaysMesh.position.set(CONFIG.CHUNK_SIZE / 2, 16, CONFIG.CHUNK_SIZE / 2);
+            scene.add(godRaysMesh);
+        }
+
+        // ==========================================
+        // AURORA BOREAL
+        // ==========================================
+        function createAurora() {
+            const geometry = new THREE.PlaneGeometry(80, 30, 64, 32);
+            
+            const material = new THREE.ShaderMaterial({
+                uniforms: {
+                    time: { value: 0 },
+                    color1: { value: new THREE.Color(0x00ff88) },
+                    color2: { value: new THREE.Color(0x0088ff) }
+                },
+                vertexShader: `
+                    varying vec2 vUv;
+                    varying float vElevation;
+                    uniform float time;
+                    
+                    void main() {
+                        vUv = uv;
+                        vec3 pos = position;
+                        
+                        // Ondas de aurora
+                        float wave1 = sin(pos.x * 0.1 + time * 0.5) * 3.0;
+                        float wave2 = sin(pos.x * 0.2 - time * 0.3) * 2.0;
+                        float wave3 = sin(pos.y * 0.1 + time * 0.2) * 1.0;
+                        
+                        pos.z += wave1 + wave2 + wave3;
+                        vElevation = pos.z;
+                        
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                    }
+                `,
+                fragmentShader: `
+                    uniform vec3 color1;
+                    uniform vec3 color2;
+                    uniform float time;
+                    varying vec2 vUv;
+                    varying float vElevation;
+                    
+                    void main() {
+                        float mixFactor = sin(vUv.x * 3.14159) * 0.5 + 0.5;
+                        mixFactor += sin(time * 0.2 + vUv.x * 5.0) * 0.2;
+                        
+                        vec3 color = mix(color1, color2, mixFactor);
+                        
+                        // Brillo en las crestas
+                        float brightness = smoothstep(-2.0, 5.0, vElevation);
+                        color *= 0.5 + brightness * 0.5;
+                        
+                        // Fade en los bordes
+                        float alpha = sin(vUv.x * 3.14159) * sin(vUv.y * 3.14159);
+                        alpha *= 0.3;
+                        
+                        gl_FragColor = vec4(color, alpha);
+                    }
+                `,
+                transparent: true,
+                blending: THREE.AdditiveBlending,
+                side: THREE.DoubleSide,
+                depthWrite: false
+            });
+            
+            auroraMesh = new THREE.Mesh(geometry, material);
+            auroraMesh.position.set(CONFIG.CHUNK_SIZE / 2, 35, CONFIG.CHUNK_SIZE / 2);
+            auroraMesh.visible = false;
+            scene.add(auroraMesh);
+        }
+
+        // ==========================================
+        // GENERACIÓN CHUNK
+        // ==========================================
+        // Libera geometría/material de un mesh de bloques al quitarlo de la
+        // escena. Antes solo se hacía scene.remove(), así que cada "NUEVO
+        // CHUNK" dejaba huérfanas en la GPU las BoxGeometry y materiales de
+        // ores/cristales/flores/hongos/terreno de la generación anterior; con
+        // chunks grandes esto acumula memoria y puede degradar el framerate
+        // hasta el punto de que el mundo "se sienta" congelado/anclado.
+        // No se libera crossGeometryCache ni los materiales de
+        // spriteMaterialCache porque esos se reutilizan entre generaciones.
+        function disposeMeshGroup(mesh) {
+            scene.remove(mesh);
+            if (mesh.geometry && mesh.geometry !== crossGeometryCache) {
+                mesh.geometry.dispose();
+            }
+            const isCachedMaterial = mesh.material && Object.values(spriteMaterialCache).includes(mesh.material);
+            if (mesh.material && !isCachedMaterial) {
+                mesh.material.dispose();
+            }
+        }
+
+        function generateChunk() {
+            Object.values(meshes).forEach(disposeMeshGroup);
+            meshes = {};
+            chunk = [];
+            blockCount = 0;
+
+            const seed = Math.random() * 10000;
+            simplex = new SimplexNoise(seed);
+
+            let biomeConfig;
+            if (currentBiome === 'random') {
+                const biomes = Object.keys(CONFIG.BIOMES);
+                currentBiome = biomes[Math.floor(Math.random() * biomes.length)];
+            }
+            biomeConfig = CONFIG.BIOMES[currentBiome];
+            
+            document.getElementById('current-biome').textContent = biomeConfig.name;
+            document.getElementById('current-biome').style.background = getBiomeColor(currentBiome);
+
+            const size = CONFIG.CHUNK_SIZE;
+            const maxH = CONFIG.MAX_HEIGHT;
+
+            // máscara radial: 100% de altura en el centro, cae suavemente a un solo
+            // bloque hacia los bordes, para que el chunk se vea como una isla y no
+            // como un bloque cuadrado cortado de golpe.
+            function smoothstep(edge0, edge1, x) {
+                const t = Math.min(1, Math.max(0, (x - edge0) / (edge1 - edge0)));
+                return t * t * (3 - 2 * t);
+            }
+            const islandCx = (size - 1) / 2;
+            const islandCz = (size - 1) / 2;
+            const islandRadius = size / 2;
+            function islandMask(x, z) {
+                const dx = (x - islandCx) / islandRadius;
+                const dz = (z - islandCz) / islandRadius;
+                const dist = Math.sqrt(dx * dx + dz * dz);
+                return 1 - smoothstep(0.65, 1.0, dist);
+            }
+            // máscara aparte para la "panza" rocosa de abajo: cae de forma lineal
+            // con la distancia al centro (sin meseta), para que la isla termine
+            // en punta de cono justo debajo del centro en vez de en un plato plano.
+            function bellyMask(x, z) {
+                const dx = (x - islandCx) / islandRadius;
+                const dz = (z - islandCz) / islandRadius;
+                const dist = Math.min(1, Math.sqrt(dx * dx + dz * dz));
+                return 1 - dist;
+            }
+            // distancia radial normalizada (0 = centro, 1 = borde del chunk)
+            function radialDist(x, z) {
+                const dx = (x - islandCx) / islandRadius;
+                const dz = (z - islandCz) / islandRadius;
+                return Math.min(1, Math.sqrt(dx * dx + dz * dz));
+            }
+            // La intensidad de "terrain-height" se reparte en dos partes:
+            // 3/4 sube el terreno (montañas visibles) y 1/4 baja (profundidad
+            // reservada para cuevas, mazmorras, minas y lagos subterráneos).
+            const surfaceMult = terrainHeightMultiplier * 0.75;
+            const undergroundMult = terrainHeightMultiplier * 0.25;
+
+            // Perfil de la base de la isla: NO es un bloque sólido hasta y=0.
+            // La roca cuelga más profunda en el centro y se va adelgazando hacia
+            // los bordes hasta converger en una punta invertida (peñasco flotante),
+            // como en una isla flotante clásica. La profundidad ahora escala con
+            // el 1/4 "hacia abajo" de la intensidad, dejando espacio para el subsuelo.
+            const islandMaxDepth = Math.min(30, Math.max(15, Math.round(120 * undergroundMult)));
+            // eleva toda la isla en el aire lo justo para que la punta del cono
+            // (islandMaxDepth bloques por debajo del centro) no choque contra
+            // y=0; se recalcula cada vez porque islandMaxDepth cambia con el slider
+            terrainBaseOffset = Math.max(0, islandMaxDepth - 6);
+            function islandBottom(x, z, topHeight) {
+                // Antes esto usaba radialDist^1.6 de forma independiente de la
+                // máscara de altura, lo que hacía que la profundidad completa
+                // solo existiera en un punto exacto del centro y cayera a 1-2
+                // bloques casi en cualquier otro lado. Ahora usa la MISMA
+                // máscara que moldea la altura, así que la mayor parte del
+                // cuerpo de la isla (no solo el centro exacto) conserva
+                // profundidad completa, y solo se afina cerca del borde real.
+                const mask = bellyMask(x, z);
+                const depthFactor = Math.pow(mask, 0.85);
+                const jag = simplex.noise3D(x * 0.15, z * 0.15, 42.0) * 0.8;
+                let bottom = topHeight - islandMaxDepth * depthFactor + jag;
+                bottom = Math.round(bottom);
+                return Math.max(0, Math.min(bottom, topHeight));
+            }
+            // margen sin árboles cerca del borde, para que ningún árbol quede con el follaje cortado
+            const treeMargin = biomeConfig.jungle ? 3 : 2;
+            const heights = [];
+
+            for (let x = 0; x < size; x++) {
+                chunk[x] = [];
+                for (let y = 0; y < maxH; y++) {
+                    chunk[x][y] = [];
+                    for (let z = 0; z < size; z++) chunk[x][y][z] = null;
+                }
+                heights[x] = [];
+            }
+
+            let peakHeight = 0;
+            for (let x = 0; x < size; x++) {
+                for (let z = 0; z < size; z++) {
+                    let height = Math.floor(
+                        (simplex.noise2D(x * 0.05, z * 0.05) + 1) * 0.5 * 
+                        10 * surfaceMult * biomeConfig.height + 3
+                    );
+                    height += Math.floor(simplex.noise2D(x * 0.1, z * 0.1) * 3);
+                    height = Math.round(height * (0.3 + 0.7 * islandMask(x, z)));
+                    height += terrainBaseOffset;
+                    height = Math.max(1, Math.min(height, maxH - 3));
+                    const bottom = islandBottom(x, z, height);
+                    heights[x][z] = height;
+                    if (height > peakHeight) peakHeight = height;
+
+                    for (let y = bottom; y <= height; y++) {
+                        let type;
+                        const relHeight = height - terrainBaseOffset; // altura "real" sin la elevación
+                        if (y === height) {
+                            if (biomeConfig.snow && relHeight > 15) type = 'snow';
+                            else if (currentBiome === 'desert') type = 'red_sand';
+                            else if (currentBiome === 'mesa') type = 'terracotta';
+                            else if (currentBiome === 'crystal') type = Math.random() < 0.3 ? 'crystal' : 'stone';
+                            else {
+                                type = 'grass';
+                                if (Math.random() < 0.05 && relHeight < 20 && !biomeConfig.snow) {
+                                    if (!chunk[x][y + 1]) chunk[x][y + 1] = [];
+                                    if (!chunk[x][y + 1][z]) {
+                                        const fc = CONFIG.COLORS.flower[Math.floor(Math.random() * CONFIG.COLORS.flower.length)];
+                                        chunk[x][y + 1][z] = { type: 'flower', colorHex: fc };
+                                    }
+                                }
+                            }
+                        } else if (y > height - 3) {
+                            type = (currentBiome === 'crystal' && Math.random() < 0.2) ? 'crystal' : 'dirt';
+                        } else {
+                            type = 'stone';
+                            if (isCaveVoid(x, y, z, bottom, height, undergroundMult)) continue;
+                        }
+                        
+                        chunk[x][y][z] = { type: type };
+                        blockCount++;
+                    }
+
+                    const nearEdge = x < treeMargin || x >= size - treeMargin || z < treeMargin || z >= size - treeMargin;
+
+                    if (!nearEdge && height > bottom + 2 && (height - terrainBaseOffset) < 25 && Math.random() < biomeConfig.trees) {
+                        if (biomeConfig.jungle) generateJungleTree(x, height + 1, z);
+                        else generateTree(x, height + 1, z, biomeConfig.snow);
+                    }
+
+                    if (!nearEdge && biomeConfig.cactus && Math.random() < biomeConfig.cactus && height > bottom) {
+                        generateCactus(x, height + 1, z);
+                    }
+                }
+            }
+
+            generateUndergroundFeatures(heights, size, undergroundMult, islandMaxDepth);
+            generateWaterfalls(heights, size);
+
+            createInstancedMeshes();
+            document.getElementById('block-count').textContent = blockCount;
+
+            terrainPeakHeight = peakHeight;
+
+            // La isla ahora puede elevarse (terrainBaseOffset) para darle aire
+            // al cono de abajo, y además el terreno puede crecer mucho hacia
+            // arriba con el slider de altura (surfaceMult crece más rápido que
+            // terrainBaseOffset). Por eso la mira de la cámara y los efectos
+            // ambientales fijos en Y se anclan a terrainPeakHeight (el punto
+            // más alto real de este chunk) y no solo a terrainBaseOffset, para
+            // que siempre queden por encima del terreno sin importar cuánto crezca.
+            if (controls) controls.target.y = terrainBaseOffset + 8;
+            if (godRaysMesh) godRaysMesh.position.y = terrainPeakHeight + 10;
+            if (auroraMesh) auroraMesh.position.y = terrainPeakHeight + 25;
+        }
+
+        // ==========================================
+        // SUBSUELO: cuevas, minas, mazmorras, lagos
+        // (usa el 1/4 de intensidad de "terrain-height" reservado hacia abajo)
+        // ==========================================
+
+        // Determina si una celda de roca debe quedar hueca (cueva). Combina
+        // una capa de ruido de baja frecuencia (cavernas amplias) con otra de
+        // alta frecuencia (detalle de túnel); mientras más intensidad "hacia
+        // abajo" tenga el terreno, más bajo el umbral y más grandes las cuevas.
+        function isCaveVoid(x, y, z, bottom, height, undergroundMult) {
+            const span = Math.max(1, height - bottom);
+            const depthFactor = (height - y) / span; // 0 arriba, 1 en el fondo
+            if (depthFactor < 0.15) return false; // deja una capa sólida bajo la superficie
+            const cavern = simplex.noise3D(x * 0.09, y * 0.09, z * 0.09);
+            const tunnel = simplex.noise3D(x * 0.22 + 50, y * 0.22 + 50, z * 0.22 + 50);
+            const threshold = 0.55 - undergroundMult * 0.18;
+            return (cavern * 0.7 + tunnel * 0.3) > threshold;
+        }
+
+        function generateUndergroundFeatures(heights, size, undergroundMult, islandMaxDepth) {
+            const margin = 2;
+            const lakeBandHeight = Math.max(2, Math.floor(islandMaxDepth * 0.35));
+
+            // --- Decoración de cuevas: hongos y cristales sobre piso de caverna ---
+            for (let x = margin; x < size - margin; x++) {
+                for (let z = margin; z < size - margin; z++) {
+                    const top = heights[x][z];
+                    for (let y = 2; y < top - 3; y++) {
+                        if (chunk[x][y][z]) continue; // no es aire
+                        const below = chunk[x][y - 1] && chunk[x][y - 1][z];
+                        if (!below || below.type === 'water') continue; // necesita piso sólido
+                        const above = chunk[x][y + 1] && chunk[x][y + 1][z];
+                        if (above) continue; // necesita espacio libre encima
+
+                        const r = Math.random();
+                        if (r < 0.012) {
+                            const c = CONFIG.COLORS.mushroom[Math.floor(Math.random() * CONFIG.COLORS.mushroom.length)];
+                            chunk[x][y][z] = { type: 'mushroom', colorHex: c };
+                            blockCount++;
+                        } else if (r < 0.018) {
+                            const c = CONFIG.COLORS.cave_crystal[Math.floor(Math.random() * CONFIG.COLORS.cave_crystal.length)];
+                            chunk[x][y][z] = { type: 'cave_crystal', colorHex: c };
+                            blockCount++;
+                        }
+                    }
+                }
+            }
+
+            // --- Lagos subterráneos: charcos en las cavernas más profundas ---
+            for (let x = margin; x < size - margin; x++) {
+                for (let z = margin; z < size - margin; z++) {
+                    const top = heights[x][z];
+                    const bottomLimit = Math.max(1, top - islandMaxDepth);
+                    for (let y = bottomLimit; y < bottomLimit + lakeBandHeight; y++) {
+                        if (y < 1 || y >= top - 3) continue;
+                        if (chunk[x][y][z]) continue;
+                        const below = chunk[x][y - 1] && chunk[x][y - 1][z];
+                        if (!below || below.type === 'water') continue;
+                        const lakeNoise = simplex.noise2D(x * 0.08 + 300, z * 0.08 + 300);
+                        if (lakeNoise > 0.25) {
+                            chunk[x][y][z] = { type: 'water' };
+                            blockCount++;
+                        }
+                    }
+                }
+            }
+
+            // --- Minas: túneles con vetas de mineral ---
+            const mineCount = 1 + Math.floor(undergroundMult * 2);
+            for (let m = 0; m < mineCount; m++) {
+                const sx = margin + Math.floor(Math.random() * (size - margin * 2));
+                const sz = margin + Math.floor(Math.random() * (size - margin * 2));
+                const top = heights[sx][sz];
+                if (top - terrainBaseOffset < 6) continue; // muy poco cuerpo rocoso en este punto
+                const sy = Math.max(2, top - islandMaxDepth + Math.floor(Math.random() * Math.max(1, islandMaxDepth - 3)));
+                if (sy >= top - 4) continue;
+                digMineTunnel(sx, sy, sz, size);
+            }
+
+            // --- Mazmorra: sala tallada con tesoro de cristales ---
+            if (size >= 8 && Math.random() < 0.6 + undergroundMult * 0.15) {
+                const dx = margin + 2 + Math.floor(Math.random() * Math.max(1, size - margin * 2 - 4));
+                const dz = margin + 2 + Math.floor(Math.random() * Math.max(1, size - margin * 2 - 4));
+                const top = heights[dx][dz];
+                const dy = Math.max(2, top - islandMaxDepth + 1);
+                if (dy < top - 5) {
+                    carveDungeonRoom(dx, dy, dz, size);
+                }
+            }
+        }
+
+        // Cava un túnel de mina de 2x2 con giros suaves y vetas de mineral
+        // incrustadas en sus paredes.
+        function digMineTunnel(x, y, z, size) {
+            const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+            let dir = Math.floor(Math.random() * 4);
+            const length = 6 + Math.floor(Math.random() * 6);
+            let cx = x, cz = z;
+
+            for (let i = 0; i < length; i++) {
+                if (Math.random() < 0.25) dir = Math.floor(Math.random() * 4);
+                const [mdx, mdz] = dirs[dir];
+                cx += mdx; cz += mdz;
+                if (cx < 1 || cx >= size - 1 || cz < 1 || cz >= size - 1) break;
+                if (y < 1 || y + 1 >= CONFIG.MAX_HEIGHT) break;
+
+                // túnel de 2 bloques de ancho, perpendicular al avance
+                const perp = mdx !== 0 ? [0, 1] : [1, 0];
+                for (let ty = y; ty <= y + 1; ty++) {
+                    for (let w = 0; w <= 1; w++) {
+                        const nx = cx + perp[0] * w;
+                        const nz = cz + perp[1] * w;
+                        if (nx < 0 || nx >= size || nz < 0 || nz >= size) continue;
+                        if (chunk[nx][ty][nz]) blockCount--;
+                        chunk[nx][ty][nz] = null;
+                    }
+                }
+                // veta de mineral en la pared del túnel
+                if (Math.random() < 0.18) {
+                    const wx = cx + perp[0] * 2;
+                    const wz = cz + perp[1] * 2;
+                    if (wx >= 0 && wx < size && wz >= 0 && wz < size && chunk[wx][y] && chunk[wx][y][wz]) {
+                        chunk[wx][y][wz] = { type: 'ore' };
+                    }
+                }
+            }
+        }
+
+        // Talla una pequeña sala de mazmorra con un racimo de cristales como tesoro
+        function carveDungeonRoom(x, y, z, size) {
+            const w = 4, d = 4, h = 3;
+            for (let ix = 0; ix < w; ix++) {
+                for (let iz = 0; iz < d; iz++) {
+                    for (let iy = 0; iy < h; iy++) {
+                        const nx = x + ix, nz = z + iz, ny = y + iy;
+                        if (nx < 0 || nx >= size || nz < 0 || nz >= size || ny < 0 || ny >= CONFIG.MAX_HEIGHT) continue;
+                        if (chunk[nx][ny][nz]) blockCount--;
+                        chunk[nx][ny][nz] = null;
+                    }
+                }
+            }
+            const cx = x + Math.floor(w / 2), cz = z + Math.floor(d / 2);
+            [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([ox, oz]) => {
+                const nx = cx + ox, nz = cz + oz;
+                if (nx < 0 || nx >= size || nz < 0 || nz >= size) return;
+                if (Math.random() < 0.7) {
+                    const c = CONFIG.COLORS.cave_crystal[Math.floor(Math.random() * CONFIG.COLORS.cave_crystal.length)];
+                    chunk[nx][y][nz] = { type: 'cave_crystal', colorHex: c };
+                    blockCount++;
+                }
+            });
+        }
+
+        // ==========================================
+        // CASCADAS (bosque, jungla, mesa)
+        // ==========================================
+        function generateWaterfalls(heights, size) {
+            if (!['forest', 'jungle', 'mesa'].includes(currentBiome)) return;
+
+            const margin = 3;
+            const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+            const candidates = [];
+
+            for (let x = margin; x < size - margin; x++) {
+                for (let z = margin; z < size - margin; z++) {
+                    const h = heights[x][z];
+                    if (h < 9) continue; // hace falta algo de altura para que se note la caída
+                    for (const [dx, dz] of dirs) {
+                        const nx = x + dx, nz = z + dz;
+                        if (nx < margin || nx >= size - margin || nz < margin || nz >= size - margin) continue;
+                        const nh = heights[nx][nz];
+                        const diff = h - nh;
+                        if (diff >= 4) candidates.push({ x, z, nx, nz, h, nh, diff });
+                    }
+                }
+            }
+            if (candidates.length === 0) return;
+
+            candidates.sort((a, b) => b.diff - a.diff);
+            const chosen = [];
+            const maxWaterfalls = Math.max(1, Math.min(3, Math.floor(size / 16)));
+            const minDist = 6;
+            for (const c of candidates) {
+                if (chosen.length >= maxWaterfalls) break;
+                const tooClose = chosen.some(o => Math.abs(o.x - c.x) < minDist && Math.abs(o.z - c.z) < minDist);
+                if (!tooClose) chosen.push(c);
+            }
+
+            chosen.forEach(c => buildWaterfall(c, size));
+        }
+
+        function buildWaterfall(c, size) {
+            const { x, z, nx, nz, h, nh } = c;
+
+            // pequeña laguna sobre el borde del acantilado (fuente de la cascada)
+            const spring = [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]];
+            spring.forEach(([dx, dz]) => {
+                const px = x + dx, pz = z + dz;
+                if (px < 0 || px >= size || pz < 0 || pz >= size) return;
+                if (Math.random() < 0.7 && chunk[px][h] && chunk[px][h][pz] && chunk[px][h][pz].type !== 'water') {
+                    chunk[px][h][pz] = { type: 'water' };
+                }
+            });
+
+            // caída: pared vertical de agua pegada al acantilado, desde el
+            // borde del terreno bajo hasta la altura del terreno alto
+            for (let y = nh + 1; y <= h; y++) {
+                if (y >= CONFIG.MAX_HEIGHT) break;
+                if (!chunk[nx][y]) chunk[nx][y] = [];
+                if (!chunk[nx][y][nz]) {
+                    chunk[nx][y][nz] = { type: 'water' };
+                    blockCount++;
+                }
+            }
+
+            // poza al pie de la cascada
+            const pool = [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]];
+            pool.forEach(([dx, dz]) => {
+                const px = nx + dx, pz = nz + dz;
+                if (px < 0 || px >= size || pz < 0 || pz >= size) return;
+                if (Math.random() < 0.75 && chunk[px][nh] && chunk[px][nh][pz] && chunk[px][nh][pz].type !== 'water') {
+                    chunk[px][nh][pz] = { type: 'water' };
+                }
+            });
+        }
+
+        function getBiomeColor(biome) {
+            const colors = {
+                plains: 'rgba(124, 179, 66, 0.3)', forest: 'rgba(67, 160, 71, 0.3)',
+                desert: 'rgba(255, 193, 7, 0.3)', snow: 'rgba(224, 224, 224, 0.3)',
+                jungle: 'rgba(27, 94, 32, 0.3)', crystal: 'rgba(224, 64, 251, 0.3)',
+                mesa: 'rgba(141, 110, 99, 0.3)'
+            };
+            return colors[biome] || 'rgba(255,255,255,0.1)';
+        }
+
+        function generateTree(x, y, z, isSnow = false) {
+            const height = 3 + Math.floor(Math.random() * 3);
+            for (let i = 0; i < height; i++) {
+                if (y + i < CONFIG.MAX_HEIGHT) {
+                    chunk[x][y + i][z] = { type: 'wood' };
+                    blockCount++;
+                }
+            }
+            const leafStart = y + height - 2;
+            const leafType = isSnow ? 'snow' : 'leaves';
+            const range = isSnow ? 1 : 2;
+            for (let lx = -range; lx <= range; lx++) {
+                for (let lz = -range; lz <= range; lz++) {
+                    for (let ly = 0; ly < (isSnow ? 2 : 3); ly++) {
+                        const dist = Math.abs(lx) + Math.abs(lz) + Math.abs(ly - 1);
+                        if (dist <= range && Math.random() > 0.2) {
+                            const nx = x + lx, ny = leafStart + ly, nz = z + lz;
+                            if (nx >= 0 && nx < CONFIG.CHUNK_SIZE && nz >= 0 && nz < CONFIG.CHUNK_SIZE && ny < CONFIG.MAX_HEIGHT) {
+                                if (!chunk[nx][ny]) chunk[nx][ny] = [];
+                                if (!chunk[nx][ny][nz]) {
+                                    chunk[nx][ny][nz] = { type: leafType };
+                                    blockCount++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function generateJungleTree(x, y, z) {
+            const height = 5 + Math.floor(Math.random() * 4);
+            for (let i = 0; i < height; i++) {
+                if (y + i < CONFIG.MAX_HEIGHT) {
+                    chunk[x][y + i][z] = { type: 'jungle_wood' };
+                    blockCount++;
+                }
+            }
+            const leafStart = y + height - 3;
+            for (let lx = -3; lx <= 3; lx++) {
+                for (let lz = -3; lz <= 3; lz++) {
+                    for (let ly = 0; ly < 4; ly++) {
+                        const dist = Math.abs(lx) + Math.abs(lz) + Math.abs(ly - 1.5);
+                        if (dist <= 3 && Math.random() > 0.15) {
+                            const nx = x + lx, ny = leafStart + ly, nz = z + lz;
+                            if (nx >= 0 && nx < CONFIG.CHUNK_SIZE && nz >= 0 && nz < CONFIG.CHUNK_SIZE && ny < CONFIG.MAX_HEIGHT) {
+                                if (!chunk[nx][ny]) chunk[nx][ny] = [];
+                                if (!chunk[nx][ny][nz]) {
+                                    chunk[nx][ny][nz] = { type: 'jungle_leaves' };
+                                    blockCount++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (Math.random() < 0.3) {
+                const vineX = x + (Math.random() < 0.5 ? -1 : 1);
+                const vineZ = z + (Math.random() < 0.5 ? -1 : 1);
+                for (let vy = leafStart; vy > y; vy--) {
+                    if (vineX >= 0 && vineX < CONFIG.CHUNK_SIZE && vineZ >= 0 && vineZ < CONFIG.CHUNK_SIZE) {
+                        if (!chunk[vineX][vy]) chunk[vineX][vy] = [];
+                        if (!chunk[vineX][vy][vineZ]) {
+                            chunk[vineX][vy][vineZ] = { type: 'vine' };
+                            blockCount++;
+                        }
+                    }
+                }
+            }
+        }
+
+        function generateCactus(x, y, z) {
+            const height = 2 + Math.floor(Math.random() * 3);
+            for (let i = 0; i < height; i++) {
+                if (y + i < CONFIG.MAX_HEIGHT) {
+                    chunk[x][y + i][z] = { type: 'cactus' };
+                    blockCount++;
+                }
+            }
+            if (height > 2 && Math.random() < 0.5) {
+                const armY = y + 1;
+                const armDir = Math.random() < 0.5 ? 1 : -1;
+                const armX = x + armDir;
+                if (armX >= 0 && armX < CONFIG.CHUNK_SIZE) {
+                    if (!chunk[armX][armY]) chunk[armX][armY] = [];
+                    if (!chunk[armX][armY][z]) {
+                        chunk[armX][armY][z] = { type: 'cactus' };
+                        blockCount++;
+                    }
+                }
+            }
+        }
+
+        // ==========================================
+        // SPRITES PIXEL-ART (flores, hongos, cristales de cueva)
+        // Se dibujan a mano en un canvas pequeño y se pintan sobre un
+        // "cross-plane" (dos planos cruzados en X), como los sprites
+        // vegetales clásicos de los voxel-builders.
+        // ==========================================
+        const SPRITE_TYPES = ['flower', 'mushroom', 'cave_crystal'];
+
+        const PIXEL_GRIDS = {
+            flower: [
+                '...PP...',
+                '..PCCP..',
+                '.PCCCCP.',
+                '..PCCP..',
+                '...PP...',
+                '....S...',
+                '...LSL..',
+                '....S...'
+            ],
+            mushroom: [
+                '..CCCC..',
+                '.CCCCCC.',
+                'CCwCCwCC',
+                'CCCCCCCC',
+                '..SSSS..',
+                '..SSSS..',
+                '..S..S..',
+                '........'
+            ],
+            cave_crystal: [
+                '...T....',
+                '..TTT...',
+                '.TTTTT..',
+                'TTTTTTT.',
+                '.TTTTT..',
+                '..TTT...',
+                '...T....',
+                '........'
+            ]
+        };
+
+        function shadeHex(hex, amount) {
+            const c = new THREE.Color(hex);
+            c.offsetHSL(0, 0, amount);
+            return '#' + c.getHexString();
+        }
+
+        function buildPixelTexture(grid, colorMap) {
+            const cellPx = 8;
+            const rows = grid.length, cols = grid[0].length;
+            const canvas = document.createElement('canvas');
+            canvas.width = cols * cellPx;
+            canvas.height = rows * cellPx;
+            const ctx = canvas.getContext('2d');
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    const ch = grid[r][c];
+                    if (ch === '.' || !colorMap[ch]) continue;
+                    ctx.fillStyle = colorMap[ch];
+                    ctx.fillRect(c * cellPx, r * cellPx, cellPx, cellPx);
+                }
+            }
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.magFilter = THREE.NearestFilter;
+            tex.minFilter = THREE.NearestFilter;
+            tex.needsUpdate = true;
+            return tex;
+        }
+
+        const pixelTextureCache = {};
+        function getPixelTexture(kind, colorHex) {
+            const key = kind + '_' + colorHex;
+            if (pixelTextureCache[key]) return pixelTextureCache[key];
+            const grid = PIXEL_GRIDS[kind];
+            const main = '#' + new THREE.Color(colorHex).getHexString();
+            let colorMap;
+            if (kind === 'flower') {
+                colorMap = { P: shadeHex(colorHex, -0.12), C: main, S: '#2e7d32', L: '#66bb6a' };
+            } else if (kind === 'mushroom') {
+                colorMap = { C: main, w: '#fff5e6', S: '#e8dcc8' };
+            } else {
+                colorMap = { T: main };
+            }
+            const tex = buildPixelTexture(grid, colorMap);
+            pixelTextureCache[key] = tex;
+            return tex;
+        }
+
+        let crossGeometryCache = null;
+        function getCrossGeometry() {
+            if (crossGeometryCache) return crossGeometryCache;
+            const geo = new THREE.BufferGeometry();
+            const h = 0.5;
+            const positions = new Float32Array([
+                -h, -h, 0,   h, -h, 0,   h, h, 0,   -h, h, 0,
+                0, -h, -h,   0, -h, h,   0, h, h,   0, h, -h
+            ]);
+            const uvs = new Float32Array([
+                0, 0, 1, 0, 1, 1, 0, 1,
+                0, 0, 1, 0, 1, 1, 0, 1
+            ]);
+            const indices = [0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7];
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+            geo.setIndex(indices);
+            geo.computeVertexNormals();
+            crossGeometryCache = geo;
+            return geo;
+        }
+
+        const spriteMaterialCache = {};
+        function getSpriteMaterial(kind, colorHex) {
+            const key = kind + '_' + colorHex;
+            if (spriteMaterialCache[key]) return spriteMaterialCache[key];
+            const texture = getPixelTexture(kind, colorHex);
+            const params = {
+                map: texture, transparent: true, alphaTest: 0.5,
+                side: THREE.DoubleSide, roughness: 0.7, metalness: 0
+            };
+            if (kind === 'mushroom') {
+                params.emissive = new THREE.Color(colorHex); params.emissiveIntensity = 0.35;
+                params.emissiveMap = texture;
+            } else if (kind === 'cave_crystal') {
+                params.emissive = new THREE.Color(colorHex); params.emissiveIntensity = 0.7;
+                params.emissiveMap = texture;
+            } else if (kind === 'flower') {
+                params.emissive = new THREE.Color(colorHex); params.emissiveIntensity = 0.12;
+                params.emissiveMap = texture;
+            }
+            const mat = new THREE.MeshStandardMaterial(params);
+            spriteMaterialCache[key] = mat;
+            return mat;
+        }
+
+        function createInstancedMeshes() {
+            const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+            const crossGeometry = getCrossGeometry();
+            const blocksByGroup = {};
+            const groupMeta = {};
+
+            for (let x = 0; x < CONFIG.CHUNK_SIZE; x++) {
+                for (let y = 0; y < CONFIG.MAX_HEIGHT; y++) {
+                    if (!chunk[x][y]) continue;
+                    for (let z = 0; z < CONFIG.CHUNK_SIZE; z++) {
+                        const block = chunk[x][y][z];
+                        if (!block) continue;
+                        const isSprite = SPRITE_TYPES.includes(block.type);
+                        const colorHex = block.colorHex !== undefined ? block.colorHex : CONFIG.COLORS[block.type][0];
+                        const groupKey = isSprite ? (block.type + '_' + colorHex) : block.type;
+                        if (!blocksByGroup[groupKey]) {
+                            blocksByGroup[groupKey] = [];
+                            groupMeta[groupKey] = { type: block.type, colorHex, isSprite };
+                        }
+                        blocksByGroup[groupKey].push({ x, y, z });
+                    }
+                }
+            }
+
+            Object.keys(blocksByGroup).forEach(groupKey => {
+                const blocks = blocksByGroup[groupKey];
+                const meta = groupMeta[groupKey];
+                const geometry = meta.isSprite ? crossGeometry : boxGeometry;
+                const material = meta.isSprite ? getSpriteMaterial(meta.type, meta.colorHex) : getMaterial(meta.type);
+                const mesh = new THREE.InstancedMesh(geometry, material, blocks.length);
+                mesh.castShadow = !meta.isSprite;
+                mesh.receiveShadow = true;
+                
+                const dummy = new THREE.Object3D();
+                blocks.forEach((block, i) => {
+                    dummy.position.set(block.x, block.y, block.z);
+                    dummy.rotation.y = meta.isSprite ? Math.random() * Math.PI * 0.5 : 0;
+                    dummy.updateMatrix();
+                    mesh.setMatrixAt(i, dummy.matrix);
+                    
+                    if (!meta.isSprite && ['grass', 'leaves', 'jungle_leaves', 'crystal', 'vine', 'ore'].includes(meta.type)) {
+                        const colors = CONFIG.COLORS[meta.type];
+                        const color = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
+                        color.r += (Math.random() - 0.5) * 0.05;
+                        color.g += (Math.random() - 0.5) * 0.05;
+                        color.b += (Math.random() - 0.5) * 0.05;
+                        mesh.setColorAt(i, color);
+                    }
+                });
+                
+                mesh.instanceMatrix.needsUpdate = true;
+                if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+                scene.add(mesh);
+                meshes[groupKey] = mesh;
+            });
+        }
+
+        function getMaterial(type) {
+            const colors = CONFIG.COLORS[type] || CONFIG.COLORS.stone;
+            const baseColor = colors[0];
+            const params = { color: baseColor, roughness: 0.8, metalness: 0.1 };
+
+            if (type === 'water') {
+                params.transparent = true; params.opacity = 0.7;
+                params.roughness = 0.1; params.metalness = 0.1;
+            } else if (type === 'ice') {
+                params.transparent = true; params.opacity = 0.85;
+                params.roughness = 0.2; params.metalness = 0.1;
+            } else if (type === 'crystal') {
+                params.transparent = true; params.opacity = 0.9;
+                params.roughness = 0.1; params.metalness = 0.3;
+                params.emissive = baseColor; params.emissiveIntensity = 0.3;
+            } else if (type === 'vine') {
+                params.transparent = true; params.opacity = 0.9;
+            } else if (type === 'ore') {
+                params.metalness = 0.6; params.roughness = 0.3;
+                params.emissive = baseColor; params.emissiveIntensity = 0.15;
+            }
+
+            return new THREE.MeshStandardMaterial(params);
+        }
+
+        // ==========================================
+        // AGUA CON SHADER
+        // ==========================================
+        function createWater() {
+            // Isla flotante: no se dibuja ningún plano de mar/océano alrededor,
+            // solo quedan los charcos y lagunas naturales que ya genera el
+            // Terreno flotante: no se genera agua en ningún lado, solo roca,
+            // tierra y vegetación (estilo montañas flotantes de Pandora).
+            if (waterMesh) scene.remove(waterMesh);
+            waterMesh = null;
+        }
+
+        // ==========================================
+        // NUBES, PARTÍCULAS, LLUVIA, ESTRELLAS
+        // ==========================================
+        function createClouds() {
+            if (cloudMesh) scene.remove(cloudMesh);
+            const cloudGeometry = new THREE.BoxGeometry(1, 1, 1);
+            const cloudMaterial = new THREE.MeshStandardMaterial({
+                color: 0xffffff, transparent: true, opacity: 0.85, roughness: 1
+            });
+            const cloudCount = 20, blocksPerCloud = 10, totalBlocks = cloudCount * blocksPerCloud;
+            cloudMesh = new THREE.InstancedMesh(cloudGeometry, cloudMaterial, totalBlocks);
+            cloudMesh.castShadow = true;
+            const dummy = new THREE.Object3D();
+            let index = 0;
+            for (let i = 0; i < cloudCount; i++) {
+                const cx = Math.random() * CONFIG.CHUNK_SIZE * 1.5 - CONFIG.CHUNK_SIZE * 0.25;
+                const cz = Math.random() * CONFIG.CHUNK_SIZE * 1.5 - CONFIG.CHUNK_SIZE * 0.25;
+                // antes esto era un valor fijo (28 + variación) que no subía cuando el
+                // chunk crecía en altura; ahora se ancla a terrainPeakHeight para que
+                // las nubes siempre floten por encima del punto más alto del terreno.
+                const cy = terrainPeakHeight + 8 + Math.random() * 8;
+                for (let j = 0; j < blocksPerCloud; j++) {
+                    const ox = Math.floor(Math.random() * 4) - 2;
+                    const oz = Math.floor(Math.random() * 4) - 2;
+                    const oy = Math.floor(Math.random() * 2);
+                    dummy.position.set(cx + ox, cy + oy, cz + oz);
+                    dummy.scale.set(1 + Math.random(), 0.5 + Math.random() * 0.5, 1 + Math.random());
+                    dummy.updateMatrix();
+                    cloudMesh.setMatrixAt(index++, dummy.matrix);
+                }
+            }
+            cloudMesh.instanceMatrix.needsUpdate = true;
+            cloudMesh.visible = showRain ? false : showClouds;
+            scene.add(cloudMesh);
+        }
+
+        // Capa densa de niebla/nubarrones en lo alto, que reemplaza a las
+        // nubes sueltas cuando llueve, simulando un cielo cubierto y bajo.
+        function createOvercastMist() {
+            if (overcastMesh) scene.remove(overcastMesh);
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+            const material = new THREE.MeshStandardMaterial({
+                color: 0x8b96a3, transparent: true, opacity: 0.12, roughness: 1
+            });
+            const cols = 10, rows = 10;
+            const count = cols * rows;
+            overcastMesh = new THREE.InstancedMesh(geometry, material, count);
+            overcastMesh.castShadow = false;
+            const dummy = new THREE.Object3D();
+            const spread = CONFIG.CHUNK_SIZE * 1.8;
+            let index = 0;
+            for (let i = 0; i < cols; i++) {
+                for (let j = 0; j < rows; j++) {
+                    const px = (i / (cols - 1)) * spread - spread * 0.3 + (Math.random() - 0.5) * 3;
+                    const pz = (j / (rows - 1)) * spread - spread * 0.3 + (Math.random() - 0.5) * 3;
+                    const py = 26 + Math.random() * 8;
+                    dummy.position.set(px, py, pz);
+                    dummy.scale.set(4 + Math.random() * 2.5, 1.3 + Math.random(), 4 + Math.random() * 2.5);
+                    dummy.updateMatrix();
+                    overcastMesh.setMatrixAt(index++, dummy.matrix);
+                }
+            }
+            overcastMesh.instanceMatrix.needsUpdate = true;
+            overcastMesh.visible = showRain;
+            scene.add(overcastMesh);
+        }
+
+        // Ajusta la densidad de la niebla ambiental según el clima
+        function updateFogForWeather() {
+            if (!scene.fog) return;
+            if (showRain) {
+                scene.fog.near = 18;
+                scene.fog.far = 92;
+            } else {
+                scene.fog.near = 20;
+                scene.fog.far = 100;
+            }
+        }
+
+        function createParticles() {
+            if (particleSystem) scene.remove(particleSystem);
+            const count = Math.floor(300 * particleDensity);
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+            
+            for (let i = 0; i < count; i++) {
+                positions[i * 3] = Math.random() * CONFIG.CHUNK_SIZE;
+                positions[i * 3 + 1] = terrainBaseOffset + Math.random() * 20 + 5;
+                positions[i * 3 + 2] = Math.random() * CONFIG.CHUNK_SIZE;
+                const hue = Math.random() * 0.15 + 0.05;
+                const color = new THREE.Color().setHSL(hue, 0.8, 0.8);
+                colors[i * 3] = color.r;
+                colors[i * 3 + 1] = color.g;
+                colors[i * 3 + 2] = color.b;
+            }
+            
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            
+            const material = new THREE.PointsMaterial({
+                size: 0.2, vertexColors: true, transparent: true,
+                opacity: 0.8, blending: THREE.AdditiveBlending
+            });
+            
+            particleSystem = new THREE.Points(geometry, material);
+            scene.add(particleSystem);
+        }
+
+        function createRain() {
+            if (rainSystem) scene.remove(rainSystem);
+            const rainCount = 2000;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(rainCount * 3);
+            for (let i = 0; i < rainCount; i++) {
+                positions[i * 3] = Math.random() * CONFIG.CHUNK_SIZE * 1.5;
+                positions[i * 3 + 1] = terrainBaseOffset + Math.random() * 40 + 10;
+                positions[i * 3 + 2] = Math.random() * CONFIG.CHUNK_SIZE * 1.5;
+            }
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const material = new THREE.PointsMaterial({
+                color: 0x88ccff, size: 0.1, transparent: true,
+                opacity: 0.6, blending: THREE.AdditiveBlending
+            });
+            rainSystem = new THREE.Points(geometry, material);
+            rainSystem.visible = false;
+            scene.add(rainSystem);
+        }
+
+        function createStars() {
+            if (starSystem) scene.remove(starSystem);
+            const starCount = 2000;
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(starCount * 3);
+            const sizes = new Float32Array(starCount);
+            
+            for (let i = 0; i < starCount; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.random() * Math.PI;
+                const r = 80 + Math.random() * 20;
+                positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+                positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+                positions[i * 3 + 2] = r * Math.cos(phi);
+                sizes[i] = Math.random() * 2 + 0.5;
+            }
+            
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            
+            const material = new THREE.PointsMaterial({
+                color: 0xffffff, size: 0.5, transparent: true,
+                opacity: starsIntensity, blending: THREE.AdditiveBlending,
+                fog: false, depthWrite: false
+            });
+            
+            starSystem = new THREE.Points(geometry, material);
+            scene.add(starSystem);
+        }
+
+
+        // ==========================================
+        // MÁQUINA DE PADS CON ACORDES (banco de progresiones)
+        // ==========================================
+        const PAD_PRESETS = [
+  {
+    "id": "estudio-claridad",
+    "name": "Estudio · Claridad",
+    "cat": "Estudio",
+    "desc": "Progresión mayor ascendente (I-ii-iii-IV) con timbre brillante y poca reverb, para mantener la mente despierta mientras estudiás.",
+    "chords": [
+      ["C3","E3","G3","B3","D4"],
+      ["D3","F3","A3","C4"],
+      ["E3","G3","B3","D4"],
+      ["F3","A3","C4","E4"]
+    ],
+    "settings": { "wave":"triangle", "detune":7, "subGain":0.06, "attack":2.2, "release":2.8, "chordDuration":8,
+      "filterFreq":1900, "filterQ":0.6, "lfoRate":0.05, "lfoDepth":180,
+      "delayTime":0.28, "delayFb":0.14, "delayMix":0.22, "reverbMix":0.22 }
+  },
+  {
+    "id": "estudio-enfoque",
+    "name": "Estudio · Enfoque",
+    "cat": "Estudio",
+    "desc": "Bucle vi-IV-I-V en la menor, estable y predecible, pensado para sesiones largas de concentración sin distraer.",
+    "chords": [
+      ["A2","C3","E3","G3"],
+      ["F2","A2","C3","E3"],
+      ["C3","E3","G3","B3"],
+      ["G2","B2","D3","E3"]
+    ],
+    "settings": { "wave":"triangle", "detune":6, "subGain":0.07, "attack":2.8, "release":3.2, "chordDuration":9,
+      "filterFreq":1500, "filterQ":0.6, "lfoRate":0.045, "lfoDepth":150,
+      "delayTime":0.3, "delayFb":0.15, "delayMix":0.2, "reverbMix":0.2 }
+  },
+  {
+    "id": "meditacion-respiracion",
+    "name": "Meditación · Respiración",
+    "cat": "Meditación",
+    "desc": "Solo dos acordes que se alternan muy despacio, marcando un ritmo natural de inhalar y exhalar.",
+    "chords": [
+      ["D3","E3","A3","D4"],
+      ["D3","F3","A3","D4"]
+    ],
+    "settings": { "wave":"sine", "detune":5, "subGain":0.08, "attack":4.5, "release":5, "chordDuration":10,
+      "filterFreq":850, "filterQ":0.5, "lfoRate":0.025, "lfoDepth":100,
+      "delayTime":0.5, "delayFb":0.22, "delayMix":0.3, "reverbMix":0.5 }
+  },
+  {
+    "id": "meditacion-cuenco",
+    "name": "Meditación · Cuenco abierto",
+    "cat": "Meditación",
+    "desc": "Quintas abiertas tipo cuenco tibetano que se desplazan muy lentamente, casi como un dron con variación mínima.",
+    "chords": [
+      ["C2","G2","C3","G3"],
+      ["G2","D3","G3","D4"],
+      ["A2","E3","A3","E4"]
+    ],
+    "settings": { "wave":"sine", "detune":4, "subGain":0.08, "attack":6, "release":6, "chordDuration":16,
+      "filterFreq":780, "filterQ":0.4, "lfoRate":0.02, "lfoDepth":80,
+      "delayTime":0.6, "delayFb":0.25, "delayMix":0.3, "reverbMix":0.6 }
+  },
+  {
+    "id": "sueno-nocturno",
+    "name": "Sueño · Nocturno",
+    "cat": "Sueño",
+    "desc": "Progresión vi-IV-I-Vsus en la menor, cálida y espaciosa, con harta reverb para relajarse antes de dormir.",
+    "chords": [
+      ["A2","C3","E3","G3"],
+      ["F2","A2","C3","E3"],
+      ["C3","E3","G3","B3"],
+      ["G2","C3","D3","F3"]
+    ],
+    "settings": { "wave":"triangle", "detune":9, "subGain":0.08, "attack":3.5, "release":4.5, "chordDuration":11,
+      "filterFreq":1050, "filterQ":0.6, "lfoRate":0.04, "lfoDepth":220,
+      "delayTime":0.5, "delayFb":0.3, "delayMix":0.32, "reverbMix":0.45 }
+  },
+  {
+    "id": "sueno-entre-nubes",
+    "name": "Sueño · Entre nubes",
+    "cat": "Sueño",
+    "desc": "Acordes mayores con mezcla modal (préstamo de la menor), un color más soñador y ambiguo.",
+    "chords": [
+      ["F2","A2","C3","E3"],
+      ["Eb2","G2","Bb2","D3"],
+      ["Bb2","D3","F3","A3"],
+      ["C3","Eb3","G3","Bb3"]
+    ],
+    "settings": { "wave":"triangle", "detune":10, "subGain":0.09, "attack":3.8, "release":4.5, "chordDuration":10,
+      "filterFreq":1000, "filterQ":0.6, "lfoRate":0.04, "lfoDepth":230,
+      "delayTime":0.55, "delayFb":0.28, "delayMix":0.32, "reverbMix":0.5 }
+  },
+  {
+    "id": "relax-bosque",
+    "name": "Relajación · Bosque en calma",
+    "cat": "Relajación",
+    "desc": "Progresión I-vi-IV-V en sol mayor, suave y natural, como una tarde tranquila al aire libre.",
+    "chords": [
+      ["G2","B2","D3","F#3"],
+      ["E2","G2","B2","D3"],
+      ["C3","E3","G3","B3"],
+      ["D3","F#3","A3","B3"]
+    ],
+    "settings": { "wave":"triangle", "detune":7, "subGain":0.08, "attack":3, "release":3.5, "chordDuration":8,
+      "filterFreq":1300, "filterQ":0.6, "lfoRate":0.05, "lfoDepth":190,
+      "delayTime":0.4, "delayFb":0.2, "delayMix":0.25, "reverbMix":0.35 }
+  },
+  {
+    "id": "relax-mar",
+    "name": "Relajación · Mar en calma",
+    "cat": "Relajación",
+    "desc": "Progresión pop-ambient en re mayor, con un leve balanceo como el oleaje suave.",
+    "chords": [
+      ["B2","D3","F#3","A3"],
+      ["G2","B2","D3","F#3"],
+      ["D3","F#3","A3","D4"],
+      ["A2","C#3","E3","B3"]
+    ],
+    "settings": { "wave":"triangle", "detune":8, "subGain":0.08, "attack":3, "release":3.6, "chordDuration":9,
+      "filterFreq":1400, "filterQ":0.6, "lfoRate":0.06, "lfoDepth":210,
+      "delayTime":0.42, "delayFb":0.22, "delayMix":0.28, "reverbMix":0.35 }
+  },
+  {
+    "id": "relax-niebla",
+    "name": "Relajación · Niebla suave",
+    "cat": "Relajación",
+    "desc": "Progresión en fa menor, oscura y aterciopelada, ideal para bajar revoluciones al final del día.",
+    "chords": [
+      ["F2","Ab2","C3","Eb3"],
+      ["Db2","F2","Ab2","C3"],
+      ["Ab2","C3","Eb3","G3"],
+      ["Eb3","F3","Bb3","Eb4"]
+    ],
+    "settings": { "wave":"sine", "detune":6, "subGain":0.08, "attack":4, "release":4.5, "chordDuration":10,
+      "filterFreq":1050, "filterQ":0.5, "lfoRate":0.035, "lfoDepth":170,
+      "delayTime":0.5, "delayFb":0.26, "delayMix":0.3, "reverbMix":0.5 }
+  }
+];
+
+        // ==========================================
+        // MÁQUINA DE PADS CON ACORDES (motor nuevo, simple y musical)
+        // Reproduce progresiones de acordes reales en bucle, con voces tipo pad
+        // (osciladores detune + sub-octava), filtro con movimiento lento, delay y reverb.
+        // Sin knobs: solo play(id) / stop() / setVolume(v).
+        // ==========================================
+        const NOTE_TO_SEMITONE = {
+            C: 0, 'C#': 1, Db: 1, D: 2, 'D#': 3, Eb: 3, E: 4, F: 5,
+            'F#': 6, Gb: 6, G: 7, 'G#': 8, Ab: 8, A: 9, 'A#': 10, Bb: 10, B: 11
+        };
+
+        function noteToFreq(name) {
+            const m = /^([A-G])(#|b)?(-?\d+)$/.exec(name);
+            if (!m) return 220;
+            const key = m[1] + (m[2] || '');
+            const semitone = NOTE_TO_SEMITONE[key];
+            const octave = parseInt(m[3], 10);
+            const midi = (octave + 1) * 12 + semitone;
+            return 440 * Math.pow(2, (midi - 69) / 12);
+        }
+
+        // transpone una nota tipo "C4" un número de octavas (puede ser negativo)
+        function transposeOctave(name, deltaOct) {
+            const m = /^([A-G])(#|b)?(-?\d+)$/.exec(name);
+            if (!m) return name;
+            return m[1] + (m[2] || '') + (parseInt(m[3], 10) + deltaOct);
+        }
+
+        // ==========================================
+        // INSTRUMENTOS: 5 timbres que comparten pads y arpegios. Cada uno
+        // define las formas de onda de sus osciladores y, opcionalmente,
+        // un armónico extra (quinta u octava) para darle carácter propio.
+        // ==========================================
+        const INSTRUMENTS = [
+            { id: 'soft',  name: '🌫️ Suave',    waves: ['triangle', 'triangle'], subWave: 'sine' },
+            { id: 'glass', name: '💎 Cristal',  waves: ['sine', 'sine'], subWave: 'sine', overtone: 0.05 },
+            { id: 'warm',  name: '🔥 Cálido',   waves: ['sawtooth', 'sawtooth'], subWave: 'sine', gainScale: 0.7 },
+            { id: 'airy',  name: '🌬️ Etéreo',  waves: ['square', 'square'], subWave: 'sine', gainScale: 0.55 },
+            { id: 'organ', name: '🎹 Órgano',   waves: ['sine', 'triangle'], subWave: 'sine', fifth: 0.045 }
+        ];
+        function getInstrument(id) {
+            return INSTRUMENTS.find(i => i.id === id) || INSTRUMENTS[0];
+        }
+        // mapea el "wave" original de cada preset JSON a un instrumento, para
+        // que el timbre por defecto de cada preset no cambie si el usuario no
+        // toca la selección de instrumentos.
+        const WAVE_TO_INSTRUMENT = { triangle: 'soft', sine: 'glass', sawtooth: 'warm', square: 'airy' };
+
+        const PadEngine = (function () {
+            let ctx = null;
+            let masterGain, filter, lfo, lfoGain;
+            let delayNode, delayFeedback, delayWet, convolver, reverbWet, dryGain;
+            let running = false;
+            let currentPreset = null;
+            let chordIndex = 0;
+            let chordTimer = null;
+            let activeVoiceGroups = [];
+            let volumeLevel = 0.5;
+
+            // --- selección de instrumentos de los pads (varios a la vez) ---
+            // Si el usuario no ha tocado nada, cada preset usa el timbre que
+            // traía en su JSON (vía WAVE_TO_INSTRUMENT). En cuanto el usuario
+            // marca uno o más instrumentos, esa selección manda para todos
+            // los presets, repartiendo las voces del acorde entre ellos para
+            // que las progresiones no suenen todas exactamente igual.
+            let selectedPadInstruments = ['soft'];
+            let padInstrumentsUserSet = false;
+
+            // --- capa de arpegio ---
+            let arpEnabled = false;
+            let arpInstruments = ['glass'];
+            let arpVolume = 0.35;
+            let arpGainNode = null;
+            let arpTimer = null;
+            let arpStepIndex = 0;
+            let arpSchedulerActive = false;
+
+            function smoothSet(param, value, tc) {
+                if (!ctx || value === undefined) return;
+                const t = ctx.currentTime;
+                param.cancelScheduledValues(t);
+                param.setTargetAtTime(value, t, tc || 0.3);
+            }
+
+            function makeImpulseResponse(duration, decay) {
+                const rate = ctx.sampleRate;
+                const length = Math.floor(rate * duration);
+                const impulse = ctx.createBuffer(2, length, rate);
+                for (let ch = 0; ch < 2; ch++) {
+                    const data = impulse.getChannelData(ch);
+                    for (let i = 0; i < length; i++) {
+                        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, decay);
+                    }
+                }
+                return impulse;
+            }
+
+            function ensureGraph(sharedCtx) {
+                if (ctx) return;
+                ctx = sharedCtx || new (window.AudioContext || window.webkitAudioContext)();
+
+                masterGain = ctx.createGain();
+                masterGain.gain.value = 0;
+
+                filter = ctx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 1200;
+                filter.Q.value = 0.7;
+
+                lfo = ctx.createOscillator();
+                lfo.type = 'sine';
+                lfo.frequency.value = 0.06;
+                lfoGain = ctx.createGain();
+                lfoGain.gain.value = 150;
+                lfo.connect(lfoGain);
+                lfoGain.connect(filter.frequency);
+                lfo.start();
+
+                delayNode = ctx.createDelay(2.0);
+                delayNode.delayTime.value = 0.4;
+                delayFeedback = ctx.createGain();
+                delayFeedback.gain.value = 0.2;
+                delayWet = ctx.createGain();
+                delayWet.gain.value = 0.3;
+                delayNode.connect(delayFeedback);
+                delayFeedback.connect(delayNode);
+                delayNode.connect(delayWet);
+
+                convolver = ctx.createConvolver();
+                convolver.buffer = makeImpulseResponse(4, 3);
+                reverbWet = ctx.createGain();
+                reverbWet.gain.value = 0.35;
+
+                dryGain = ctx.createGain();
+                dryGain.gain.value = 0.7;
+
+                filter.connect(dryGain);
+                filter.connect(delayNode);
+                filter.connect(convolver);
+
+                dryGain.connect(masterGain);
+                delayWet.connect(masterGain);
+                convolver.connect(reverbWet);
+                reverbWet.connect(masterGain);
+
+                masterGain.connect(ctx.destination);
+
+                // el arpegio entra por el mismo filtro/delay/reverb que los
+                // pads para que suene como parte del mismo paisaje sonoro,
+                // con su propio control de volumen.
+                arpGainNode = ctx.createGain();
+                arpGainNode.gain.value = arpVolume;
+                arpGainNode.connect(filter);
+            }
+
+            // una "voz" = 2 osciladores levemente destemplados + una sub-octava
+            // (más un armónico extra según el instrumento elegido), así cada
+            // nota del acorde suena con cuerpo, sin ser un simple tono puro.
+            function buildVoice(freq, s, instrumentId) {
+                const inst = getInstrument(instrumentId);
+                const gainScale = inst.gainScale !== undefined ? inst.gainScale : 1;
+                const group = { oscs: [], gains: [], targets: [] };
+                const spreadCents = s.detune || 8;
+                [-1, 1].forEach((dir, idx) => {
+                    const osc = ctx.createOscillator();
+                    osc.type = inst.waves[idx] || inst.waves[0] || s.wave || 'triangle';
+                    osc.frequency.value = freq;
+                    osc.detune.value = dir * spreadCents;
+                    const g = ctx.createGain();
+                    g.gain.value = 0;
+                    osc.connect(g);
+                    g.connect(filter);
+                    osc.start();
+                    group.oscs.push(osc);
+                    group.gains.push(g);
+                    group.targets.push(0.13 * gainScale);
+                });
+                const sub = ctx.createOscillator();
+                sub.type = inst.subWave || 'sine';
+                sub.frequency.value = freq / 2;
+                const subGain = ctx.createGain();
+                subGain.gain.value = 0;
+                sub.connect(subGain);
+                subGain.connect(filter);
+                sub.start();
+                group.oscs.push(sub);
+                group.gains.push(subGain);
+                group.targets.push((s.subGain !== undefined ? s.subGain : 0.08) * gainScale);
+
+                // armónico extra opcional del instrumento: da a "Cristal" un
+                // brillo de octava y a "Órgano" un cuerpo de quinta.
+                if (inst.overtone) {
+                    const ov = ctx.createOscillator();
+                    ov.type = 'sine';
+                    ov.frequency.value = freq * 2;
+                    const ovGain = ctx.createGain();
+                    ovGain.gain.value = 0;
+                    ov.connect(ovGain);
+                    ovGain.connect(filter);
+                    ov.start();
+                    group.oscs.push(ov);
+                    group.gains.push(ovGain);
+                    group.targets.push(inst.overtone);
+                }
+                if (inst.fifth) {
+                    const fi = ctx.createOscillator();
+                    fi.type = 'sine';
+                    fi.frequency.value = freq * 1.5;
+                    const fiGain = ctx.createGain();
+                    fiGain.gain.value = 0;
+                    fi.connect(fiGain);
+                    fiGain.connect(filter);
+                    fi.start();
+                    group.oscs.push(fi);
+                    group.gains.push(fiGain);
+                    group.targets.push(inst.fifth);
+                }
+                return group;
+            }
+
+            function fadeInGroup(group, s) {
+                const t = ctx.currentTime;
+                group.gains.forEach((g, i) => {
+                    g.gain.cancelScheduledValues(t);
+                    g.gain.setValueAtTime(0, t);
+                    g.gain.linearRampToValueAtTime(group.targets[i] !== undefined ? group.targets[i] : 0.1, t + (s.attack || 3));
+                });
+            }
+
+            function fadeOutGroup(group, releaseSec) {
+                const t = ctx.currentTime;
+                group.gains.forEach(g => {
+                    g.gain.cancelScheduledValues(t);
+                    g.gain.setValueAtTime(g.gain.value, t);
+                    g.gain.linearRampToValueAtTime(0, t + releaseSec);
+                });
+                group.oscs.forEach(o => { try { o.stop(t + releaseSec + 0.2); } catch (e) {} });
+            }
+
+            function playChord(idx) {
+                const s = currentPreset.settings;
+                const chord = currentPreset.chords[idx % currentPreset.chords.length];
+                const oldGroups = activeVoiceGroups;
+                oldGroups.forEach(g => fadeOutGroup(g, s.release || 3.5));
+                activeVoiceGroups = [];
+                const pool = selectedPadInstruments.length ? selectedPadInstruments : ['soft'];
+                chord.forEach(noteName => {
+                    const f = noteToFreq(noteName);
+                    // cada nota del acorde puede tomar un instrumento distinto
+                    // del pool elegido, así con varios instrumentos activos
+                    // ninguna progresión suena exactamente igual a la anterior.
+                    const instId = pool[Math.floor(Math.random() * pool.length)];
+                    const group = buildVoice(f, s, instId);
+                    fadeInGroup(group, s);
+                    activeVoiceGroups.push(group);
+                });
+            }
+
+            // --- arpegio: recorre el acorde actual (más una octava arriba)
+            // en un patrón de ida y vuelta, independiente del tempo de los
+            // acordes, con su propio instrumento (o varios, elegidos al azar
+            // nota a nota igual que en los pads).
+            function buildArpPattern(chord) {
+                const up = chord.slice();
+                const upOct = chord.map(n => transposeOctave(n, 1));
+                return up.concat(upOct).concat(upOct.slice().reverse()).concat(up.slice().reverse());
+            }
+
+            function playArpNote(noteName) {
+                if (!ctx || !arpGainNode) return;
+                const pool = arpInstruments.length ? arpInstruments : ['glass'];
+                const instId = pool[Math.floor(Math.random() * pool.length)];
+                const inst = getInstrument(instId);
+                const freq = noteToFreq(noteName);
+                const t = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                osc.type = inst.waves[0] || 'sine';
+                osc.frequency.value = freq;
+                const g = ctx.createGain();
+                g.gain.value = 0;
+                osc.connect(g);
+                g.connect(arpGainNode);
+                osc.start(t);
+                g.gain.setValueAtTime(0, t);
+                g.gain.linearRampToValueAtTime(0.22 * (inst.gainScale !== undefined ? inst.gainScale : 1), t + 0.02);
+                g.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
+                osc.stop(t + 0.55);
+            }
+
+            function scheduleArpStep() {
+                const stepSec = 0.28;
+                arpTimer = setTimeout(() => {
+                    if (arpEnabled && running && currentPreset) {
+                        const chord = currentPreset.chords[chordIndex % currentPreset.chords.length];
+                        const pattern = buildArpPattern(chord);
+                        playArpNote(pattern[arpStepIndex % pattern.length]);
+                        arpStepIndex++;
+                    }
+                    scheduleArpStep();
+                }, stepSec * 1000);
+            }
+
+            function startArpScheduler() {
+                if (arpSchedulerActive) return;
+                arpSchedulerActive = true;
+                arpStepIndex = 0;
+                scheduleArpStep();
+            }
+
+            function stopArpScheduler() {
+                arpSchedulerActive = false;
+                if (arpTimer) { clearTimeout(arpTimer); arpTimer = null; }
+            }
+
+            function scheduleNext() {
+                const s = currentPreset.settings;
+                chordTimer = setTimeout(() => {
+                    chordIndex++;
+                    playChord(chordIndex);
+                    scheduleNext();
+                }, (s.chordDuration || 8) * 1000);
+            }
+
+            function applyPreset(preset, sharedCtx) {
+                ensureGraph(sharedCtx);
+                ctx.resume();
+                currentPreset = preset;
+                const s = preset.settings;
+
+                smoothSet(filter.frequency, s.filterFreq || 1200, 0.5);
+                smoothSet(filter.Q, s.filterQ || 0.7, 0.4);
+                if (lfo) smoothSet(lfo.frequency, s.lfoRate || 0.06, 0.4);
+                smoothSet(lfoGain.gain, s.lfoDepth || 150, 0.4);
+                smoothSet(delayNode.delayTime, s.delayTime || 0.4, 0.4);
+                smoothSet(delayFeedback.gain, s.delayFb !== undefined ? s.delayFb : 0.2, 0.4);
+                smoothSet(delayWet.gain, s.delayMix !== undefined ? s.delayMix : 0.3, 0.4);
+                smoothSet(reverbWet.gain, s.reverbMix !== undefined ? s.reverbMix : 0.35, 0.5);
+                smoothSet(dryGain.gain, 0.7, 0.4);
+
+                if (!padInstrumentsUserSet) {
+                    selectedPadInstruments = [WAVE_TO_INSTRUMENT[s.wave] || 'soft'];
+                }
+
+                if (chordTimer) { clearTimeout(chordTimer); chordTimer = null; }
+                chordIndex = 0;
+                playChord(0);
+                scheduleNext();
+
+                if (arpEnabled) startArpScheduler();
+
+                if (!running) {
+                    const t = ctx.currentTime;
+                    masterGain.gain.cancelScheduledValues(t);
+                    masterGain.gain.setValueAtTime(masterGain.gain.value, t);
+                    masterGain.gain.linearRampToValueAtTime(volumeLevel, t + (s.attack || 3));
+                    running = true;
+                }
+            }
+
+            function play(presetId, sharedCtx) {
+                const p = PAD_PRESETS.find(x => x.id === presetId);
+                if (!p) return false;
+                applyPreset(p, sharedCtx);
+                return true;
+            }
+
+            function stop() {
+                if (!ctx) return;
+                const t = ctx.currentTime;
+                masterGain.gain.cancelScheduledValues(t);
+                masterGain.gain.setValueAtTime(masterGain.gain.value, t);
+                masterGain.gain.linearRampToValueAtTime(0, t + 2.5);
+                running = false;
+                if (chordTimer) { clearTimeout(chordTimer); chordTimer = null; }
+                activeVoiceGroups.forEach(g => fadeOutGroup(g, 2.5));
+                activeVoiceGroups = [];
+                stopArpScheduler();
+            }
+
+            function setVolume(v) {
+                volumeLevel = v;
+                if (ctx && masterGain && running) smoothSet(masterGain.gain, v, 0.2);
+            }
+
+            // ids de INSTRUMENTS a usar para las voces de los pads (varios a
+            // la vez posible). Array vacío = volver al timbre automático del preset.
+            function setPadInstruments(ids) {
+                if (!ids || ids.length === 0) {
+                    padInstrumentsUserSet = false;
+                    selectedPadInstruments = currentPreset ? [WAVE_TO_INSTRUMENT[currentPreset.settings.wave] || 'soft'] : ['soft'];
+                    return;
+                }
+                padInstrumentsUserSet = true;
+                selectedPadInstruments = ids.slice();
+            }
+
+            function setArpEnabled(v) {
+                arpEnabled = !!v;
+                if (arpEnabled && running) startArpScheduler();
+                else if (!arpEnabled) stopArpScheduler();
+            }
+
+            function setArpInstruments(ids) {
+                arpInstruments = (ids && ids.length) ? ids.slice() : ['glass'];
+            }
+
+            function setArpVolume(v) {
+                arpVolume = v;
+                if (ctx && arpGainNode) smoothSet(arpGainNode.gain, v, 0.2);
+            }
+
+            function isRunning() { return running; }
+            function getCurrentPreset() { return currentPreset; }
+
+            return {
+                play, stop, setVolume, isRunning, getCurrentPreset,
+                setPadInstruments, setArpEnabled, setArpInstruments, setArpVolume
+            };
+        })();
+
+
+        // ==========================================
+        // AMBIENTE SONORO (motor de presets, sin música procedural)
+        // ==========================================
+        function initMusic() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                createVisualizer();
+                buildAmbientPresetSelect();
+                if (musicPlaying) {
+                    playAmbientPreset(currentAmbientPresetId, true);
+                    startAmbientSounds();
+                }
+            } catch (e) {
+                console.log('Audio no disponible:', e);
+            }
+        }
+
+        function createVisualizer() {
+            const container = document.getElementById('music-visualizer');
+            container.innerHTML = '';
+            for (let i = 0; i < 25; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                bar.style.height = '2px';
+                container.appendChild(bar);
+            }
+        }
+
+        // agrupa los presets por categoría en el <select>
+        function buildAmbientPresetSelect() {
+            const select = document.getElementById('ambient-preset-select');
+            if (!select || select.options.length) return; // ya construido
+            const CAT_LABELS = {
+                'Estudio': '📚 ESTUDIO / ENFOQUE',
+                'Meditación': '🧘 MEDITACIÓN',
+                'Sueño': '🌙 SUEÑO',
+                'Relajación': '🌿 RELAJACIÓN'
+            };
+            const cats = {};
+            PAD_PRESETS.forEach((p, idx) => { (cats[p.cat] = cats[p.cat] || []).push(idx); });
+            const order = ['Estudio', 'Meditación', 'Sueño', 'Relajación'];
+            order.forEach(cat => {
+                if (!cats[cat]) return;
+                const group = document.createElement('optgroup');
+                group.label = CAT_LABELS[cat] || cat;
+                cats[cat].forEach(idx => {
+                    const p = PAD_PRESETS[idx];
+                    const opt = document.createElement('option');
+                    opt.value = p.id;
+                    opt.textContent = p.name.replace(/^[^·]+·\s*/, '');
+                    group.appendChild(opt);
+                });
+                select.appendChild(group);
+            });
+            currentAmbientPresetId = PAD_PRESETS[0].id;
+            select.value = currentAmbientPresetId;
+            updateAmbientPresetDesc();
+        }
+
+        function updateAmbientPresetDesc() {
+            const p = PAD_PRESETS.find(x => x.id === currentAmbientPresetId);
+            const desc = document.getElementById('ambient-preset-desc');
+            if (p && desc) desc.textContent = p.desc;
+        }
+
+        // arranca (o cambia) el preset actual en el motor de pads compartiendo audioContext
+        function playAmbientPreset(id, silent) {
+            if (!id) return;
+            currentAmbientPresetId = id;
+            PadEngine.play(id, audioContext);
+            PadEngine.setVolume(masterVolume);
+            updateAmbientPresetDesc();
+            if (!silent) {
+                const select = document.getElementById('ambient-preset-select');
+                if (select) select.value = id;
+            }
+        }
+
+        // ==========================================
+        // SONIDOS AMBIENTALES
+        // ==========================================
+        function startAmbientSounds() {
+            if (!audioContext) return;
+            if (soundLayers.wind) startWindSound();
+            if (soundLayers.birds && isDaytime) startBirdSounds();
+            if (soundLayers.frogs) startFrogSounds();
+            if (soundLayers.rain) startRainSound();
+            if (soundLayers.cricket && !isDaytime) startCricketSounds();
+        }
+
+        function startWindSound() {
+            if (!audioContext || !soundLayers.wind) return;
+            const bufferSize = audioContext.sampleRate * 2;
+            const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.5;
+            
+            const noise = audioContext.createBufferSource();
+            noise.buffer = buffer;
+            noise.loop = true;
+            
+            const filter = audioContext.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 300;
+            filter.Q.value = 0.5;
+            
+            const gain = audioContext.createGain();
+            gain.gain.value = masterVolume * 0.02;
+            
+            const lfo = audioContext.createOscillator();
+            lfo.type = 'sine';
+            lfo.frequency.value = 0.1;
+            const lfoGain = audioContext.createGain();
+            lfoGain.gain.value = 100;
+            lfo.connect(lfoGain);
+            lfoGain.connect(filter.frequency);
+            lfo.start();
+            
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            noise.start();
+            ambientNodes.push({ noise, gain, lfo, lfoGain });
+        }
+
+        function startBirdSounds() {
+            if (!audioContext || !soundLayers.birds || !isDaytime) return;
+            
+            function playBird() {
+                if (!soundLayers.birds || !audioContext || !isDaytime) return;
+                
+                const now = audioContext.currentTime;
+                const freq = 2000 + Math.random() * 3000;
+                
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, now);
+                osc.frequency.exponentialRampToValueAtTime(freq * 1.5, now + 0.1);
+                
+                gain.gain.setValueAtTime(0, now);
+                gain.gain.linearRampToValueAtTime(masterVolume * 0.03, now + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                
+                osc.start(now);
+                osc.stop(now + 0.2);
+                
+                if (Math.random() < 0.7) {
+                    const osc2 = audioContext.createOscillator();
+                    const gain2 = audioContext.createGain();
+                    osc2.type = 'sine';
+                    osc2.frequency.setValueAtTime(freq * 0.8, now + 0.15);
+                    gain2.gain.setValueAtTime(0, now + 0.15);
+                    gain2.gain.linearRampToValueAtTime(masterVolume * 0.02, now + 0.2);
+                    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                    osc2.connect(gain2);
+                    gain2.connect(audioContext.destination);
+                    osc2.start(now + 0.15);
+                    osc2.stop(now + 0.35);
+                }
+                
+                setTimeout(playBird, 3000 + Math.random() * 7000);
+            }
+            
+            setTimeout(playBird, 2000);
+        }
+
+        function startFrogSounds() {
+            if (!audioContext || !soundLayers.frogs) return;
+
+            function croak(startTime, freq, vol) {
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                const filter = audioContext.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 700;
+
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(freq, startTime);
+                osc.frequency.exponentialRampToValueAtTime(freq * 0.75, startTime + 0.15);
+
+                gain.gain.setValueAtTime(0, startTime);
+                gain.gain.linearRampToValueAtTime(masterVolume * vol, startTime + 0.03);
+                gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.18);
+
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioContext.destination);
+
+                osc.start(startTime);
+                osc.stop(startTime + 0.2);
+            }
+
+            function playFrog() {
+                if (!soundLayers.frogs || !audioContext) return;
+                const now = audioContext.currentTime;
+                const baseFreq = 220 + Math.random() * 180;
+
+                croak(now, baseFreq, 0.04);
+                if (Math.random() < 0.5) croak(now + 0.18, baseFreq * 1.15, 0.03);
+
+                setTimeout(playFrog, 500 + Math.random() * 1300);
+            }
+
+            setTimeout(playFrog, 600);
+        }
+
+        function startRainSound() {
+            if (!audioContext || !soundLayers.rain) return;
+            const bufferSize = audioContext.sampleRate * 2;
+            const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.8;
+            
+            const noise = audioContext.createBufferSource();
+            noise.buffer = buffer;
+            noise.loop = true;
+            
+            const filter = audioContext.createBiquadFilter();
+            filter.type = 'highpass';
+            filter.frequency.value = 800;
+            
+            // Volumen del sonido de lluvia fijado al 30%
+            const RAIN_SOUND_LEVEL = 0.3;
+            const gain = audioContext.createGain();
+            gain.gain.value = masterVolume * 0.1 * RAIN_SOUND_LEVEL;
+            
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            noise.start();
+            ambientNodes.push({ noise, gain });
+        }
+
+        function startCricketSounds() {
+            if (!audioContext || !soundLayers.cricket || isDaytime) return;
+            
+            function playCricket() {
+                if (!soundLayers.cricket || !audioContext || isDaytime) return;
+                
+                const now = audioContext.currentTime;
+                const osc = audioContext.createOscillator();
+                const gain = audioContext.createGain();
+                
+                osc.type = 'square';
+                osc.frequency.value = 4000 + Math.random() * 1000;
+                
+                gain.gain.setValueAtTime(0, now);
+                gain.gain.linearRampToValueAtTime(masterVolume * 0.01, now + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                
+                osc.connect(gain);
+                gain.connect(audioContext.destination);
+                
+                osc.start(now);
+                osc.stop(now + 0.05);
+                
+                setTimeout(playCricket, 500 + Math.random() * 1500);
+            }
+            
+            setTimeout(playCricket, 1000);
+            
+            const bufferSize = audioContext.sampleRate;
+            const buffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * (Math.random() < 0.01 ? 0.8 : 0.1);
+            
+            const noise = audioContext.createBufferSource();
+            noise.buffer = buffer;
+            noise.loop = true;
+            
+            const filter = audioContext.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.value = 2000;
+            filter.Q.value = 1;
+            
+            const gain = audioContext.createGain();
+            gain.gain.value = masterVolume * 0.01;
+            
+            noise.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioContext.destination);
+            
+            noise.start();
+            ambientNodes.push({ noise, gain });
+        }
+
+        function updateAmbientSounds() {
+            ambientNodes.forEach(node => {
+                try {
+                    if (node.noise) node.noise.stop();
+                    if (node.lfo) node.lfo.stop();
+                } catch (e) {}
+            });
+            ambientNodes = [];
+            if (audioContext && musicPlaying) startAmbientSounds();
+        }
+
+        function toggleMusic() {
+            musicPlaying = !musicPlaying;
+            const btn = document.getElementById('btn-music');
+
+            if (musicPlaying) {
+                btn.classList.add('active');
+                btn.textContent = '🎹 PADS ACTIVOS';
+                if (audioContext && audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+                playAmbientPreset(currentAmbientPresetId, true);
+                updateAmbientSounds();
+            } else {
+                btn.classList.remove('active');
+                btn.textContent = '🔇 PADS OFF';
+                PadEngine.stop();
+            }
+        }
+
+        // ==========================================
+        // ANIMACIÓN CON POST-PROCESSING
+        // ==========================================
+        function animate() {
+            animationId = requestAnimationFrame(animate);
+            const delta = 0.016;
+            time += delta;
+            
+            // Actualizar shaders
+            if (waterMesh && waterMesh.material.uniforms) {
+                waterMesh.material.uniforms.time.value = time;
+            }
+            
+            if (godRaysMesh) {
+                godRaysMesh.children.forEach(m => {
+                    if (m.material && m.material.uniforms) m.material.uniforms.time.value = time;
+                });
+                
+                // Orientar god rays hacia el sol
+                const cycle = (Math.sin(dayTime) + 1) / 2;
+                if (cycle > 0.3) {
+                    godRaysMesh.visible = godRaysEnabled;
+                    godRaysMesh.rotation.y = dayTime * 0.5;
+                } else {
+                    godRaysMesh.visible = false;
+                }
+            }
+            
+            if (auroraMesh && auroraMesh.material.uniforms) {
+                auroraMesh.material.uniforms.time.value = time;
+                auroraMesh.visible = auroraEnabled;
+            }
+            
+            updateTimeCycle(delta);
+            updateDayNightCycle();
+            
+            if (showClouds && cloudMesh) {
+                cloudMesh.position.x = Math.sin(time * 0.03) * 3;
+                cloudMesh.position.z = Math.cos(time * 0.02) * 2;
+            }
+            
+            if (showRain && overcastMesh) {
+                overcastMesh.position.x = Math.sin(time * 0.015) * 4;
+                overcastMesh.position.z = Math.cos(time * 0.012) * 3;
+            }
+            
+            if (showParticles && particleSystem) {
+                const positions = particleSystem.geometry.attributes.position;
+                const speed = particleSpeed;
+                for (let i = 0; i < positions.count; i++) {
+                    let y = positions.getY(i);
+                    y += Math.sin(time * speed + i) * 0.02 * speed;
+                    // Los límites de reciclado deben seguir a terrainBaseOffset:
+                    // antes reseteaban a una altura absoluta (5), así que cuando la
+                    // isla se elevaba (chunk-size/terrain-height más grandes) las
+                    // partículas terminaban "ancladas" muy por debajo del terreno.
+                    if (y > terrainBaseOffset + 25) y = terrainBaseOffset + 5;
+                    positions.setY(i, y);
+                    
+                    let x = positions.getX(i);
+                    x += Math.sin(time * 0.5 * speed + i * 0.1) * 0.01 * speed;
+                    // mismo criterio en X/Z: si se salen del chunk actual (p.ej. tras
+                    // reducir chunk-size) se reciclan dentro de los límites nuevos en
+                    // vez de quedar flotando fuera de la isla.
+                    if (x < -5 || x > CONFIG.CHUNK_SIZE + 5) x = Math.random() * CONFIG.CHUNK_SIZE;
+                    positions.setX(i, x);
+
+                    let z = positions.getZ(i);
+                    if (z < -5 || z > CONFIG.CHUNK_SIZE + 5) z = Math.random() * CONFIG.CHUNK_SIZE;
+                    positions.setZ(i, z);
+                }
+                positions.needsUpdate = true;
+            }
+            
+            if (showRain && rainSystem) {
+                const positions = rainSystem.geometry.attributes.position;
+                for (let i = 0; i < positions.count; i++) {
+                    let y = positions.getY(i);
+                    y -= 0.5;
+                    if (y < 0) {
+                        y = terrainBaseOffset + 40 + Math.random() * 10;
+                        positions.setX(i, Math.random() * CONFIG.CHUNK_SIZE * 1.5);
+                        positions.setZ(i, Math.random() * CONFIG.CHUNK_SIZE * 1.5);
+                    }
+                    positions.setY(i, y);
+                }
+                positions.needsUpdate = true;
+            }
+            
+            if (autoOrbit) {
+                const orbitRadius = cameraDistance;
+                const orbitSpeedRad = orbitSpeed * 0.01;
+                camera.position.x = Math.cos(time * orbitSpeedRad) * orbitRadius + CONFIG.CHUNK_SIZE / 2;
+                camera.position.z = Math.sin(time * orbitSpeedRad) * orbitRadius + CONFIG.CHUNK_SIZE / 2;
+                camera.lookAt(CONFIG.CHUNK_SIZE / 2, 8, CONFIG.CHUNK_SIZE / 2);
+            }
+            
+            updateVisualizer();
+            
+            frameCount++;
+            const currentTime = performance.now();
+            if (currentTime - lastTime >= 1000) {
+                fps = frameCount;
+                frameCount = 0;
+                lastTime = currentTime;
+                document.getElementById('fps').textContent = fps;
+            }
+            
+            controls.update();
+            
+            // Render con post-processing
+            renderer.setRenderTarget(renderTarget);
+            renderer.render(scene, camera);
+            renderer.setRenderTarget(null);
+            
+            postMaterial.uniforms.tDiffuse.value = renderTarget.texture;
+            postMaterial.uniforms.time.value = time;
+            postMaterial.uniforms.bloomIntensity.value = bloomIntensity;
+            postMaterial.uniforms.bloomEnabled.value = bloomEnabled;
+            postMaterial.uniforms.filmGrainIntensity.value = FILM_GRAIN_INTENSITY[filmGrainLevel];
+            postMaterial.uniforms.chromaticEnabled.value = chromaticEnabled;
+            
+            renderer.render(postScene, postCamera);
+        }
+
+        function updateTimeCycle(delta) {
+            if (timeMode === 'cycle') {
+                dayTime += delta * timeSpeed * 0.01;
+            } else if (timeMode === 'day') {
+                dayTime = Math.PI / 2;
+            } else if (timeMode === 'night') {
+                dayTime = Math.PI * 1.5;
+            } else if (timeMode === 'sunset') {
+                dayTime = Math.PI * 0.85;
+            }
+            
+            const cycle = (Math.sin(dayTime) + 1) / 2;
+            const wasDaytime = isDaytime;
+            isDaytime = cycle > 0.3;
+            
+            if (wasDaytime !== isDaytime) {
+                updateAmbientSounds();
+                
+                // Al caer la noche se activa automáticamente la aurora boreal;
+                // al volver el día se apaga sola.
+                auroraEnabled = !isDaytime;
+                const auroraToggle = document.getElementById('toggle-aurora');
+                if (auroraToggle) auroraToggle.classList.toggle('active', auroraEnabled);
+            }
+        }
+
+        function updateDayNightCycle() {
+            const cycle = (Math.sin(dayTime) + 1) / 2;
+            
+            let dayColor, sunsetColor, nightColor;
+            
+            if (showRain) {
+                dayColor = new THREE.Color(SKY_COLORS.rain);
+            } else {
+                dayColor = new THREE.Color(SKY_COLORS.day);
+            }
+            
+            sunsetColor = new THREE.Color(SKY_COLORS.sunset);
+            nightColor = new THREE.Color(SKY_COLORS.night);
+            
+            let currentSky;
+            
+            if (cycle > 0.7) {
+                currentSky = dayColor.clone();
+            } else if (cycle < 0.3) {
+                currentSky = nightColor.clone();
+            } else {
+                if (cycle > 0.5) {
+                    const t = (cycle - 0.5) / 0.2;
+                    currentSky = sunsetColor.clone().lerp(dayColor, Math.max(0, 1 - t * 2));
+                } else {
+                    const t = (0.3 - cycle) / 0.2;
+                    currentSky = sunsetColor.clone().lerp(nightColor, Math.max(0, 1 - t * 2));
+                }
+            }
+            
+            scene.background = currentSky;
+            scene.fog.color = currentSky;
+            
+            if (scene.userData.sunLight) {
+                scene.userData.sunLight.intensity = Math.max(0.1, cycle * 1.2);
+                const sunAngle = dayTime * 0.5;
+                scene.userData.sunLight.position.x = Math.cos(sunAngle) * 50;
+                scene.userData.sunLight.position.y = Math.sin(sunAngle) * 50 + 10;
+            }
+            
+            if (scene.userData.fillLight) {
+                scene.userData.fillLight.intensity = (1 - cycle) * 0.5;
+            }
+            
+            if (scene.userData.hemiLight) {
+                scene.userData.hemiLight.intensity = 0.2 + cycle * 0.3;
+            }
+            
+            if (starSystem) {
+                // las estrellas viven en una esfera fija de radio ~80-100 alrededor del
+                // origen; como la cámara puede alejarse hasta 250 (más que ese radio),
+                // sin esto la esfera de estrellas quedaba "por delante" de la cámara en
+                // vez de comportarse como fondo. Al centrarla en la cámara cada frame
+                // se comporta como un skybox: siempre de fondo, nunca cruza el encuadre.
+                starSystem.position.copy(camera.position);
+                starSystem.material.opacity = (1 - cycle) * starsIntensity;
+                starSystem.visible = showStars;
+            }
+            
+            const timeDisplay = document.getElementById('time-display');
+            if (cycle > 0.7) timeDisplay.textContent = 'DÍA';
+            else if (cycle < 0.3) timeDisplay.textContent = 'NOCHE';
+            else timeDisplay.textContent = 'AMANECER/OCASO';
+        }
+
+        function updateVisualizer() {
+            const bars = document.querySelectorAll('.bar');
+            bars.forEach((bar, i) => {
+                const height = 2 + Math.sin(time * 3 + i * 0.5) * 20 + Math.random() * 8;
+                bar.style.height = Math.max(2, height) + 'px';
+            });
+        }
+
+        // ==========================================
+        // UI
+        // ==========================================
+        function setupUI() {
+            document.getElementById('btn-disclaimer').addEventListener('click', () => {
+                document.getElementById('disclaimer-overlay').classList.add('visible');
+            });
+            
+            document.getElementById('btn-close-disclaimer').addEventListener('click', () => {
+                document.getElementById('disclaimer-overlay').classList.remove('visible');
+            });
+            
+            document.getElementById('disclaimer-overlay').addEventListener('click', (e) => {
+                if (e.target.id === 'disclaimer-overlay') {
+                    document.getElementById('disclaimer-overlay').classList.remove('visible');
+                }
+            });
+            
+            document.getElementById('btn-hide').addEventListener('click', () => {
+                uiVisible = false;
+                document.getElementById('ui').classList.add('hidden');
+                document.getElementById('stats').classList.add('hidden');
+                document.getElementById('music-visualizer').classList.add('hidden');
+                document.getElementById('btn-hide-ui').style.display = 'block';
+                document.getElementById('btn-fullscreen-floating').style.display = 'block';
+                resetFloatingButtonsTimer();
+            });
+            
+            document.getElementById('btn-hide-ui').addEventListener('click', () => {
+                uiVisible = true;
+                document.getElementById('ui').classList.remove('hidden');
+                document.getElementById('stats').classList.remove('hidden');
+                document.getElementById('music-visualizer').classList.remove('hidden');
+                document.getElementById('btn-hide-ui').style.display = 'none';
+                document.getElementById('btn-fullscreen-floating').style.display = 'none';
+                clearFloatingButtonsTimer();
+                document.getElementById('top-left-controls').classList.remove('faded');
+                document.getElementById('btn-disclaimer').classList.remove('faded');
+            });
+            
+            // ==========================================
+            // PANTALLA COMPLETA
+            // ==========================================
+            function toggleFullscreen() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+            
+            document.getElementById('btn-fullscreen-panel').addEventListener('click', toggleFullscreen);
+            document.getElementById('btn-fullscreen-floating').addEventListener('click', toggleFullscreen);
+            
+            document.addEventListener('fullscreenchange', () => {
+                const isFs = !!document.fullscreenElement;
+                const label = isFs ? '🗗 SALIR PANTALLA COMPLETA' : '⛶ PANTALLA COMPLETA';
+                document.getElementById('btn-fullscreen-panel').textContent = label;
+                document.getElementById('btn-fullscreen-floating').textContent = label;
+            });
+            
+            // ==========================================
+            // AUTO-OCULTAR BOTONES FLOTANTES (solo con panel escondido)
+            // ==========================================
+            let floatingButtonsTimer = null;
+            const FLOATING_BUTTONS_IDLE_MS = 6000;
+            
+            function resetFloatingButtonsTimer() {
+                clearFloatingButtonsTimer();
+                document.getElementById('top-left-controls').classList.remove('faded');
+                document.getElementById('btn-disclaimer').classList.remove('faded');
+                if (!uiVisible) {
+                    floatingButtonsTimer = setTimeout(() => {
+                        document.getElementById('top-left-controls').classList.add('faded');
+                        document.getElementById('btn-disclaimer').classList.add('faded');
+                    }, FLOATING_BUTTONS_IDLE_MS);
+                }
+            }
+            
+            function clearFloatingButtonsTimer() {
+                if (floatingButtonsTimer) {
+                    clearTimeout(floatingButtonsTimer);
+                    floatingButtonsTimer = null;
+                }
+            }
+            
+            document.addEventListener('mousemove', () => {
+                if (!uiVisible) resetFloatingButtonsTimer();
+            });
+            document.addEventListener('touchstart', () => {
+                if (!uiVisible) resetFloatingButtonsTimer();
+            });
+            
+            function regenerateWorld() {
+                Object.values(meshes).forEach(disposeMeshGroup);
+                if (waterMesh) scene.remove(waterMesh);
+                if (cloudMesh) scene.remove(cloudMesh);
+                if (overcastMesh) scene.remove(overcastMesh);
+                if (particleSystem) scene.remove(particleSystem);
+                if (rainSystem) scene.remove(rainSystem);
+                
+                currentBiome = document.getElementById('biome-select').value;
+                generateChunk();
+                createWater();
+                createClouds();
+                createOvercastMist();
+                createParticles();
+                createRain();
+            }
+
+            document.getElementById('btn-regenerate').addEventListener('click', regenerateWorld);
+            
+            document.getElementById('biome-select').addEventListener('change', (e) => {
+                currentBiome = e.target.value;
+            });
+            
+            document.getElementById('btn-music').addEventListener('click', toggleMusic);
+
+            document.getElementById('ambient-preset-select').addEventListener('change', (e) => {
+                musicPlaying = true;
+                const btn = document.getElementById('btn-music');
+                btn.classList.add('active');
+                btn.textContent = '🎹 PADS ACTIVOS';
+                if (audioContext && audioContext.state === 'suspended') audioContext.resume();
+                playAmbientPreset(e.target.value, true);
+            });
+
+            setupSlider('terrain-height', (v) => terrainHeightMultiplier = v / 5);
+            setupSlider('chunk-size', (v) => CONFIG.CHUNK_SIZE = parseInt(v));
+            setupSlider('master-volume', (v) => {
+                masterVolume = v / 100;
+                PadEngine.setVolume(masterVolume);
+            });
+
+            // --- instrumentos del pad (multi-selección: ninguno marcado =
+            // timbre automático del preset; uno o más = mezcla elegida) ---
+            document.querySelectorAll('#pad-instrument-select [data-pad-inst]').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    this.classList.toggle('active-wave');
+                    const ids = Array.from(document.querySelectorAll('#pad-instrument-select [data-pad-inst].active-wave'))
+                        .map(b => b.dataset.padInst);
+                    PadEngine.setPadInstruments(ids);
+                });
+            });
+
+            // --- capa de arpegio: on/off, instrumentos y volumen ---
+            const arpToggleBtn = document.getElementById('btn-arp-toggle');
+            arpToggleBtn.addEventListener('click', function () {
+                const isActive = this.classList.toggle('active-layer');
+                this.textContent = isActive ? 'ON' : 'OFF';
+                PadEngine.setArpEnabled(isActive);
+                if (audioContext && audioContext.state === 'suspended') audioContext.resume();
+            });
+
+            document.querySelectorAll('#arp-instrument-select [data-arp-inst]').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    this.classList.toggle('active-wave');
+                    const ids = Array.from(document.querySelectorAll('#arp-instrument-select [data-arp-inst].active-wave'))
+                        .map(b => b.dataset.arpInst);
+                    PadEngine.setArpInstruments(ids);
+                });
+            });
+
+            setupSlider('arp-volume', (v) => PadEngine.setArpVolume(v / 100));
+            PadEngine.setArpVolume(0.35);
+
+            setupSlider('time-speed', (v) => timeSpeed = v / 100);
+            setupSlider('orbit-speed', (v) => orbitSpeed = v);
+            setupSlider('camera-distance', (v) => {
+                cameraDistance = parseInt(v);
+                if (!autoOrbit) {
+                    const dir = new THREE.Vector3().subVectors(camera.position, controls.target).normalize();
+                    camera.position.copy(controls.target).add(dir.multiplyScalar(cameraDistance));
+                }
+            });
+            setupSlider('particle-density', (v) => {
+                particleDensity = v / 100;
+                createParticles();
+            });
+            setupSlider('particle-speed', (v) => particleSpeed = v / 100);
+            setupSlider('stars-intensity', (v) => {
+                starsIntensity = v / 100;
+                if (starSystem) starSystem.material.opacity = starsIntensity;
+            });
+            
+            // Shader toggles
+            setupToggle('toggle-bloom', (v) => bloomEnabled = v);
+            setupToggle('toggle-godrays', (v) => godRaysEnabled = v);
+            document.querySelectorAll('[data-grain]').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    document.querySelectorAll('[data-grain]').forEach(b => b.classList.remove('active-wave'));
+                    this.classList.add('active-wave');
+                    filmGrainLevel = this.dataset.grain;
+                });
+            });
+            setupToggle('toggle-chromatic', (v) => chromaticEnabled = v);
+            setupToggle('toggle-aurora', (v) => auroraEnabled = v);
+            
+            setupSlider('bloom-intensity', (v) => bloomIntensity = v / 100);
+            
+            setupToggle('toggle-clouds', (v) => { showClouds = v; if (cloudMesh) cloudMesh.visible = showRain ? false : v; });
+            setupToggle('toggle-particles', (v) => { showParticles = v; if (particleSystem) particleSystem.visible = v; });
+            // Ajuste automático "clima de tormenta": al llover se bajan las
+            // partículas a cero y se apagan viento/pájaros/grillos en favor
+            // de las ranitas; al parar la lluvia se restaura lo anterior.
+            function applyRainAutoSettings(active) {
+                const particleSlider = document.getElementById('particle-density');
+                const windToggle = document.getElementById('toggle-wind');
+                const birdsToggle = document.getElementById('toggle-birds');
+                const cricketToggle = document.getElementById('toggle-cricket');
+                const frogsToggle = document.getElementById('toggle-frogs');
+
+                if (active) {
+                    preRainSoundState = {
+                        particleDensity: particleDensity,
+                        particleSliderValue: particleSlider.value,
+                        wind: soundLayers.wind,
+                        birds: soundLayers.birds,
+                        cricket: soundLayers.cricket,
+                        frogs: soundLayers.frogs
+                    };
+
+                    particleDensity = 0;
+                    particleSlider.value = 0;
+                    updateIntensityBar('particle-density');
+                    createParticles();
+
+                    soundLayers.wind = false;
+                    soundLayers.birds = false;
+                    soundLayers.cricket = false;
+                    soundLayers.frogs = true;
+                    windToggle.classList.remove('active');
+                    birdsToggle.classList.remove('active');
+                    cricketToggle.classList.remove('active');
+                    frogsToggle.classList.add('active');
+                } else if (preRainSoundState) {
+                    particleDensity = preRainSoundState.particleDensity;
+                    particleSlider.value = preRainSoundState.particleSliderValue;
+                    updateIntensityBar('particle-density');
+                    createParticles();
+
+                    soundLayers.wind = preRainSoundState.wind;
+                    soundLayers.birds = preRainSoundState.birds;
+                    soundLayers.cricket = preRainSoundState.cricket;
+                    soundLayers.frogs = preRainSoundState.frogs;
+                    windToggle.classList.toggle('active', soundLayers.wind);
+                    birdsToggle.classList.toggle('active', soundLayers.birds);
+                    cricketToggle.classList.toggle('active', soundLayers.cricket);
+                    frogsToggle.classList.toggle('active', soundLayers.frogs);
+
+                    preRainSoundState = null;
+                }
+            }
+
+            setupToggle('toggle-rain-visual', (v) => {
+                showRain = v;
+                if (rainSystem) rainSystem.visible = v;
+                
+                // Al llover se esconden las nubes sueltas y aparece una niebla
+                // densa arriba que simula un cielo cubierto y bajo
+                if (cloudMesh) cloudMesh.visible = v ? false : showClouds;
+                if (overcastMesh) overcastMesh.visible = v;
+                updateFogForWeather();
+                
+                applyRainAutoSettings(v);
+                
+                // La lluvia visual enciende/apaga junto con ella el sonido ambiental de lluvia
+                soundLayers.rain = v;
+                const rainSoundToggle = document.getElementById('toggle-rain');
+                if (rainSoundToggle) rainSoundToggle.classList.toggle('active', v);
+                updateAmbientSounds();
+            });
+            setupToggle('toggle-stars', (v) => { showStars = v; if (starSystem) starSystem.visible = v; });
+            setupToggle('toggle-orbit', (v) => autoOrbit = v);
+            
+            setupToggle('toggle-wind', (v) => { soundLayers.wind = v; updateAmbientSounds(); });
+            setupToggle('toggle-birds', (v) => { soundLayers.birds = v; updateAmbientSounds(); });
+            setupToggle('toggle-frogs', (v) => { soundLayers.frogs = v; updateAmbientSounds(); });
+            setupToggle('toggle-rain', (v) => { soundLayers.rain = v; updateAmbientSounds(); });
+            setupToggle('toggle-cricket', (v) => { soundLayers.cricket = v; updateAmbientSounds(); });
+            
+            document.querySelectorAll('.time-mode-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.time-mode-btn').forEach(b => b.classList.remove('active-time'));
+                    this.classList.add('active-time');
+                    timeMode = this.dataset.time;
+                });
+            });
+            
+            document.getElementById('btn-save').addEventListener('click', () => {
+                savedChunk = {
+                    chunk: JSON.parse(JSON.stringify(chunk)),
+                    biome: currentBiome,
+                    seed: Math.random()
+                };
+                alert('CHUNK GUARDADO!');
+            });
+            
+            document.getElementById('btn-load').addEventListener('click', () => {
+                if (!savedChunk) {
+                    alert('NO HAY CHUNK GUARDADO!');
+                    return;
+                }
+                chunk = JSON.parse(JSON.stringify(savedChunk.chunk));
+                currentBiome = savedChunk.biome;
+                document.getElementById('biome-select').value = currentBiome;
+                Object.values(meshes).forEach(disposeMeshGroup);
+                createInstancedMeshes();
+            });
+        }
+
+        function setupSlider(id, callback) {
+            const el = document.getElementById(id);
+            el.addEventListener('input', (e) => {
+                callback(parseFloat(e.target.value));
+                updateIntensityBar(id);
+            });
+            updateIntensityBar(id);
+        }
+
+        function setupToggle(id, callback) {
+            const el = document.getElementById(id);
+            el.addEventListener('click', function() {
+                this.classList.toggle('active');
+                callback(this.classList.contains('active'));
+            });
+        }
+
+        function setupIntensityBars() {
+            const sliders = [
+                'terrain-height', 'chunk-size',
+                'master-volume', 'arp-volume', 'time-speed',
+                'orbit-speed', 'camera-distance', 'particle-density', 'particle-speed',
+                'stars-intensity', 'bloom-intensity'
+            ];
+            sliders.forEach(id => updateIntensityBar(id));
+        }
+
+        function updateIntensityBar(sliderId) {
+            const slider = document.getElementById(sliderId);
+            if (!slider) return;
+            
+            let barId = sliderId + '-intensity';
+            if (sliderId === 'particle-density') barId = 'particle-d-intensity';
+            if (sliderId === 'particle-speed') barId = 'particle-s-intensity';
+            if (sliderId === 'stars-intensity') barId = 'stars-intensity-bar';
+            if (sliderId === 'bloom-intensity') barId = 'bloom-int-bar';
+            
+            let bar = document.getElementById(barId);
+            if (!bar) return;
+            
+            bar.innerHTML = '';
+            const segments = 10;
+            const value = parseFloat(slider.value);
+            const min = parseFloat(slider.min);
+            const max = parseFloat(slider.max);
+            const percent = (value - min) / (max - min);
+            const activeSegments = Math.floor(percent * segments);
+            
+            for (let i = 0; i < segments; i++) {
+                const seg = document.createElement('div');
+                seg.className = 'intensity-segment';
+                if (i < activeSegments) {
+                    seg.classList.add('active');
+                    if (percent > 0.7) seg.classList.add('high');
+                    else if (percent > 0.4) seg.classList.add('medium');
+                }
+                bar.appendChild(seg);
+            }
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            
+            renderTarget.setSize(window.innerWidth, window.innerHeight);
+            postMaterial.uniforms.resolution.value.set(window.innerWidth, window.innerHeight);
+        }
+
+        // ==========================================
+        // INICIAR
+        // ==========================================
+        window.addEventListener('load', init);
+    </script>
+</body>
+</html>
