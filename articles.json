@@ -1,5 +1,47 @@
 [
   {
+    "featured": true,
+    "pinned": false,
+    "date": "2026-08-31",
+    "category": "Perfil",
+    "categoryPill": "Trance — Melodic House",
+    "titleLines": [
+      "SESIONES",
+      "DE BEATS",
+      "AROUND SIVAR"
+    ],
+    "title": "Bert Álvarez: las sesiones de Beats Around Sivar por El Salvador",
+    "artistLine": "DJ — Trance, Melodic House, Progressive, Techno",
+    "dek": "Beats Around Sivar graba sesiones de música electrónica en locaciones de El Salvador. Detrás está Bert Álvarez, DJ salvadoreño y también piloto de avión.",
+    "tag": "Perfil",
+    "tagColor": "teal",
+    "meta": "Perfil · 8 min",
+    "image": "articulos/images/bertalvarez01.jpg",
+    "seed": 52,
+    "slug": "articulos/articulo-bert-alvarez.html",
+    "comingSoon": false
+  },
+  {
+    "featured": false,
+    "pinned": true,
+    "date": "2026-08-31",
+    "category": "Nota",
+    "categoryPill": "De la casa",
+    "titleLines": [
+      "//RELAXTHECHUNK"
+    ],
+    "title": "//RELAXTHECHUNK — un mundo que StemsMag armó de regalo para que perdás la tarde",
+    "artistLine": "Redacción STEMS",
+    "dek": "Un pedacito de mundo generado en tu navegador, con lluvia, grillos y una máquina de pads que respira solo. Ni review ni tutorial — solo una invitación a entrar y quedarte un rato.",
+    "tag": "Nota",
+    "tagColor": "sky",
+    "meta": "Nota · 4 min",
+    "image": "articulos/images/rtchunk.jpg",
+    "seed": 6,
+    "slug": "articulos/articulo-relaxthechunk.html",
+    "comingSoon": false
+  },
+  {
     "featured": false,
     "pinned": true,
     "date": "2026-08-25",
