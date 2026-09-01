@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-E9K74DFXY3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-E9K74DFXY3');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>//RELAXTHECHUNK // StemsMag — un regalo para perder la tarde</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Mr+Dafoe&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ===== Header/footer oficiales STEMS ===== */
+    --cream:#F4E8D3;
+    --cream-dim:#A89A80;
+    --muted:#B49A7A;
+    --magenta:#E8236B;
+    --amber:#F2A93C;
+    --teal:#2FB6A8;
+    --brown:#8B5A34;
+    --brown-light:#052A3D;
+    --site-line:rgba(244,232,211,0.14);
+    --font-logo:'Mr Dafoe', cursive;
+    --header-h:64px;
+    --top-band-h:24px;
+    --navbar-h:34px;
+    --header-overlay-color:0,25,46;
+    --header-overlay-opacity:0.55;
+    --band-overlay-opacity:0.8;
+    --stack-h:calc(var(--top-band-h) + var(--header-h) + var(--navbar-h));
+
+    --bg:#0a0d10;
+    --panel:#10151a;
+    --panel-2:#141a20;
+    --grid:#1c242b;
+    --line:#232c33;
+    --sky:#8fc7dc;
+    --moss:#7bb37a;
+    --text:#e7edf0;
+    --text-dim:#8b98a2;
+    --text-faint:#4c5760;
+    --mono:'JetBrains Mono', monospace;
+    --cond:'Barlow Condensed', sans-serif;
+    --sans:'IBM Plex Sans', sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background-color:#060907;
+    color:var(--text);
+    font-family:var(--sans);
+    overflow-x:hidden;
+    position:relative;
+  }
+  /* ============ FONDO BOKEH (celeste/verde, tono de tarde en el bosque) ============ */
+  .bokeh-bg{
+    position:fixed; inset:0; z-index:-1; overflow:hidden;
+    background:#060907;
+  }
+  .bokeh-bg::before{
+    content:'';
+    position:absolute; inset:-15%;
+    background:
+      radial-gradient(circle at 10% 15%, rgba(50,90,110,0.5) 0%, transparent 26%),
+      radial-gradient(circle at 85% 10%, rgba(40,90,75,0.5) 0%, transparent 30%),
+      radial-gradient(circle at 95% 45%, rgba(143,199,220,0.18) 0%, transparent 28%),
+      radial-gradient(circle at 6% 48%, rgba(45,80,68,0.5) 0%, transparent 30%),
+      radial-gradient(circle at 50% 22%, rgba(123,179,122,0.20) 0%, transparent 34%),
+      radial-gradient(circle at 25% 75%, rgba(35,70,85,0.5) 0%, transparent 30%),
+      radial-gradient(circle at 68% 68%, rgba(143,199,220,0.16) 0%, transparent 30%),
+      radial-gradient(circle at 92% 88%, rgba(242,169,60,0.10) 0%, transparent 24%),
+      radial-gradient(circle at 40% 92%, rgba(45,85,70,0.32) 0%, transparent 28%),
+      radial-gradient(circle at 52% 48%, rgba(123,179,122,0.22) 0%, rgba(40,90,75,0.14) 22%, transparent 48%);
+    filter:blur(70px) saturate(112%) brightness(0.85);
+  }
+  .bokeh-bg::after{
+    content:'';
+    position:absolute; inset:0;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    opacity:0.05; mix-blend-mode:overlay;
+  }
+  ::selection{background:var(--sky); color:#031310;}
+  a{color:inherit; text-decoration:none;}
+  img{display:block; max-width:100%;}
+
+  /* ============ TOPBAR ============ */
+  .note-topbar{
+    position:sticky; top:var(--stack-h); z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 28px; background:rgba(10,13,16,0.88); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .note-brand{
+    font-family:var(--cond); font-weight:800; font-size:16px; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--text);
+  }
+  .note-brand span{color:var(--sky);}
+  .note-topbar-right{font-family:var(--mono); font-size:10px; letter-spacing:1.5px; color:var(--text-faint); text-transform:uppercase;}
+
+  /* ============ HERO ============ */
+  .note-hero{max-width:760px; margin:0 auto; padding:48px 24px 0;}
+  .note-kicker{display:flex; align-items:center; gap:10px; margin-bottom:18px; flex-wrap:wrap;}
+  .kicker-pill{
+    font-family:var(--mono); font-size:10px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--bg); background:var(--sky); padding:4px 9px;
+  }
+  .kicker-text{font-family:var(--mono); font-size:10.5px; letter-spacing:2px; text-transform:uppercase; color:var(--text-faint);}
+  .note-title{
+    font-family:var(--cond); font-weight:800; text-transform:uppercase;
+    font-size:clamp(32px,5.6vw,52px); line-height:1.02; letter-spacing:-0.5px;
+    color:var(--text); margin-bottom:18px;
+  }
+  .note-title .hl{color:var(--moss);}
+  .note-dek{
+    font-family:var(--sans); font-size:clamp(14.5px,1.6vw,17px); line-height:1.65; color:var(--text-dim);
+    margin-bottom:22px;
+  }
+  .note-byline{font-family:var(--mono); font-size:10.5px; letter-spacing:1px; color:var(--text-faint); text-transform:uppercase; line-height:1.7; padding-bottom:36px; border-bottom:1px solid var(--line);}
+  .note-byline b{color:var(--text-dim); font-weight:600;}
+
+  /* ============ CUERPO ============ */
+  .note-col{max-width:700px; margin:0 auto; padding:40px 24px 0;}
+  .note-col p{
+    font-family:var(--sans); font-size:16px; line-height:1.8; color:var(--text);
+    margin-bottom:22px;
+  }
+  .note-col h2{
+    font-family:var(--cond); font-weight:800; text-transform:uppercase;
+    font-size:clamp(22px,3vw,28px); letter-spacing:-0.2px; color:var(--text);
+    margin:48px 0 16px; padding-left:18px; position:relative;
+  }
+  .note-col h2::before{
+    content:''; position:absolute; left:0; top:0.15em;
+    width:3px; height:1em; background:var(--moss);
+  }
+  .note-col h2:first-of-type{margin-top:8px;}
+
+  .note-col blockquote{
+    font-family:var(--cond); font-weight:700; font-size:clamp(19px,2.4vw,24px); line-height:1.32; color:var(--sky);
+    border-left:3px solid var(--sky); padding:4px 0 4px 22px; margin:32px 0;
+    letter-spacing:0.2px;
+  }
+
+  .callout{
+    background:var(--panel); border:1px solid var(--line); border-left:3px solid var(--moss);
+    padding:18px 20px; margin:26px 0; font-family:var(--sans); font-size:14.5px; line-height:1.7; color:var(--text-dim);
+  }
+  .callout b{color:var(--moss); font-family:var(--mono); font-size:11px; letter-spacing:1px; text-transform:uppercase; display:block; margin-bottom:8px;}
+
+  /* ============ CAPTURAS ============ */
+  .note-figure{margin:28px 0; border:1px solid var(--line); background:var(--panel);}
+  .note-figure img{width:100%; display:block;}
+  .note-figure figcaption{padding:10px 14px; font-family:var(--mono); font-size:11px; letter-spacing:0.5px; color:var(--text-faint);}
+  .note-figure-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:28px 0;}
+  .note-figure-grid .note-figure{margin:0;}
+  @media (max-width:640px){.note-figure-grid{grid-template-columns:1fr;}}
+
+  /* ============ FICHA REGALO ============ */
+  .gift-panel{background:var(--panel); border:1px solid var(--line); border-top:2px solid var(--amber); padding:22px 22px 20px; margin:14px 0 30px;}
+  .gift-panel .panel-title{font-family:var(--mono); font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--amber); margin-bottom:14px;}
+  .gift-rows{display:flex; flex-direction:column; gap:9px;}
+  .gift-rows .row{display:flex; justify-content:space-between; gap:12px; font-family:var(--mono); font-size:12px;}
+  .gift-rows .row .k{color:var(--text-faint);}
+  .gift-rows .row .v{color:var(--text-dim); text-align:right;}
+
+  .note-closing{
+    max-width:700px; margin:44px auto 0; padding:24px 24px 0;
+    font-family:var(--mono); font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-faint);
+    border-top:1px solid var(--line);
+  }
+
+  /* ============ LINKS BAR ============ */
+  .links-bar{max-width:700px; margin:30px auto 0; padding:0 24px; display:flex; flex-wrap:wrap; gap:10px;}
+  .links-bar a{
+    font-family:var(--mono); font-size:11px; letter-spacing:1px; text-transform:uppercase;
+    color:var(--text); border:1px solid var(--line); padding:10px 16px; transition:.15s;
+  }
+  .links-bar a:hover{border-color:var(--sky); color:var(--sky);}
+  .links-bar a.primary{background:var(--moss); color:var(--bg); border-color:var(--moss);}
+  .links-bar a.primary:hover{background:var(--sky); border-color:var(--sky); color:var(--bg);}
+
+  /* ============ COMMENTS ============ */
+  .comments-section{max-width:700px; margin:56px auto 0; padding:0 24px 60px;}
+  .comments-head{font-family:var(--mono); font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--text-faint); padding-bottom:16px; margin-bottom:16px; border-bottom:1px solid var(--line);}
+
+  /* ============ HEADER OFICIAL STEMS (sin cambios de estilo) ============ */
+  .grain{
+    position:fixed; inset:0; z-index:998; pointer-events:none;
+    opacity:0.07; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    animation:grain .4s steps(2) infinite;
+  }
+  @keyframes grain{0%{transform:translate(0,0)}50%{transform:translate(-1%,1%)}100%{transform:translate(1%,-1%)}}
+
+  body{padding-top:var(--stack-h);}
+
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    height:var(--stack-h);
+    padding-top:var(--top-band-h);
+    background:var(--brown-light);
+    overflow:hidden;
+  }
+  .header-hitbox{position:absolute; inset:0; z-index:1;}
+  .top-band{
+    position:fixed; top:0; left:0; right:0; z-index:130;
+    height:var(--top-band-h);
+    display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(90deg,
+      rgba(232,35,107, var(--band-overlay-opacity)) 0%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 18%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 82%,
+      rgba(242,169,60, var(--band-overlay-opacity)) 100%);
+    border-bottom:1px solid var(--site-line);
+    font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:2px;
+    text-transform:uppercase; color:var(--amber);
+  }
+  .site-navbar{
+    position:fixed; top:calc(var(--top-band-h) + var(--header-h)); left:0; right:0; z-index:125;
+    height:var(--navbar-h);
+    background:linear-gradient(90deg,
+      rgba(232,35,107, var(--band-overlay-opacity)) 0%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 18%,
+      rgba(var(--header-overlay-color), var(--band-overlay-opacity)) 82%,
+      rgba(242,169,60, var(--band-overlay-opacity)) 100%);
+    border-bottom:1px solid var(--site-line);
+    overflow-x:auto;
+  }
+  .site-navbar .navbar-inner{
+    max-width:1200px; margin:0 auto; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    padding:0 24px; white-space:nowrap;
+  }
+  .navbar-links{display:flex; align-items:center; gap:36px;}
+  .site-navbar a{
+    font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:1.5px;
+    text-transform:uppercase; color:var(--cream); transition:color .2s;
+  }
+  .site-navbar a:hover{color:var(--amber);}
+  .nav-toggle{
+    display:none; flex-direction:column; justify-content:center; align-items:center; gap:5px;
+    width:32px; height:32px; padding:0; margin-left:auto;
+    background:transparent; border:none; cursor:pointer;
+  }
+  .nav-toggle-bar{
+    display:block; width:20px; height:2px; background:var(--cream);
+    transition:transform .25s ease, opacity .2s ease;
+  }
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(2){opacity:0;}
+  .site-navbar.nav-open .nav-toggle-bar:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+  @media (max-width:640px){
+    .site-navbar .navbar-inner{justify-content:space-between;}
+    .nav-toggle{display:flex;}
+    .navbar-links{
+      display:none;
+      position:fixed; top:var(--stack-h); left:0; right:0; z-index:124;
+      flex-direction:column; align-items:stretch; gap:0;
+      max-height:calc(100vh - var(--stack-h)); overflow-y:auto;
+      background:rgba(4,37,56,0.97);
+      border-bottom:1px solid var(--site-line);
+      padding:6px 24px 14px;
+    }
+    .navbar-links a{padding:13px 0; border-bottom:1px solid var(--site-line); white-space:normal;}
+    .navbar-links a:last-child{border-bottom:none;}
+    .site-navbar.nav-open .navbar-links{display:flex;}
+  }
+  .header-bg{
+    position:absolute; left:0; top:0; z-index:-3;
+    width:100%; height:300%;
+    object-fit:cover;
+    transform:translateY(-33.3333%);
+    transition:transform .15s ease-out;
+    will-change:transform;
+  }
+  .header-overlay{
+    position:absolute; inset:0; z-index:-2;
+    background:rgba(var(--header-overlay-color), var(--header-overlay-opacity));
+    pointer-events:none;
+  }
+  .header-inner{
+    position:relative; z-index:2;
+    width:100%; max-width:1200px; margin:0 auto;
+    min-height:var(--header-h);
+    display:flex; align-items:center; justify-content:flex-end;
+    padding:0 24px;
+    pointer-events:none;
+  }
+  header::before{
+    content:'';
+    position:absolute; inset:0; z-index:-1;
+    background-image:
+      radial-gradient(circle at 8% 15%, rgba(0,0,0,0.35), transparent 40%),
+      radial-gradient(circle at 92% 85%, rgba(0,0,0,0.3), transparent 45%),
+      radial-gradient(circle at 55% 50%, rgba(244,232,211,0.05), transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:auto, auto, auto, 160px 160px;
+    opacity:0.5;
+    mix-blend-mode:overlay;
+    pointer-events:none;
+  }
+  .header-signature{
+    position:absolute; inset:0; z-index:-1;
+    max-width:1200px; margin:0 auto;
+    overflow:hidden;
+    pointer-events:none;
+  }
+  .header-signature::after{
+    content:'Stemsmag';
+    position:absolute; inset:0;
+    display:flex; align-items:center;
+    font-family:var(--font-logo); font-weight:400;
+    font-size:clamp(67px, 10.8vw, 108px); line-height:1;
+    letter-spacing:0; white-space:nowrap;
+    opacity:1;
+    color:var(--amber);
+    text-shadow:0 6px 24px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.35);
+    padding-left:24px;
+    transform:rotate(-3.5deg); transform-origin:left center;
+  }
+
+  /* ============ FOOTER OFICIAL STEMS (sin cambios de estilo) ============ */
+  .site-footer{border-top:1px solid var(--site-line); margin-top:20px;}
+  .footer-top{
+    max-width:1200px; margin:0 auto;
+    display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:32px;
+    padding:52px 28px 40px;
+  }
+  @media (max-width:900px){.footer-top{grid-template-columns:1fr 1fr; row-gap:36px;}}
+  @media (max-width:560px){.footer-top{grid-template-columns:1fr; padding:44px 20px 32px;}}
+
+  .footer-brand .footer-logo{font-family:'Anton',sans-serif; font-size:26px; letter-spacing:0; color:var(--cream); text-transform:uppercase; margin-bottom:12px;}
+  .footer-brand .footer-logo span{color:var(--muted); font-weight:400;}
+  .footer-tagline-script{font-family:'JetBrains Mono',monospace; font-weight:500; font-size:9.5px; letter-spacing:1.5px; color:var(--amber); text-transform:uppercase; margin-bottom:10px;}
+  .footer-tagline{font-family:'Inter',sans-serif; font-size:12.5px; line-height:1.6; color:var(--muted); max-width:280px; margin-bottom:18px;}
+  .footer-social{display:flex; gap:8px;}
+  .footer-social a{
+    display:flex; align-items:center; justify-content:center;
+    width:32px; height:32px; border:1px solid var(--site-line);
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:0.5px;
+    color:var(--muted); transition:.2s;
+  }
+  .footer-social a:hover{border-color:var(--magenta); color:var(--magenta);}
+  .footer-social svg{width:16px; height:16px;}
+
+  .footer-col h4{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--amber); margin-bottom:16px;}
+  .footer-col ul{list-style:none; display:flex; flex-direction:column; gap:10px;}
+  .footer-col a{font-family:'Inter',sans-serif; font-size:13px; color:var(--muted); transition:.2s;}
+  .footer-col a:hover{color:var(--cream);}
+
+  .footer-bottom{
+    border-top:1px solid var(--site-line);
+    max-width:1200px; margin:0 auto;
+    padding:20px 28px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1px; color:var(--muted);
+  }
+  @media (max-width:560px){.footer-bottom{padding:18px 20px;}}
+  .footer-credit{
+    text-align:center; max-width:1200px; margin:0 auto;
+    padding:12px 24px 20px;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1px;
+    color:rgba(244,232,211,0.28);
+  }
+</style>
+<script type="application/json" id="article-meta">
+{
+   "featured": false,
+   "pinned": true,
+   "date": "2026-08-31",
+    "category": "Nota",
+    "categoryPill": "De la casa",
+    "titleLines": ["//RELAXTHECHUNK"],
+    "title": "//RELAXTHECHUNK — un mundo que StemsMag armó de regalo para que perdás la tarde",
+    "artistLine": "Redacción STEMS",
+    "dek": "Un pedacito de mundo generado en tu navegador, con lluvia, grillos y una máquina de pads que respira solo. Ni review ni tutorial — solo una invitación a entrar y quedarte un rato.",
+    "tag": "Nota",
+    "tagColor": "sky",
+    "meta": "Nota · 4 min",
+    "image": "articulos/images/rtchunk.jpg",
+    "seed": 6,
+    "slug": "articulos/articulo-relaxthechunk.html",
+    "comingSoon": false
+}
+</script>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<div class="top-band">La música que nos une</div>
+
+<header>
+  <img class="header-bg" src="../img/fondo-head.jpg" alt="">
+  <div class="header-overlay"></div>
+  <div class="header-signature"></div>
+  <a href="../index.html" class="header-hitbox" aria-label="Ir al inicio"></a>
+  <div class="header-inner"></div>
+</header>
+
+<nav class="site-navbar">
+  <div class="navbar-inner">
+    <div class="navbar-links">
+      <a href="../articulos.html">Artículos</a>
+      <a href="../eventos.html">Eventos y lanzamientos</a>
+      <a href="../playlist.html">Playlists y videos</a>
+    </div>
+    <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+      <span class="nav-toggle-bar"></span>
+    </button>
+  </div>
+</nav>
+
+<script>
+  /* Parallax de la imagen de fondo del header: mouse en desktop, dedo en mobile */
+  (function(){
+    const headerBg = document.querySelector('.header-bg');
+    if(!headerBg) return;
+    let ratio = 0.5, ticking = false;
+    function apply(){
+      headerBg.style.transform = `translateY(${-(ratio * 66.6667)}%)`;
+      ticking = false;
+    }
+    function onMove(clientY){
+      ratio = Math.min(1, Math.max(0, clientY / window.innerHeight));
+      if(!ticking){ requestAnimationFrame(apply); ticking = true; }
+    }
+    window.addEventListener('mousemove', e => onMove(e.clientY));
+    window.addEventListener('touchmove', e => {
+      if(e.touches && e.touches[0]) onMove(e.touches[0].clientY);
+    }, {passive:true});
+  })();
+
+  /* Menú hamburguesa del navbar en móvil */
+  (function(){
+    document.querySelectorAll('.site-navbar').forEach(nav => {
+      const toggle = nav.querySelector('.nav-toggle');
+      if(!toggle) return;
+      toggle.addEventListener('click', () => {
+        const open = nav.classList.toggle('nav-open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      nav.querySelectorAll('.navbar-links a').forEach(a => {
+        a.addEventListener('click', () => {
+          nav.classList.remove('nav-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+    });
+    window.addEventListener('resize', () => {
+      if(window.innerWidth > 640){
+        document.querySelectorAll('.site-navbar.nav-open').forEach(nav => {
+          nav.classList.remove('nav-open');
+          const t = nav.querySelector('.nav-toggle');
+          if(t) t.setAttribute('aria-expanded', 'false');
+        });
+      }
+    });
+  })();
+</script>
+
+<div class="bokeh-bg"></div>
+
+<div class="note-topbar">
+  <div class="note-brand">STEMS <span>REGALOS</span></div>
+  <div class="note-topbar-right">De la casa</div>
+</div>
+
+<div class="note-hero">
+  <div class="note-kicker">
+    <span class="kicker-pill">Nota</span>
+    <span class="kicker-text">Herramientas de STEMS · Regalo</span>
+  </div>
+  <h1 class="note-title">//RELAX<span class="hl">THE</span>CHUNK: un mundito para regalarte una tarde</h1>
+  <p class="note-dek">Un pedacito de mundo generado en tu navegador, con lluvia, grillos y una máquina de pads que respira sola. Ni review ni tutorial — solo una invitación a entrar y quedarte un rato.</p>
+  <div class="note-byline">
+    Escribe <b>Redacción STEMS</b><br>
+    31 AGO 2026 · Hecho por Stemsmag
+  </div>
+</div>
+
+<div class="note-col">
+
+  <p>Cada tanto en STEMS armamos algo simplemente para regalar. Esta vez es //RELAXTHECHUNK, un mundito que se genera solo, ahí en tu pantalla, y que no te pide nada a cambio — ni cuenta, ni instalación. Solo que abras la pestaña y lo dejes correr.</p>
+
+  <h2>Así se ve</h2>
+
+  <p>Apenas entrás, la pantalla se llena de un terreno hecho de bloques — como si alguien hubiera armado un paisaje en cubitos de colores. No es siempre el mismo: puede tocarte una llanura suave, un bosque denso, un desierto, una taiga nevada, una jungla, una mesa rocosa o incluso un bioma de cristal que brilla distinto a todo lo demás. La cámara gira sola alrededor del chunk, despacio, como si lo estuviera admirando por vos.</p>
+
+  <p>Arriba, el cielo cambia con el tiempo: amanece, atardece, cae la noche y salen las estrellas — o se pone a llover, y las nubes bajas tapan todo de gris. Hay luz que se filtra entre los bloques como rayos de sol, un brillo suave alrededor de las cosas más iluminadas, y hasta la opción de teñir la escena con grano de película o con una aurora boreal ondulando en el cielo, si querés llevarlo a un lugar más onírico.</p>
+
+  <blockquote>No hay nada que ganar, ni puntaje, ni objetivo. Solo un lugar bonito que mirar.</blockquote>
+
+  <div class="note-figure-grid">
+    <figure class="note-figure">
+      <img src="images/relaxthechunk-bosque.jpg" alt="Chunk de bioma bosque en //RELAXTHECHUNK, de día, con partículas de polen flotando en el aire">
+      <figcaption>Bioma bosque, de día</figcaption>
+    </figure>
+    <figure class="note-figure">
+      <img src="images/relaxthechunk-noche.jpg" alt="Chunk de bioma jungla en //RELAXTHECHUNK, de noche, con estrellas y rayos de luz atravesando el cielo">
+      <figcaption>Bioma jungla, de noche</figcaption>
+    </figure>
+  </div>
+
+  <h2>Así se oye</h2>
+
+  <p>Debajo de todo eso hay una pequeña máquina de pads, generada en el momento por el propio navegador, con presets que vas cambiando según el ánimo que busques. Y encima de esa base musical, se puede armar tu propia mezcla de sonido ambiental: viento, pájaros de día, ranitas, grillos de noche, lluvia.</p>
+
+  <p>Lo que más nos gustó al probarlo es que esa mezcla reacciona sola: si activás la lluvia visual, el ambiente se ajusta con ella — bajan las partículas de polvo o polen, se apaga el viento y los pájaros, y entran las ranitas, como si de verdad hubiera empezado a llover afuera. Apagás la lluvia y todo vuelve a como estaba. Es un detalle chiquito, pero es el tipo de detalle que hace que el mundo se sienta vivo en vez de solo decorado.</p>
+
+  <figure class="note-figure">
+    <img src="images/relaxthechunk-nieve.jpg" alt="Chunk de bioma taiga nevada en //RELAXTHECHUNK con lluvia visual activada y el ambiente sonoro ajustado a ranitas">
+    <figcaption>Taiga nevada con la lluvia visual activada</figcaption>
+  </figure>
+
+  <h2>Cómo jugar con ella</h2>
+
+  <p>No hay manual que leer. El panel de control está ahí a la izquierda con todo a la vista: un botón para generar un chunk nuevo, un selector de bioma, control de altura del terreno y del tamaño del mapa. Si algo no te convence, tocás "nuevo chunk" y probás otra combinación.</p>
+
+  <p>Desde ahí también podés mover la velocidad del ciclo día/noche, fijar el reloj en un momento del día que te guste, ajustar cuánto se acerca o se aleja la cámara, y subir o bajar la densidad de las partículas que flotan en el aire. Si encontrás un paisaje que te enamoró, hay un botón para guardarlo y volver a cargarlo después. Y si el panel te estorba, lo escondés con un clic y te quedás solo con el mundo, a pantalla completa si querés.</p>
+
+  <figure class="note-figure">
+    <img src="images/relaxthechunk-panel.jpg" alt="Panel de control de //RELAXTHECHUNK con las secciones de mundo, máquina de pads, sonidos ambientales y ciclo día/noche">
+    <figcaption>El panel completo — todo a la vista, nada escondido en submenús</figcaption>
+  </figure>
+
+  <h2>Por qué es un regalo</h2>
+
+  <p>Porque no tiene otra intención. //RELAXTHECHUNK nació de un experimento de Gerardo Ventura, diseñador y productor salvadoreño detrás del proyecto (podés encontrarlo como <a href="https://www.instagram.com/thegeco_sv/" target="_blank" rel="noopener" style="color:var(--sky);">@thegeco_sv</a>), y lo compartió en STEMS para que lo pusiéramos a disposición de quien quiera usarlo — para relajarse, para estudiar con algo bonito de fondo, o simplemente para perder una tarde moviendo perillas sin ningún propósito productivo.</p>
+
+  <div class="gift-panel">
+    <div class="panel-title">Ficha de //RELAXTHECHUNK</div>
+    <div class="gift-rows">
+      <div class="row"><span class="k">Precio</span><span class="v">Gratis, siempre</span></div>
+      <div class="row"><span class="k">Cuenta o registro</span><span class="v">No hace falta</span></div>
+      <div class="row"><span class="k">Instalación</span><span class="v">Ninguna — corre en el navegador</span></div>
+      <div class="row"><span class="k">Datos que se envían a un servidor</span><span class="v">Ninguno</span></div>
+      <div class="row"><span class="k">Licencia</span><span class="v">Creative Commons BY-NC 4.0</span></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="links-bar">
+  <a href="../artifacts/relaxthechunkv1.html" class="primary">Entrar a //RELAXTHECHUNK →</a>
+  <a href="https://ko-fi.com/E1E21FM5MW" target="_blank" rel="noopener">Invitar un cafecito</a>
+  <a href="https://paypal.me/stemsmag?locale.x=es_XC&country.x=SV" target="_blank" rel="noopener">Apoyar por PayPal</a>
+</div>
+
+<div class="note-closing">Un deseo de toda la redacción de STEMS: que lo abras un rato sin ningún objetivo, que dejes que llueva ahí adentro, y que la tarde se te pase un poco más despacio. Eso es todo lo que queríamos regalarte.</div>
+
+<div class="comments-section" id="comments">
+  <div class="comments-head">Comentarios — únete a la conversación</div>
+  <!--
+    Comentarios vía Giscus (https://giscus.app), basado en GitHub Discussions.
+    Antes de publicar, configura tu propia instancia en https://giscus.app y reemplaza
+    data-repo, data-repo-id, data-category y data-category-id con los valores que te
+    genere el sitio para tu repositorio de GitHub.
+  -->
+  <script src="https://giscus.app/client.js"
+    data-repo="stemsmag/magazine"
+    data-repo-id="R_kgDOTsEphw"
+    data-category="Comments"
+    data-category-id="DIC_kwDOTsEph84DC18I"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="dark"
+    data-lang="es"
+    crossorigin="anonymous"
+    async>
+</script>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="footer-logo">STEMS<span>//</span>MAGAZINE</div>
+      <p class="footer-tagline-script">La música que nos une</p>
+      <p class="footer-tagline">Reseñas, perfiles y cultura de la música electrónica en español.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <rect x="3" y="3" width="18" height="18" rx="5"/>
+            <circle cx="12" cy="12" r="4.2"/>
+            <circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="#" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <rect x="2.5" y="5.5" width="19" height="13" rx="3.5"/>
+            <path d="M10 9.2 L15.5 12 L10 14.8 Z" fill="currentColor" stroke="none"/>
+          </svg>
+        </a>
+        <a href="#" aria-label="Spotify">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <circle cx="12" cy="12" r="9.5"/>
+            <path d="M7 9.5c3.5-1 7-1 10 .6" stroke-linecap="round"/>
+            <path d="M7.3 12.5c3-.8 6-.8 8.6.5" stroke-linecap="round"/>
+            <path d="M7.6 15.3c2.3-.6 4.8-.6 6.9.5" stroke-linecap="round"/>
+          </svg>
+        </a>
+        <a href="#" aria-label="TikTok">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M14 3v10.2a3.6 3.6 0 1 1-3-3.55" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14 3c.3 2.4 2 4.2 4.4 4.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Secciones</h4>
+      <ul>
+        <li><a href="../eventos.html">Eventos y lanzamientos</a></li>
+        <li><a href="../playlist.html">Playlists y videos</a></li>
+       </ul>
+    </div>
+    <div class="footer-col">
+      <h4>STEMS</h4>
+      <ul>
+        <li><a href="../sobre-nosotros.html">Sobre nosotros</a></li>
+        <li><a href="../contacto.html">Contacto</a></li>
+               </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="../terminos.html">Términos y condiciones</a></li>
+        <li><a href="../privacidad.html">Política de privacidad</a></li>
+        <li><a href="../cookies.html">Aviso de cookies</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>STEMS © 2026 — La música que nos une</span>
+  </div>
+  <div class="footer-credit">Revista de Música Electrónica Stems · Hecho en El Salvador · 2026</div>
+</footer>
+
+</body>
+</html>
