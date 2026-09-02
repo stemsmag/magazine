@@ -1,5 +1,18 @@
 { "events": [
   {
+  "id": "toque-beats-around-sivar-live-sessions",
+  "type": "toque",
+  "title": "BEATS AROUND SIVAR - LIVE SESSIONS",
+  "date": "2026-09-19",
+  "time": "5:00 PM CT",
+  "description": "Ya conocés Beats Around Sivar. Ahora es momento de vivirlo en vivo. 🔥\nPor primera vez, BAS sale de la pantalla para convertirse en una experiencia junto a ustedes.\n\nBAS LIVE SESSIONS — Primera Edición\n🎧 @pazmichi_ , @lirol.ofc , @bert.alvarez_ , @eryonstocker\n📅 19 de septiembre\n📍 @clubladalia · Centro Histórico\n\n🎟️ Preventa $12 (hasta el 13 de Septiembre)\n🎟️ Regular $15\n⚠️ Cupo limitado\n\nDifferent Sounds. One Experience.\n🎟️ Entradas disponibles en @easypass.fun",
+  "image": "img-ev/BASLS.jpg",
+  "link": "https://easypass.fun/eventos/bas-el-salvador",
+  "status": "confirmado",
+  "venue": "CLUB LA DALIA CENTRO HISTORICO, SAN SALVADOR",
+  "dj": "BERT ÁLVAREZ - B.A.S."
+},
+  {
   "id": "toque-lost-paradise",
   "type": "toque",
   "title": "Lost Paradise",
