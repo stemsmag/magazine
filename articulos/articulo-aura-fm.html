@@ -739,5 +739,106 @@
 
 </div>
 
+
+<!-- ============ MINI PLAYER FIJO — Aura FM 99.3 (a pie de página, sitio completo) ============ -->
+<div class="site-player" id="site-player">
+  <button class="site-player-btn" id="site-player-toggle" aria-label="Reproducir Aura FM en vivo">
+    <svg id="site-player-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+  </button>
+  <div class="site-player-info">
+    <div class="site-player-top">
+      <span class="site-player-dot"></span>
+      <span class="site-player-label">En vivo</span>
+    </div>
+    <div class="site-player-name">Aura FM · 99.3</div>
+  </div>
+  <div class="site-player-eq">
+    <span></span><span></span><span></span><span></span>
+  </div>
+  <button class="site-player-close" id="site-player-close" aria-label="Cerrar reproductor">✕</button>
+  <audio id="site-player-audio" preload="none">
+    <source src="https://stream.miradio.in/proxy/aura/stream" type="audio/mpeg">
+  </audio>
+</div>
+
+<style>
+  .site-player{
+    position:fixed; left:0; right:0; bottom:0; z-index:200;
+    display:flex; align-items:center; gap:14px;
+    max-width:1200px; margin:0 auto;
+    background:var(--card);
+    border-top:1px solid var(--orange);
+    border-left:1px solid var(--line);
+    border-right:1px solid var(--line);
+    padding:10px 16px;
+    box-shadow:0 -8px 24px rgba(0,0,0,0.35);
+  }
+  .site-player-btn{
+    flex:0 0 auto; width:38px; height:38px; border-radius:50%;
+    background:var(--orange); border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:transform .15s ease;
+  }
+  .site-player-btn:hover{transform:scale(1.06);}
+  .site-player-btn svg{width:14px; height:14px; fill:var(--bg);}
+  .site-player-info{flex:1 1 auto; min-width:0;}
+  .site-player-top{display:flex; align-items:center; gap:7px; margin-bottom:2px;}
+  .site-player-dot{width:6px; height:6px; border-radius:50%; background:var(--magenta); flex:0 0 auto;}
+  .site-player.is-playing .site-player-dot{animation:sitePlayerPulse 1.2s ease-in-out infinite;}
+  @keyframes sitePlayerPulse{0%,100%{opacity:1;}50%{opacity:0.25;}}
+  .site-player-label{font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--magenta); text-transform:uppercase;}
+  .site-player-name{font-family:'Anton',sans-serif; font-size:13px; letter-spacing:0.4px; color:var(--cream);}
+  .site-player-eq{display:flex; align-items:flex-end; gap:3px; height:18px; flex:0 0 auto;}
+  .site-player-eq span{display:block; width:3px; background:var(--orange); height:4px; border-radius:1px;}
+  .site-player.is-playing .site-player-eq span{animation:sitePlayerBounce 0.9s ease-in-out infinite;}
+  .site-player-eq span:nth-child(1){animation-delay:-0.6s;}
+  .site-player-eq span:nth-child(2){animation-delay:-0.3s;}
+  .site-player-eq span:nth-child(3){animation-delay:-0.9s;}
+  .site-player-eq span:nth-child(4){animation-delay:-0.15s;}
+  @keyframes sitePlayerBounce{0%,100%{height:4px;}50%{height:16px;}}
+  .site-player-close{
+    flex:0 0 auto; width:26px; height:26px; border:1px solid var(--line);
+    background:transparent; color:var(--muted); cursor:pointer;
+    font-family:'JetBrains Mono',monospace; font-size:11px; line-height:1;
+  }
+  .site-player-close:hover{color:var(--cream); border-color:var(--cream);}
+  .site-player.is-hidden{display:none;}
+  @media (max-width:520px){ .site-player-eq{display:none;} }
+</style>
+
+<script>
+  (function(){
+    const wrap = document.getElementById('site-player');
+    const btn = document.getElementById('site-player-toggle');
+    const icon = document.getElementById('site-player-icon');
+    const audio = document.getElementById('site-player-audio');
+    const closeBtn = document.getElementById('site-player-close');
+    const PLAY_ICON = '<path d="M8 5v14l11-7z"/>';
+    const PAUSE_ICON = '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>';
+
+    btn.addEventListener('click', function(){
+      if(audio.paused){
+        audio.play().catch(function(){
+          alert('No se pudo iniciar la transmisión.');
+        });
+      } else {
+        audio.pause();
+      }
+    });
+    audio.addEventListener('play', function(){
+      wrap.classList.add('is-playing');
+      icon.innerHTML = PAUSE_ICON;
+    });
+    audio.addEventListener('pause', function(){
+      wrap.classList.remove('is-playing');
+      icon.innerHTML = PLAY_ICON;
+    });
+    closeBtn.addEventListener('click', function(){
+      audio.pause();
+      wrap.classList.add('is-hidden');
+    });
+  })();
+</script>
+
 </body>
 </html>
