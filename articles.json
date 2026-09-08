@@ -2,6 +2,27 @@
   {
     "featured": true,
     "pinned": false,
+    "date": "2026-09-08",
+    "category": "Industria",
+    "categoryPill": "Radio Electrónica",
+    "titleLines": [
+      "AURA FM",
+      "SALE AL",
+      "AIRE"
+    ],
+    "title": "Aura FM: nace la primera radio 100% electrónica de El Salvador",
+    "dek": "La nueva estación transmite en el 99.3 y se presenta como la primera radio del país dedicada, las 24 horas, a la música electrónica.",
+    "tag": "Industria",
+    "tagColor": "orange",
+    "meta": "Industria · 7 min",
+    "image": "articulos/images/aurafm.jpg",
+    "seed": 61,
+    "slug": "articulos/articulo-aura-fm.html",
+    "comingSoon": false
+  },
+  {
+    "featured": true,
+    "pinned": false,
     "date": "2026-08-31",
     "category": "Perfil",
     "categoryPill": "Trance — Melodic House",
