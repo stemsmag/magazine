@@ -1,0 +1,1382 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>STEMS TV x Latam Electrónica</title>
+
+  <style>
+    /* =========================================================
+       Variables / paleta
+       ========================================================= */
+    :root {
+      --color-bg: #08080c;
+      --color-panel: #0f0f14;
+      --color-panel-2: #10101a;
+      --color-panel-3: #0e0e14;
+      --color-panel-4: #12131a;
+      --color-panel-active: #15151f;
+      --color-white: #ffffff;
+      --color-white-90: rgba(255,255,255,.9);
+      --color-white-80: rgba(255,255,255,.8);
+      --color-white-70: rgba(255,255,255,.7);
+      --color-white-60: rgba(255,255,255,.6);
+      --color-white-50: rgba(255,255,255,.5);
+      --color-white-40: rgba(255,255,255,.4);
+      --color-white-30: rgba(255,255,255,.3);
+      --color-white-20: rgba(255,255,255,.2);
+      --color-white-10: rgba(255,255,255,.1);
+      --color-white-08: rgba(255,255,255,.08);
+      --color-white-07: rgba(255,255,255,.07);
+      --color-white-06: rgba(255,255,255,.06);
+      --color-white-05: rgba(255,255,255,.05);
+      --color-white-04: rgba(255,255,255,.04);
+      --color-white-03: rgba(255,255,255,.03);
+      --color-violet-300: #c4b5fd;
+      --color-violet-400: #a78bfa;
+      --color-violet-500: #8b5cf6;
+      --color-violet-600: #7c3aed;
+      --color-cyan-200: #a5f3fc;
+      --color-cyan-300: #67e8f9;
+      --color-cyan-400: #22d3ee;
+      --color-cyan-500: #06b6d4;
+      --color-fuchsia-200: #f5d0fe;
+      --color-fuchsia-400: #e879f9;
+      --color-fuchsia-500: #d946ef;
+      --color-pink-500: #ec4899;
+      --color-red-300: #fca5a5;
+      --color-red-500: #ef4444;
+      --color-emerald-300: #6ee7b7;
+      --color-emerald-400: #34d399;
+      --color-emerald-500: #10b981;
+      --shadow-main: 0 20px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04) inset;
+      --shadow-float: 0 10px 40px rgba(0,0,0,.5);
+      --font-ui: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-display: "Space Grotesk", Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+
+    /* =========================================================
+       Reset / base
+       ========================================================= */
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--color-bg);
+      color: var(--color-white);
+      font-family: var(--font-ui);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; border: 0; background: transparent; cursor: pointer; }
+    img { display: block; max-width: 100%; height: auto; }
+    h1, h2, .display { font-family: var(--font-display); }
+    ::selection { background: rgba(217,70,239,.3); color: #fff; }
+
+    /* =========================================================
+       Utility / layout
+       ========================================================= */
+    .page { min-height: 100vh; position: relative; background: var(--color-bg); }
+    .container { width: 100%; max-width: 1440px; margin: 0 auto; }
+    .main-grid {
+      position: relative; z-index: 10; max-width: 1440px; margin: 0 auto;
+      padding: 24px 16px 40px; display: grid;
+      grid-template-columns: 1fr; gap: 32px; align-items: start;
+    }
+    .content-stack { min-width: 0; display: flex; flex-direction: column; gap: 32px; }
+    .two-column { display: grid; grid-template-columns: 1fr; gap: 32px; }
+
+    /* =========================================================
+       Ambient background
+       ========================================================= */
+    .ambient { pointer-events: none; position: fixed; inset: 0; z-index: 0; overflow: hidden; }
+    .glow { position: absolute; border-radius: 9999px; filter: blur(40px); }
+    .glow-a {
+      top: -20%; left: 10%; width: 60vw; height: 60vw; max-width: 800px; max-height: 800px;
+      background: radial-gradient(circle at center, rgba(168,85,247,.18), transparent 70%);
+    }
+    .glow-b {
+      top: 10%; right: 5%; width: 50vw; height: 50vw; max-width: 700px; max-height: 700px;
+      filter: blur(50px);
+      background: radial-gradient(circle at center, rgba(56,189,248,.14), transparent 70%);
+    }
+    .glow-c {
+      bottom: 0; left: 50%; transform: translateX(-50%); width: 80vw; height: 40vh;
+      filter: blur(30px);
+      background: radial-gradient(ellipse at center, rgba(139,92,246,.10), transparent 70%);
+    }
+
+    /* =========================================================
+       Version badge
+       ========================================================= */
+    .version-badge {
+      position: fixed; top: 76px; right: 14px; z-index: 90;
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 12px; border-radius: 9999px;
+      background: rgba(255,255,255,.10); backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,.15);
+      box-shadow: 0 0 30px rgba(168,85,247,.3);
+    }
+    .version-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--color-emerald-400);
+      box-shadow: 0 0 10px rgba(52,211,153,.8);
+      animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite;
+    }
+    .version-text { font-size: 11px; font-weight: 700; letter-spacing: .14em; color: var(--color-white-90); }
+
+    /* =========================================================
+       Header
+       ========================================================= */
+    .site-header {
+      position: sticky; top: 0; z-index: 50; width: 100%;
+      border-bottom: 1px solid var(--color-white-06);
+      background: rgba(8,8,12,.8); backdrop-filter: blur(20px);
+    }
+    .header-inner {
+      max-width: 1440px; height: 64px; margin: 0 auto; padding: 0 16px;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    }
+    .header-left, .brand, .series, .live, .header-right { display: flex; align-items: center; }
+    .header-left { gap: 20px; min-width: 0; }
+    .brand { gap: 12px; min-width: 0; }
+    .brand-mark {
+      width: 42px; height: 42px; border-radius: 11px; flex-shrink: 0;
+      background: #fff; color: #000; display: grid; place-items: center;
+      font-weight: 900; letter-spacing: -.05em; font-size: 15px;
+      box-shadow: 0 0 28px rgba(255,255,255,.35);
+    }
+    .brand-copy { min-width: 0; line-height: .9; }
+    .brand-title {
+      display: flex; align-items: center; gap: 8px; min-width: 0;
+      font-size: 21px; font-weight: 800; letter-spacing: -.025em;
+    }
+    .brand-title span { white-space: nowrap; }
+    .brand-title .gradient { overflow: hidden; text-overflow: ellipsis; }
+    .brand-title .muted-x { color: rgba(255,255,255,.2); font-weight: 350; }
+    .brand-title .gradient {
+      background: linear-gradient(to right, var(--color-violet-300), var(--color-cyan-300));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 0 12px rgba(139,92,246,.35));
+    }
+    .brand-subtitle { margin-top: 1px; font-size: 10px; letter-spacing: .2em; color: var(--color-white-40); font-weight: 500; }
+    .series { display: none; gap: 8px; margin-left: 24px; padding-left: 24px; border-left: 1px solid var(--color-white-10); }
+    .series-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-white-30); }
+    .series-text { font-size: 11px; letter-spacing: .16em; color: var(--color-white-40); font-weight: 600; }
+    .header-right { gap: 12px; flex-shrink: 0; }
+    .live {
+      gap: 10px; height: 32px; padding: 0 14px 0 12px; border-radius: 9999px;
+      background: var(--color-panel-4); border: 1px solid var(--color-white-10);
+    }
+    .live-dots { position: relative; width: 10px; height: 10px; }
+    .live-dots::before, .live-dots::after {
+      content: ""; position: absolute; inset: 0; border-radius: 50%; background: var(--color-red-500);
+    }
+    .live-dots::before { animation: ping 1s cubic-bezier(0,0,.2,1) infinite; opacity: .75; }
+    .live-dots::after { box-shadow: 0 0 10px rgba(239,68,68,.8); }
+    .live-label { font-size: 11px; font-weight: 700; letter-spacing: .14em; }
+    .live-viewers { margin-left: 4px; font-size: 11px; color: var(--color-white-50); }
+    .channel-options {
+      display: none; width: 32px; height: 32px; border-radius: 50%;
+      background: var(--color-white-05); border: 1px solid var(--color-white-10);
+      place-items: center;
+    }
+
+    /* =========================================================
+       Hero / video card
+       ========================================================= */
+    .hero-card {
+      position: relative; border-radius: 20px; overflow: hidden;
+      background: var(--color-panel); border: 1px solid var(--color-white-08);
+      box-shadow: var(--shadow-main);
+    }
+    .hero-card::before {
+      content: ""; position: absolute; inset: -1px; border-radius: inherit;
+      background: linear-gradient(to bottom right, rgba(139,92,246,.2), transparent, rgba(34,211,238,.2));
+      opacity: 0; transition: opacity .7s; pointer-events: none; z-index: 2;
+    }
+    .hero-card:hover::before { opacity: 1; }
+    .hero-media { position: relative; aspect-ratio: 16/9; overflow: hidden; }
+    .hero-media img {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+      transform: scale(1.02); transition: transform 1.2s;
+    }
+    .hero-card:hover .hero-media img { transform: scale(1.04); }
+    .hero-media iframe {
+      position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 1;
+    }
+    .hero-media.is-playing .hero-overlay,
+    .hero-media.is-playing .hero-color-overlay,
+    .hero-media.is-playing .noise,
+    .hero-media.is-playing .hero-tags,
+    .hero-media.is-playing .play-button,
+    .hero-media.is-playing .hero-bottom,
+    .hero-media.is-playing img { display: none; }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, var(--color-bg), rgba(8,8,12,.3), transparent);
+    }
+    .hero-color-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom right, rgba(124,58,237,.2), transparent, rgba(6,182,212,.1));
+      mix-blend-mode: screen;
+    }
+    .noise {
+      position: absolute; inset: 0; opacity: .04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .hero-tags {
+      position: absolute; top: 16px; left: 16px; right: 16px;
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap; z-index: 3;
+    }
+    .pill {
+      padding: 4px 10px; border-radius: 9999px; font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      background: rgba(0,0,0,.6); backdrop-filter: blur(12px); border: 1px solid var(--color-white-10);
+    }
+    .pill-with-icon { display: inline-flex; align-items: center; gap: 6px; }
+    .pill-secondary { background: rgba(0,0,0,.4); color: var(--color-white-70); font-weight: 500; }
+    .play-button {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+      z-index: 4; width: 72px; height: 72px; border-radius: 50%;
+    }
+    .play-glow { position: absolute; inset: 0; border-radius: 50%; background: #fff; filter: blur(18px); opacity: .3; transition: opacity .3s; }
+    .play-button:hover .play-glow { opacity: .5; }
+    .play-core {
+      position: relative; width: 72px; height: 72px; border-radius: 50%; background: #fff; color: #000;
+      display: grid; place-items: center; box-shadow: var(--shadow-float); transition: transform .3s;
+    }
+    .play-button:hover .play-core { transform: scale(1.05); }
+    .play-ring { position: absolute; inset: -12px; border-radius: 50%; border: 1px solid var(--color-white-20); transition: border-color .15s; }
+    .play-button:hover .play-ring { border-color: rgba(255,255,255,.4); }
+    .preview-active {
+      position: absolute; left: 50%; bottom: 68px; transform: translateX(-50%);
+      padding: 4px 12px; border-radius: 9999px; background: #fff; color: #000;
+      font-size: 11px; font-weight: 700; letter-spacing: .025em; z-index: 4;
+      white-space: nowrap;
+    }
+    .hero-bottom {
+      position: absolute; left: 0; right: 0; bottom: 0; padding: 16px;
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; z-index: 3;
+    }
+    .hero-meta, .hero-actions { display: flex; align-items: center; gap: 8px; }
+    .hero-meta { min-width: 0; }
+    .hd {
+      padding: 4px 8px; border-radius: 4px; background: #fff; color: #000;
+      font-size: 10px; font-weight: 700; letter-spacing: .1em; flex-shrink: 0;
+    }
+    .duration {
+      display: none; align-items: center; gap: 6px; font-size: 11px; color: var(--color-white-60);
+      min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .round-action {
+      width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
+      background: rgba(255,255,255,.1); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,.15);
+      transition: background .15s;
+    }
+    .round-action:hover { background: rgba(255,255,255,.15); }
+
+    /* =========================================================
+       Main metadata
+       ========================================================= */
+    .episode-meta { display: flex; flex-direction: column; gap: 16px; }
+    .meta-pills { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .genre-pill {
+      display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 9999px;
+      background: rgba(34,211,238,.1); border: 1px solid rgba(103,232,249,.2);
+      color: var(--color-cyan-200); font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      box-shadow: 0 0 20px rgba(34,211,238,.15);
+    }
+    .scene-pill {
+      display: inline-flex; padding: 4px 10px; border-radius: 9999px;
+      background: var(--color-white-06); border: 1px solid var(--color-white-10);
+      color: var(--color-white-50); font-size: 10px; letter-spacing: .1em;
+    }
+    .episode-title {
+      margin: 0; max-width: 22ch; font-size: 24px; line-height: 1.05; font-weight: 700; letter-spacing: -.025em;
+    }
+    .episode-title .soft { color: var(--color-white-50); font-weight: 500; }
+    .episode-title .softer { color: var(--color-white-30); }
+    .byline { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; font-size: 13px; color: var(--color-white-50); }
+    .artist { display: flex; align-items: center; gap: 8px; }
+    .artist-avatar {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: linear-gradient(to bottom right, var(--color-violet-400), var(--color-cyan-300));
+      display: grid; place-items: center; color: #000; font-size: 10px; font-weight: 900;
+    }
+    .separator { width: 4px; height: 4px; border-radius: 50%; background: var(--color-white-20); }
+    .muted-date { color: var(--color-white-30); }
+
+    /* =========================================================
+       Info cards
+       ========================================================= */
+    .info-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .info-card {
+      position: relative; border-radius: 16px; padding: 20px;
+      background: var(--color-white-04); backdrop-filter: blur(24px);
+      border: 1px solid var(--color-white-07); transition: background .15s, border-color .15s;
+    }
+    .info-card:hover { background: var(--color-white-06); border-color: var(--color-white-10); }
+    .info-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .info-label { font-size: 10px; letter-spacing: .18em; font-weight: 700; color: var(--color-white-40); }
+    .info-value { font-size: 13px; font-weight: 500; color: var(--color-white-90); line-height: 1.25; }
+    .info-link { display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; font-size: 11px; color: rgba(165,243,252,.8); }
+    .info-link:hover { color: var(--color-cyan-200); }
+    .social-links { display: flex; flex-direction: column; gap: 10px; }
+    .social-link {
+      display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500;
+      color: var(--color-white-80); transition: color .15s; word-break: break-all;
+    }
+    .social-link:hover { color: #fff; }
+    .social-link .icon-sm { flex-shrink: 0; }
+
+    /* =========================================================
+       Review / comments panels
+       ========================================================= */
+    .panel {
+      position: relative; border-radius: 18px; overflow: hidden;
+      backdrop-filter: blur(24px); border: 1px solid var(--color-white-08);
+    }
+    .panel-review { background: rgba(16,16,26,.8); }
+    .panel-comments { background: rgba(14,14,20,.8); }
+    .panel-line {
+      position: absolute; left: 0; right: 0; top: 0; height: 1px;
+      background: linear-gradient(to right, transparent, rgba(232,121,249,.5), rgba(34,211,238,0));
+    }
+    .panel-line-cyan { background: linear-gradient(to right, transparent, rgba(34,211,238,.5), transparent); }
+    .panel-body { padding: 20px; }
+    .panel-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .review-badge, .comments-badge {
+      height: 24px; padding: 0 12px; border-radius: 9999px;
+      display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .18em;
+    }
+    .review-badge { background: linear-gradient(to right, rgba(217,70,239,.2), rgba(236,72,153,.2)); border: 1px solid rgba(232,121,249,.2); color: var(--color-fuchsia-200); }
+    .review-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-fuchsia-400); box-shadow: 0 0 8px rgba(232,121,249,.8); }
+    .comments-badge { background: rgba(34,211,238,.15); border: 1px solid rgba(103,232,249,.2); color: var(--color-cyan-200); }
+    .panel-note { font-size: 11px; color: var(--color-white-30); }
+    .review-text { margin: 0; max-width: 65ch; font-size: 14px; line-height: 1.7; color: var(--color-white-80); }
+    .review-text strong { color: #fff; font-weight: 500; }
+    .review-text p { margin: 0 0 10px; }
+    .review-text p:last-child { margin-bottom: 0; }
+
+    /* Comentarios reales */
+    .comment-item {
+      display: flex; gap: 12px; padding: 14px 0;
+      border-bottom: 1px solid var(--color-white-06);
+    }
+    .comment-item:last-child { border-bottom: 0; padding-bottom: 0; }
+    .comment-avatar {
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      object-fit: cover; background: var(--color-panel-3); border: 1px solid var(--color-white-10);
+    }
+    .comment-avatar-fallback {
+      display: grid; place-items: center; font-size: 11px; font-weight: 900; color: var(--color-white-60);
+    }
+    .comment-content { min-width: 0; flex: 1; }
+    .comment-author { font-size: 12px; font-weight: 700; color: var(--color-white-90); margin-bottom: 3px; }
+    .comment-text { font-size: 13px; line-height: 1.5; color: var(--color-white-70); word-break: break-word; }
+    .comment-meta { margin-top: 6px; display: flex; gap: 12px; font-size: 11px; color: var(--color-white-30); }
+    .load-more-btn {
+      width: 100%; margin-top: 16px; padding: 10px; border-radius: 12px;
+      background: var(--color-white-05); border: 1px solid var(--color-white-10);
+      color: var(--color-cyan-200); font-family: var(--font-ui); font-size: 12px; font-weight: 700;
+      letter-spacing: .05em; cursor: pointer; transition: background .15s, border-color .15s;
+    }
+    .load-more-btn:hover { background: rgba(34,211,238,.1); border-color: rgba(103,232,249,.3); }
+    .hashtags { margin-top: 20px; display: flex; gap: 8px; }
+    .hashtag {
+      padding: 4px 10px; border-radius: 9999px; background: var(--color-white-05);
+      border: 1px solid var(--color-white-10); font-size: 11px; color: var(--color-white-60);
+    }
+    .comments-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .comments-left { display: flex; align-items: center; gap: 12px; }
+    .comments-empty {
+      padding: 24px; border-radius: 14px; background: var(--color-white-03);
+      border: 1px solid var(--color-white-06); text-align: center;
+    }
+    .comments-icon {
+      width: 40px; height: 40px; margin: 0 auto 12px; border-radius: 50%;
+      background: var(--color-white-04); border: 1px solid var(--color-white-10);
+      display: grid; place-items: center; color: var(--color-white-30);
+    }
+    .comments-empty p { margin: 0; }
+    .comment-main { font-size: 14px; color: var(--color-white-60); }
+    .comment-sub { margin-top: 8px !important; font-size: 13px; color: var(--color-white-30); }
+    .youtube-comment-link {
+      margin-top: 16px; display: inline-flex; align-items: center; gap: 8px;
+      font-size: 12px; font-weight: 600; color: var(--color-cyan-200);
+    }
+    .youtube-comment-link:hover { color: #cffafe; }
+    .mobile-divider { display: none; height: 1px; background: linear-gradient(to right, transparent, rgba(255,255,255,.1), transparent); }
+
+    /* =========================================================
+       Sidebar / episode list
+       ========================================================= */
+    .sidebar { min-width: 0; }
+    .sidebar-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .sidebar-title { margin: 0; display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700; letter-spacing: -.025em; }
+    .count {
+      padding: 2px 8px; border-radius: 9999px; background: var(--color-white-10);
+      border: 1px solid var(--color-white-10); color: var(--color-white-50); font-size: 11px; font-weight: 500;
+    }
+    .compact-toggle {
+      font-size: 11px; letter-spacing: .1em; font-weight: 700; color: var(--color-cyan-200);
+      padding: 6px 14px; border-radius: 9999px;
+      background: rgba(34,211,238,.1); border: 1px solid rgba(103,232,249,.25);
+      transition: background .15s, border-color .15s, color .15s;
+    }
+    .compact-toggle:hover { color: #fff; background: rgba(34,211,238,.18); border-color: rgba(103,232,249,.4); }
+    .episode-list { display: flex; flex-direction: column; gap: 14px; padding-bottom: 32px; }
+    .episode-item {
+      position: relative; width: 100%; padding: 1px; border-radius: 16px; overflow: hidden;
+      text-align: left; border: 1px solid var(--color-white-06);
+      background: var(--color-white-03); transition: background .3s, border-color .3s, box-shadow .3s;
+    }
+    .episode-item:hover { background: var(--color-white-06); border-color: var(--color-white-10); box-shadow: 0 10px 30px rgba(0,0,0,.3); }
+    .episode-item.active {
+      background: var(--color-panel-active); border-color: rgba(167,139,250,.4);
+      box-shadow: 0 0 30px rgba(139,92,246,.25), 0 0 0 1px rgba(167,139,250,.15) inset;
+    }
+    .episode-highlight {
+      position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(to bottom right, rgba(139,92,246,.1), transparent, rgba(34,211,238,.1));
+    }
+    .episode-inner { position: relative; display: flex; gap: 14px; padding: 14px; border-radius: 15px; background: var(--color-panel); }
+    .thumb {
+      position: relative; flex: 0 0 108px; width: 108px; height: 64px; border-radius: 11px; overflow: hidden;
+      background: var(--color-panel-3); border: 1px solid var(--color-white-10);
+    }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; opacity: .9; transition: opacity .15s; }
+    .thumb-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.7), transparent); }
+    .thumb-play { position: absolute; inset: 0; display: grid; place-items: center; }
+    .thumb-play-core {
+      width: 24px; height: 24px; border-radius: 50%; background: #fff; color: #000;
+      display: grid; place-items: center; box-shadow: 0 10px 15px -3px rgba(0,0,0,.1);
+    }
+    .thumb-gradient { position: absolute; inset: 0; opacity: .8; transition: opacity .15s; }
+    .episode-item:hover .thumb-gradient { opacity: 1; }
+    .thumb-radial { position: absolute; inset: 0; background: radial-gradient(circle at center, transparent, rgba(0,0,0,.5)); }
+    .episode-number {
+      position: absolute; top: 6px; left: 6px; padding: 2px 6px; border-radius: 6px;
+      font-size: 10px; font-weight: 900; letter-spacing: .05em;
+      background: rgba(0,0,0,.7); color: var(--color-white-80); border: 1px solid var(--color-white-10);
+    }
+    .episode-item.active .episode-number { background: #fff; color: #000; border-color: #fff; }
+    .episode-duration {
+      position: absolute; right: 4px; bottom: 4px; padding: 2px 4px; border-radius: 4px;
+      background: rgba(0,0,0,.7); color: var(--color-white-70); font-size: 9px; font-weight: 500;
+      backdrop-filter: blur(8px);
+    }
+    .episode-copy { min-width: 0; flex: 1; }
+    .episode-item-title {
+      font-size: 13px; font-weight: 600; line-height: 1.25; color: var(--color-white-80);
+      display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+    }
+    .episode-item.active .episode-item-title, .episode-item:hover .episode-item-title { color: #fff; }
+    .episode-handle { margin-top: 4px; display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--color-white-40); }
+    .active-dot {
+      width: 4px; height: 4px; border-radius: 50%; background: var(--color-emerald-400);
+      box-shadow: 0 0 6px rgba(52,211,153,.8); animation: pulse 2s cubic-bezier(.4,0,.6,1) infinite;
+    }
+    .episode-genres { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px; }
+    .genre-tag {
+      padding: 2px 6px; border-radius: 9999px; font-size: 9px; font-weight: 500; letter-spacing: .025em;
+      border: 1px solid var(--color-white-10); background: var(--color-white-05); color: var(--color-white-40);
+    }
+    .episode-item.active .genre-tag { background: rgba(139,92,246,.15); border-color: rgba(167,139,250,.2); color: #ddd6fe; }
+    .active-bar {
+      position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+      width: 3px; height: 60%; border-radius: 9999px;
+      background: linear-gradient(to bottom, var(--color-violet-400), var(--color-cyan-300));
+      box-shadow: 0 0 12px rgba(139,92,246,.8);
+    }
+    .stems-card {
+      margin-top: 8px; padding: 20px; border-radius: 16px; background: var(--color-panel);
+      border: 1px solid var(--color-white-05);
+    }
+    .stems-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .tv-mini {
+      width: 20px; height: 20px; border-radius: 50%; background: #fff; color: #000;
+      display: grid; place-items: center; font-size: 10px; font-weight: 900;
+    }
+    .stems-title { font-size: 12px; font-weight: 600; }
+    .curated {
+      margin-left: auto; padding: 2px 8px; border-radius: 9999px;
+      background: rgba(16,185,129,.15); color: var(--color-emerald-300); border: 1px solid rgba(52,211,153,.2);
+      font-size: 10px;
+    }
+    .stems-text { margin: 0; font-size: 11px; line-height: 1.6; color: var(--color-white-40); }
+
+    /* =========================================================
+       Bottom fade
+       ========================================================= */
+    .bottom-fade {
+      pointer-events: none; position: fixed; left: 0; right: 0; bottom: 0; height: 20vh; z-index: 10;
+      background: linear-gradient(to top, var(--color-bg), transparent);
+    }
+
+    /* =========================================================
+       Inline SVG icons
+       ========================================================= */
+    .icon { width: 14px; height: 14px; display: inline-block; vertical-align: middle; }
+    .icon-sm { width: 12px; height: 12px; }
+    .icon-lg { width: 18px; height: 18px; }
+    .icon-play { width: 28px; height: 28px; }
+    .icon-cyan { color: var(--color-cyan-300); }
+    .icon-red { color: var(--color-red-300); }
+    .icon-violet { color: var(--color-violet-300); }
+    .icon-muted { color: var(--color-white-60); }
+
+    /* =========================================================
+       Responsive behavior
+       ========================================================= */
+    @media (min-width: 768px) {
+      .header-inner { padding-left: 32px; padding-right: 32px; }
+      .main-grid { padding-left: 32px; padding-right: 32px; padding-top: 40px; }
+      .series, .channel-options, .duration { display: flex; }
+      .channel-options { display: grid; }
+      .hero-card { border-radius: 28px; }
+      .hero-tags { top: 24px; left: 24px; right: 24px; }
+      .play-button, .play-core { width: 88px; height: 88px; }
+      .hero-bottom { padding: 24px; }
+      .episode-title { font-size: 36px; }
+      .panel-body { padding: 28px; }
+      .review-text { font-size: 15px; }
+      .info-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      .mobile-divider { display: block; }
+      .panel { border-radius: 22px; }
+      .thumb { flex-basis: 108px; }
+    }
+
+    @media (min-width: 1024px) {
+      .main-grid { grid-template-columns: 1.75fr .95fr; gap: 40px; }
+      .sidebar { position: sticky; top: 80px; height: calc(100vh - 96px); overflow-y: auto; padding-right: 8px; }
+      .sidebar::-webkit-scrollbar { width: 4px; }
+      .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 10px; }
+      .sidebar::-webkit-scrollbar-track { background: transparent; }
+      .two-column { grid-template-columns: 1fr; }
+    }
+
+    /* ---- Tablet chico / móvil grande (hasta 767px) ---- */
+    @media (max-width: 767px) {
+      .container, .main-grid { padding-left: 16px; padding-right: 16px; }
+      .version-badge { top: 72px; right: 12px; padding: 5px 10px; }
+      .version-text { font-size: 10px; }
+      .live-viewers { display: none; }
+      .hero-bottom { padding: 16px; }
+      .episode-title { font-size: 24px; max-width: none; }
+      .mobile-divider { display: block; }
+      .play-button, .play-core { width: 64px; height: 64px; }
+      .play-ring { inset: -10px; }
+      .icon-play { width: 22px; height: 22px; }
+      .thumb { flex: 0 0 92px; width: 92px; height: 56px; }
+      .episode-inner { padding: 12px; gap: 12px; }
+      .panel-body { padding: 18px; }
+      .info-grid { gap: 12px; }
+      .info-card { padding: 16px; }
+    }
+
+    /* ---- Móvil (hasta 480px) ---- */
+    @media (max-width: 480px) {
+      .header-inner { height: 58px; padding-left: 12px; padding-right: 12px; }
+      .brand { gap: 8px; }
+      .brand-mark { width: 34px; height: 34px; font-size: 12px; }
+      .brand-title { font-size: 13px; gap: 5px; }
+      .brand-subtitle { font-size: 8px; letter-spacing: .12em; }
+      .live { height: 28px; padding: 0 10px 0 8px; }
+      .live-label { font-size: 9px; }
+      .version-badge { top: 64px; right: 10px; padding: 4px 8px; gap: 6px; }
+      .version-text { font-size: 9px; letter-spacing: .1em; }
+      .version-dot { width: 6px; height: 6px; }
+      .main-grid { padding: 16px 12px 32px; gap: 24px; }
+      .content-stack { gap: 24px; }
+      .hero-card { border-radius: 14px; }
+      .hero-tags { top: 10px; left: 10px; right: 10px; gap: 6px; }
+      .pill { padding: 3px 8px; font-size: 9px; }
+      .hero-bottom { padding: 12px; gap: 10px; }
+      .round-action { width: 28px; height: 28px; }
+      .icon { width: 12px; height: 12px; }
+      .genre-pill { font-size: 10px; padding: 5px 10px; }
+      .episode-title { font-size: 20px; }
+      .byline { font-size: 12px; gap: 8px; }
+      .sidebar-title { font-size: 16px; }
+      .thumb { flex: 0 0 78px; width: 78px; height: 48px; border-radius: 9px; }
+      .episode-item-title { font-size: 12px; }
+      .stems-card { padding: 16px; }
+    }
+
+    /* =========================================================
+       Animations
+       ========================================================= */
+    @keyframes ping {
+      75%, 100% { transform: scale(2); opacity: 0; }
+
+    }
+    @keyframes pulse {
+      50% { opacity: .5; }
+    }
+
+    /* =========================================================
+       Nav links (header)
+       ========================================================= */
+    .nav-links { display: none; align-items: center; gap: 4px; }
+    .nav-links a {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px; border-radius: 9999px;
+      font-size: 11px; font-weight: 700; letter-spacing: .08em;
+      color: var(--color-white-60); border: 1px solid transparent;
+      transition: color .15s, background .15s, border-color .15s;
+    }
+    .nav-links a:hover {
+      color: var(--color-cyan-200); background: rgba(34,211,238,.08);
+      border-color: rgba(103,232,249,.2);
+    }
+    .nav-links a.is-active {
+      color: var(--color-cyan-200); background: rgba(34,211,238,.12);
+      border-color: rgba(103,232,249,.3); box-shadow: 0 0 20px rgba(34,211,238,.15);
+    }
+    @media (min-width: 900px) { .nav-links { display: flex; } }
+
+    .nav-toggle-tv {
+      display: grid; place-items: center; width: 36px; height: 36px; border-radius: 9999px;
+      background: rgba(255,255,255,.06); border: 1px solid var(--color-white-10);
+    }
+    @media (min-width: 900px) { .nav-toggle-tv { display: none; } }
+
+    .nav-links-mobile {
+      display: none; flex-direction: column; gap: 4px;
+      padding: 10px 16px 16px; border-bottom: 1px solid var(--color-white-06);
+      background: rgba(8,8,12,.95); backdrop-filter: blur(20px);
+    }
+    .nav-links-mobile.is-open { display: flex; }
+    .nav-links-mobile a {
+      padding: 12px 14px; border-radius: 12px; font-size: 13px; font-weight: 700; letter-spacing: .04em;
+      color: var(--color-white-70); background: rgba(255,255,255,.04); border: 1px solid var(--color-white-10);
+    }
+    .nav-links-mobile a.is-active { color: var(--color-cyan-200); border-color: rgba(103,232,249,.3); background: rgba(34,211,238,.1); }
+    @media (min-width: 900px) { .nav-links-mobile { display: none !important; } }
+
+    /* =========================================================
+       Footer
+       ========================================================= */
+    .tv-footer {
+      position: relative; z-index: 10; margin-top: 24px;
+      border-top: 1px solid var(--color-white-06);
+      background: rgba(15,15,20,.6);
+    }
+    .footer-top {
+      max-width: 1440px; margin: 0 auto; padding: 48px 16px 36px;
+      display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 32px;
+    }
+    @media (max-width: 900px) { .footer-top { grid-template-columns: 1fr 1fr; row-gap: 32px; } }
+    @media (max-width: 560px) { .footer-top { grid-template-columns: 1fr; padding: 40px 16px 28px; } }
+
+    .footer-brand-mark { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .footer-brand-mark .brand-mark { width: 34px; height: 34px; font-size: 12px; box-shadow: none; }
+    .footer-brand-title { font-size: 15px; font-weight: 800; letter-spacing: -.02em; }
+    .footer-brand-title .gradient {
+      background: linear-gradient(to right, var(--color-violet-300), var(--color-cyan-300));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .footer-tagline { font-size: 12.5px; line-height: 1.6; color: var(--color-white-50); max-width: 280px; margin-bottom: 18px; }
+    .footer-social { display: flex; gap: 8px; }
+    .footer-social a {
+      display: flex; align-items: center; justify-content: center; width: 32px; height: 32px;
+      border-radius: 9999px; border: 1px solid var(--color-white-10); color: var(--color-white-50);
+      transition: color .15s, border-color .15s;
+    }
+    .footer-social a:hover { color: var(--color-cyan-200); border-color: rgba(103,232,249,.35); }
+    .footer-social svg { width: 15px; height: 15px; }
+
+    .footer-col h4 {
+      font-size: 10px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700;
+      color: var(--color-violet-300); margin: 0 0 14px;
+    }
+    .footer-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col a { font-size: 13px; color: var(--color-white-50); transition: color .15s; }
+    .footer-col a:hover { color: var(--color-white-90); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--color-white-06);
+      max-width: 1440px; margin: 0 auto; padding: 18px 16px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+      font-size: 10px; letter-spacing: .05em; color: var(--color-white-30);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app" class="page">
+
+    <!-- Ambient background -->
+    <div class="ambient" aria-hidden="true">
+      <div class="glow glow-a"></div>
+      <div class="glow glow-b"></div>
+      <div class="glow glow-c"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="header-left">
+          <div class="brand">
+<div class="brand-copy">
+            <div class="brand-title">
+                <span>STEMS TV</span>
+                <span class="muted-x">×</span>
+                <span class="gradient">LATAM ELECTRONICA</span>
+              </div>
+              <div class="brand-subtitle">CULTURA ELECTRÓNICA</div>
+            </div>
+          </div>
+
+          <div class="series">
+            <span class="series-dot"></span>
+            <span class="series-text">SERIE ORIGINAL by: RUDO</span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <nav class="nav-links" aria-label="Navegación principal">
+            <a href="index.html">Home</a>
+            <a href="articulos.html">Artículos</a>
+            <a href="eventos.html">Eventos</a>
+            <a href="playlist.html">Playlist</a>
+            <a href="stems-tv-latam-electronica02.html" class="is-active">TV</a>
+          </nav>
+          <button id="navToggleTv" class="nav-toggle-tv" type="button" aria-label="Abrir menú" aria-expanded="false">
+            <svg class="icon icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div id="navLinksMobile" class="nav-links-mobile">
+        <a href="index.html">Home</a>
+        <a href="articulos.html">Artículos</a>
+        <a href="eventos.html">Eventos</a>
+        <a href="playlist.html">Playlist</a>
+        <a href="stems-tv-latam-electronica02.html" class="is-active">STEMS TV</a>
+      </div>
+    </header>
+
+    <!-- Main content -->
+    <main class="main-grid">
+      <!-- Main column -->
+      <div class="content-stack">
+
+        <!-- Hero -->
+        <section class="hero-card">
+          <div class="hero-media" id="heroMedia">
+            <img id="heroThumb" alt="">
+            <div class="hero-overlay"></div>
+            <div class="hero-color-overlay"></div>
+            <div class="noise"></div>
+
+            <div class="hero-tags">
+              <span class="pill pill-with-icon">
+                <svg class="icon-sm icon-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 12h16M12 4v16"></path>
+                </svg>
+                LATAM ELECTRONICA
+              </span>
+              <span class="pill pill-secondary" id="heroChBadge">CH.01</span>
+            </div>
+
+            <button id="playHeroBtn" class="play-button" type="button" aria-label="Reproducir episodio">
+              <span class="play-glow"></span>
+              <span id="playCore" class="play-core">
+                <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="m9 6 9 6-9 6z"></path>
+                </svg>
+              </span>
+              <span class="play-ring"></span>
+            </button>
+
+            <div class="hero-bottom" id="heroBottom">
+              <div class="hero-meta">
+                <span class="hd">HD</span>
+                <span class="duration" id="heroDate">
+                  <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path>
+                  </svg>
+                  <span id="heroDateText"></span>
+                </span>
+              </div>
+              <div class="hero-actions">
+                <a class="round-action" id="heroYoutubeLink" href="#" target="_blank" rel="noopener" aria-label="Abrir en YouTube">
+                  <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M21.6 7.2a2.8 2.8 0 0 0-2-2C17.9 4.7 12 4.7 12 4.7s-5.9 0-7.6.5a2.8 2.8 0 0 0-2 2C2 8.9 2 12 2 12s0 3.1.4 4.8a2.8 2.8 0 0 0 2 2c1.7.5 7.6.5 7.6.5s5.9 0 7.6-.5a2.8 2.8 0 0 0 2-2c.4-1.7.4-4.8.4-4.8s0-3.1-.4-4.8ZM10 15.3V8.7l5.2 3.3-5.2 3.3Z"></path>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Episode metadata -->
+        <section class="episode-meta">
+          <div class="meta-pills">
+            <span class="genre-pill">
+              <svg class="icon-sm icon-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3v18M3 12h18"></path>
+              </svg>
+              <span id="metaGenre">Cargando…</span>
+            </span>
+          </div>
+
+          <h1 class="episode-title" id="episodeTitleMain">
+            Cargando episodio…
+            <span class="softer" id="episodeTitleHandle"> @YoSoyRudoMx</span>
+          </h1>
+
+          <div class="byline">
+            <span class="artist">
+              <span class="artist-avatar" id="artistAvatar">·</span>
+              <span id="artistName">—</span>
+            </span>
+            <span class="separator"></span>
+            <span id="publishDate">—</span>
+          </div>
+        </section>
+
+        <!-- Information cards -->
+        <section class="info-grid">
+          <article class="info-card">
+            <div class="info-head">
+              <span class="info-label">REDES SOCIALES</span>
+              <svg class="icon icon-red" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21.6 7.2a2.8 2.8 0 0 0-2-2C17.9 4.7 12 4.7 12 4.7s-5.9 0-7.6.5a2.8 2.8 0 0 0-2 2C2 8.9 2 12 2 12s0 3.1.4 4.8a2.8 2.8 0 0 0 2 2c1.7.5 7.6.5 7.6.5s5.9 0 7.6-.5a2.8 2.8 0 0 0 2-2c.4-1.7.4-4.8.4-4.8s0-3.1-.4-4.8ZM10 15.3V8.7l5.2 3.3-5.2 3.3Z"></path>
+              </svg>
+            </div>
+            <!-- Enlaces fijos de la marca. El modificador ?sub_confirmation=1 en los
+                 links de YouTube abre directamente el diálogo de "Suscribirse". -->
+            <div class="social-links">
+              <a class="social-link" href="https://www.youtube.com/@LatamElectronica?sub_confirmation=1" target="_blank" rel="noopener">
+                <svg class="icon-sm icon-red" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M21.6 7.2a2.8 2.8 0 0 0-2-2C17.9 4.7 12 4.7 12 4.7s-5.9 0-7.6.5a2.8 2.8 0 0 0-2 2C2 8.9 2 12 2 12s0 3.1.4 4.8a2.8 2.8 0 0 0 2 2c1.7.5 7.6.5 7.6.5s5.9 0 7.6-.5a2.8 2.8 0 0 0 2-2c.4-1.7.4-4.8.4-4.8s0-3.1-.4-4.8ZM10 15.3V8.7l5.2 3.3-5.2 3.3Z"></path>
+                </svg>
+                youtube.com/@LatamElectronica
+              </a>
+              <a class="social-link" href="https://www.youtube.com/@YoSoyRudoMx?sub_confirmation=1" target="_blank" rel="noopener">
+                <svg class="icon-sm icon-red" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M21.6 7.2a2.8 2.8 0 0 0-2-2C17.9 4.7 12 4.7 12 4.7s-5.9 0-7.6.5a2.8 2.8 0 0 0-2 2C2 8.9 2 12 2 12s0 3.1.4 4.8a2.8 2.8 0 0 0 2 2c1.7.5 7.6.5 7.6.5s5.9 0 7.6-.5a2.8 2.8 0 0 0 2-2c.4-1.7.4-4.8.4-4.8s0-3.1-.4-4.8ZM10 15.3V8.7l5.2 3.3-5.2 3.3Z"></path>
+                </svg>
+                youtube.com/@YoSoyRudoMx
+              </a>
+              <a class="social-link" href="https://www.instagram.com/stemsmag" target="_blank" rel="noopener">
+                <svg class="icon-sm icon-violet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+                  <circle cx="12" cy="12" r="4"></circle>
+                  <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"></circle>
+                </svg>
+                instagram.com/@stemsmag
+              </a>
+            </div>
+          </article>
+
+          <article class="info-card">
+            <div class="info-head">
+              <span class="info-label">PLATAFORMAS DE ESCUCHA</span>
+              <span class="icon icon-cyan">⌁</span>
+            </div>
+            <div class="info-value" id="infoPlataformasValue">—</div>
+          </article>
+
+          <article class="info-card">
+            <div class="info-head">
+              <span class="info-label">LANZAMIENTO DESTACADO</span>
+              <svg class="icon icon-violet" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 3v18M3 12h18"></path>
+              </svg>
+            </div>
+            <div class="info-value" id="infoLanzamientoValue">—</div>
+          </article>
+        </section>
+
+        <!-- Editorial review -->
+        <section class="panel panel-review">
+          <div class="panel-line"></div>
+          <div class="panel-body">
+            <div class="panel-heading">
+              <span class="review-badge">
+                <span class="review-dot"></span>
+                RESEÑA — STEMS
+              </span>
+              <span class="panel-note">Curaduría editorial</span>
+            </div>
+
+            <div class="review-text" id="resenaBody">
+              <p>Cargando…</p>
+            </div>
+
+            <div class="hashtags">
+              <span class="hashtag">#LatamElectronica</span>
+              <span class="hashtag">#STEMSTV</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Comments -->
+        <section class="panel panel-comments">
+          <div class="panel-line panel-line-cyan"></div>
+          <div class="panel-body">
+            <div class="comments-head">
+              <div class="comments-left">
+                <span class="comments-badge">
+                  <svg class="icon-sm icon-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8 8 0 0 1-3.5-.8L4 20l1.7-4.1A7.5 7.5 0 1 1 20 11.5Z"></path>
+                  </svg>
+                  COMENTARIOS
+                </span>
+                <span class="panel-note" style="font-size:12px" id="commentsCountNote">Cargando…</span>
+              </div>
+              <span class="panel-note">STEMS TV Community</span>
+            </div>
+
+            <div id="commentsContainer">
+              <div class="comments-empty">
+                <div class="comments-icon">
+                  <svg class="icon-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 11.5a7.5 7.5 0 0 1-8 7.5 8 8 0 0 1-3.5-.8L4 20l1.7-4.1A7.5 7.5 0 1 1 20 11.5Z"></path>
+                  </svg>
+                </div>
+                <p class="comment-main">Cargando comentarios…</p>
+              </div>
+            </div>
+
+            <button id="loadMoreBtn" class="load-more-btn" type="button" style="display:none" onclick="cargarMasComentarios()">Cargar más comentarios</button>
+
+            <a class="youtube-comment-link" id="ytLink" href="#" target="_blank" rel="noopener" style="margin-top:20px">
+              <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21.6 7.2a2.8 2.8 0 0 0-2-2C17.9 4.7 12 4.7 12 4.7s-5.9 0-7.6.5a2.8 2.8 0 0 0-2 2C2 8.9 2 12 2 12s0 3.1.4 4.8a2.8 2.8 0 0 0 2 2c1.7.5 7.6.5 7.6.5s5.9 0 7.6-.5a2.8 2.8 0 0 0 2-2c.4-1.7.4-4.8.4-4.8s0-3.1-.4-4.8ZM10 15.3V8.7l5.2 3.3-5.2 3.3Z"></path>
+              </svg>
+              ver o comentar directamente en YouTube
+              <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 5h5v5M19 5l-8 8"></path><path d="M19 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h4"></path>
+              </svg>
+            </a>
+          </div>
+        </section>
+
+        <!-- Mobile divider -->
+        <div class="mobile-divider"></div>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-head">
+          <h2 class="sidebar-title">
+            Más episodios
+            <span class="count" id="episodeCount">0</span>
+          </h2>
+          <button id="toggleEpisodes" class="compact-toggle" type="button">VER TODO</button>
+        </div>
+
+        <div id="episodeList" class="episode-list"></div>
+
+        <!-- STEMS TV footer card -->
+        <div class="stems-card">
+          <div class="stems-head">
+            <div class="tv-mini">TV</div>
+            <span class="stems-title">STEMS TV • LATAM</span>
+            <span class="curated">CURATED</span>
+          </div>
+          <p class="stems-text">Archivo vivo de la escena electrónica latinoamericana. Entrevistas, mixes y reseñas en 4K.</p>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Footer -->
+    <footer class="tv-footer">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-brand-mark">
+            <div class="brand-mark">TV</div>
+            <div class="footer-brand-title"><span class="gradient">STEMS TV</span></div>
+          </div>
+          <p class="footer-tagline">Archivo vivo de la escena electrónica latinoamericana. Entrevistas, mixes y reseñas en 4K.</p>
+          <div class="footer-social">
+            <a href="https://www.instagram.com/stemsmag/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/>
+                <circle cx="17.2" cy="6.8" r="0.9" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+            <a href="https://www.youtube.com/@stemsmag" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <rect x="2.5" y="5.5" width="19" height="13" rx="3.5"/>
+                <path d="M10 9.2 L15.5 12 L10 14.8 Z" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+            <a href="https://open.spotify.com/playlist/0s9dUDfd3tbKknUUvKt0PM" target="_blank" rel="noopener noreferrer" aria-label="Spotify">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <circle cx="12" cy="12" r="9.5"/>
+                <path d="M7 9.5c3.5-1 7-1 10 .6" stroke-linecap="round"/>
+                <path d="M7.3 12.5c3-.8 6-.8 8.6.5" stroke-linecap="round"/>
+                <path d="M7.6 15.3c2.3-.6 4.8-.6 6.9.5" stroke-linecap="round"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Secciones</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="articulos.html">Artículos</a></li>
+            <li><a href="eventos.html">Eventos</a></li>
+            <li><a href="playlist.html">Playlist</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>STEMS</h4>
+          <ul>
+            <li><a href="sobre-nosotros.html">Sobre nosotros</a></li>
+            <li><a href="contacto.html">Contacto</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="terminos.html">Términos y condiciones</a></li>
+            <li><a href="privacidad.html">Política de privacidad</a></li>
+            <li><a href="cookies.html">Aviso de cookies</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>STEMS © 2026 — La música que nos une</span>
+      </div>
+    </footer>
+
+    <!-- Bottom fade -->
+    <div class="bottom-fade" aria-hidden="true"></div>
+  </div>
+
+  <!-- =========================================================
+       JavaScript funcional (conectado a episodios.json + YouTube)
+       ========================================================= -->
+  <script>
+    /* ---------------------------------------------------------
+       Config
+       --------------------------------------------------------- */
+    const YOUTUBE_API_KEY = 'AIzaSyBKdUKsMSFbkeTlYftHwlLv8N8a3Vq89pk';
+    const CHANNEL_URL = 'https://youtube.com/@YoSoyRudoMx';
+
+    let episodiosData = [];
+    let currentVideoId = '';
+    let selectedEpisodeId = null;
+    let nextPageToken = null;
+    let expanded = false;
+
+    const $ = (selector) => document.querySelector(selector);
+
+    /* ---------------------------------------------------------
+       Menú de navegación (mobile)
+       --------------------------------------------------------- */
+    $("#navToggleTv").addEventListener("click", () => {
+      const menu = $("#navLinksMobile");
+      const open = menu.classList.toggle("is-open");
+      $("#navToggleTv").setAttribute("aria-expanded", open ? "true" : "false");
+    });
+
+    /* ---------------------------------------------------------
+       Carga de episodios
+       --------------------------------------------------------- */
+    async function cargarEpisodios() {
+      try {
+        const res = await fetch('episodios.json');
+        const data = await res.json();
+
+        // Orden descendente (más nuevo primero)
+        episodiosData = data.episodios.sort((a, b) => new Date(b.fechaPublicacion) - new Date(a.fechaPublicacion));
+
+        $("#episodeCount").textContent = episodiosData.length;
+        renderEpisodeList();
+
+        if (episodiosData.length > 0) {
+          mostrarEpisodio(episodiosData[0].id);
+        }
+      } catch (err) {
+        $("#episodeTitleMain").innerHTML = 'No se pudo cargar episodios.json';
+        $("#episodeList").innerHTML = '<p class="panel-note">Si abriste este archivo directamente desde tu computadora, súbelo a un servidor para que el navegador pueda leerlo.</p>';
+      }
+    }
+
+    /* ---------------------------------------------------------
+       Sidebar: lista de episodios
+       --------------------------------------------------------- */
+    function renderEpisodeList() {
+      const list = $("#episodeList");
+      const visible = expanded ? episodiosData : episodiosData.slice(0, 7);
+      list.innerHTML = "";
+
+      visible.forEach((ep, i) => {
+        const active = ep.id === selectedEpisodeId;
+        const thumbUrl = `https://img.youtube.com/vi/${ep.videoId}/mqdefault.jpg`;
+
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = "episode-item" + (active ? " active" : "");
+        item.addEventListener("click", () => {
+          if (ep.id !== selectedEpisodeId) {
+            mostrarEpisodio(ep.id);
+          }
+        });
+
+        if (active) {
+          const highlight = document.createElement("div");
+          highlight.className = "episode-highlight";
+          item.appendChild(highlight);
+        }
+
+        const inner = document.createElement("div");
+        inner.className = "episode-inner";
+
+        const thumb = document.createElement("div");
+        thumb.className = "thumb";
+        thumb.innerHTML = `
+          <img src="${thumbUrl}" alt="${ep.titulo}">
+          <div class="thumb-overlay"></div>
+          ${active ? `<div class="thumb-play"><span class="thumb-play-core">
+              <svg class="icon-sm" viewBox="0 0 24 24" fill="currentColor"><path d="m9 6 9 6-9 6z"></path></svg>
+            </span></div>` : ''}
+          <span class="episode-number">#${ep.id}</span>
+        `;
+
+        const copy = document.createElement("div");
+        copy.className = "episode-copy";
+
+        const title = document.createElement("div");
+        title.className = "episode-item-title";
+        title.textContent = ep.titulo;
+        copy.appendChild(title);
+
+        const handle = document.createElement("div");
+        handle.className = "episode-handle";
+        handle.textContent = ep.artista || '';
+        if (active) {
+          const dot = document.createElement("span");
+          dot.className = "active-dot";
+          handle.appendChild(dot);
+        }
+        copy.appendChild(handle);
+
+        const genres = document.createElement("div");
+        genres.className = "episode-genres";
+        (ep.genero || '').split('/').map(g => g.trim()).filter(Boolean).forEach((genre) => {
+          const tag = document.createElement("span");
+          tag.className = "genre-tag";
+          tag.textContent = genre;
+          genres.appendChild(tag);
+        });
+        copy.appendChild(genres);
+
+        inner.appendChild(thumb);
+        inner.appendChild(copy);
+        item.appendChild(inner);
+
+        if (active) {
+          const bar = document.createElement("div");
+          bar.className = "active-bar";
+          item.appendChild(bar);
+        }
+
+        list.appendChild(item);
+      });
+    }
+
+    $("#toggleEpisodes").addEventListener("click", () => {
+      expanded = !expanded;
+      $("#toggleEpisodes").textContent = expanded ? "COMPACTAR" : "VER TODO";
+      renderEpisodeList();
+    });
+
+    /* ---------------------------------------------------------
+       Mostrar episodio seleccionado
+       --------------------------------------------------------- */
+    function formatearFecha(fechaStr) {
+      return new Date(fechaStr + 'T00:00:00').toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function iniciales(nombre) {
+      if (!nombre) return '·';
+      const partes = nombre.trim().split(/\s+/);
+      return (partes[0][0] + (partes[1] ? partes[1][0] : '')).toUpperCase();
+    }
+
+    function mostrarEpisodio(id) {
+      const ep = episodiosData.find(e => e.id === id);
+      if (!ep) return;
+
+      currentVideoId = ep.videoId;
+      selectedEpisodeId = id;
+      nextPageToken = null;
+
+      const posicion = episodiosData.findIndex(e => e.id === id) + 1;
+      const watchUrl = `https://www.youtube.com/watch?v=${ep.videoId}`;
+
+      // Hero: volver a estado miniatura (no autoplay) cada vez que se cambia de episodio
+      const heroMedia = $("#heroMedia");
+      heroMedia.classList.remove("is-playing");
+      heroMedia.querySelectorAll("iframe").forEach(f => f.remove());
+      $("#heroThumb").src = `https://img.youtube.com/vi/${ep.videoId}/hqdefault.jpg`;
+      $("#heroThumb").alt = ep.titulo;
+      $("#heroChBadge").textContent = `CH.${String(posicion).padStart(2, '0')}`;
+      $("#heroDateText").textContent = formatearFecha(ep.fechaPublicacion);
+      $("#heroYoutubeLink").href = watchUrl;
+
+      // Meta
+      $("#metaGenre").textContent = ep.genero || '—';
+      $("#episodeTitleMain").childNodes[0].nodeValue = ep.titulo + ' ';
+      $("#artistAvatar").textContent = iniciales(ep.artista);
+      $("#artistName").textContent = ep.artista || '—';
+      $("#publishDate").textContent = formatearFecha(ep.fechaPublicacion);
+
+      // Info cards (plataformas y lanzamiento se toman por episodio; redes sociales es fijo, ver HTML)
+      const ficha = ep.fichaArtista || {};
+
+      $("#infoPlataformasValue").textContent = ficha.plataformasEscucha || '—';
+      $("#infoLanzamientoValue").textContent = ficha.lanzamientoDestacado || '—';
+
+      // Reseña
+      $("#resenaBody").innerHTML = ep.resenaHtml || '<p>Sin reseña disponible.</p>';
+
+      // YouTube link de comentarios
+      $("#ytLink").href = watchUrl;
+
+      // Sidebar activo
+      renderEpisodeList();
+
+      // Comentarios
+      $("#commentsContainer").innerHTML = '<div class="comments-empty"><p class="comment-main">Cargando comentarios…</p></div>';
+      $("#commentsCountNote").textContent = 'Cargando…';
+      $("#loadMoreBtn").style.display = 'none';
+      renderComentarios(ep);
+    }
+
+    /* ---------------------------------------------------------
+       Reproducción real del episodio
+       --------------------------------------------------------- */
+    $("#playHeroBtn").addEventListener("click", () => {
+      const heroMedia = $("#heroMedia");
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${currentVideoId}?autoplay=1&rel=0`;
+      iframe.title = 'Reproductor STEMS TV';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+      heroMedia.appendChild(iframe);
+      heroMedia.classList.add("is-playing");
+    });
+
+    /* ---------------------------------------------------------
+       Comentarios
+       --------------------------------------------------------- */
+    async function renderComentarios(ep) {
+      const container = $("#commentsContainer");
+
+      if (ep.comentarios && ep.comentarios.length > 0) {
+        container.innerHTML = ep.comentarios.map(c => `
+          <div class="comment-item">
+            <div class="comment-avatar comment-avatar-fallback">${iniciales(c.usuario)}</div>
+            <div class="comment-content">
+              <div class="comment-author">${c.usuario}</div>
+              <div class="comment-text">${c.texto}</div>
+            </div>
+          </div>
+        `).join('');
+        $("#commentsCountNote").textContent = `${ep.comentarios.length} • Moderado`;
+        return;
+      }
+
+      if (YOUTUBE_API_KEY && YOUTUBE_API_KEY !== 'TU_YOUTUBE_API_KEY_AQUI') {
+        await obtenerComentariosYouTube(true);
+        return;
+      }
+
+      container.innerHTML = '<div class="comments-empty"><p class="comment-main">Visita YouTube para ver o dejar comentarios en este video.</p></div>';
+      $("#commentsCountNote").textContent = '— • Moderado';
+    }
+
+    async function obtenerComentariosYouTube(isInitial = false) {
+      const container = $("#commentsContainer");
+      const btn = $("#loadMoreBtn");
+
+      try {
+        let url = `https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${currentVideoId}&maxResults=10&order=relevance&key=${YOUTUBE_API_KEY}`;
+        if (nextPageToken) {
+          url += `&pageToken=${nextPageToken}`;
+        }
+
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (isInitial) {
+          container.innerHTML = '';
+        }
+
+        if (data.items && data.items.length > 0) {
+          const html = data.items.map(item => {
+            const top = item.snippet.topLevelComment.snippet;
+            const avatar = top.authorProfileImageUrl || '';
+            const likes = top.likeCount > 0 ? `👍 ${top.likeCount}` : '';
+            return `
+              <div class="comment-item">
+                ${avatar
+                  ? `<img src="${avatar}" class="comment-avatar" alt="${top.authorDisplayName}">`
+                  : `<div class="comment-avatar comment-avatar-fallback">${iniciales(top.authorDisplayName)}</div>`}
+                <div class="comment-content">
+                  <div class="comment-author">${top.authorDisplayName}</div>
+                  <div class="comment-text">${top.textDisplay}</div>
+                  <div class="comment-meta">
+                    <span>${new Date(top.publishedAt).toLocaleDateString('es-ES')}</span>
+                    ${likes ? `<span>${likes}</span>` : ''}
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          container.insertAdjacentHTML('beforeend', html);
+          $("#commentsCountNote").textContent = `${data.pageInfo?.totalResults ?? container.children.length} • Moderado`;
+
+          if (data.nextPageToken) {
+            nextPageToken = data.nextPageToken;
+            btn.style.display = 'block';
+            btn.textContent = 'Cargar más comentarios';
+          } else {
+            nextPageToken = null;
+            btn.style.display = 'none';
+          }
+        } else if (isInitial) {
+          container.innerHTML = '<div class="comments-empty"><p class="comment-main">No hay comentarios en este video aún.</p><p class="comment-sub">Sé el primero en compartir tu frecuencia.</p></div>';
+          $("#commentsCountNote").textContent = '0 • Moderado';
+          btn.style.display = 'none';
+        }
+      } catch (err) {
+        console.error('Error al obtener comentarios:', err);
+        if (isInitial) {
+          container.innerHTML = '<div class="comments-empty"><p class="comment-main">No se pudieron cargar los comentarios.</p></div>';
+          $("#commentsCountNote").textContent = '— • Moderado';
+        }
+        btn.style.display = 'none';
+      }
+    }
+
+    function cargarMasComentarios() {
+      const btn = $("#loadMoreBtn");
+      btn.textContent = 'Cargando...';
+      obtenerComentariosYouTube(false);
+    }
+
+    /* ---------------------------------------------------------
+       Init
+       --------------------------------------------------------- */
+    cargarEpisodios();
+  </script>
+</body>
+</html>
