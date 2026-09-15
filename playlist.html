@@ -228,7 +228,7 @@
   .playlists-page .section-head{border-top:none; padding-top:0;}
 
   .platforms-grid{
-    display:grid; grid-template-columns:repeat(3,1fr);
+    display:grid; grid-template-columns:repeat(var(--platform-cols,3),1fr);
     border-top:1px solid var(--line); margin-top:24px;
   }
   .platform-col{
@@ -458,7 +458,7 @@
     <div class="platforms-grid" id="platforms-grid">
 
       <!-- SPOTIFY -->
-      <div class="platform-col" style="--platform-color:var(--spotify)">
+      <div class="platform-col" id="platform-col-spotify" style="--platform-color:var(--spotify)">
         <div class="platform-col-head">
           <span class="platform-icon">
             <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
@@ -470,7 +470,7 @@
       </div>
 
       <!-- SOUNDCLOUD -->
-      <div class="platform-col" style="--platform-color:var(--soundcloud)">
+      <div class="platform-col" id="platform-col-soundcloud" style="--platform-color:var(--soundcloud)">
         <div class="platform-col-head">
           <span class="platform-icon">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 15h1v3H2zM4 13h1v5H4zM6 11h1v7H6zM8 9h1v9H8zM10.5 4c-.4 0-.7.3-.9.6v13.8c.2.3.5.6.9.6h9c2 0 3.5-1.6 3.5-3.5 0-1.8-1.4-3.3-3.1-3.5-.2-3-2.7-5.4-5.7-5.4-1.4 0-2.7.5-3.7 1.4z"/></svg>
@@ -482,7 +482,7 @@
       </div>
 
       <!-- YOUTUBE -->
-      <div class="platform-col" style="--platform-color:var(--youtube)">
+      <div class="platform-col" id="platform-col-youtube" style="--platform-color:var(--youtube)">
         <div class="platform-col-head">
           <span class="platform-icon">
             <svg viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9.2 15.5 12 10 14.8Z" fill="var(--card)"/></svg>
@@ -598,18 +598,20 @@ const PLAYLISTS_JSON_PATH = 'playlists.json';
 const PLATFORM_LABEL = {spotify:'Spotify', soundcloud:'SoundCloud', youtube:'YouTube'};
 
 function renderPlatformColumn(platform, items){
+  const colWrapEl = document.getElementById('platform-col-' + platform);
   const colEl = document.getElementById('col-' + platform);
   const countEl = document.getElementById('count-' + platform);
   colEl.innerHTML = '';
-  countEl.textContent = String(items.length).padStart(2, '0') + ' playlist' + (items.length === 2 ? '' : 's');
+  countEl.textContent = String(items.length).padStart(2, '0') + ' playlist' + (items.length === 1 ? '' : 's');
 
   if(!items.length){
-    const emptyMsg = platform === 'soundcloud'
-      ? 'Próximamente.'
-      : `Todavía no hay playlists de ${PLATFORM_LABEL[platform]} publicadas.`;
-    colEl.innerHTML = `<p class="platform-empty">${emptyMsg}</p>`;
+    // Sin playlists asignadas en esta plataforma: la columna no se muestra.
+    if(colWrapEl) colWrapEl.style.display = 'none';
     return;
   }
+
+  // Hay al menos una playlist: la columna se muestra (o vuelve a mostrarse).
+  if(colWrapEl) colWrapEl.style.display = '';
 
   items.forEach(item => {
     const card = document.createElement('div');
@@ -636,19 +638,43 @@ function renderPlatformColumn(platform, items){
   });
 }
 
+function updateGridLayout(){
+  const gridEl = document.getElementById('platforms-grid');
+  const cols = ['spotify','soundcloud','youtube']
+    .map(p => document.getElementById('platform-col-' + p))
+    .filter(el => el && el.style.display !== 'none');
+
+  // Reacomoda el número de columnas del grid según cuántas quedaron visibles,
+  // para que no quede espacio en blanco donde iría una columna oculta.
+  // (Usa una variable CSS para no pisar la regla responsiva de móvil, que
+  // fuerza 1 columna en pantallas chicas.)
+  gridEl.style.setProperty('--platform-cols', cols.length || 1);
+
+  // Quita el borde derecho de la última columna visible (la regla CSS
+  // :last-child no aplica si el último elemento del DOM está oculto).
+  ['spotify','soundcloud','youtube'].forEach(p => {
+    const el = document.getElementById('platform-col-' + p);
+    if(el) el.style.borderRight = '';
+  });
+  if(cols.length) cols[cols.length - 1].style.borderRight = 'none';
+
+  if(!cols.length){
+    gridEl.innerHTML = '<p class="platform-empty">Todavía no hay playlists publicadas. Vuelve pronto.</p>';
+  }
+}
+
 fetch(PLAYLISTS_JSON_PATH + '?_=' + Date.now())
   .then(res => res.json())
   .then(data => {
     renderPlatformColumn('spotify', data.spotify || []);
     renderPlatformColumn('soundcloud', data.soundcloud || []);
     renderPlatformColumn('youtube', data.youtube || []);
+    updateGridLayout();
   })
   .catch(err => {
     console.error('No se pudo cargar playlists.json', err);
-    ['spotify','soundcloud','youtube'].forEach(p => {
-      document.getElementById('col-' + p).innerHTML =
-        '<p class="platform-empty">No se pudieron cargar las playlists.</p>';
-    });
+    document.getElementById('platforms-grid').innerHTML =
+      '<p class="platform-empty">No se pudieron cargar las playlists.</p>';
   });
 </script>
 </body>
