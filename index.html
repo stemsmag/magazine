@@ -516,6 +516,8 @@
   .events-col h3{font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--accent, var(--teal)); text-transform:uppercase; padding-bottom:8px; border-bottom:2px solid var(--accent, var(--teal)); margin-bottom:12px;}
   .event-items-row{display:flex; gap:10px;}
   .event-item{display:flex; flex-direction:column; gap:8px; flex:1 1 0; min-width:0; padding:0;}
+  a.event-item{color:inherit; text-decoration:none; transition:opacity .2s;}
+  a.event-item:hover{opacity:0.82;}
   .event-thumb{width:100%; aspect-ratio:1/1; height:auto; border:1px solid var(--line); overflow:hidden; background:#000;}
   .event-thumb img{width:100%; height:100%; object-fit:cover; filter:sepia(0.4) saturate(1.4) contrast(1.05) brightness(0.8);}
   .event-body{min-width:0;}
@@ -1443,8 +1445,14 @@ function renderEventItems(containerId, items){
   const row = document.createElement('div');
   row.className = 'event-items-row';
   items.forEach(it=>{
-    const item = document.createElement('div');
+    const hasLink = !!it.link;
+    const item = document.createElement(hasLink ? 'a' : 'div');
     item.className = 'event-item';
+    if(hasLink){
+      item.href = it.link;
+      item.target = '_blank';
+      item.rel = 'noopener noreferrer';
+    }
     item.innerHTML = `
       <div class="event-thumb"><img src="${it.img}" alt="" onerror="this.parentElement.style.visibility='hidden'"></div>
       <div class="event-body">
@@ -1474,15 +1482,17 @@ fetch(EVENTOS_JSON_PATH + '?_=' + Date.now())
     const isToday = d => d.getTime() === today.getTime();
 
     // "Eventos" = toques en vivo. "Lanzamientos" = sencillos/álbumes/videos/promo.
+    // "link" es opcional en events.json: si el evento/lanzamiento lo trae, toda
+    // la tarjeta se vuelve clicable y abre esa URL en pestaña nueva.
     const eventos = all
       .filter(e => e.type === 'toque')
       .slice(0, 3)
-      .map(e => ({day:toDayLabel(e.dateObj), title:e.title, meta:e.venue || '', who:e.dj ? `🎧 ${e.dj}` : '', img:e.image || '', isToday:isToday(e.dateObj)}));
+      .map(e => ({day:toDayLabel(e.dateObj), title:e.title, meta:e.venue || '', who:e.dj ? `🎧 ${e.dj}` : '', img:e.image || '', isToday:isToday(e.dateObj), link:e.link || ''}));
 
     const lanzamientos = all
       .filter(e => e.type !== 'toque')
       .slice(0, 3)
-      .map(e => ({day:toDayLabel(e.dateObj), title:e.title, meta:RELEASE_TYPE_LABEL[e.type] || e.type, who:e.productor ? `Prod. ${e.productor}` : '', img:e.image || '', isToday:isToday(e.dateObj)}));
+      .map(e => ({day:toDayLabel(e.dateObj), title:e.title, meta:RELEASE_TYPE_LABEL[e.type] || e.type, who:e.productor ? `Prod. ${e.productor}` : '', img:e.image || '', isToday:isToday(e.dateObj), link:e.link || ''}));
 
     renderEventItems('events-col', eventos);
     renderEventItems('releases-col', lanzamientos);
