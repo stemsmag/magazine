@@ -361,7 +361,13 @@
   @media (max-width:900px){.poster-grid{grid-template-columns:repeat(2, 1fr);}}
   @media (max-width:560px){.poster-grid{grid-template-columns:1fr;}}
 
-  /* ============ BASE CARD (shared bones) ============ */
+  /* =====================================================
+     DISEÑO ÚNICO — el mismo para todas las categorías
+     (cartel de show: foto sangrada, titular Anton gigante,
+     insignia de fecha, lugar en vertical mono). El color de
+     acento sigue variando según la categoría (t-toque,
+     t-single, t-album, t-video, t-promo definidos arriba).
+     ===================================================== */
   .poster-card{
     background:var(--card);
     border:1px solid var(--line);
@@ -372,168 +378,110 @@
     cursor:pointer;
     overflow:hidden;
     transition:border-color .2s ease, transform .2s ease;
-  }
-  .poster-card:hover{transform:translateY(-3px);}
-  .time-pill{
-    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
-    background:var(--brown-light); color:var(--cream);
-    border:1px solid var(--line);
-    padding:6px 10px; border-radius:6px; white-space:nowrap;
-  }
-  .poster-thumb{
-    width:100%; aspect-ratio:1/1; height:auto; object-fit:cover;
-    background:var(--brown-light); border:1px solid var(--line);
-  }
-  .poster-desc{font-size:13px; color:var(--cream-dim); line-height:1.55;}
-  .poster-status{
-    font-family:'JetBrains Mono',monospace; font-size:10px;
-    text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
-  }
-  .empty-msg-shared{} /* spacer no-op */
-
-  /* =====================================================
-     T-TOQUE — cartel de show: foto sangrada, titular Anton
-     gigante encima, fecha en insignia, lugar en vertical mono.
-     ===================================================== */
-  .poster-card.t-toque{
-    border-left:none;
     min-height:400px;
-    background-size:cover; background-position:center;
     background-color:var(--brown-light);
     justify-content:flex-end;
   }
-  .poster-card.t-toque:hover{border-color:var(--accent);}
-  .poster-card.t-toque .card-scrim{
+  .poster-card:hover{transform:translateY(-3px); border-color:var(--accent);}
+  .poster-bg-img{
+    position:absolute; inset:0; z-index:0;
+    width:100%; height:100%; object-fit:cover;
+  }
+  .poster-card .card-scrim{
     position:absolute; inset:0; z-index:1;
     background:linear-gradient(180deg, rgba(0,10,20,0) 28%, rgba(0,10,20,.6) 60%, rgba(0,10,20,.95) 100%);
   }
-  .poster-card.t-toque .poster-daybadge{
+  .poster-card .poster-daybadge{
     position:absolute; top:14px; left:14px; z-index:2;
     font-family:'Anton',sans-serif; font-size:16px; line-height:1; text-align:center;
     background:var(--accent); color:#1A0010;
     padding:8px 11px; border-radius:6px;
   }
-  .poster-card.t-toque .poster-daybadge span{
+  .poster-card .poster-daybadge span{
     display:block; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:8px; letter-spacing:1.5px; margin-top:2px;
   }
-  .poster-card.t-toque .poster-vertical-tag{
+  .poster-card .poster-vertical-tag{
     position:absolute; top:14px; right:14px; z-index:2;
     writing-mode:vertical-rl; text-orientation:mixed;
     font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:2.5px; text-transform:uppercase;
     color:var(--cream); opacity:.9;
   }
-  .poster-card.t-toque .toque-body{position:relative; z-index:2; padding:18px 18px 22px;}
-  .poster-card.t-toque .poster-tag{
+  .poster-card .toque-body{position:relative; z-index:2; padding:18px 18px 22px;}
+  .poster-card .poster-tag{
     font-family:'Righteous',sans-serif; color:var(--accent); font-size:13px; margin-bottom:2px;
   }
-  .poster-card.t-toque .poster-title{
+  .poster-card .poster-title{
     font-family:'Anton',sans-serif; text-transform:uppercase; font-size:28px; line-height:.92;
     color:var(--cream); margin-bottom:12px; letter-spacing:.2px;
   }
-  .poster-card.t-toque .toque-meta{display:flex; align-items:center; justify-content:space-between; gap:10px;}
-  .poster-card.t-toque .poster-venue{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--cream-dim);}
-  .poster-card.t-toque .time-pill{background:rgba(4,37,56,.75); backdrop-filter:blur(2px);}
-
-  /* =====================================================
-     T-SINGLE — editorial: eyebrow mono, titular Anton,
-     retrato cuadrado, nombre en Inter bold, bajada breve.
-     ===================================================== */
-  .poster-card.t-single{
-    border-left:none; border-top:3px solid var(--accent);
-    padding:20px 20px 22px; gap:0;
+  .poster-card .poster-desc-inline{
+    font-family:'Inter',sans-serif; font-size:13px; line-height:1.5; color:var(--cream-dim);
+    margin-bottom:14px; margin-top:-4px;
   }
-  .poster-card.t-single .single-eyebrow{
-    font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase;
-    color:var(--accent); margin-bottom:8px;
+  .poster-card .toque-meta{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .poster-card .poster-venue{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--cream-dim);}
+  .poster-card .time-pill{
+    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
+    background:rgba(4,37,56,.75); backdrop-filter:blur(2px); color:var(--cream);
+    border:1px solid var(--line);
+    padding:6px 10px; border-radius:6px; white-space:nowrap;
   }
-  .poster-card.t-single .poster-title{
-    font-family:'Anton',sans-serif; text-transform:uppercase; font-size:22px; line-height:.98;
-    margin-bottom:14px;
-  }
-  .poster-card.t-single .poster-thumb{aspect-ratio:4/5; border-radius:8px; margin-bottom:14px;}
-  .poster-card.t-single .poster-venue{
-    font-family:'Inter',sans-serif; font-weight:700; font-size:14px; color:var(--cream);
-    text-transform:none; letter-spacing:0; margin-bottom:6px;
-  }
-
-  /* =====================================================
-     T-ALBUM — lista tipográfica gigante, minimal, casi sin
-     adorno: el título ES el diseño. Fecha pequeña al lado.
-     ===================================================== */
-  .poster-card.t-album{
-    border-left:none; border:1px solid var(--line);
-    background:var(--brown-light);
-    padding:24px 22px;
-    justify-content:space-between;
-  }
-  .poster-card.t-album .poster-tag{
-    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase;
-    color:var(--accent); margin-bottom:10px;
-  }
-  .poster-card.t-album .album-row{display:flex; align-items:flex-start; justify-content:space-between; gap:10px;}
-  .poster-card.t-album .poster-title{
-    font-family:'Anton',sans-serif; text-transform:uppercase; font-size:clamp(28px,3.4vw,34px);
-    line-height:.88; letter-spacing:-.5px; flex:1;
-  }
-  .poster-card.t-album .album-date{
-    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent);
-    text-align:right; white-space:nowrap; padding-top:4px;
-  }
-  .poster-card.t-album .poster-venue{
-    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); margin-top:10px;
-  }
-  .poster-card.t-album .poster-desc{margin-top:12px;}
-  .poster-card.t-album .poster-thumb{aspect-ratio:16/9; margin-top:16px; border-radius:6px;}
-
-  /* =====================================================
-     T-VIDEO — lookbook: eyebrow mono, titular redondeado
-     Righteous, foto enmarcada, subtítulo + bajada.
-     ===================================================== */
-  .poster-card.t-video{
-    border-left:none; border:1px solid var(--line);
-    padding:20px 20px 22px;
-  }
-  .poster-card.t-video .video-eyebrow{
-    font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase;
-    color:var(--muted); margin-bottom:8px;
-  }
-  .poster-card.t-video .poster-title{
-    font-family:'Righteous',sans-serif; text-transform:none; font-size:24px; line-height:1.05;
-    color:var(--accent); margin-bottom:14px;
-  }
-  .poster-card.t-video .video-frame{
-    border:2px solid var(--accent); border-radius:8px; padding:5px; margin-bottom:14px;
-  }
-  .poster-card.t-video .video-frame .poster-thumb{aspect-ratio:16/10; border-radius:5px; border:none;}
-  .poster-card.t-video .poster-venue{
-    font-family:'Inter',sans-serif; font-weight:600; font-size:13px; color:var(--cream); margin-bottom:6px;
-  }
-
-  /* =====================================================
-     T-PROMO — solo texto, estilo entrevista/editorial:
-     Inter limpio, sin display font, divisor fino.
-     ===================================================== */
-  .poster-card.t-promo{
-    border-left:none; border:1px solid var(--line); border-bottom:2px solid var(--accent);
-    padding:22px 22px 24px;
-    justify-content:center;
-  }
-  .poster-card.t-promo .poster-date-row{
-    display:flex; align-items:center; gap:10px; margin-bottom:12px;
-    font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase;
-    color:var(--accent);
-  }
-  .poster-card.t-promo .poster-title{
-    font-family:'Inter',sans-serif; font-weight:700; font-size:19px; line-height:1.25;
-    margin-bottom:8px; padding-bottom:14px; border-bottom:1px solid var(--line);
-  }
-  .poster-card.t-promo .poster-venue{
-    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); margin-top:10px;
+  .poster-card .poster-status{
+    margin-top:10px; font-family:'JetBrains Mono',monospace; font-size:10px;
+    text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
   }
 
   .empty{
     grid-column:1/-1; text-align:center; padding:50px 20px; color:var(--muted);
     font-family:'JetBrains Mono',monospace; font-size:13px; border:1px dashed var(--line); border-radius:12px;
+  }
+
+  /* =====================================================
+     ARCHIVO — eventos pasados, con el diseño original
+     (día grande en Anton, foto cuadrada, tag en Righteous).
+     ===================================================== */
+  .archive-section{margin-top:56px;}
+  .archive-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:18px;
+    align-items:start;
+  }
+  @media (max-width:900px){.archive-grid{grid-template-columns:repeat(2, 1fr);}}
+  @media (max-width:560px){.archive-grid{grid-template-columns:1fr;}}
+
+  .archive-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:22px 22px 24px;
+    position:relative;
+    border-left:3px solid var(--accent);
+    display:flex;
+    flex-direction:column;
+    cursor:pointer;
+    opacity:.78;
+    filter:grayscale(.25);
+    transition:opacity .2s ease, filter .2s ease;
+  }
+  .archive-card:hover{opacity:1; filter:grayscale(0); border-color:var(--accent);}
+  .archive-top{display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:14px;}
+  .archive-day{font-family:'Anton',sans-serif; font-size:56px; line-height:.85; color:var(--cream);}
+  .archive-day .month{
+    display:block; font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:2px;
+    color:var(--accent); margin-top:4px; text-transform:uppercase;
+  }
+  .archive-thumb{
+    width:100%; aspect-ratio:1/1; height:auto; object-fit:cover; border-radius:8px; margin-bottom:14px;
+    background:var(--brown-light); border:1px solid var(--line);
+  }
+  .archive-card .poster-tag{font-family:'Righteous',sans-serif; color:var(--accent); font-size:14px; margin-bottom:4px;}
+  .archive-card .poster-title{font-family:'Inter',sans-serif; font-size:19px; font-weight:700; line-height:1.2; margin-bottom:8px; color:var(--cream);}
+  .archive-card .poster-venue{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--muted); margin-bottom:10px;}
+  .archive-card .poster-desc{font-size:13px; color:var(--cream-dim); line-height:1.55;}
+  .archive-card .poster-status{
+    margin-top:14px; font-family:'JetBrains Mono',monospace; font-size:10px;
+    text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
   }
 
   .overlay{
@@ -560,6 +508,20 @@
   }
   .modal-body h3{font-size:22px; margin-bottom:8px;}
   .modal-body p{color:var(--cream-dim); font-size:14px; line-height:1.55; margin-bottom:16px;}
+  .modal-datevenue{color:var(--muted); font-size:12px; margin-bottom:16px !important; text-transform:capitalize;}
+  .modal-desc p{color:var(--cream-dim); font-size:14px; line-height:1.65; margin-bottom:12px;}
+  .modal-desc strong{color:var(--cream); font-weight:700;}
+  .modal-status{
+    font-size:11px !important; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--amber) !important; margin-bottom:14px !important;
+  }
+  .modal-link{
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--accent); color:#1A0010; font-weight:700;
+    padding:11px 18px; border-radius:8px; font-size:12px; letter-spacing:.05em; text-transform:uppercase;
+    margin-bottom:16px; transition:transform .15s ease;
+  }
+  .modal-link:hover{transform:translateY(-2px);}
   .modal-close{
     background:none; border:1px solid var(--line); color:var(--cream);
     padding:8px 16px; border-radius:6px; cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:12px;
@@ -668,6 +630,11 @@
 
   <p class="month-label" id="monthLabel"></p>
   <div class="poster-grid" id="grid"></div>
+
+  <div class="archive-section" id="archiveSection">
+    <p class="month-label">Archivo — eventos pasados</p>
+    <div class="archive-grid" id="archiveGrid"></div>
+  </div>
 </div>
 
 <footer class="site-footer">
@@ -745,8 +712,10 @@
     <div class="modal-body">
       <p class="poster-tag script" id="modalTag"></p>
       <h3 class="display" id="modalTitle" style="text-transform:none;"></h3>
-      <p id="modalDesc"></p>
-      <p class="mono" id="modalDate" style="color:var(--muted); font-size:12px; margin-bottom:16px;"></p>
+      <p class="mono modal-datevenue" id="modalDate"></p>
+      <div id="modalDesc" class="modal-desc"></div>
+      <p class="mono modal-status" id="modalStatus"></p>
+      <a class="modal-link mono" id="modalLink" target="_blank" rel="noopener">Ver más →</a>
       <button class="modal-close" id="modalClose">Cerrar</button>
     </div>
   </div>
@@ -754,6 +723,7 @@
 
 <script>
 const TYPE_LABEL = {toque:'Toque', single:'Sencillo', album:'Álbum', video:'Video oficial', promo:'Promo'};
+const LINK_LABEL = {toque:'Comprar boletos', single:'Escuchar', album:'Escuchar álbum', video:'Ver video', promo:'Más información'};
 const MONTHS = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
 
 let allEvents = [];
@@ -762,7 +732,8 @@ let activeFilter = 'all';
 async function loadEvents(){
   try{
     const res = await fetch('events.json?_=' + Date.now());
-    const data = await res.json();
+    const raw = await res.text();
+    const data = JSON.parse(sanitizeJsonText(raw));
     allEvents = (data.events || []).map(e => ({...e, dateObj:new Date(e.date+'T00:00:00')}))
       .sort((a,b) => a.dateObj - b.dateObj);
   }catch(err){
@@ -772,107 +743,138 @@ async function loadEvents(){
   render();
 }
 
-function render(){
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-  let events = activeFilter === 'all' ? allEvents : allEvents.filter(e => e.type === activeFilter);
-
-  const now = new Date();
-  document.getElementById('monthLabel').textContent =
-    (events[0] ? MONTHS[events[0].dateObj.getMonth()] + ' ' + events[0].dateObj.getFullYear() : MONTHS[now.getMonth()] + ' ' + now.getFullYear());
-
-  if(!events.length){
-    grid.innerHTML = '<div class="empty">No hay eventos para este filtro por ahora.</div>';
-    return;
+/* Algunos exports dejan saltos de línea "crudos" dentro de strings
+   (ej. la descripción de un evento con varios párrafos). Eso es JSON
+   inválido y rompería JSON.parse. Aquí los escapamos, pero solo
+   cuando están DENTRO de un string, sin tocar el resto del archivo. */
+function sanitizeJsonText(text){
+  let out = '';
+  let inString = false;
+  let escaped = false;
+  for(let i = 0; i < text.length; i++){
+    const ch = text[i];
+    if(inString){
+      if(escaped){
+        out += ch;
+        escaped = false;
+      }else if(ch === '\\'){
+        out += ch;
+        escaped = true;
+      }else if(ch === '"'){
+        out += ch;
+        inString = false;
+      }else if(ch === '\n'){
+        out += '\\n';
+      }else if(ch === '\r'){
+        out += '\\r';
+      }else if(ch === '\t'){
+        out += '\\t';
+      }else{
+        out += ch;
+      }
+    }else{
+      out += ch;
+      if(ch === '"') inString = true;
+    }
   }
-
-  events.forEach(e => {
-    const card = document.createElement('div');
-    card.className = `poster-card t-${e.type}`;
-    card.innerHTML = cardTemplate(e);
-    card.addEventListener('click', () => openModal(e));
-    grid.appendChild(card);
-  });
+  return out;
 }
 
+function render(){
+  const grid = document.getElementById('grid');
+  const archiveSection = document.getElementById('archiveSection');
+  const archiveGrid = document.getElementById('archiveGrid');
+  grid.innerHTML = '';
+  archiveGrid.innerHTML = '';
+
+  const filtered = activeFilter === 'all' ? allEvents : allEvents.filter(e => e.type === activeFilter);
+
+  const now = new Date();
+  const upcoming = filtered.filter(e => e.dateObj >= startOfToday(now));
+  const past = filtered.filter(e => e.dateObj < startOfToday(now)).sort((a,b) => b.dateObj - a.dateObj);
+
+  document.getElementById('monthLabel').textContent =
+    (upcoming[0] ? MONTHS[upcoming[0].dateObj.getMonth()] + ' ' + upcoming[0].dateObj.getFullYear() : MONTHS[now.getMonth()] + ' ' + now.getFullYear());
+
+  if(!upcoming.length){
+    grid.innerHTML = '<div class="empty">No hay eventos próximos para este filtro por ahora.</div>';
+  }else{
+    upcoming.forEach(e => {
+      const card = document.createElement('div');
+      card.className = `poster-card t-${e.type}`;
+      card.innerHTML = cardTemplate(e);
+      card.addEventListener('click', () => openModal(e));
+      grid.appendChild(card);
+    });
+  }
+
+  if(!past.length){
+    archiveSection.style.display = 'none';
+  }else{
+    archiveSection.style.display = '';
+    past.forEach(e => {
+      const card = document.createElement('div');
+      card.className = `archive-card t-${e.type}`;
+      card.innerHTML = archiveCardTemplate(e);
+      card.addEventListener('click', () => openModal(e));
+      archiveGrid.appendChild(card);
+    });
+  }
+}
+
+function startOfToday(now){
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+}
+
+/* Diseño único (estilo "toque"), usado para todas las categorías de próximos eventos */
 function cardTemplate(e){
   const day = e.dateObj.getDate();
   const monthShort = MONTHS[e.dateObj.getMonth()].slice(0,3);
   const timeStr = e.time || '';
   const title = escapeHtml(e.title);
   const venue = e.venue ? escapeHtml(e.venue) : '';
-  const desc = escapeHtml(e.description || '');
+  const desc = e.description ? escapeHtml(truncateText(stripMarkdown(e.description), 130)) : '';
   const status = e.status === 'pendiente' ? '<p class="poster-status">Pendiente de confirmar</p>' : '';
-  const thumb = e.image ? `<img class="poster-thumb" src="${e.image}" alt="" onerror="this.style.display='none'">` : '';
 
-  switch(e.type){
+  return `
+    ${e.image ? `<img class="poster-bg-img" src="${e.image}" alt="" onerror="this.style.display='none'">` : ''}
+    <div class="card-scrim"></div>
+    <div class="poster-daybadge">${day}<span>${monthShort}</span></div>
+    <div class="poster-vertical-tag">${venue || 'STEMS'}</div>
+    <div class="toque-body">
+      <p class="poster-tag script">${TYPE_LABEL[e.type] || e.type}</p>
+      <h3 class="poster-title">${title}</h3>
+      ${desc ? `<p class="poster-desc-inline">${desc}</p>` : ''}
+      <div class="toque-meta">
+        ${venue ? `<p class="poster-venue">${venue}</p>` : '<span></span>'}
+        ${timeStr ? `<div class="time-pill">${timeStr}</div>` : ''}
+      </div>
+      ${status}
+    </div>`;
+}
 
-    case 'toque': // cartel de show — foto sangrada, titular gigante
-      return `
-        ${e.image ? `<img class="poster-thumb" src="${e.image}" alt="" style="position:absolute;inset:0;width:100%;height:100%;border:none;border-radius:0;" onerror="this.style.display='none'">` : ''}
-        <div class="card-scrim"></div>
-        <div class="poster-daybadge">${day}<span>${monthShort}</span></div>
-        <div class="poster-vertical-tag">${venue || 'STEMS'}</div>
-        <div class="toque-body">
-          <p class="poster-tag script">Toque</p>
-          <h3 class="poster-title">${title}</h3>
-          <div class="toque-meta">
-            <p class="poster-venue">${venue}</p>
-            ${timeStr ? `<div class="time-pill">${timeStr}</div>` : ''}
-          </div>
-        </div>`;
+/* Diseño original, reservado para el archivo de eventos pasados */
+function archiveCardTemplate(e){
+  const day = e.dateObj.getDate();
+  const monthShort = MONTHS[e.dateObj.getMonth()].slice(0,3);
+  const timeStr = e.time || '';
+  const title = escapeHtml(e.title);
+  const venue = e.venue ? escapeHtml(e.venue) : '';
+  const desc = e.description ? escapeHtml(truncateText(stripMarkdown(e.description), 160)) : '';
+  const status = e.status === 'pendiente' ? '<p class="poster-status">Pendiente de confirmar</p>' : '';
+  const thumb = e.image ? `<img class="archive-thumb" src="${e.image}" alt="" onerror="this.style.display='none'">` : '';
 
-    case 'single': // editorial — retrato + nombre + bajada
-      return `
-        <p class="single-eyebrow">${day} ${monthShort} · Sencillo</p>
-        <h3 class="poster-title">${title}</h3>
-        ${thumb}
-        ${venue ? `<p class="poster-venue">${venue}</p>` : ''}
-        <p class="poster-desc">${desc}</p>
-        ${status}`;
-
-    case 'album': // lista tipográfica gigante
-      return `
-        <div>
-          <p class="poster-tag">Álbum</p>
-          <div class="album-row">
-            <h3 class="poster-title">${title}</h3>
-            <span class="album-date">${day} ${monthShort}${timeStr ? ' · ' + timeStr : ''}</span>
-          </div>
-          ${venue ? `<p class="poster-venue">${venue}</p>` : ''}
-          <p class="poster-desc">${desc}</p>
-        </div>
-        ${thumb}
-        ${status}`;
-
-    case 'video': // lookbook — foto enmarcada
-      return `
-        <p class="video-eyebrow">${day} ${monthShort} · Video oficial</p>
-        <h3 class="poster-title">${title}</h3>
-        ${e.image ? `<div class="video-frame">${thumb}</div>` : ''}
-        ${venue ? `<p class="poster-venue">${venue}</p>` : ''}
-        <p class="poster-desc">${desc}</p>
-        ${status}`;
-
-    case 'promo': // solo texto, estilo editorial
-      return `
-        <div class="poster-date-row">
-          <span>${day} ${monthShort}${timeStr ? ' · ' + timeStr : ''}</span>
-        </div>
-        <h3 class="poster-title">${title}</h3>
-        <p class="poster-desc">${desc}</p>
-        ${venue ? `<p class="poster-venue">${venue}</p>` : ''}
-        ${status}`;
-
-    default:
-      return `
-        <p class="poster-tag script">${TYPE_LABEL[e.type] || e.type}</p>
-        <h3 class="poster-title">${title}</h3>
-        ${thumb}
-        ${venue ? `<p class="poster-venue">${venue}</p>` : ''}
-        <p class="poster-desc">${desc}</p>
-        ${status}`;
-  }
+  return `
+    <div class="archive-top">
+      <div class="archive-day">${day}<span class="month">${monthShort}</span></div>
+      ${timeStr ? `<div class="time-pill">${timeStr}</div>` : ''}
+    </div>
+    ${thumb}
+    <p class="poster-tag script">${TYPE_LABEL[e.type] || e.type}</p>
+    <p class="poster-title">${title}</p>
+    ${venue ? `<p class="poster-venue">${venue}</p>` : ''}
+    <p class="poster-desc">${desc}</p>
+    ${status}`;
 }
 
 function openModal(e){
@@ -882,9 +884,32 @@ function openModal(e){
   document.getElementById('modalMedia').style.display = e.image ? 'flex' : 'none';
   document.getElementById('modalTag').textContent = TYPE_LABEL[e.type] || e.type;
   document.getElementById('modalTitle').textContent = e.title;
-  document.getElementById('modalDesc').textContent = e.description || '';
+
   const fmt = new Intl.DateTimeFormat('es-ES', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
-  document.getElementById('modalDate').textContent = fmt.format(e.dateObj) + (e.venue ? ' · ' + e.venue : '');
+  let dateLine = fmt.format(e.dateObj);
+  if(e.time) dateLine += ' · ' + e.time;
+  if(e.venue) dateLine += ' · ' + e.venue;
+  document.getElementById('modalDate').textContent = dateLine;
+
+  document.getElementById('modalDesc').innerHTML = formatDescriptionHtml(e.description || '');
+
+  const statusEl = document.getElementById('modalStatus');
+  if(e.status === 'pendiente'){
+    statusEl.textContent = 'Pendiente de confirmar';
+    statusEl.style.display = '';
+  }else{
+    statusEl.style.display = 'none';
+  }
+
+  const linkEl = document.getElementById('modalLink');
+  if(e.link){
+    linkEl.href = e.link;
+    linkEl.textContent = (LINK_LABEL[e.type] || 'Más información') + ' →';
+    linkEl.style.display = 'inline-flex';
+  }else{
+    linkEl.style.display = 'none';
+  }
+
   document.getElementById('overlay').classList.add('open');
 }
 document.getElementById('modalClose').addEventListener('click', () => document.getElementById('overlay').classList.remove('open'));
@@ -903,6 +928,31 @@ function escapeHtml(str){
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
+}
+
+/* Quita el markdown simple (**negritas**) y aplana saltos de línea,
+   para usar en las vistas compactas (tarjetas). */
+function stripMarkdown(text){
+  return text.replace(/\*\*(.*?)\*\*/g, '$1').replace(/\r?\n+/g, ' ').trim();
+}
+
+function truncateText(text, maxLen){
+  if(text.length <= maxLen) return text;
+  return text.slice(0, maxLen - 1).trimEnd() + '…';
+}
+
+/* Convierte **negritas** y párrafos (líneas en blanco) a HTML real,
+   para la vista completa (modal). El texto ya se recibe sin escapar
+   y aquí mismo se escapa antes de aplicar el formato. */
+function formatDescriptionHtml(text){
+  if(!text) return '';
+  const escaped = escapeHtml(text);
+  const withBold = escaped.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  const withItalic = withBold.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  return withItalic
+    .split(/\n{2,}/)
+    .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
+    .join('');
 }
 
 loadEvents();
