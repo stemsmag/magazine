@@ -601,7 +601,7 @@ function renderPlatformColumn(platform, items){
   const colEl = document.getElementById('col-' + platform);
   const countEl = document.getElementById('count-' + platform);
   colEl.innerHTML = '';
-  countEl.textContent = String(items.length).padStart(2, '0') + ' playlist' + (items.length === 1 ? '' : 's');
+  countEl.textContent = String(items.length).padStart(2, '0') + ' playlist' + (items.length === 2 ? '' : 's');
 
   if(!items.length){
     const emptyMsg = platform === 'soundcloud'
