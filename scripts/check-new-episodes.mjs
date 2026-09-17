@@ -18,6 +18,10 @@ const JSON_PATH = process.argv[2] || "episodios.json";
 const SERIES_KEYWORDS_REGION = /latam|latino\s*americ/i;
 const SERIES_KEYWORDS_GENERO = /electr[oó]nic/i;
 
+// Duración máxima (en segundos) para considerar un video "Short".
+// YouTube define Shorts como videos de 3 minutos o menos.
+const SHORT_MAX_SECONDS = 180;
+
 async function main() {
   const raw = await readFile(JSON_PATH, "utf-8");
   const data = JSON.parse(raw);
@@ -54,12 +58,36 @@ async function main() {
   });
 
   const nuevos = [];
-  for (const video of candidatos) {
-    if (await isShort(video.videoId)) {
-      console.log(`Omitido (es un Short): "${video.title}" (${video.videoId})`);
-      continue;
+  const apiKey = process.env.YOUTUBE_API_KEY;
+
+  if (apiKey && candidatos.length > 0) {
+    const durations = await getDurationsSeconds(
+      candidatos.map((v) => v.videoId),
+      apiKey
+    );
+    for (const video of candidatos) {
+      const seconds = durations[video.videoId];
+      if (seconds !== undefined && seconds <= SHORT_MAX_SECONDS) {
+        console.log(
+          `Omitido (Short, ${seconds}s): "${video.title}" (${video.videoId})`
+        );
+        continue;
+      }
+      nuevos.push(video);
     }
-    nuevos.push(video);
+  } else {
+    if (candidatos.length > 0) {
+      console.warn(
+        "YOUTUBE_API_KEY no configurada: usando detección de Shorts menos confiable (redirect). Considera agregar el secret YOUTUBE_API_KEY."
+      );
+    }
+    for (const video of candidatos) {
+      if (await isShort(video.videoId)) {
+        console.log(`Omitido (es un Short): "${video.title}" (${video.videoId})`);
+        continue;
+      }
+      nuevos.push(video);
+    }
   }
 
   if (nuevos.length === 0) {
@@ -119,6 +147,32 @@ function parseFeed(xml) {
     const published = (block.match(/<published>(.*?)<\/published>/) || [])[1];
     return { videoId, title, published };
   }).filter((v) => v.videoId && v.title && v.published);
+}
+
+// Consulta la duración real de cada video vía YouTube Data API v3.
+// Devuelve un mapa { videoId: segundos }. Requiere una API key gratuita
+// (Google Cloud Console -> habilitar "YouTube Data API v3" -> credenciales).
+async function getDurationsSeconds(videoIds, apiKey) {
+  const ids = videoIds.join(",");
+  const url = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids}&key=${apiKey}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`Fallo al consultar YouTube Data API (status ${res.status}): ${body}`);
+  }
+  const json = await res.json();
+  const result = {};
+  for (const item of json.items || []) {
+    result[item.id] = parseIsoDuration(item.contentDetails.duration);
+  }
+  return result;
+}
+
+function parseIsoDuration(iso) {
+  const match = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return 0;
+  const [, h, m, s] = match;
+  return (parseInt(h || 0, 10) * 3600) + (parseInt(m || 0, 10) * 60) + parseInt(s || 0, 10);
 }
 
 function isSeriesTitle(title) {
