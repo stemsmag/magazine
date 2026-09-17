@@ -12,6 +12,12 @@ import { readFile, writeFile } from "node:fs/promises";
 
 const JSON_PATH = process.argv[2] || "episodios.json";
 
+// El título debe mencionar tanto "Latam/Latinoamericano" como "Electrónica"
+// (en cualquier orden) para considerarse parte de la serie. Ajusta estas
+// expresiones si cambia el naming de tus episodios.
+const SERIES_KEYWORDS_REGION = /latam|latino\s*americ/i;
+const SERIES_KEYWORDS_GENERO = /electr[oó]nic/i;
+
 async function main() {
   const raw = await readFile(JSON_PATH, "utf-8");
   const data = JSON.parse(raw);
@@ -37,10 +43,27 @@ async function main() {
   }
 
   const existingIds = new Set(data.episodios.map((e) => e.videoId));
-  const nuevos = feedVideos.filter((v) => !existingIds.has(v.videoId));
+
+  const candidatos = feedVideos.filter((v) => {
+    if (existingIds.has(v.videoId)) return false;
+    if (!isSeriesTitle(v.title)) {
+      console.log(`Omitido (no parece de la serie): "${v.title}" (${v.videoId})`);
+      return false;
+    }
+    return true;
+  });
+
+  const nuevos = [];
+  for (const video of candidatos) {
+    if (await isShort(video.videoId)) {
+      console.log(`Omitido (es un Short): "${video.title}" (${video.videoId})`);
+      continue;
+    }
+    nuevos.push(video);
+  }
 
   if (nuevos.length === 0) {
-    console.log("Sin episodios nuevos. episodios.json queda igual.");
+    console.log("Sin episodios nuevos que cumplan los filtros. episodios.json queda igual.");
     return;
   }
 
@@ -96,6 +119,31 @@ function parseFeed(xml) {
     const published = (block.match(/<published>(.*?)<\/published>/) || [])[1];
     return { videoId, title, published };
   }).filter((v) => v.videoId && v.title && v.published);
+}
+
+function isSeriesTitle(title) {
+  return SERIES_KEYWORDS_REGION.test(title) && SERIES_KEYWORDS_GENERO.test(title);
+}
+
+// Truco sin API key: al pedir /shorts/<id>, YouTube responde 200 y se queda
+// en esa página si el video SÍ es un Short; si es un video normal, redirige
+// (30x) hacia /watch?v=<id>. Si la verificación falla por red, no se excluye
+// el video (mejor un falso positivo revisable que perder un episodio real).
+async function isShort(videoId) {
+  try {
+    const res = await fetch(`https://www.youtube.com/shorts/${videoId}`, {
+      method: "HEAD",
+      redirect: "manual",
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; EpisodeChecker/1.0)" },
+    });
+    if (res.status >= 300 && res.status < 400) return false; // redirigido a /watch -> no es Short
+    if (res.status === 200) return true; // se quedó en /shorts -> sí es Short
+    console.warn(`Status inesperado (${res.status}) verificando Short para ${videoId}; se incluye por defecto.`);
+    return false;
+  } catch (err) {
+    console.warn(`No se pudo verificar Short para ${videoId} (${err.message}); se incluye por defecto.`);
+    return false;
+  }
 }
 
 function extractEpisodeNumber(title) {
