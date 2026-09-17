@@ -1,0 +1,39 @@
+name: Check new LATAM Electrónica episode
+
+on:
+  schedule:
+    # 11:00 UTC = 05:00 hora de El Salvador / Centroamérica (UTC-6, sin horario de verano)
+    # Ajusta la hora restando/sumando horas si tu zona horaria cambia.
+    - cron: "0 11 * * 5" # todos los viernes
+  workflow_dispatch: {} # permite correrlo manualmente desde la pestaña Actions
+
+permissions:
+  contents: write
+
+jobs:
+  check-episodes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Revisar canal y actualizar episodios.json
+        id: check
+        run: node scripts/check-new-episodes.mjs episodios.json
+
+      - name: Commit y push si hubo cambios
+        run: |
+          if ! git diff --quiet -- episodios.json; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add episodios.json
+            git commit -m "chore: nuevo episodio detectado automáticamente"
+            git push
+          else
+            echo "Sin cambios en episodios.json"
+          fi
