@@ -24,6 +24,8 @@ jobs:
 
       - name: Revisar canal y actualizar episodios.json
         id: check
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: node scripts/check-new-episodes.mjs episodios.json
 
       - name: Commit y push si hubo cambios
