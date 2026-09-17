@@ -313,8 +313,114 @@
     position:relative;
     padding:calc(var(--stack-h) + 14px) 24px 24px;
     display:flex;
-    align-items:flex-start;
+    flex-direction:column;
+    align-items:stretch;
+    gap:14px;
   }
+  /* ============ BANNER STEMS TV × LATAM ELECTRÓNICA ============ */
+  /* Se alimenta de episodios.json: muestra el último episodio publicado. */
+  .tv-banner{
+    position:relative; display:none; /* JS lo muestra cuando carga el JSON */
+    align-items:center; gap:14px;
+    width:100%; overflow:hidden;
+    padding:12px 16px;
+    border:1px solid rgba(167,139,250,0.45);
+    background:linear-gradient(110deg, #0f0f1a 0%, #16102b 35%, #0d1b2b 70%, #0f0f1a 100%);
+    background-size:220% 100%;
+    animation:tvBannerPan 14s ease-in-out infinite;
+    color:var(--cream);
+    transition:border-color .25s, transform .25s;
+  }
+  .tv-banner.is-ready{display:flex;}
+  .tv-banner:hover{border-color:var(--color-fuchsia, #e879f9); transform:translateY(-2px);}
+  @keyframes tvBannerPan{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+  }
+  /* barra de luz que barre el banner */
+  .tv-banner::after{
+    content:''; position:absolute; top:0; bottom:0; left:-40%; width:40%;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.09), transparent);
+    transform:skewX(-18deg); pointer-events:none;
+    animation:tvBannerSweep 5.5s ease-in-out infinite;
+  }
+  @keyframes tvBannerSweep{
+    0%{left:-40%;}
+    55%{left:120%;}
+    100%{left:120%;}
+  }
+  .tv-banner-thumb{
+    flex:0 0 96px; width:96px; aspect-ratio:16/9;
+    border:1px solid rgba(255,255,255,0.18); overflow:hidden; background:#000;
+  }
+  .tv-banner-thumb img{width:100%; height:100%; object-fit:cover; transition:transform .35s;}
+  .tv-banner:hover .tv-banner-thumb img{transform:scale(1.07);}
+  .tv-banner-body{flex:1; min-width:0; position:relative; z-index:1;}
+  .tv-banner-kicker{
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1.6px;
+    text-transform:uppercase; margin-bottom:5px;
+  }
+  .tv-banner-brand{
+    background:linear-gradient(90deg, #a78bfa, #22d3ee, #e879f9);
+    background-size:200% 100%;
+    -webkit-background-clip:text; background-clip:text;
+    color:transparent; -webkit-text-fill-color:transparent;
+    font-weight:700;
+    animation:tvBrandShift 6s linear infinite;
+  }
+  @keyframes tvBrandShift{
+    0%{background-position:0% 0;}
+    100%{background-position:200% 0;}
+  }
+  .tv-banner-new{
+    display:inline-flex; align-items:center; gap:5px;
+    background:#d946ef; color:#fff; padding:2px 7px; font-size:8px; letter-spacing:1.2px;
+  }
+  .tv-banner-new::before{
+    content:''; width:5px; height:5px; border-radius:50%; background:#fff;
+    animation:tvDotPulse 1.4s ease-in-out infinite;
+  }
+  @keyframes tvDotPulse{
+    0%,100%{opacity:1; transform:scale(1);}
+    50%{opacity:0.35; transform:scale(0.7);}
+  }
+  .tv-banner-ep{color:var(--cream-dim);}
+  .tv-banner-title{
+    font-family:'Oswald',sans-serif; font-weight:600; font-size:14px; line-height:1.25;
+    display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .tv-banner-sub{
+    font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:0.6px;
+    color:var(--muted); margin-top:3px;
+    display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .tv-banner-cta{
+    flex:0 0 auto; position:relative; z-index:1;
+    display:inline-flex; align-items:center; gap:7px;
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.4px; text-transform:uppercase;
+    border:1px solid rgba(255,255,255,0.35); padding:8px 13px;
+    transition:background .2s, border-color .2s;
+  }
+  .tv-banner:hover .tv-banner-cta{background:rgba(217,70,239,0.18); border-color:#e879f9;}
+  .tv-banner-cta span{display:inline-block; animation:tvArrow 1.6s ease-in-out infinite;}
+  @keyframes tvArrow{
+    0%,100%{transform:translateX(0);}
+    50%{transform:translateX(4px);}
+  }
+  @media (max-width:720px){
+    .tv-banner{gap:10px; padding:10px 12px;}
+    .tv-banner-thumb{flex-basis:68px; width:68px;}
+    .tv-banner-title{font-size:12.5px;}
+    .tv-banner-cta{padding:7px 10px; font-size:9px; letter-spacing:1px;}
+    .tv-banner-cta .tv-cta-text{display:none;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .tv-banner, .tv-banner::after, .tv-banner-brand,
+    .tv-banner-new::before, .tv-banner-cta span{animation:none;}
+  }
+
   .cover-frame{
     position:relative;
     width:100%;
@@ -871,6 +977,22 @@
 
       <!-- ============ COVER ============ -->
       <section class="cover">
+
+        <!-- Banner de la sección STEMS TV — se llena desde episodios.json -->
+        <a class="tv-banner" id="tv-banner" href="stems-tv-latam-electronica.html" aria-label="Ir a STEMS TV x Latam Electrónica">
+          <div class="tv-banner-thumb"><img id="tv-banner-img" src="" alt="" onerror="this.parentElement.style.display='none'"></div>
+          <div class="tv-banner-body">
+            <div class="tv-banner-kicker">
+              <span class="tv-banner-new">Nueva sección</span>
+              <span class="tv-banner-brand">STEMS TV × LATAM ELECTRÓNICA</span>
+              <span class="tv-banner-ep" id="tv-banner-ep"></span>
+            </div>
+            <div class="tv-banner-title" id="tv-banner-title"></div>
+            <div class="tv-banner-sub" id="tv-banner-sub"></div>
+          </div>
+          <span class="tv-banner-cta"><span class="tv-cta-text">Ver ahora</span><span>▶</span></span>
+        </a>
+
         <div class="cover-frame">
           <div class="cover-media"><canvas id="hero-canvas"></canvas></div>
           <div class="cover-scrim"></div>
@@ -1428,6 +1550,46 @@ fetch('articles.json')
     renderGrid([...pinned, ...unpinned]);
   })
   .catch(err => console.error('No se pudo cargar articles.json', err));
+
+/* =========================================================
+   BANNER STEMS TV — último episodio desde episodios.json
+   Se alimenta solo: cada vez que agregues un episodio nuevo al JSON,
+   el banner pasa a mostrar ese. Si el JSON falla o viene vacío, el
+   banner simplemente no aparece.
+   ========================================================= */
+(function(){
+  const banner = document.getElementById('tv-banner');
+  if(!banner) return;
+
+  fetch('episodios.json' + '?_=' + Date.now())
+    .then(r => r.json())
+    .then(data => {
+      const hoy = new Date(); hoy.setHours(23,59,59,999);
+
+      // Solo episodios ya publicados (no fechas futuras), el más reciente primero.
+      const eps = (data.episodios || [])
+        .map(e => ({...e, fechaObj:new Date(e.fechaPublicacion + 'T00:00:00')}))
+        .filter(e => e.fechaObj <= hoy)
+        .sort((a,b) => b.fechaObj - a.fechaObj);
+
+      if(!eps.length) return; // sin episodios: el banner queda oculto
+
+      const ep = eps[0];
+      const num = (ep.id || '').replace(/\D/g,''); // "ep13" -> "13"
+
+      const img = document.getElementById('tv-banner-img');
+      if(ep.thumbnail){ img.src = ep.thumbnail; img.alt = ep.titulo || ''; }
+      else { img.parentElement.style.display = 'none'; }
+
+      document.getElementById('tv-banner-ep').textContent = num ? '// EP ' + num : '';
+      document.getElementById('tv-banner-title').textContent = ep.titulo || '';
+      document.getElementById('tv-banner-sub').textContent =
+        [ep.artista, ep.genero].filter(Boolean).join(' · ');
+
+      banner.classList.add('is-ready');
+    })
+    .catch(err => console.error('No se pudo cargar episodios.json para el banner', err));
+})();
 
 /* =========================================================
    EVENTOS Y LANZAMIENTOS — dos sub-columnas
