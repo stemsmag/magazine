@@ -167,6 +167,81 @@
         "plataformasEscucha": "YouTube",
         "lanzamientoDestacado": "Latam Electronica #13"
       }
+    },
+    {
+      "id": "ep02",
+      "videoId": "FZNFWTfiWDU",
+      "titulo": "RUDO Guest Mix #2 Latam Electronica (MainFloor Mix)",
+      "artista": "Varios Artistas",
+      "genero": "EDM / Electrónica",
+      "fechaPublicacion": "2025-12-09",
+      "thumbnail": "https://img.youtube.com/vi/FZNFWTfiWDU/hqdefault.jpg",
+      "resenaHtml": "<p>TODO: escribir reseña para \"RUDO Guest Mix #2 Latam Electronica (MainFloor Mix)\". Generado automáticamente, pendiente de edición.</p>",
+      "fichaArtista": {
+        "redesSociales": "https://www.youtube.com/@LatamElectronica",
+        "plataformasEscucha": "YouTube",
+        "lanzamientoDestacado": "RUDO Guest Mix #2 Latam Electronica (MainFloor Mix)"
+      }
+    },
+    {
+      "id": "ep14",
+      "videoId": "0Hdx7zjIPkc",
+      "titulo": "Episodio 7 Latam Electronica",
+      "artista": "Varios Artistas",
+      "genero": "EDM / Electrónica",
+      "fechaPublicacion": "2025-12-12",
+      "thumbnail": "https://img.youtube.com/vi/0Hdx7zjIPkc/hqdefault.jpg",
+      "resenaHtml": "<p>TODO: escribir reseña para \"Episodio 7 Latam Electronica\". Generado automáticamente, pendiente de edición.</p>",
+      "fichaArtista": {
+        "redesSociales": "https://www.youtube.com/@LatamElectronica",
+        "plataformasEscucha": "YouTube",
+        "lanzamientoDestacado": "Episodio 7 Latam Electronica"
+      }
+    },
+    {
+      "id": "ep03",
+      "videoId": "YggMt4tGE9E",
+      "titulo": "Leo Drops Guest Mix #3 Latam Electronica",
+      "artista": "Varios Artistas",
+      "genero": "EDM / Electrónica",
+      "fechaPublicacion": "2025-12-16",
+      "thumbnail": "https://img.youtube.com/vi/YggMt4tGE9E/hqdefault.jpg",
+      "resenaHtml": "<p>TODO: escribir reseña para \"Leo Drops Guest Mix #3 Latam Electronica\". Generado automáticamente, pendiente de edición.</p>",
+      "fichaArtista": {
+        "redesSociales": "https://www.youtube.com/@LatamElectronica",
+        "plataformasEscucha": "YouTube",
+        "lanzamientoDestacado": "Leo Drops Guest Mix #3 Latam Electronica"
+      }
+    },
+    {
+      "id": "ep03",
+      "videoId": "3R7YjzkvCpQ",
+      "titulo": "DJ Diamond HM Guest mix #3 Latam Electronica",
+      "artista": "Varios Artistas",
+      "genero": "EDM / Electrónica",
+      "fechaPublicacion": "2025-12-23",
+      "thumbnail": "https://img.youtube.com/vi/3R7YjzkvCpQ/hqdefault.jpg",
+      "resenaHtml": "<p>TODO: escribir reseña para \"DJ Diamond HM Guest mix #3 Latam Electronica\". Generado automáticamente, pendiente de edición.</p>",
+      "fichaArtista": {
+        "redesSociales": "https://www.youtube.com/@LatamElectronica",
+        "plataformasEscucha": "YouTube",
+        "lanzamientoDestacado": "DJ Diamond HM Guest mix #3 Latam Electronica"
+      }
+    },
+    {
+      "id": "ep15",
+      "videoId": "dOOlHL1UA4Y",
+      "titulo": "Episodio 8 Latam Electronica @YoSoyRudoMx",
+      "artista": "Varios Artistas",
+      "genero": "EDM / Electrónica",
+      "fechaPublicacion": "2025-12-26",
+      "thumbnail": "https://img.youtube.com/vi/dOOlHL1UA4Y/hqdefault.jpg",
+      "resenaHtml": "<p>TODO: escribir reseña para \"Episodio 8 Latam Electronica @YoSoyRudoMx\". Generado automáticamente, pendiente de edición.</p>",
+      "fichaArtista": {
+        "redesSociales": "https://www.youtube.com/@LatamElectronica",
+        "plataformasEscucha": "YouTube",
+        "lanzamientoDestacado": "Episodio 8 Latam Electronica @YoSoyRudoMx"
+      }
     }
   ]
 }
