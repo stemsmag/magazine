@@ -526,6 +526,81 @@
     background:none; border:1px solid var(--line); color:var(--cream);
     padding:8px 16px; border-radius:6px; cursor:pointer; font-family:'JetBrains Mono',monospace; font-size:12px;
   }
+
+  /* ============ FORMULARIO DE ENVÍOS ============ */
+  .submit-form-section{
+    margin-top:64px; scroll-margin-top:calc(var(--stack-h) + 20px);
+    background:var(--paper); border:1px solid var(--line); border-radius:14px;
+    padding:34px 32px 38px; position:relative; overflow:hidden;
+  }
+  .submit-form-section::before{
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background-image:radial-gradient(circle at 96% 8%, rgba(242,169,60,0.16), transparent 55%),
+                     radial-gradient(circle at 2% 96%, rgba(232,35,107,0.12), transparent 50%);
+  }
+  .submit-form-section > *{position:relative; z-index:1;}
+  @media (max-width:560px){.submit-form-section{padding:26px 20px 30px;}}
+  .submit-form-section .eyebrow{font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:3px; color:var(--amber); margin-bottom:10px;}
+  .submit-form-section h2{font-size:clamp(28px,5vw,44px); line-height:.95; margin-bottom:10px;}
+  .submit-form-section .form-intro{color:var(--cream-dim); font-size:13.5px; line-height:1.6; max-width:560px; margin-bottom:26px;}
+
+  .form-grid{display:grid; grid-template-columns:1fr 1fr; gap:6px 20px;}
+  @media (max-width:640px){.form-grid{grid-template-columns:1fr;}}
+  .field-full{grid-column:1/-1;}
+
+  .submit-form label.flabel{
+    display:block; font-family:'JetBrains Mono',monospace; font-size:10.5px;
+    text-transform:uppercase; letter-spacing:.09em; color:var(--muted); margin:18px 0 6px;
+  }
+  .submit-form input[type=text], .submit-form input[type=email], .submit-form input[type=date],
+  .submit-form input[type=url], .submit-form textarea, .submit-form select{
+    width:100%; background:var(--card); border:1px solid var(--line); color:var(--cream);
+    padding:11px 12px; border-radius:8px; font-size:14px; font-family:'Inter',sans-serif;
+  }
+  .submit-form input:focus, .submit-form textarea:focus, .submit-form select:focus{
+    outline:none; border-color:var(--amber);
+  }
+  .submit-form textarea{resize:vertical; min-height:88px;}
+  .submit-form select option{background:var(--paper); color:var(--cream);}
+  .field-hint{font-size:11.5px; color:var(--muted); margin-top:6px; line-height:1.5;}
+
+  .dist-block{
+    margin-top:18px; padding:14px 16px; background:var(--card);
+    border:1px solid var(--line); border-radius:10px;
+  }
+  .dist-options{display:flex; flex-direction:column; gap:8px; font-size:13px;}
+  .dist-radio, .platform-check{
+    display:flex; align-items:center; gap:8px; cursor:pointer;
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--cream);
+  }
+  .dist-radio input, .platform-check input{width:auto; accent-color:var(--amber);}
+  .platform-list{
+    display:grid; grid-template-columns:1fr 1fr; gap:8px 14px;
+    margin-top:12px; padding-top:12px; border-top:1px solid var(--line);
+  }
+  .platform-list.hidden{display:none;}
+  @media (max-width:480px){.platform-list{grid-template-columns:1fr;}}
+
+  .form-send{
+    margin-top:26px; display:inline-flex; align-items:center; gap:10px;
+    background:var(--amber); color:#1A1300; border:none; cursor:pointer;
+    padding:14px 26px; border-radius:40px; font-family:'JetBrains Mono',monospace;
+    font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    transition:transform .15s ease, background .2s ease;
+  }
+  .form-send:hover{background:#FFC46B; transform:translateY(-2px);}
+  .form-send:disabled{opacity:.6; cursor:default; transform:none;}
+  .form-note{
+    margin-top:14px; font-family:'JetBrains Mono',monospace; font-size:11px;
+    color:var(--muted); line-height:1.6;
+  }
+  .form-status{
+    display:none; margin-top:18px; padding:14px 16px; border-radius:10px;
+    font-family:'JetBrains Mono',monospace; font-size:12.5px; line-height:1.6;
+  }
+  .form-status.show{display:block;}
+  .form-status.ok{border:1px solid var(--teal); color:var(--teal); background:rgba(47,182,168,.08);}
+  .form-status.err{border:1px solid var(--magenta); color:var(--magenta); background:rgba(232,35,107,.08);}
 </style>
 </head>
 <body>
@@ -610,12 +685,12 @@
 
   <div class="submit-cta">
     <div class="submit-cta-text">
-      <p class="eyebrow mono">// ¿tienes un evento?</p>
-      <h2 class="display">Súmalo al calendario</h2>
-      <p>Mándanos la fecha, hora, lugar, flyer y toda la info — nosotros lo sumamos al calendario de STEMS.</p>
+      <p class="eyebrow mono">// ¿tienes algo que anunciar?</p>
+      <h2 class="display">Mándanos tu evento o lanzamiento</h2>
+      <p>Toques, sencillos, álbumes y EPs, videos oficiales o promos y teasers: llena el formulario con fecha, lugar o plataformas, flyer y links, y lo sumamos al calendario de STEMS.</p>
     </div>
-    <a class="submit-cta-btn mono" href="mailto:stemsmagazine@gmail.com?subject=Nuevo%20evento%20para%20STEMS&body=Nombre%20del%20evento%3A%0AFecha%20y%20hora%3A%0ALugar%3A%0ADescripci%C3%B3n%3A%0AFlyer%2Fimagen%20(adjunta)%3A%0A">
-      stemsmagazine@gmail.com <span>→</span>
+    <a class="submit-cta-btn mono" href="#enviar">
+      Enviar mi evento <span>↓</span>
     </a>
   </div>
 
@@ -635,6 +710,115 @@
     <p class="month-label">Archivo — eventos pasados</p>
     <div class="archive-grid" id="archiveGrid"></div>
   </div>
+
+  <section class="submit-form-section" id="enviar">
+    <p class="eyebrow mono">// envíos abiertos</p>
+    <h2 class="display">Publica tu evento en STEMS</h2>
+    <p class="form-intro">Llena los campos según lo que quieras anunciar: <strong>toque</strong> (evento en vivo),
+      <strong>sencillo</strong>, <strong>álbum o EP</strong>, <strong>video oficial</strong> o <strong>promo / teaser</strong>.
+      Revisamos cada envío antes de publicarlo; si falta algo te escribimos.</p>
+
+    <form class="submit-form" id="submitForm" action="https://formspree.io/f/xwlppyjg" method="POST">
+      <div class="form-grid">
+        <div>
+          <label class="flabel" for="f-name">Tu nombre o proyecto *</label>
+          <input id="f-name" name="Nombre de contacto" type="text" required placeholder="Ej: Colectivo Almacén 7">
+        </div>
+        <div>
+          <label class="flabel" for="f-email">Tu correo *</label>
+          <input id="f-email" name="email" type="email" required placeholder="tucorreo@ejemplo.com">
+        </div>
+
+        <div>
+          <label class="flabel" for="f-type">Tipo de envío *</label>
+          <select id="f-type" name="Tipo">
+            <option value="Toque (evento en vivo)">Toque (evento en vivo)</option>
+            <option value="Sencillo">Sencillo</option>
+            <option value="Álbum / EP">Álbum / EP</option>
+            <option value="Video oficial">Video oficial</option>
+            <option value="Promo / Teaser">Promo / Teaser</option>
+          </select>
+        </div>
+        <div>
+          <label class="flabel" for="f-status">Estado</label>
+          <select id="f-status" name="Estado">
+            <option value="Confirmado">Confirmado</option>
+            <option value="Pendiente">Pendiente</option>
+          </select>
+        </div>
+
+        <div class="field-full">
+          <label class="flabel" for="f-title">Título *</label>
+          <input id="f-title" name="Título" type="text" required placeholder="Ej: Nocturno, Sesión en Almacén 7...">
+        </div>
+
+        <div>
+          <label class="flabel" for="f-date">Fecha *</label>
+          <input id="f-date" name="Fecha" type="date" required>
+        </div>
+        <div>
+          <label class="flabel" for="f-time">Hora</label>
+          <input id="f-time" name="Hora" type="text" placeholder="Ej: 9:00 PM">
+        </div>
+
+        <div class="field-full" id="venueField">
+          <label class="flabel" for="f-venue">Venue / lugar</label>
+          <input id="f-venue" name="Venue" type="text" placeholder="Ej: Almacén 7, San Salvador">
+        </div>
+
+        <div class="field-full">
+          <label class="flabel" for="f-artist" id="artistLabel">DJ que se presenta</label>
+          <input id="f-artist" name="Artista" type="text" placeholder="Ej: DJ Nombre">
+        </div>
+      </div>
+
+      <div class="dist-block" id="distBlock">
+        <label class="flabel" style="margin-top:0;">Distribución</label>
+        <div class="dist-options">
+          <label class="dist-radio"><input type="radio" name="distMode" value="all" checked> Todas las plataformas</label>
+          <label class="dist-radio"><input type="radio" name="distMode" value="selected"> Plataformas seleccionadas</label>
+        </div>
+        <div class="platform-list hidden" id="platformList">
+          <label class="platform-check"><input type="checkbox" value="Spotify"> Spotify</label>
+          <label class="platform-check"><input type="checkbox" value="Apple Music"> Apple Music</label>
+          <label class="platform-check"><input type="checkbox" value="YouTube Music"> YouTube Music</label>
+          <label class="platform-check"><input type="checkbox" value="Deezer"> Deezer</label>
+          <label class="platform-check"><input type="checkbox" value="Amazon Music"> Amazon Music</label>
+          <label class="platform-check"><input type="checkbox" value="Tidal"> Tidal</label>
+          <label class="platform-check"><input type="checkbox" value="SoundCloud"> SoundCloud</label>
+          <label class="platform-check"><input type="checkbox" value="Bandcamp"> Bandcamp</label>
+        </div>
+      </div>
+
+      <label class="flabel" for="f-desc">Descripción *</label>
+      <textarea id="f-desc" name="Descripción" required placeholder="Detalles cortos del evento o lanzamiento: line-up, sello, concepto, precio de entrada..."></textarea>
+
+      <div class="form-grid">
+        <div>
+          <label class="flabel" for="f-image">Link del flyer / portada</label>
+          <input id="f-image" name="Imagen (link)" type="url" placeholder="https://drive.google.com/...">
+          <p class="field-hint">Súbelo a Drive, Dropbox o WeTransfer y pega aquí el enlace público (JPG o PNG, de preferencia vertical).</p>
+        </div>
+        <div>
+          <label class="flabel" for="f-link">Link del evento o lanzamiento</label>
+          <input id="f-link" name="Link" type="url" placeholder="https://... (boletos, Spotify, YouTube)">
+          <p class="field-hint">Boletos, Spotify, YouTube o el perfil donde se anuncia.</p>
+        </div>
+      </div>
+
+      <label class="flabel" for="f-extra">Notas adicionales</label>
+      <textarea id="f-extra" name="Notas" placeholder="Cualquier cosa que debamos saber (opcional)"></textarea>
+
+      <input type="hidden" name="Distribución" id="f-dist">
+      <input type="hidden" name="_subject" id="f-subject" value="Nuevo envío de evento — STEMS">
+      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+
+      <button class="form-send" type="submit" id="formSend">Enviar a STEMS <span>→</span></button>
+      <p class="form-note">Al enviar aceptas que STEMS publique esta información en el calendario y en sus redes.
+        También puedes escribirnos a <a href="mailto:stemsmagazine@gmail.com" style="color:var(--amber);">stemsmagazine@gmail.com</a>.</p>
+      <div class="form-status mono" id="formStatus"></div>
+    </form>
+  </section>
 </div>
 
 <footer class="site-footer">
@@ -956,6 +1140,91 @@ function formatDescriptionHtml(text){
 }
 
 loadEvents();
+</script>
+<script>
+/* ===== Formulario de envíos ===== */
+(function(){
+  const form = document.getElementById('submitForm');
+  if(!form) return;
+  const typeSel   = document.getElementById('f-type');
+  const artistLbl = document.getElementById('artistLabel');
+  const artistIn  = document.getElementById('f-artist');
+  const venueField= document.getElementById('venueField');
+  const distBlock = document.getElementById('distBlock');
+  const platList  = document.getElementById('platformList');
+  const statusBox = document.getElementById('formStatus');
+  const sendBtn   = document.getElementById('formSend');
+
+  function isToque(){ return typeSel.value.indexOf('Toque') === 0; }
+
+  function syncType(){
+    if(isToque()){
+      artistLbl.textContent = 'DJ que se presenta';
+      artistIn.placeholder = 'Ej: DJ Nombre';
+      venueField.style.display = '';
+      distBlock.style.display = 'none';
+    } else {
+      artistLbl.textContent = 'Productor';
+      artistIn.placeholder = 'Ej: Nombre del productor';
+      venueField.style.display = 'none';
+      distBlock.style.display = '';
+    }
+  }
+  typeSel.addEventListener('change', syncType);
+  syncType();
+
+  function togglePlatforms(){
+    const mode = form.querySelector('input[name="distMode"]:checked').value;
+    platList.classList.toggle('hidden', mode !== 'selected');
+  }
+  form.querySelectorAll('input[name="distMode"]').forEach(r => r.addEventListener('change', togglePlatforms));
+  togglePlatforms();
+
+  function distributionText(){
+    if(isToque()) return '';
+    const mode = form.querySelector('input[name="distMode"]:checked').value;
+    if(mode === 'all') return 'Disponible en todas las plataformas.';
+    const sel = Array.from(platList.querySelectorAll('input:checked')).map(c => c.value);
+    return sel.length ? 'Disponible en: ' + sel.join(', ') + '.' : '';
+  }
+
+  function show(msg, ok){
+    statusBox.textContent = msg;
+    statusBox.className = 'form-status mono show ' + (ok ? 'ok' : 'err');
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    document.getElementById('f-dist').value = distributionText();
+    document.getElementById('f-subject').value = 'Nuevo envío STEMS — ' + typeSel.value + ': ' + (document.getElementById('f-title').value || 'sin título');
+
+    const data = new FormData(form);
+    data.delete('distMode');
+    if(isToque()) data.delete('Distribución');
+    else data.delete('Venue');
+
+    sendBtn.disabled = true;
+    const original = sendBtn.innerHTML;
+    sendBtn.textContent = 'Enviando...';
+    try{
+      const res = await fetch(form.action, {
+        method:'POST', body:data, headers:{'Accept':'application/json'}
+      });
+      if(res.ok){
+        form.reset();
+        syncType(); togglePlatforms();
+        show('¡Listo! Recibimos tu envío. Te escribimos si necesitamos algo más.', true);
+      } else {
+        show('No pudimos enviar el formulario. Escríbenos a stemsmagazine@gmail.com.', false);
+      }
+    } catch(err){
+      show('Hubo un problema de conexión. Intenta de nuevo o escríbenos a stemsmagazine@gmail.com.', false);
+    } finally {
+      sendBtn.disabled = false;
+      sendBtn.innerHTML = original;
+    }
+  });
+})();
 </script>
 </body>
 </html>
