@@ -421,6 +421,110 @@
     .tv-banner-new::before, .tv-banner-cta span{animation:none;}
   }
 
+  /* ============ BANNER BEATS AROUND SIVAR ============ */
+  /* Se alimenta en vivo de la playlist de YouTube (playlistItems API),
+     no de un JSON local — muestra el episodio agregado más reciente. */
+  .sivar-banner{
+    position:relative; display:none; /* JS lo muestra cuando carga la playlist */
+    align-items:center; gap:14px;
+    width:100%; overflow:hidden;
+    padding:12px 16px;
+    border:1px solid rgba(255,122,46,0.45);
+    background:linear-gradient(110deg, #0c0c0a 0%, #1a1108 35%, #0c1512 70%, #0c0c0a 100%);
+    background-size:220% 100%;
+    animation:sivarBannerPan 14s ease-in-out infinite;
+    color:var(--cream);
+    transition:border-color .25s, transform .25s;
+  }
+  .sivar-banner.is-ready{display:flex;}
+  .sivar-banner:hover{border-color:#35c9a8; transform:translateY(-2px);}
+  @keyframes sivarBannerPan{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+  }
+  .sivar-banner::after{
+    content:''; position:absolute; top:0; bottom:0; left:-40%; width:40%;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.09), transparent);
+    transform:skewX(-18deg); pointer-events:none;
+    animation:sivarBannerSweep 5.5s ease-in-out infinite;
+  }
+  @keyframes sivarBannerSweep{
+    0%{left:-40%;}
+    55%{left:120%;}
+    100%{left:120%;}
+  }
+  .sivar-banner-thumb{
+    flex:0 0 96px; width:96px; aspect-ratio:16/9;
+    border:1px solid rgba(255,255,255,0.18); overflow:hidden; background:#000;
+  }
+  .sivar-banner-thumb img{width:100%; height:100%; object-fit:cover; transition:transform .35s;}
+  .sivar-banner:hover .sivar-banner-thumb img{transform:scale(1.07);}
+  .sivar-banner-body{flex:1; min-width:0; position:relative; z-index:1;}
+  .sivar-banner-kicker{
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:1.6px;
+    text-transform:uppercase; margin-bottom:5px;
+  }
+  .sivar-banner-brand{
+    background:linear-gradient(90deg, #ff9a5c, #35c9a8, #f2c14e);
+    background-size:200% 100%;
+    -webkit-background-clip:text; background-clip:text;
+    color:transparent; -webkit-text-fill-color:transparent;
+    font-weight:700;
+    animation:sivarBrandShift 6s linear infinite;
+  }
+  @keyframes sivarBrandShift{
+    0%{background-position:0% 0;}
+    100%{background-position:200% 0;}
+  }
+  .sivar-banner-new{
+    display:inline-flex; align-items:center; gap:5px;
+    background:#ff5a36; color:#0c0c0a; padding:2px 7px; font-size:8px; letter-spacing:1.2px;
+  }
+  .sivar-banner-new::before{
+    content:''; width:5px; height:5px; border-radius:50%; background:#0c0c0a;
+    animation:sivarDotPulse 1.4s ease-in-out infinite;
+  }
+  @keyframes sivarDotPulse{
+    0%,100%{opacity:1; transform:scale(1);}
+    50%{opacity:0.35; transform:scale(0.7);}
+  }
+  .sivar-banner-ep{color:var(--cream-dim);}
+  .sivar-banner-title{
+    font-family:'Oswald',sans-serif; font-weight:600; font-size:14px; line-height:1.25;
+    display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .sivar-banner-sub{
+    font-family:'JetBrains Mono',monospace; font-size:8.5px; letter-spacing:0.6px;
+    color:var(--muted); margin-top:3px;
+    display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .sivar-banner-cta{
+    flex:0 0 auto; position:relative; z-index:1;
+    display:inline-flex; align-items:center; gap:7px;
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:1.4px; text-transform:uppercase;
+    border:1px solid rgba(255,255,255,0.35); padding:8px 13px;
+    transition:background .2s, border-color .2s;
+  }
+  .sivar-banner:hover .sivar-banner-cta{background:rgba(53,201,168,0.18); border-color:#35c9a8;}
+  .sivar-banner-cta span{display:inline-block; animation:sivarArrow 1.6s ease-in-out infinite;}
+  @keyframes sivarArrow{
+    0%,100%{transform:translateX(0);}
+    50%{transform:translateX(4px);}
+  }
+  @media (max-width:720px){
+    .sivar-banner{gap:10px; padding:10px 12px;}
+    .sivar-banner-thumb{flex-basis:68px; width:68px;}
+    .sivar-banner-title{font-size:12.5px;}
+    .sivar-banner-cta{padding:7px 10px; font-size:9px; letter-spacing:1px;}
+    .sivar-banner-cta .sivar-cta-text{display:none;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .sivar-banner, .sivar-banner::after, .sivar-banner-brand,
+    .sivar-banner-new::before, .sivar-banner-cta span{animation:none;}
+  }
+
   .cover-frame{
     position:relative;
     width:100%;
@@ -792,6 +896,8 @@
       <a href="articulos.html">Todos los artículos</a>
       <a href="eventos.html">Eventos y lanzamientos</a>
       <a href="playlist.html">Playlists y videos</a>
+      <a href="stems-tv-latam-electronica.html">STEMS TV</a>
+      <a href="beats-around-sivar.html">Beats Around Sivar</a>
     </div>
     <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
       <span class="nav-toggle-bar"></span>
@@ -978,6 +1084,21 @@
       <!-- ============ COVER ============ -->
       <section class="cover">
 
+        <!-- Banner de Beats Around Sivar — se llena en vivo desde la playlist de YouTube -->
+        <a class="sivar-banner" id="sivar-banner" href="beats-around-sivar.html" aria-label="Ir a Beats Around Sivar">
+          <div class="sivar-banner-thumb"><img id="sivar-banner-img" src="" alt="" onerror="this.parentElement.style.display='none'"></div>
+          <div class="sivar-banner-body">
+            <div class="sivar-banner-kicker">
+              <span class="sivar-banner-new">Nueva sección</span>
+              <span class="sivar-banner-brand">BEATS AROUND SIVAR</span>
+              <span class="sivar-banner-ep" id="sivar-banner-ep"></span>
+            </div>
+            <div class="sivar-banner-title" id="sivar-banner-title"></div>
+            <div class="sivar-banner-sub" id="sivar-banner-sub"></div>
+          </div>
+          <span class="sivar-banner-cta"><span class="sivar-cta-text">Ver ahora</span><span>▶</span></span>
+        </a>
+
         <!-- Banner de la sección STEMS TV — se llena desde episodios.json -->
         <a class="tv-banner" id="tv-banner" href="stems-tv-latam-electronica.html" aria-label="Ir a STEMS TV x Latam Electrónica">
           <div class="tv-banner-thumb"><img id="tv-banner-img" src="" alt="" onerror="this.parentElement.style.display='none'"></div>
@@ -1138,7 +1259,8 @@
           <li><a href="articulos.html">Todos los artículos</a></li>
           <li><a href="eventos.html">Eventos y lanzamientos</a></li>
           <li><a href="playlist.html">Playlists y videos</a></li>
-         
+          <li><a href="stems-tv-latam-electronica.html">STEMS TV</a></li>
+          <li><a href="beats-around-sivar.html">Beats Around Sivar</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -1550,6 +1672,59 @@ fetch('articles.json')
     renderGrid([...pinned, ...unpinned]);
   })
   .catch(err => console.error('No se pudo cargar articles.json', err));
+
+/* =========================================================
+   BANNER BEATS AROUND SIVAR — último video agregado a la playlist
+   real de YouTube (playlistItems API). No depende de ningún JSON
+   local: si el dueño del canal agrega un video nuevo a la playlist,
+   este banner lo recoge solo la próxima vez que alguien cargue la
+   página. Si el fetch falla, el banner simplemente no aparece.
+
+   TODO / OJO:
+   - Solo pide maxResults=10 y elige el publishedAt más reciente
+     de esos 10. Si la playlist crece mucho y el video más nuevo
+     no cae entre esos primeros 10 que devuelve YouTube, el banner
+     no lo detectaría. beats-around-sivar.html sí pagina la playlist
+     completa (ver obtenerTodaLaPlaylist en ese archivo) — si hace
+     falta, replicar esa misma paginación aquí.
+   - Cada carga de index.html dispara esta llamada a la API de
+     YouTube (además de las que ya hace stems-tv-latam-electronica.html
+     y beats-around-sivar.html cuando se visitan). Nada grave con
+     tráfico normal, pero si algún día aparece un error de cuota
+     diaria en la consola, es la primera sospechosa junto con el
+     resto de llamadas a googleapis.com/youtube/v3.
+   ========================================================= */
+(function(){
+  const banner = document.getElementById('sivar-banner');
+  if(!banner) return;
+
+  const YT_API_KEY = 'AIzaSyBKdUKsMSFbkeTlYftHwlLv8N8a3Vq89pk';
+  const PLAYLIST_ID = 'PL4rYOiOGXIuIh_IkTwy4AqzX2OnYlbWV_';
+
+  fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=10&playlistId=${PLAYLIST_ID}&key=${YT_API_KEY}`)
+    .then(r => r.json())
+    .then(data => {
+      if(data.error) throw new Error(data.error.message);
+      const items = (data.items || []).filter(it => it.snippet && it.snippet.resourceId && it.snippet.resourceId.videoId);
+      if(!items.length) return; // playlist vacía o inaccesible: el banner queda oculto
+
+      // el video agregado más recientemente a la playlist
+      items.sort((a,b) => new Date(b.snippet.publishedAt) - new Date(a.snippet.publishedAt));
+      const ep = items[0].snippet;
+
+      const thumb = (ep.thumbnails && (ep.thumbnails.medium || ep.thumbnails.default)) || {};
+      const img = document.getElementById('sivar-banner-img');
+      if(thumb.url){ img.src = thumb.url; img.alt = ep.title || ''; }
+      else { img.parentElement.style.display = 'none'; }
+
+      document.getElementById('sivar-banner-ep').textContent = '// EL SALVADOR';
+      document.getElementById('sivar-banner-title').textContent = ep.title || '';
+      document.getElementById('sivar-banner-sub').textContent = ep.videoOwnerChannelTitle || 'Bert Alvarez';
+
+      banner.classList.add('is-ready');
+    })
+    .catch(err => console.error('No se pudo cargar la playlist de Beats Around Sivar para el banner', err));
+})();
 
 /* =========================================================
    BANNER STEMS TV — último episodio desde episodios.json
