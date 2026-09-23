@@ -601,13 +601,26 @@
   .form-status.show{display:block;}
   .form-status.ok{border:1px solid var(--teal); color:var(--teal); background:rgba(47,182,168,.08);}
   .form-status.err{border:1px solid var(--magenta); color:var(--magenta); background:rgba(232,35,107,.08);}
+
+  /* ============ LANG TOGGLE ============ */
+  .lang-toggle{
+    display:inline-flex; align-items:center; justify-content:center;
+    margin-left:10px; vertical-align:middle;
+    background:transparent; border:1px solid var(--amber); color:var(--amber);
+    font-family:'JetBrains Mono',monospace; font-size:9.5px; letter-spacing:1.5px;
+    padding:3px 9px; border-radius:10px; cursor:pointer; text-transform:uppercase;
+    transition:background .2s ease, color .2s ease;
+  }
+  .lang-toggle:hover{background:var(--amber); color:#1A1300;}
 </style>
 </head>
 <body>
 
 <div class="grain"></div>
 
-<div class="top-band">La música que nos une</div>
+<div class="top-band">
+  <span data-i18n="topband">La música que nos une</span>
+</div>
 
 <header>
   <img class="header-bg" src="img/fondo-head.jpg" alt="">
@@ -619,9 +632,9 @@
 
 <nav class="site-navbar">
   <div class="navbar-inner">
-    <div class="navbar-links"> <a href="articulos.html">Artículos</a>
-      <a href="eventos.html">Eventos</a>
-      <a href="playlist.html">Playlist</a>
+    <div class="navbar-links"> <a href="articulos.html" data-i18n="nav_articulos">Artículos</a>
+      <a href="eventos.html" data-i18n="nav_eventos">Eventos</a>
+      <a href="playlist.html" data-i18n="nav_playlist">Playlist</a>
        
     </div>
     <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false">
@@ -681,102 +694,100 @@
 </script>
 
 <div class="wrap">
-  <a href="index.html" class="back-link mono">← Volver a portada</a>
+  <a href="index.html" class="back-link mono" data-i18n="back_link">← Volver a portada</a>
 
   <div class="submit-cta">
     <div class="submit-cta-text">
-      <p class="eyebrow mono">// ¿tienes algo que anunciar?</p>
-      <h2 class="display">Mándanos tu evento o lanzamiento</h2>
-      <p>Toques, sencillos, álbumes y EPs, videos oficiales o promos y teasers: llena el formulario con fecha, lugar o plataformas, flyer y links, y lo sumamos al calendario de STEMS.</p>
+      <p class="eyebrow mono"><span data-i18n="cta_eyebrow">// ¿tienes algo que anunciar?</span><button type="button" class="lang-toggle mono lang-toggle-1">EN</button></p>
+      <h2 class="display" data-i18n="cta_h2">Mándanos tu evento o lanzamiento</h2>
+      <p data-i18n="cta_p">Toques, sencillos, álbumes y EPs, videos oficiales o promos y teasers: llena el formulario con fecha, lugar o plataformas, flyer y links, y lo sumamos al calendario de STEMS.</p>
     </div>
     <a class="submit-cta-btn mono" href="#enviar">
-      Enviar mi evento <span>↓</span>
+      <span data-i18n="cta_btn">Enviar mi evento</span> <span>↓</span>
     </a>
   </div>
 
   <div class="filters mono" id="filters">
-    <button class="chip active" data-type="all">Todos</button>
-    <button class="chip" data-type="toque">Toques</button>
-    <button class="chip" data-type="single">Sencillos</button>
-    <button class="chip" data-type="album">Álbumes</button>
-    <button class="chip" data-type="video">Videos</button>
-    <button class="chip" data-type="promo">Promo</button>
+    <button class="chip active" data-type="all" data-i18n="chip_all">Todos</button>
+    <button class="chip" data-type="toque" data-i18n="chip_toque">Toques</button>
+    <button class="chip" data-type="single" data-i18n="chip_single">Sencillos</button>
+    <button class="chip" data-type="album" data-i18n="chip_album">Álbumes</button>
+    <button class="chip" data-type="video" data-i18n="chip_video">Videos</button>
+    <button class="chip" data-type="promo" data-i18n="chip_promo">Promo</button>
   </div>
 
   <p class="month-label" id="monthLabel"></p>
   <div class="poster-grid" id="grid"></div>
 
   <div class="archive-section" id="archiveSection">
-    <p class="month-label">Archivo — eventos pasados</p>
+    <p class="month-label" data-i18n="archive_label">Archivo — eventos pasados</p>
     <div class="archive-grid" id="archiveGrid"></div>
   </div>
 
   <section class="submit-form-section" id="enviar">
-    <p class="eyebrow mono">// envíos abiertos</p>
-    <h2 class="display">Publica tu evento en STEMS</h2>
-    <p class="form-intro">Llena los campos según lo que quieras anunciar: <strong>toque</strong> (evento en vivo),
-      <strong>sencillo</strong>, <strong>álbum o EP</strong>, <strong>video oficial</strong> o <strong>promo / teaser</strong>.
-      Revisamos cada envío antes de publicarlo; si falta algo te escribimos.</p>
+    <p class="eyebrow mono"><span data-i18n="form_eyebrow">// envíos abiertos</span><button type="button" class="lang-toggle mono lang-toggle-2">EN</button></p>
+    <h2 class="display" data-i18n="form_h2">Publica tu evento en STEMS</h2>
+    <p class="form-intro" id="formIntro"></p>
 
     <form class="submit-form" id="submitForm" action="https://formspree.io/f/xwlppyjg" method="POST">
       <div class="form-grid">
         <div>
-          <label class="flabel" for="f-name">Tu nombre o proyecto *</label>
-          <input id="f-name" name="Nombre de contacto" type="text" required placeholder="Ej: Colectivo Almacén 7">
+          <label class="flabel" for="f-name" data-i18n="lbl_name">Tu nombre o proyecto *</label>
+          <input id="f-name" name="Nombre de contacto" type="text" required data-i18n-ph="ph_name" placeholder="Ej: Colectivo Almacén 7">
         </div>
         <div>
-          <label class="flabel" for="f-email">Tu correo *</label>
-          <input id="f-email" name="email" type="email" required placeholder="tucorreo@ejemplo.com">
+          <label class="flabel" for="f-email" data-i18n="lbl_email">Tu correo *</label>
+          <input id="f-email" name="email" type="email" required data-i18n-ph="ph_email" placeholder="tucorreo@ejemplo.com">
         </div>
 
         <div>
-          <label class="flabel" for="f-type">Tipo de envío *</label>
+          <label class="flabel" for="f-type" data-i18n="lbl_type">Tipo de envío *</label>
           <select id="f-type" name="Tipo">
-            <option value="Toque (evento en vivo)">Toque (evento en vivo)</option>
-            <option value="Sencillo">Sencillo</option>
-            <option value="Álbum / EP">Álbum / EP</option>
-            <option value="Video oficial">Video oficial</option>
-            <option value="Promo / Teaser">Promo / Teaser</option>
+            <option value="Toque (evento en vivo)" data-i18n="opt_toque">Toque (evento en vivo)</option>
+            <option value="Sencillo" data-i18n="opt_single">Sencillo</option>
+            <option value="Álbum / EP" data-i18n="opt_album">Álbum / EP</option>
+            <option value="Video oficial" data-i18n="opt_video">Video oficial</option>
+            <option value="Promo / Teaser" data-i18n="opt_promo">Promo / Teaser</option>
           </select>
         </div>
         <div>
-          <label class="flabel" for="f-status">Estado</label>
+          <label class="flabel" for="f-status" data-i18n="lbl_status">Estado</label>
           <select id="f-status" name="Estado">
-            <option value="Confirmado">Confirmado</option>
-            <option value="Pendiente">Pendiente</option>
+            <option value="Confirmado" data-i18n="opt_confirmado">Confirmado</option>
+            <option value="Pendiente" data-i18n="opt_pendiente">Pendiente</option>
           </select>
         </div>
 
         <div class="field-full">
-          <label class="flabel" for="f-title">Título *</label>
-          <input id="f-title" name="Título" type="text" required placeholder="Ej: Nocturno, Sesión en Almacén 7...">
+          <label class="flabel" for="f-title" data-i18n="lbl_title">Título *</label>
+          <input id="f-title" name="Título" type="text" required data-i18n-ph="ph_title" placeholder="Ej: Nocturno, Sesión en Almacén 7...">
         </div>
 
         <div>
-          <label class="flabel" for="f-date">Fecha *</label>
+          <label class="flabel" for="f-date" data-i18n="lbl_date">Fecha *</label>
           <input id="f-date" name="Fecha" type="date" required>
         </div>
         <div>
-          <label class="flabel" for="f-time">Hora</label>
-          <input id="f-time" name="Hora" type="text" placeholder="Ej: 9:00 PM">
+          <label class="flabel" for="f-time" data-i18n="lbl_time">Hora</label>
+          <input id="f-time" name="Hora" type="text" data-i18n-ph="ph_time" placeholder="Ej: 9:00 PM">
         </div>
 
         <div class="field-full" id="venueField">
-          <label class="flabel" for="f-venue">Venue / lugar</label>
-          <input id="f-venue" name="Venue" type="text" placeholder="Ej: Almacén 7, San Salvador">
+          <label class="flabel" for="f-venue" data-i18n="lbl_venue">Venue / lugar</label>
+          <input id="f-venue" name="Venue" type="text" data-i18n-ph="ph_venue" placeholder="Ej: Almacén 7, San Salvador">
         </div>
 
         <div class="field-full">
-          <label class="flabel" for="f-artist" id="artistLabel">DJ que se presenta</label>
-          <input id="f-artist" name="Artista" type="text" placeholder="Ej: DJ Nombre">
+          <label class="flabel" for="f-artist" id="artistLabel" data-i18n="lbl_artist_toque">DJ que se presenta</label>
+          <input id="f-artist" name="Artista" type="text" data-i18n-ph="ph_artist_toque" placeholder="Ej: DJ Nombre">
         </div>
       </div>
 
       <div class="dist-block" id="distBlock">
-        <label class="flabel" style="margin-top:0;">Distribución</label>
+        <label class="flabel" style="margin-top:0;" data-i18n="lbl_dist">Distribución</label>
         <div class="dist-options">
-          <label class="dist-radio"><input type="radio" name="distMode" value="all" checked> Todas las plataformas</label>
-          <label class="dist-radio"><input type="radio" name="distMode" value="selected"> Plataformas seleccionadas</label>
+          <label class="dist-radio"><input type="radio" name="distMode" value="all" checked> <span data-i18n="dist_all">Todas las plataformas</span></label>
+          <label class="dist-radio"><input type="radio" name="distMode" value="selected"> <span data-i18n="dist_selected">Plataformas seleccionadas</span></label>
         </div>
         <div class="platform-list hidden" id="platformList">
           <label class="platform-check"><input type="checkbox" value="Spotify"> Spotify</label>
@@ -790,32 +801,31 @@
         </div>
       </div>
 
-      <label class="flabel" for="f-desc">Descripción *</label>
-      <textarea id="f-desc" name="Descripción" required placeholder="Detalles cortos del evento o lanzamiento: line-up, sello, concepto, precio de entrada..."></textarea>
+      <label class="flabel" for="f-desc" data-i18n="lbl_desc">Descripción *</label>
+      <textarea id="f-desc" name="Descripción" required data-i18n-ph="ph_desc" placeholder="Detalles cortos del evento o lanzamiento: line-up, sello, concepto, precio de entrada..."></textarea>
 
       <div class="form-grid">
         <div>
-          <label class="flabel" for="f-image">Link del flyer / portada</label>
-          <input id="f-image" name="Imagen (link)" type="url" placeholder="https://drive.google.com/...">
-          <p class="field-hint">Súbelo a Drive, Dropbox o WeTransfer y pega aquí el enlace público (JPG o PNG, de preferencia vertical).</p>
+          <label class="flabel" for="f-image" data-i18n="lbl_image">Link del flyer / portada</label>
+          <input id="f-image" name="Imagen (link)" type="url" data-i18n-ph="ph_image" placeholder="https://drive.google.com/...">
+          <p class="field-hint" data-i18n="hint_image">Súbelo a Drive, Dropbox o WeTransfer y pega aquí el enlace público (JPG o PNG, de preferencia vertical).</p>
         </div>
         <div>
-          <label class="flabel" for="f-link">Link del evento o lanzamiento</label>
-          <input id="f-link" name="Link" type="url" placeholder="https://... (boletos, Spotify, YouTube)">
-          <p class="field-hint">Boletos, Spotify, YouTube o el perfil donde se anuncia.</p>
+          <label class="flabel" for="f-link" data-i18n="lbl_link">Link del evento o lanzamiento</label>
+          <input id="f-link" name="Link" type="url" data-i18n-ph="ph_link" placeholder="https://... (boletos, Spotify, YouTube)">
+          <p class="field-hint" data-i18n="hint_link">Boletos, Spotify, YouTube o el perfil donde se anuncia.</p>
         </div>
       </div>
 
-      <label class="flabel" for="f-extra">Notas adicionales</label>
-      <textarea id="f-extra" name="Notas" placeholder="Cualquier cosa que debamos saber (opcional)"></textarea>
+      <label class="flabel" for="f-extra" data-i18n="lbl_extra">Notas adicionales</label>
+      <textarea id="f-extra" name="Notas" data-i18n-ph="ph_extra" placeholder="Cualquier cosa que debamos saber (opcional)"></textarea>
 
       <input type="hidden" name="Distribución" id="f-dist">
       <input type="hidden" name="_subject" id="f-subject" value="Nuevo envío de evento — STEMS">
       <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
 
-      <button class="form-send" type="submit" id="formSend">Enviar a STEMS <span>→</span></button>
-      <p class="form-note">Al enviar aceptas que STEMS publique esta información en el calendario y en sus redes.
-        También puedes escribirnos a <a href="mailto:stemsmagazine@gmail.com" style="color:var(--amber);">stemsmagazine@gmail.com</a>.</p>
+      <button class="form-send" type="submit" id="formSend"><span data-i18n="send_btn">Enviar a STEMS</span> <span>→</span></button>
+      <p class="form-note" id="formNote"></p>
       <div class="form-status mono" id="formStatus"></div>
     </form>
   </section>
@@ -825,8 +835,8 @@
   <div class="footer-top">
     <div class="footer-brand">
       <div class="footer-logo">STEMS<span>//</span>MAGAZINE</div>
-      <p class="footer-tagline-script">La música que nos une</p>
-      <p class="footer-tagline">Reseñas, perfiles y cultura de la música electrónica en español.</p>
+      <p class="footer-tagline-script" data-i18n="topband">La música que nos une</p>
+      <p class="footer-tagline" data-i18n="footer_tagline">Reseñas, perfiles y cultura de la música electrónica en español.</p>
       <div class="footer-social">
         <a href="#" aria-label="Instagram">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -858,33 +868,33 @@
       </div>
     </div>
     <div class="footer-col">
-      <h4>Secciones</h4>
+      <h4 data-i18n="footer_sections">Secciones</h4>
       <ul>
    
-        <li><a href="eventos.html">Eventos</a></li>
-        <li><a href="playlist.html">Playlist</a></li>
+        <li><a href="eventos.html" data-i18n="nav_eventos">Eventos</a></li>
+        <li><a href="playlist.html" data-i18n="nav_playlist">Playlist</a></li>
       
       </ul>
     </div>
     <div class="footer-col">
       <h4>STEMS</h4>
       <ul>
-        <li><a href="sobre-nosotros.html">Sobre nosotros</a></li>
-        <li><a href="contacto.html">Contacto</a></li>
+        <li><a href="sobre-nosotros.html" data-i18n="footer_about">Sobre nosotros</a></li>
+        <li><a href="contacto.html" data-i18n="footer_contact">Contacto</a></li>
      
       </ul>
     </div>
     <div class="footer-col">
-      <h4>Legal</h4>
+      <h4 data-i18n="footer_legal">Legal</h4>
       <ul>
-        <li><a href="terminos.html">Términos y condiciones</a></li>
-        <li><a href="privacidad.html">Política de privacidad</a></li>
-        <li><a href="cookies.html">Aviso de cookies</a></li>
+        <li><a href="terminos.html" data-i18n="footer_terms">Términos y condiciones</a></li>
+        <li><a href="privacidad.html" data-i18n="footer_privacy">Política de privacidad</a></li>
+        <li><a href="cookies.html" data-i18n="footer_cookies">Aviso de cookies</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>STEMS © 2026 — La música que nos une</span>
+    <span data-i18n="footer_copy">STEMS © 2026 — La música que nos une</span>
   </div>
 </footer>
 
@@ -900,18 +910,161 @@
       <div id="modalDesc" class="modal-desc"></div>
       <p class="mono modal-status" id="modalStatus"></p>
       <a class="modal-link mono" id="modalLink" target="_blank" rel="noopener">Ver más →</a>
-      <button class="modal-close" id="modalClose">Cerrar</button>
+      <button class="modal-close" id="modalClose" data-i18n="modal_close">Cerrar</button>
     </div>
   </div>
 </div>
 
 <script>
-const TYPE_LABEL = {toque:'Toque', single:'Sencillo', album:'Álbum', video:'Video oficial', promo:'Promo'};
-const LINK_LABEL = {toque:'Comprar boletos', single:'Escuchar', album:'Escuchar álbum', video:'Ver video', promo:'Más información'};
-const MONTHS = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+const I18N = {
+  es:{
+    topband:'La música que nos une',
+    nav_articulos:'Artículos', nav_eventos:'Eventos', nav_playlist:'Playlist',
+    back_link:'← Volver a portada',
+    cta_eyebrow:'// ¿tienes algo que anunciar?',
+    cta_h2:'Mándanos tu evento o lanzamiento',
+    cta_p:'Toques, sencillos, álbumes y EPs, videos oficiales o promos y teasers: llena el formulario con fecha, lugar o plataformas, flyer y links, y lo sumamos al calendario de STEMS.',
+    cta_btn:'Enviar mi evento',
+    chip_all:'Todos', chip_toque:'Toques', chip_single:'Sencillos', chip_album:'Álbumes', chip_video:'Videos', chip_promo:'Promo',
+    archive_label:'Archivo — eventos pasados',
+    form_eyebrow:'// envíos abiertos',
+    form_h2:'Publica tu evento en STEMS',
+    form_intro:'Llena los campos según lo que quieras anunciar: <strong>toque</strong> (evento en vivo), <strong>sencillo</strong>, <strong>álbum o EP</strong>, <strong>video oficial</strong> o <strong>promo / teaser</strong>. Revisamos cada envío antes de publicarlo; si falta algo te escribimos.',
+    lbl_name:'Tu nombre o proyecto *', ph_name:'Ej: Colectivo Almacén 7',
+    lbl_email:'Tu correo *', ph_email:'tucorreo@ejemplo.com',
+    lbl_type:'Tipo de envío *',
+    opt_toque:'Toque (evento en vivo)', opt_single:'Sencillo', opt_album:'Álbum / EP', opt_video:'Video oficial', opt_promo:'Promo / Teaser',
+    lbl_status:'Estado', opt_confirmado:'Confirmado', opt_pendiente:'Pendiente',
+    lbl_title:'Título *', ph_title:'Ej: Nocturno, Sesión en Almacén 7...',
+    lbl_date:'Fecha *',
+    lbl_time:'Hora', ph_time:'Ej: 9:00 PM',
+    lbl_venue:'Venue / lugar', ph_venue:'Ej: Almacén 7, San Salvador',
+    lbl_artist_toque:'DJ que se presenta', ph_artist_toque:'Ej: DJ Nombre',
+    lbl_artist_release:'Productor', ph_artist_release:'Ej: Nombre del productor',
+    lbl_dist:'Distribución', dist_all:'Todas las plataformas', dist_selected:'Plataformas seleccionadas',
+    lbl_desc:'Descripción *', ph_desc:'Detalles cortos del evento o lanzamiento: line-up, sello, concepto, precio de entrada...',
+    lbl_image:'Link del flyer / portada', ph_image:'https://drive.google.com/...',
+    hint_image:'Súbelo a Drive, Dropbox o WeTransfer y pega aquí el enlace público (JPG o PNG, de preferencia vertical).',
+    lbl_link:'Link del evento o lanzamiento', ph_link:'https://... (boletos, Spotify, YouTube)',
+    hint_link:'Boletos, Spotify, YouTube o el perfil donde se anuncia.',
+    lbl_extra:'Notas adicionales', ph_extra:'Cualquier cosa que debamos saber (opcional)',
+    send_btn:'Enviar a STEMS',
+    form_note:'Al enviar aceptas que STEMS publique esta información en el calendario y en sus redes. También puedes escribirnos a <a href="mailto:stemsmagazine@gmail.com" style="color:var(--amber);">stemsmagazine@gmail.com</a>.',
+    footer_tagline:'Reseñas, perfiles y cultura de la música electrónica en español.',
+    footer_sections:'Secciones', footer_about:'Sobre nosotros', footer_contact:'Contacto',
+    footer_legal:'Legal', footer_terms:'Términos y condiciones', footer_privacy:'Política de privacidad', footer_cookies:'Aviso de cookies',
+    footer_copy:'STEMS © 2026 — La música que nos une',
+    modal_close:'Cerrar',
+    empty:'No hay eventos próximos para este filtro por ahora.',
+    pendiente:'Pendiente de confirmar',
+    ver_mas:'Ver más',
+    send_sending:'Enviando...',
+    send_ok:'¡Listo! Recibimos tu envío. Te escribimos si necesitamos algo más.',
+    send_err:'No pudimos enviar el formulario. Escríbenos a stemsmagazine@gmail.com.',
+    send_conn_err:'Hubo un problema de conexión. Intenta de nuevo o escríbenos a stemsmagazine@gmail.com.',
+    dist_available_all:'Disponible en todas las plataformas.',
+    dist_available_sel:'Disponible en: ',
+    TYPE_LABEL:{toque:'Toque', single:'Sencillo', album:'Álbum', video:'Video oficial', promo:'Promo'},
+    LINK_LABEL:{toque:'Comprar boletos', single:'Escuchar', album:'Escuchar álbum', video:'Ver video', promo:'Más información'},
+    MONTHS:['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'],
+    locale:'es-ES'
+  },
+  en:{
+    topband:'The music that unites us',
+    nav_articulos:'Articles', nav_eventos:'Events', nav_playlist:'Playlist',
+    back_link:'← Back to home',
+    cta_eyebrow:'// got something to announce?',
+    cta_h2:'Send us your event or release',
+    cta_p:'Live shows, singles, albums and EPs, official videos or promos and teasers: fill out the form with date, venue or platforms, flyer and links, and we\'ll add it to the STEMS calendar.',
+    cta_btn:'Submit my event',
+    chip_all:'All', chip_toque:'Live shows', chip_single:'Singles', chip_album:'Albums', chip_video:'Videos', chip_promo:'Promo',
+    archive_label:'Archive — past events',
+    form_eyebrow:'// submissions open',
+    form_h2:'Publish your event on STEMS',
+    form_intro:'Fill out the fields based on what you want to announce: <strong>live show</strong>, <strong>single</strong>, <strong>album or EP</strong>, <strong>official video</strong>, or <strong>promo / teaser</strong>. We review every submission before publishing it; if something\'s missing, we\'ll reach out.',
+    lbl_name:'Your name or project *', ph_name:'E.g.: Almacén 7 Collective',
+    lbl_email:'Your email *', ph_email:'youremail@example.com',
+    lbl_type:'Submission type *',
+    opt_toque:'Live show', opt_single:'Single', opt_album:'Album / EP', opt_video:'Official video', opt_promo:'Promo / Teaser',
+    lbl_status:'Status', opt_confirmado:'Confirmed', opt_pendiente:'Pending',
+    lbl_title:'Title *', ph_title:'E.g.: Nocturno, Session at Almacén 7...',
+    lbl_date:'Date *',
+    lbl_time:'Time', ph_time:'E.g.: 9:00 PM',
+    lbl_venue:'Venue / location', ph_venue:'E.g.: Almacén 7, San Salvador',
+    lbl_artist_toque:'Performing DJ', ph_artist_toque:'E.g.: DJ Name',
+    lbl_artist_release:'Producer', ph_artist_release:'E.g.: Producer name',
+    lbl_dist:'Distribution', dist_all:'All platforms', dist_selected:'Selected platforms',
+    lbl_desc:'Description *', ph_desc:'Short details about the event or release: line-up, label, concept, ticket price...',
+    lbl_image:'Flyer / cover link', ph_image:'https://drive.google.com/...',
+    hint_image:'Upload it to Drive, Dropbox or WeTransfer and paste the public link here (JPG or PNG, vertical preferred).',
+    lbl_link:'Event or release link', ph_link:'https://... (tickets, Spotify, YouTube)',
+    hint_link:'Tickets, Spotify, YouTube, or the profile where it\'s announced.',
+    lbl_extra:'Additional notes', ph_extra:'Anything else we should know (optional)',
+    send_btn:'Submit to STEMS',
+    form_note:'By submitting, you agree that STEMS may publish this information on the calendar and social media. You can also write to us at <a href="mailto:stemsmagazine@gmail.com" style="color:var(--amber);">stemsmagazine@gmail.com</a>.',
+    footer_tagline:'Reviews, profiles and culture from electronic music, in Spanish.',
+    footer_sections:'Sections', footer_about:'About us', footer_contact:'Contact',
+    footer_legal:'Legal', footer_terms:'Terms and conditions', footer_privacy:'Privacy policy', footer_cookies:'Cookie notice',
+    footer_copy:'STEMS © 2026 — The music that unites us',
+    modal_close:'Close',
+    empty:'No upcoming events for this filter right now.',
+    pendiente:'Pending confirmation',
+    ver_mas:'More info',
+    send_sending:'Sending...',
+    send_ok:'Done! We received your submission. We\'ll reach out if we need anything else.',
+    send_err:'We couldn\'t send the form. Write to us at stemsmagazine@gmail.com.',
+    send_conn_err:'There was a connection problem. Try again or write to us at stemsmagazine@gmail.com.',
+    dist_available_all:'Available on all platforms.',
+    dist_available_sel:'Available on: ',
+    TYPE_LABEL:{toque:'Live show', single:'Single', album:'Album', video:'Official video', promo:'Promo'},
+    LINK_LABEL:{toque:'Buy tickets', single:'Listen', album:'Listen to album', video:'Watch video', promo:'More info'},
+    MONTHS:['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'],
+    locale:'en-US'
+  }
+};
+
+let currentLang = (localStorage.getItem('stemsLang') === 'en') ? 'en' : 'es';
+
+function t(key){ return I18N[currentLang][key]; }
+
+function applyStaticI18n(){
+  document.documentElement.lang = currentLang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const val = I18N[currentLang][key];
+    if(typeof val === 'string') el.textContent = val;
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.getAttribute('data-i18n-ph');
+    const val = I18N[currentLang][key];
+    if(typeof val === 'string') el.setAttribute('placeholder', val);
+  });
+  document.getElementById('formIntro').innerHTML = t('form_intro');
+  document.getElementById('formNote').innerHTML = t('form_note');
+  document.querySelectorAll('.lang-toggle').forEach(btn => {
+    btn.textContent = currentLang === 'es' ? 'EN' : 'ES';
+  });
+  if(window.syncType) window.syncType();
+  if(window.togglePlatforms) window.togglePlatforms();
+}
+
+function setLang(lang){
+  currentLang = lang;
+  localStorage.setItem('stemsLang', lang);
+  applyStaticI18n();
+  render();
+  if(document.getElementById('overlay').classList.contains('open') && lastOpenedEvent){
+    openModal(lastOpenedEvent);
+  }
+}
+
+document.querySelectorAll('.lang-toggle').forEach(btn => {
+  btn.addEventListener('click', () => setLang(currentLang === 'es' ? 'en' : 'es'));
+});
 
 let allEvents = [];
 let activeFilter = 'all';
+let lastOpenedEvent = null;
 
 async function loadEvents(){
   try{
@@ -977,11 +1130,12 @@ function render(){
   const upcoming = filtered.filter(e => e.dateObj >= startOfToday(now));
   const past = filtered.filter(e => e.dateObj < startOfToday(now)).sort((a,b) => b.dateObj - a.dateObj);
 
+  const MONTHS = t('MONTHS');
   document.getElementById('monthLabel').textContent =
     (upcoming[0] ? MONTHS[upcoming[0].dateObj.getMonth()] + ' ' + upcoming[0].dateObj.getFullYear() : MONTHS[now.getMonth()] + ' ' + now.getFullYear());
 
   if(!upcoming.length){
-    grid.innerHTML = '<div class="empty">No hay eventos próximos para este filtro por ahora.</div>';
+    grid.innerHTML = `<div class="empty">${t('empty')}</div>`;
   }else{
     upcoming.forEach(e => {
       const card = document.createElement('div');
@@ -1012,13 +1166,15 @@ function startOfToday(now){
 
 /* Diseño único (estilo "toque"), usado para todas las categorías de próximos eventos */
 function cardTemplate(e){
+  const MONTHS = t('MONTHS');
+  const TYPE_LABEL = t('TYPE_LABEL');
   const day = e.dateObj.getDate();
   const monthShort = MONTHS[e.dateObj.getMonth()].slice(0,3);
   const timeStr = e.time || '';
   const title = escapeHtml(e.title);
   const venue = e.venue ? escapeHtml(e.venue) : '';
   const desc = e.description ? escapeHtml(truncateText(stripMarkdown(e.description), 130)) : '';
-  const status = e.status === 'pendiente' ? '<p class="poster-status">Pendiente de confirmar</p>' : '';
+  const status = e.status === 'pendiente' ? `<p class="poster-status">${t('pendiente')}</p>` : '';
 
   return `
     ${e.image ? `<img class="poster-bg-img" src="${e.image}" alt="" onerror="this.style.display='none'">` : ''}
@@ -1039,13 +1195,15 @@ function cardTemplate(e){
 
 /* Diseño original, reservado para el archivo de eventos pasados */
 function archiveCardTemplate(e){
+  const MONTHS = t('MONTHS');
+  const TYPE_LABEL = t('TYPE_LABEL');
   const day = e.dateObj.getDate();
   const monthShort = MONTHS[e.dateObj.getMonth()].slice(0,3);
   const timeStr = e.time || '';
   const title = escapeHtml(e.title);
   const venue = e.venue ? escapeHtml(e.venue) : '';
   const desc = e.description ? escapeHtml(truncateText(stripMarkdown(e.description), 160)) : '';
-  const status = e.status === 'pendiente' ? '<p class="poster-status">Pendiente de confirmar</p>' : '';
+  const status = e.status === 'pendiente' ? `<p class="poster-status">${t('pendiente')}</p>` : '';
   const thumb = e.image ? `<img class="archive-thumb" src="${e.image}" alt="" onerror="this.style.display='none'">` : '';
 
   return `
@@ -1062,6 +1220,9 @@ function archiveCardTemplate(e){
 }
 
 function openModal(e){
+  lastOpenedEvent = e;
+  const TYPE_LABEL = t('TYPE_LABEL');
+  const LINK_LABEL = t('LINK_LABEL');
   const accentMap = {toque:'magenta', single:'teal', album:'amber', video:'orange', promo:'cream-dim'};
   document.getElementById('modal').style.setProperty('--accent', `var(--${accentMap[e.type] || 'cream-dim'})`);
   document.getElementById('modalImg').src = e.image || '';
@@ -1069,7 +1230,7 @@ function openModal(e){
   document.getElementById('modalTag').textContent = TYPE_LABEL[e.type] || e.type;
   document.getElementById('modalTitle').textContent = e.title;
 
-  const fmt = new Intl.DateTimeFormat('es-ES', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  const fmt = new Intl.DateTimeFormat(t('locale'), {weekday:'long', day:'numeric', month:'long', year:'numeric'});
   let dateLine = fmt.format(e.dateObj);
   if(e.time) dateLine += ' · ' + e.time;
   if(e.venue) dateLine += ' · ' + e.venue;
@@ -1079,7 +1240,7 @@ function openModal(e){
 
   const statusEl = document.getElementById('modalStatus');
   if(e.status === 'pendiente'){
-    statusEl.textContent = 'Pendiente de confirmar';
+    statusEl.textContent = t('pendiente');
     statusEl.style.display = '';
   }else{
     statusEl.style.display = 'none';
@@ -1088,7 +1249,7 @@ function openModal(e){
   const linkEl = document.getElementById('modalLink');
   if(e.link){
     linkEl.href = e.link;
-    linkEl.textContent = (LINK_LABEL[e.type] || 'Más información') + ' →';
+    linkEl.textContent = (LINK_LABEL[e.type] || t('ver_mas')) + ' →';
     linkEl.style.display = 'inline-flex';
   }else{
     linkEl.style.display = 'none';
@@ -1139,6 +1300,7 @@ function formatDescriptionHtml(text){
     .join('');
 }
 
+applyStaticI18n();
 loadEvents();
 </script>
 <script>
@@ -1155,37 +1317,37 @@ loadEvents();
   const statusBox = document.getElementById('formStatus');
   const sendBtn   = document.getElementById('formSend');
 
-  function isToque(){ return typeSel.value.indexOf('Toque') === 0; }
+  function isToque(){ return typeSel.selectedIndex === 0; }
 
-  function syncType(){
+  window.syncType = function syncType(){
     if(isToque()){
-      artistLbl.textContent = 'DJ que se presenta';
-      artistIn.placeholder = 'Ej: DJ Nombre';
+      artistLbl.textContent = t('lbl_artist_toque');
+      artistIn.placeholder = t('ph_artist_toque');
       venueField.style.display = '';
       distBlock.style.display = 'none';
     } else {
-      artistLbl.textContent = 'Productor';
-      artistIn.placeholder = 'Ej: Nombre del productor';
+      artistLbl.textContent = t('lbl_artist_release');
+      artistIn.placeholder = t('ph_artist_release');
       venueField.style.display = 'none';
       distBlock.style.display = '';
     }
-  }
+  };
   typeSel.addEventListener('change', syncType);
-  syncType();
 
-  function togglePlatforms(){
+  window.togglePlatforms = function togglePlatforms(){
     const mode = form.querySelector('input[name="distMode"]:checked').value;
     platList.classList.toggle('hidden', mode !== 'selected');
-  }
+  };
   form.querySelectorAll('input[name="distMode"]').forEach(r => r.addEventListener('change', togglePlatforms));
+  syncType();
   togglePlatforms();
 
   function distributionText(){
     if(isToque()) return '';
     const mode = form.querySelector('input[name="distMode"]:checked').value;
-    if(mode === 'all') return 'Disponible en todas las plataformas.';
+    if(mode === 'all') return t('dist_available_all');
     const sel = Array.from(platList.querySelectorAll('input:checked')).map(c => c.value);
-    return sel.length ? 'Disponible en: ' + sel.join(', ') + '.' : '';
+    return sel.length ? t('dist_available_sel') + sel.join(', ') + '.' : '';
   }
 
   function show(msg, ok){
@@ -1205,7 +1367,7 @@ loadEvents();
 
     sendBtn.disabled = true;
     const original = sendBtn.innerHTML;
-    sendBtn.textContent = 'Enviando...';
+    sendBtn.innerHTML = `<span>${t('send_sending')}</span>`;
     try{
       const res = await fetch(form.action, {
         method:'POST', body:data, headers:{'Accept':'application/json'}
@@ -1213,12 +1375,12 @@ loadEvents();
       if(res.ok){
         form.reset();
         syncType(); togglePlatforms();
-        show('¡Listo! Recibimos tu envío. Te escribimos si necesitamos algo más.', true);
+        show(t('send_ok'), true);
       } else {
-        show('No pudimos enviar el formulario. Escríbenos a stemsmagazine@gmail.com.', false);
+        show(t('send_err'), false);
       }
     } catch(err){
-      show('Hubo un problema de conexión. Intenta de nuevo o escríbenos a stemsmagazine@gmail.com.', false);
+      show(t('send_conn_err'), false);
     } finally {
       sendBtn.disabled = false;
       sendBtn.innerHTML = original;
