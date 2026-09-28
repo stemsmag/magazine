@@ -66,7 +66,7 @@
   },
   {
     "featured": false,
-    "pinned": true,
+    "pinned": false,
     "date": "2026-08-31",
     "category": "Nota",
     "categoryPill": "De la casa",
@@ -86,7 +86,7 @@
   },
   {
     "featured": false,
-    "pinned": true,
+    "pinned": false,
     "date": "2026-08-25",
     "category": "Review",
     "categoryPill": "Herramientas de audio",
@@ -172,7 +172,7 @@
   },
   {
     "featured": false,
-    "pinned": true,
+    "pinned": false,
     "date": "2026-08-11",
     "category": "Review",
     "categoryPill": "Instrumentos Virtuales",
@@ -236,7 +236,7 @@
   },
   {
     "featured": false,
-    "pinned": true,
+    "pinned": false,
     "date": "2026-08-07",
     "category": "Comunidad",
     "categoryPill": "Sobre Nosotros",
