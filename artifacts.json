@@ -1,6 +1,18 @@
 [
   {
     "status": "live",
+    "kind": "productividad",
+    "seed": 23,
+    "id": "ART.04",
+    "name": "//KANBAN v1",
+    "desc": "Calendario de proyectos y tablero de tareas.",
+    "specs": ["IDEA", "PROYECTOS", "LANZAMIENTOS"],
+    "cta": "CREA TU PRIMER PROYECTO",
+    "img": "img/kanban.jpg",
+    "link": "https://stemsmag.fyi/artifacts/kanbanv1.html"
+  },
+  {
+    "status": "live",
     "kind": "synth",
     "seed": 9,
     "id": "ART.01",
