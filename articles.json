@@ -1,5 +1,25 @@
 [
   {
+    "featured": false,
+    "pinned": true,
+    "date": "2026-09-28",
+    "category": "Review",
+    "categoryPill": "Herramientas",
+    "titleLines": [
+      "KANBAN"
+    ],
+    "title": "KANBAN // BOARD-1 // StemsMag — a prueba: tu calendario de producción en un tablero sin backend",
+    "artistLine": "STEMS LAB",
+    "dek": "Calendario semanal, tablero Kanban con drag & drop, proyectos por fases y timeline de lanzamiento. 100% offline, archivo vinculado y alarmas con Web Audio API. Lo probamos como reemplazo de Trello para equipos creativos.",
+    "tag": "Review",
+    "tagColor": "violet",
+    "meta": "Review · 11 min",
+    "image": "articulos/images/kanban.jpg",
+    "seed": 9,
+    "slug": "articulos/articulo-kanban-review.html",
+    "comingSoon": false
+  },
+  {
     "featured": true,
     "pinned": false,
     "date": "2026-09-08",
