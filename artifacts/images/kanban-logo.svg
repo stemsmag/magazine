@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 72" role="img" aria-label="//KANBAN">
+  <g transform="translate(4 6)">
+    <path d="M8 56 28 6h10L18 56Z" fill="#FF4D5D"/>
+    <path d="M22 56 42 6h10L32 56Z" fill="#FF8A3D"/>
+    <path d="M36 56 56 6h10L46 56Z" fill="#2EE5C8"/>
+    <text x="76" y="43" fill="#E6E9F0" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" letter-spacing="6">KANBAN</text>
+  </g>
+</svg>
