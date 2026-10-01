@@ -1,6 +1,18 @@
 [
   {
     "status": "live",
+    "kind": "widget",
+    "seed": 24,
+    "id": "ART.05",
+    "name": "//RELAXtheCHUNK v2",
+    "desc": "Un mundo para relajarse.",
+    "specs": ["FOCUS", "RELAX", "ESTUDIAR"],
+    "cta": "TIME OUT!",
+    "img": "img/CHUNK2.jpg",
+    "link": "https://stemsmag.fyi/artifacts/relaxthechunkv2.html"
+  },
+  {
+    "status": "live",
     "kind": "productividad",
     "seed": 23,
     "id": "ART.04",
