@@ -1,5 +1,17 @@
 [
   {
+  "status": "live",
+  "kind": "widget",
+  "seed": 31,
+  "id": "ART.06",
+  "name": "//NEUROPULSE v1",
+  "desc": "Visuales para tu música.",
+  "specs": ["VJ", "AUDIO-REACTIVO", "DJ SETS"],
+  "cta": "PLAY IT!",
+  "img": "img/NEUROPULSE.jpg",
+  "link": "https://stemsmag.fyi/artifacts/neuropulsev1.html"
+},
+  {
     "status": "live",
     "kind": "widget",
     "seed": 24,
