@@ -454,6 +454,61 @@
   html.output-mode #panel,
   html.output-mode #creditsOverlay,
   html.output-mode #introOverlay { display: none !important; }
+
+  /* --- Ventana secundaria: marquesina con el nombre de la pista --- */
+  html.marquee-mode, html.marquee-mode body { background: #000; overflow: hidden; }
+  html.marquee-mode #c { display: none !important; }
+  #marq { position: fixed; inset: 0; overflow: hidden; display: flex; align-items: center; background: #000;
+          --h: 200; --p: 0; --sz: 1; color: #fff; z-index: 50;
+          font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+  #marq .mq-track { display: flex; white-space: nowrap; will-change: transform; font-weight: 800;
+          text-transform: uppercase; letter-spacing: .02em; line-height: 1.15;
+          font-size: calc(34vh * var(--sz));
+          text-shadow: 0 0 calc(.4vh + 3vh * var(--p)) hsla(var(--h), 100%, 60%, calc(.3 + .7 * var(--p)));
+          filter: brightness(calc(1 + .4 * var(--p))); }
+  #marq .mq-track.fixed { position: absolute; left: 50%; top: 50%; transform-origin: center center; }
+  #marq .mq-seg { flex: none; }
+  #marq .mq-sep { font-style: normal; padding: 0 .55em; color: hsl(var(--h), 100%, 66%); opacity: .8; }
+  #marq .mq-chip { position: absolute; left: 2.2vh; bottom: 1.6vh; font: 600 max(11px, 3vh)/1 ui-monospace, Menlo, Consolas, monospace;
+          color: hsl(var(--h), 90%, 75%); opacity: .8; display: none; }
+  #marq.chip .mq-chip { display: block; }
+
+  /* --- Ventana de salida: barra de pista (abajo, centrada, ~7 % del alto) y
+         cuadro de estado en una esquina. Sólo se crean en modo salida. --- */
+  #outTrack {
+    position: fixed; left: 50%; bottom: 1.6vh; transform: translateX(-50%);
+    height: 7vh; max-width: 72vw; box-sizing: border-box; padding: 0 2.4vh;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    background: rgba(0,0,0,0.52); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    border-radius: 1.3vh; color: #fff; text-align: center; pointer-events: none; z-index: 40;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+  }
+  #outTrack.hidden, #outInfo.hidden { display: none; }
+  #outTrack .t1 { font-size: 3.1vh; font-weight: 650; line-height: 1.15; max-width: 100%;
+                  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #outTrack .t2 { font-size: 2vh; font-weight: 400; line-height: 1.2; opacity: 0.82; max-width: 100%;
+                  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #outTrack.solo .t1 { font-size: 3.5vh; }
+  #outTrack.chg { animation: npTrackIn .6s ease-out; }
+  @keyframes npTrackIn { from { opacity: 0; transform: translateX(-50%) translateY(1.5vh); } to { opacity: 1; transform: translateX(-50%); } }
+  #outInfo {
+    position: fixed; z-index: 40; box-sizing: border-box; pointer-events: none;
+    min-width: 21vh; max-width: 34vw; padding: 1vh 1.4vh; border-radius: 1.1vh;
+    background: rgba(0,0,0,0.58); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    color: #e8f1ff; font: 400 max(10px, 1.55vh)/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+  }
+  #outInfo.tl { top: 1.6vh; left: 1.6vh; } #outInfo.tr { top: 1.6vh; right: 1.6vh; }
+  #outInfo.bl { bottom: 1.6vh; left: 1.6vh; } #outInfo.br { bottom: 1.6vh; right: 1.6vh; }
+  #outInfo .r { display: flex; gap: 1ch; justify-content: space-between; white-space: nowrap; }
+  #outInfo .r b { font-weight: 400; color: rgba(150,200,255,0.75); }
+  #outInfo .r span { overflow: hidden; text-overflow: ellipsis; text-align: right; }
+  #outInfo .h { font-weight: 700; color: #fff; margin-bottom: .3vh; letter-spacing: .04em; }
+  #outInfo .on { color: #8dffb0; } #outInfo .off { color: rgba(255,255,255,0.45); }
+  #outInfo .bars { display: inline-flex; gap: .5vh; align-items: flex-end; height: 1.6vh; }
+  #outInfo .bars i { display: block; width: .8vh; height: 100%; background: linear-gradient(#7fe0ff,#4a7bff); transform-origin: bottom; transform: scaleY(0.05); border-radius: 1px; }
+  #outInfo .dot { display: inline-block; width: 1.1vh; height: 1.1vh; border-radius: 50%; background: #fff; opacity: .15; margin-left: .6ch; vertical-align: middle; }
   /* --- Reproductor local: playlists + EQ 8 bandas + crossfade --- */
   #npPrevBtn, #npNextBtn { flex-shrink: 0; padding: 5px 8px; }
   .player-section { border-left: 3px solid rgba(255,215,90,0.55); background: rgba(255,215,90,0.045); border-bottom: 1px solid rgba(255,255,255,0.1); }
@@ -626,15 +681,15 @@ body.np-ghost #npPrevTile{opacity:1}  /* si el panel entero está en fantasma, y
           <button id="scene1Btn" class="active">① Neural</button>
           <button id="scene3Btn">② Space Trip</button>
           <button id="scene4Btn">③ Cosmic Web</button>
-          <button id="scene5Btn">④ Ether</button>
-          <button id="scene7Btn">⑤ Supernova</button>
-          <button id="scene11Btn">⑥ Outrun</button>
-          <button id="scene12Btn">⑦ Satisfying</button>
-          <button id="scene13Btn">⑧ Acid Zoomer</button>
-          <button id="scene14Btn">⑨ Hyper Tunnel</button>
-          <button id="scene15Btn">⑩ Warp Speed</button>
-          <button id="scene16Btn">⑪ Saturday Weirdness</button>
-          <button id="scene17Btn">⑫ Smooth Voronoi</button>
+          <button id="scene7Btn">④ Supernova</button>
+          <button id="scene11Btn">⑤ Outrun</button>
+          <button id="scene12Btn">⑥ Satisfying</button>
+          <button id="scene14Btn">⑦ Fire Lotto</button>
+          <button id="scene16Btn">⑧ Tunnel Trip</button>
+          <button id="scene18Btn">⑨ Log Fractal</button>
+          <button id="scene19Btn">⑩ Prism Glow</button>
+          <button id="scene20Btn">⑪ Pulse Relief</button>
+          <button id="scene21Btn">⑫ Kaleido Orbit</button>
         </div>
         <button id="sceneNextBtn" class="scene-arrow" title="Ver escenas siguientes">›</button>
       </div>
@@ -678,7 +733,7 @@ body.np-ghost #npPrevTile{opacity:1}  /* si el panel entero está en fantasma, y
             </select>
           </div>
           <button id="modAutoBtn" title="Recorre los modificadores de Morph de Plegado a Eco, uno por uno: cada slider sube de 0 a 50% y vuelve a 0 antes de pasar al siguiente.">🎛 Ciclar modificadores: OFF</button>
-          <div class="speed-box" title="Duración de la vuelta completa por los 10 modificadores (Plegado → Eco). Cada uno recibe 1/10 de ese tiempo.">
+          <div class="speed-box" title="Duración de la vuelta completa por los 11 modificadores (Plegado → Bloom). Cada uno recibe 1/11 de ese tiempo.">
             ⏳ <span class="ctrl-label">Vuelta completa</span>
             <select id="modAutoSel">
               <option value="30">30 s</option>
@@ -750,11 +805,17 @@ body.np-ghost #npPrevTile{opacity:1}  /* si el panel entero está en fantasma, y
             <span id="morphLensVal">0%</span>
             <select class="morph-band" data-axis="lens" title="Atar este eje a una banda: el efecto sigue la energía de esa banda (el slider fija el máximo)."></select>
           </div>
-          <div class="speed-box" title="Eco: ondas de tiempo que salen desde el centro (no afecta a Neural, Outrun ni Saturday Weirdness).">
+          <div class="speed-box" title="Eco: ondas de tiempo que salen desde el centro (no afecta a Neural, Outrun ni Tunnel Trip).">
             〰️ <span class="ctrl-label">Eco</span>
             <input type="range" id="morphRipple" min="0" max="100" step="1" value="0">
             <span id="morphRippleVal">0%</span>
             <select class="morph-band" data-axis="ripple" title="Atar este eje a una banda: el efecto sigue la energía de esa banda (el slider fija el máximo)."></select>
+          </div>
+          <div class="speed-box" title="Infusión + Bloom (dos en uno): induce un trazo claro en las aristas de las estructuras aunque la escena no tenga blancos (un brazo rojo recibe un borde rosado/blanco; las aristas filosas dan un trazo fino y las romas uno más ancho) y ese trazo irradia un halo. Con poco valor domina el trazo, con mucho el halo (que cae suave hasta 0 en los bordes). Atado a una banda late con ella y con cada beat se infla. Doble click = 0%.">
+            ✨ <span class="ctrl-label">Bloom</span>
+            <input type="range" id="morphBloom" min="0" max="100" step="1" value="0">
+            <span id="morphBloomVal">0%</span>
+            <select class="morph-band" data-axis="bloom" title="Atar este eje a una banda: el efecto sigue la energía de esa banda (el slider fija el máximo)."></select>
           </div>
         </div>
       </div>
@@ -773,8 +834,21 @@ body.np-ghost #npPrevTile{opacity:1}  /* si el panel entero está en fantasma, y
       <div class="panel-section output-section">
         <div class="panel-section-label">Salida</div>
         <div class="panel-section-body">
-          <button id="outputBtn">🪟 Ventana de salida</button>
+          <button id="outputBtn" title="Salida PRINCIPAL: sólo visuales, sin textos. Cada click abre otra (por ejemplo una por pantalla/proyector).">🪟 Salida principal</button>
+          <button id="marqueeBtn" title="Salida SECUNDARIA: marquesina con el nombre de la pista (sin WebGL, muy liviana). En esa ventana: ←/→ velocidad, ↑/↓ tamaño, M = marquesina/fijo, I = BPM y escena, F o doble click = pantalla completa.">🔤 Marquesina</button>
+          <button id="outputCloseBtn" title="Cierra todas las ventanas de salida abiertas desde acá.">✕ Cerrar salidas</button>
           <button id="fullscreenBtn">⛶ Pantalla completa</button>
+          <div class="speed-box" title="Qué se dibuja encima de la imagen en las salidas PRINCIPALES (por defecto limpias). En cada ventana también: tecla T = pista, tecla I = cuadro de estado (sólo en esa ventana).">
+            <label><input type="checkbox" id="outShowTrack"> Pista</label>
+            <label><input type="checkbox" id="outShowInfo"> Estado</label>
+          </div>
+          <div class="speed-box" title="Esquina donde va el cuadro de estado.">
+            <span class="ctrl-label">Esquina</span>
+            <select id="outCorner">
+              <option value="tl" selected>Arriba izq.</option><option value="tr">Arriba der.</option>
+              <option value="bl">Abajo izq.</option><option value="br">Abajo der.</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
@@ -826,32 +900,23 @@ body.np-ghost #npPrevTile{opacity:1}  /* si el panel entero está en fantasma, y
       <a href="https://www.shadertoy.com/user/Kali" target="_blank" rel="noopener">Kali</a> en Shadertoy.</p>
     <p><span class="scene-name">③ Cosmic Web</span> — variación de "mosaic fractal circles" de nayk, por
       <a href="https://www.shadertoy.com/user/PAEz" target="_blank" rel="noopener">PAEz</a> en Shadertoy.</p>
-    <p><span class="scene-name">④ Ether</span> — "Ether" de
-      <a href="https://www.shadertoy.com/view/MsjSW3" target="_blank" rel="noopener">nimitz</a>
-      (<a href="https://x.com/stormoid" target="_blank" rel="noopener">@stormoid</a>, 2014). CC BY-NC-SA 3.0.</p>
-    <p><span class="scene-name">⑤ Supernova</span> — "Supernova remnant" de
+    <p><span class="scene-name">④ Supernova</span> — "Supernova remnant" de
       <a href="https://www.shadertoy.com/user/Duke" target="_blank" rel="noopener">Duke</a> en Shadertoy, con aportes de
       <a href="https://www.shadertoy.com/user/otaviogood" target="_blank" rel="noopener">otaviogood</a> y
       <a href="https://www.shadertoy.com/user/Shane" target="_blank" rel="noopener">Shane</a>. CC BY-NC-SA 3.0.</p>
-    <p><span class="scene-name">⑥ Outrun</span> — "Outrun The Rain" de
+    <p><span class="scene-name">⑤ Outrun</span> — "Outrun The Rain" de
       <a href="https://www.shadertoy.com/view/ltccRl" target="_blank" rel="noopener">Ian Reichert-Watts (irwatts)</a>,
       Shadertoy 2018, licencia MIT.</p>
-    <p><span class="scene-name">⑦ Satisfying</span> — "Overly satisfying" de
+    <p><span class="scene-name">⑥ Satisfying</span> — "Overly satisfying" de
       <a href="https://www.shadertoy.com/view/Mts3zM" target="_blank" rel="noopener">nimitz</a>
       (<a href="https://x.com/stormoid" target="_blank" rel="noopener">@stormoid</a>). CC BY-NC-SA 3.0.</p>
-    <p><span class="scene-name">⑧ Acid Zoomer</span> — "Acid Zoomer" de
-      <a href="https://www.shadertoy.com/user/nr4" target="_blank" rel="noopener">Alexander Kraus (nr4)</a> en Shadertoy.
-      Licencia GNU GPL v3 o posterior.</p>
-    <p><span class="scene-name">⑨ Hyper Tunnel</span> — de la producción demoscene
-      <a href="https://www.youtube.com/watch?v=oITx9xMrAcM" target="_blank" rel="noopener">"Sailing Beyond"</a>
-      (<a href="https://www.pouet.net/prod.php?which=77899" target="_blank" rel="noopener">ficha en Pouet</a>).</p>
-    <p><span class="scene-name">⑩ Warp Speed</span> — David Hoskins (2013), inspirado en el shader de
-      <a href="https://www.shadertoy.com/view/ltl3WS" target="_blank" rel="noopener">Kali</a> en Shadertoy.</p>
-    <p><span class="scene-name">⑪ Saturday Weirdness</span> — CC0, autor desconocido, a partir de una idea de
-      <a href="https://www.shadertoy.com/user/Kali" target="_blank" rel="noopener">Kali</a>.</p>
-    <p><span class="scene-name">⑫ Smooth Voronoi</span> — basado en el método de estimación de distancia de
-      <a href="https://www.shadertoy.com/view/MdfGWn" target="_blank" rel="noopener">Inigo Quilez</a>, emparentado con
-      "2D Noise Contours" de <a href="https://www.shadertoy.com/view/XdcGzB" target="_blank" rel="noopener">Shane</a>.</p>
+    <p><span class="scene-name">⑦ Fire Lotto</span> — shader compacto estilo twigl (autor por acreditar).</p>
+    <p><span class="scene-name">⑧ Tunnel Trip</span> — shader compacto estilo twigl (autor por acreditar). Antialiasing FXAA de
+      <a href="https://github.com/XorDev/GM_FXAA" target="_blank" rel="noopener">XorDev</a>.</p>
+    <p><span class="scene-name">⑨ Log Fractal</span> — shader compacto estilo twigl (raymarch sobre plegado fractal log-polar; autor por acreditar). Cada pasada del pliegue reacciona a una zona del espectro (graves, medios, agudos).</p>
+    <p><span class="scene-name">⑩ Prism Glow</span> — shader compacto estilo twigl (inversión esférica con glow HSV acumulado; autor por acreditar). La estructura (planos, ramas y brazos) no reacciona al audio. El audio sólo controla la velocidad de generación y el giro de la cámara, la intensidad de la luz central (graves) y la intensidad de la neblina (medios y nivel general).</p>
+    <p><span class="scene-name">⑪ Pulse Relief</span> — shader compacto estilo twigl (relieve de ruido log-polar con glow HSV; autor por acreditar). Todo el shader late con el beat: en cada golpe sube al instante el relieve, el brillo y un golpe de zoom, y decae según el tempo. No hay movimiento propio: el giro y el flujo sólo avanzan con la música (y reciben un empujón en cada beat); en silencio la imagen queda quieta.</p>
+    <p><span class="scene-name">⑫ Kaleido Orbit</span> — shader compacto estilo twigl (raymarch de un túnel caleidoscópico con inversión log-polar y glow acumulado; autor por acreditar). Las figuras se regeneran en cada beat (nº de pliegues, frecuencia angular, grosor y semilla); los graves además las esculpen de forma continua y suben el brillo, los medios curvan la lente y los agudos desplazan el color. La mutación cambia la órbita de la cámara (radio, velocidad y sentido del giro, elevación y punto de mira). Es pesado (100 pasos × ~10 iteraciones por pixel): si baja el FPS, achicá la ventana.</p>
 
     </div>
   </div>
@@ -872,9 +937,14 @@ if (!gl) {
 //     pantalla completa (doble click o tecla F) sin tocar los controles. ---
 const IS_OUTPUT_MODE = new URLSearchParams(location.search).get('output') === '1';
 if (IS_OUTPUT_MODE) document.documentElement.classList.add('output-mode');
+// Rol de la ventana de salida: 'main' = visuales (la principal); 'marquee' =
+// ventana secundaria sólo de texto (nombre de la pista en marquesina), sin dibujar WebGL.
+const IS_MARQUEE = IS_OUTPUT_MODE && new URLSearchParams(location.search).get('role') === 'marquee';
+if (IS_MARQUEE) document.documentElement.classList.add('marquee-mode');
 let bcSync = null;
 try { bcSync = new BroadcastChannel('stemsmag-viz-sync'); } catch(e){ bcSync = null; }
 let latestSyncState = null;
+let latestHud = null;      // último cuadro de estado enviado por la ventana de control
 // Estado del reloj extrapolado de la ventana de salida — ver frame() más
 // abajo, sección IS_OUTPUT_MODE, para el detalle de por qué existe
 // (arregla que la animación se congele si la ventana de control queda
@@ -884,7 +954,7 @@ let outSyncWallTime = 0;
 let outSpeedMul = 1.0;
 let hasSync = false;
 if (bcSync && IS_OUTPUT_MODE){
-  bcSync.onmessage = (e) => { latestSyncState = e.data; };
+  bcSync.onmessage = (e) => { latestSyncState = e.data; if (e.data && e.data.hud) latestHud = e.data.hud; };
 }
 
 function toggleFullscreen(el){
@@ -1231,56 +1301,6 @@ void mainImage(out vec4 O, vec2 F) {
 
     O = tanh(pow(O, vec4(1.5)));
     O *= (1.0 + uLevel*0.25);
-}
-
-void main(){
-  vec4 fragColor = vec4(0.0);
-  mainImage(fragColor, gl_FragCoord.xy);
-  outColor = fragColor;
-}
-`;
-
-// ---------- Escena 5: "Ether" (nimitz, shadertoy.com/view/MsjSW3) ----------
-const fragSrc5 = `#version 300 es
-precision highp float;
-out vec4 outColor;
-uniform vec2 iResolution;
-uniform float iTime;
-uniform float uBass, uMid, uTreble, uLevel;
-uniform vec3 uEthColorBase, uEthColorGlow;
-uniform float uEthRotA, uEthRotB, uEthDStart, uEthGlowEdge, uEthFreq;
-
-// ==================== Créditos ====================
-// Ether by nimitz 2014 (twitter: @stormoid)
-// https://www.shadertoy.com/view/MsjSW3
-// License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License
-// Contact the author for other licensing options
-// Extendido acá con reacción al audio y sistema de mutación.
-// ====================================================
-
-mat2 m(float a){ float c=cos(a), s=sin(a); return mat2(c,-s,s,c); }
-
-float map(vec3 p, float t){
-    p.xz *= m(t*uEthRotA);
-    p.xy *= m(t*uEthRotB);
-    vec3 q = p*uEthFreq + t;
-    return length(p+vec3(sin(t*0.7)))*log(length(p)+1.) + sin(q.x+sin(q.z+sin(q.y)))*0.5 - 1.;
-}
-
-void mainImage( out vec4 fragColor, in vec2 fragCoord ){
-    float t = iTime * (1.0 + uMid*0.6);
-    vec2 p = fragCoord.xy/iResolution.y - vec2(.9,.5);
-    vec3 cl = vec3(0.);
-    float d = uEthDStart;
-    for(int i=0; i<=5; i++){
-        vec3 pp = vec3(0,0,5.) + normalize(vec3(p, -1.))*d;
-        float rz = map(pp, t);
-        float f = clamp((rz - map(pp+.1, t))*0.5, -.1, 1.);
-        vec3 l = uEthColorBase + uEthColorGlow*f*(1.0+uTreble*1.5);
-        cl = cl*l + smoothstep(uEthGlowEdge, .0, rz)*.7*l;
-        d += min(rz, 1.0 + uBass*0.5);
-    }
-    fragColor = vec4(cl*(1.0+uLevel*0.5), 1.);
 }
 
 void main(){
@@ -2045,171 +2065,7 @@ void main(){
 }
 `;
 
-// ---------- Escena 13: "Acid Zoomer" (Alexander Kraus / nr4, GPLv3) ----------
-const fragSrc13 = `#version 300 es
-precision highp float;
-out vec4 outColor;
-uniform vec2 iResolution;
-uniform float iTime;
-uniform float uBass, uMid, uTreble, uLevel;
-uniform float uAcidZoom;
-uniform float uMutCellScale, uMutFlowSpeed, uMutMirrorAngle1, uMutMirrorAngle2, uMutNoiseScale, uMutColorPhase;
-
-// ==================== Créditos ====================
-// "Acid Zoomer" — Alexander Kraus (nr4) — https://www.shadertoy.com/user/nr4
-// Licencia: GNU General Public License v3 (o, a elección, cualquier
-// versión posterior) — ver el aviso de copyright original del autor,
-// preservado íntegro más abajo. El algoritmo del kaleidoscopio
-// (mirrorLinear/mirrorCircular) y las paletas cmap/cmap_out son los del
-// autor, sin tocar. Adaptaciones para este visualizador:
-//  - iChannel0/iChannel1 (dos texturas propias de Shadertoy, no
-//    disponibles acá) se reemplazan por dos capas de ruido procedural
-//    generadas directamente en GLSL (ver proceduralChannel más abajo),
-//    en vez de texturas estáticas.
-//  - Varias constantes fijas del original (ángulos de los espejos
-//    circulares, tamaño de celda, velocidad de flujo, frecuencia del
-//    ruido, fase de color) pasaron a ser uniforms mutables — igual
-//    convención que el resto de las escenas de este visualizador.
-//  - uBass/uMid/uTreble/uLevel modulan, adentro de mainImage, el pulso
-//    de zoom, la velocidad de flujo, la mezcla de color y el brillo
-//    final.
-//  - uAcidZoom es un control de zoom manual exclusivo de esta escena
-//    (slider "🔍 Zoom" del panel), independiente de la mutación.
-// ====================================================
-
-/*
- * Acid Zoomer
- * Copyright (C) 2024 Alexander Kraus <nr4@z10.info>
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-const vec3 c = vec3(1,0,-1);
-const float pi = 3.14159;
-
-/*
- * Add linear equidistant system of coordinate mirrors along a direction.
- * x: original coordinates.
- * axis: axis to align the mirrors onto.
- * size: distance between two adjacent mirrors.
-*/
-vec2 mirrorLinear(vec2 x, vec2 axis, float size) {
-    mat2 m = mat2(axis, axis.yx * c.zx);
-    x = transpose(m) * x;
-    float y = mod(x.x, size) - .5 * size;
-    return m * vec2((-1. + 2. * mod(floor((x.x - y) / size), 2.)) * y, x.y);
-}
-
-/*
- * Add circular equidistant system of coordinate mirrors.
- * x: original coordinates.
- * size: polar angle size.
- */
-vec2 mirrorCircular(vec2 x, float size) {
-    float p = atan(x.y, x.x);
-    float dp = mod(p + .5 * size, size) - .5 * size;
-    dp *= -1. + 2. * mod(round((p - dp) / size), 2.);
-    return length(x) * vec2(cos(dp), sin(dp));
-}
-
-vec3 cmap(float t) {
-    return vec3(-0.00,0.07,0.23)
-        +t*(vec3(2.57,-0.81,-9.92)
-        +t*(vec3(-37.43,3.26,118.72)
-        +t*(vec3(199.77,73.84,-449.72)
-        +t*(vec3(-392.43,-274.37,756.72)
-        +t*(vec3(323.25,324.20,-590.28)
-        +t*(vec3(-95.71,-126.29,174.23)
-    ))))));
-}
-
-vec3 cmap_out(float t) {
-    return vec3(-0.00,0.08,0.20)
-        +t*(vec3(4.29,1.93,1.82)
-        +t*(vec3(-24.07,-18.64,14.16)
-        +t*(vec3(48.06,118.32,-103.38)
-        +t*(vec3(9.02,-275.98,226.84)
-        +t*(vec3(-91.37,263.78,-212.07)
-        +t*(vec3(54.27,-89.39,72.71)
-    ))))));
-}
-
-// ---- Ruido procedural: reemplaza los dos iChannel de Shadertoy por dos
-//      capas de value-noise (hash + interpolación bilineal + un octavo
-//      extra), generadas en el propio shader en vez de con texturas. ----
-float acidHash21(vec2 p){
-    p = fract(p*vec2(123.45, 678.91));
-    p += dot(p, p + 45.32);
-    return fract(p.x*p.y);
-}
-float acidValueNoise(vec2 p){
-    vec2 i = floor(p), f = fract(p);
-    float a = acidHash21(i);
-    float b = acidHash21(i+vec2(1.,0.));
-    float d = acidHash21(i+vec2(0.,1.));
-    float e = acidHash21(i+vec2(1.,1.));
-    vec2 u = f*f*(3.-2.*f);
-    return mix(mix(a,b,u.x), mix(d,e,u.x), u.y);
-}
-vec3 proceduralChannel(vec2 uv, float seed){
-    vec2 p = uv*uMutNoiseScale + seed;
-    float r = acidValueNoise(p)          + .5*acidValueNoise(p*2.3 + 3.1);
-    float g = acidValueNoise(p*1.37+19.1) + .5*acidValueNoise(p*2.3 + 11.7);
-    float b = acidValueNoise(p*1.71+7.3)  + .5*acidValueNoise(p*2.3 + 29.9);
-    return vec3(r,g,b) / 1.5;
-}
-
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
-{
-    fragCoord = mirrorLinear(fragCoord, c.xy, iResolution.x);
-    fragCoord = mirrorLinear(fragCoord, c.yx, iResolution.y);
-
-    vec2 uv = (fragCoord - .5 * iResolution.xy)/iResolution.y * uAcidZoom;
-
-    // Audio: el treble acelera el flujo de los espejos, el bajo empuja el
-    // pulso de "respiración" del zoom kaleidoscópico.
-    float flow = uMutFlowSpeed * (1.0 + uTreble*1.2);
-    float s = 1. + (.3 + uBass*0.5) * sin(.05 * iTime * flow);
-
-    uv = mirrorCircular(uv, uMutMirrorAngle1);
-    uv = mirrorLinear(uv - .01 * iTime*flow*c.yx, vec2(.2, -1), .5 * s * uMutCellScale);
-    uv = mirrorLinear(uv - .01 * iTime*flow*c.xx, vec2(1, -.3), .4 * s * uMutCellScale);
-
-    uv = mirrorCircular(uv, uMutMirrorAngle2);
-    uv = mirrorLinear(uv + .05 * iTime*flow*c.xy, vec2(1,.5), .45 * s * uMutCellScale);
-    uv = mirrorLinear(uv + .05 * iTime*flow*c.yx, vec2(-.5, 1), .55 * s * uMutCellScale);
-
-    vec3 ch0 = proceduralChannel(uv, 0.0);
-    vec3 ch1 = proceduralChannel(uv, 91.7);
-
-    float t = fract(pow(2.*length(mix(.7*ch0, ch1, .5+.5*cos(.3*iTime + uMid*2.0))) / sqrt(3.), .5) - .5 + .4 * iTime + uMutColorPhase);
-    vec3 col = mix(cmap(t), cmap_out(t), .5+.5*sin(iTime));
-
-    // Nivel general de audio → brillo final.
-    col *= 1.0 + uLevel*0.5;
-
-    fragColor = vec4(col,1.0);
-}
-
-void main(){
-    vec4 fragColor;
-    mainImage(fragColor, gl_FragCoord.xy);
-    outColor = fragColor;
-}
-`;
-
-// ---------- Escena 14: "Hyper Tunnel" (de "Sailing Beyond", demoscene) ----------
+// ---------- Escena 14: "Fire Lotto" (shader compacto estilo twigl) ----------
 const fragSrc14 = `#version 300 es
 precision highp float;
 out vec4 outColor;
@@ -2217,292 +2073,63 @@ uniform vec2 iResolution;
 uniform float iTime;
 uniform float uBass, uMid, uTreble, uLevel;
 uniform vec3 uHTColor;
-uniform float uHTNoiseAmt, uHTNoisePow, uHTRadius1, uHTRadius2, uHTWarpAmp, uHTSteamAmt;
+uniform float uHTSharp, uHTZoom, uHTStep, uHTPhase, uHTBias, uHTRedGain;
 
 // ==================== Créditos ====================
-// "Hyper Tunnel" — de la producción demoscene "Sailing Beyond"
-// https://www.youtube.com/watch?v=oITx9xMrAcM
-// https://www.pouet.net/prod.php?which=77899
-// Adaptación: el canal de audio FFT original de Shadertoy (iChannel0 +
-// iChannelTime[0]) fue reemplazado por los uniforms uBass/uMid/uTreble/
-// uLevel de este visualizador — controlan velocidad de avance (bass),
-// ritmo de respiración del túnel (mid), brillo del vapor/niebla
-// (treble) y brillo general de la escena (level). Extendido con
-// sistema de mutación (color del túnel, radios, ruido, warp y vapor).
+// Shader compacto estilo twigl (túnel fractal log-polar con ruido
+// trigonométrico). Autor original: pendiente de acreditar.
+// Adaptación: se expandieron las variables de twigl (FC, r, t, o) y se
+// agregó reacción al audio — bass: empuja el tiempo del túnel (avanza/sube
+// con cada golpe), mid: paso del rayo, treble: detalle fino del patrón,
+// level: brillo general — y sistema de mutación (tinte, nitidez, zoom,
+// paso, fase, base de brillo y ganancia del rojo).
 // ====================================================
 
-#define FAR 1e3
-#define INFINITY 1e32
-#define T iTime
-#define FOV 70.0
-#define PI 3.14159265
-
-float hash12(vec2 p) {
-    float h = dot(p,vec2(127.1,311.7));
-    return fract(sin(h)*43758.5453123);
-}
-
-float noise_3(in vec3 p) {
-    vec3 i = floor(p);
-    vec3 f = fract(p);
-    vec3 u = 1.-(--f)*f*f*f*-f;
-
-    vec2 ii = i.xy + i.z * vec2(5.0);
-    float a = hash12( ii + vec2(0.0,0.0) );
-    float b = hash12( ii + vec2(1.0,0.0) );
-    float c = hash12( ii + vec2(0.0,1.0) );
-    float d = hash12( ii + vec2(1.0,1.0) );
-    float v1 = mix(mix(a,b,u.x), mix(c,d,u.x), u.y);
-
-    ii += vec2(5.0);
-    a = hash12( ii + vec2(0.0,0.0) );
-    b = hash12( ii + vec2(1.0,0.0) );
-    c = hash12( ii + vec2(0.0,1.0) );
-    d = hash12( ii + vec2(1.0,1.0) );
-    float v2 = mix(mix(a,b,u.x), mix(c,d,u.x), u.y);
-
-    return max(mix(v1,v2,u.z),0.);
-}
-
-float fbm(vec3 x)
-{
-    float r = 0.0;
-    float w = 1.0, s = 1.0;
-    for (int i=0; i<4; i++)
-    {
-        w *= 0.25;
-        s *= 3.;
-        r += w * noise_3(s * x);
-    }
-    return r;
-}
-
-float yC(float x) {
-    return cos(x * -.134) * 1. * sin(x * .13) * uHTWarpAmp + fbm(vec3(x * .1, 0., 0.) * 55.4);
-}
-
-void pR(inout vec2 p, float a) {
-    p = cos(a)*p + sin(a)*vec2(p.y, -p.x);
-}
-
-struct geometry {
-    float dist;
-    vec3 hit;
-    int iterations;
-};
-
-float fCylinderInf(vec3 p, float r) {
-    return length(p.xz) - r;
-}
-
-geometry map(vec3 p) {
-    p.x -= yC(p.y * .1) * 3.;
-    p.z += yC(p.y * .01) * 4.;
-
-    float n = pow(abs(fbm(p * .06 )) * uHTNoiseAmt, uHTNoisePow);
-    float s = fbm(p * 0.01 + vec3(0., T * (0.14 + uMid*0.12), 0.)) * 128.;
-
-    geometry obj;
-
-    obj.dist = max(0., -fCylinderInf(p, s + uHTRadius1 - n));
-
-    p.x -= sin(p.y * .02) * 34. + cos(p.z * 0.01) * 62.;
-
-    obj.dist = max(obj.dist, -fCylinderInf(p, s + uHTRadius2 + n * 2.));
-
-    return obj;
-}
-
-float t_min = 10.0;
-float t_max = FAR;
-const int MAX_ITERATIONS = 100;
-
-geometry trace(vec3 o, vec3 d) {
-    float omega = 1.3;
-    float t = t_min;
-    float candidate_error = INFINITY;
-    float candidate_t = t_min;
-    float previousRadius = 0.;
-    float stepLength = 0.;
-    float pixelRadius = 1./ 1000.;
-
-    geometry mp = map(o);
-
-    float functionSign = mp.dist < 0. ? -1. : +1.;
-
-    for (int i = 0; i < MAX_ITERATIONS; ++i) {
-
-        mp = map(d * t + o);
-        mp.iterations = i;
-
-        float signedRadius = functionSign * mp.dist;
-        float radius = abs(signedRadius);
-        bool sorFail = omega > 1. &&
-            (radius + previousRadius) < stepLength;
-
-        if (sorFail) {
-            stepLength -= omega * stepLength;
-            omega = 1.;
-        } else {
-            stepLength = signedRadius * omega;
-        }
-        previousRadius = radius;
-        float error = radius / t;
-
-        if (!sorFail && error < candidate_error) {
-            candidate_t = t;
-            candidate_error = error;
-        }
-
-        if (!sorFail && error < pixelRadius || t > t_max) break;
-
-        t += stepLength * .5;
-    }
-
-    mp.dist = candidate_t;
-
-    if (t > t_max || candidate_error > pixelRadius) mp.dist = INFINITY;
-
-    return mp;
-}
-
-void mainImage(out vec4 fragColor, in vec2 fragCoord) {
-
-    vec2 ouv = fragCoord.xy / iResolution.xy;
-    vec2 uv = ouv - .5;
-
-    uv *= tan(radians(FOV) / 2.0) * 4.;
-
-    // Bass: velocidad de avance por el túnel.
-    float camT = T * (1.0 + uBass*0.6);
-
-    vec3
-        vuv = normalize(vec3(cos(T), sin(T * .11), sin(T * .41))),
-        ro = vec3(0., 30. + camT * 100., -.1);
-
-    ro.x += yC(ro.y * .1) * 3.;
-    ro.z -= yC(ro.y * .01) * 4.;
-
-    vec3 vrp =  vec3(0., 50. + camT * 100., 2.);
-
-    vrp.x += yC(vrp.y * .1) * 3.;
-    vrp.z -= yC(vrp.y * .01) * 4.;
-
-    vec3
-        vpn = normalize(vrp - ro),
-        u = normalize(cross(vuv, vpn)),
-        v = cross(vpn, u),
-        vcv = (ro + vpn),
-        scrCoord = (vcv + uv.x * u * iResolution.x/iResolution.y + uv.y * v),
-        rd = normalize(scrCoord - ro),
-        oro = ro;
-
-    vec3 sceneColor = vec3(0.);
-
-    geometry tr = trace(ro, rd);
-
-    tr.hit = ro + rd * tr.dist;
-
-    vec3 col = uHTColor * fbm(tr.hit.xzy * .01) * 20.;
-    col.b *= fbm(tr.hit * .01) * 10.;
-
-    sceneColor += min(.8, float(tr.iterations) / 90.) * col + col * .03;
-    sceneColor *= 1. + .9 * (abs(fbm(tr.hit * .002 + 3.) * 10.) * (fbm(vec3(0.,0.,iTime * .05) * 2.)) * 1.);
-    // Level: brillo general de la escena (reemplaza la textura FFT original).
-    sceneColor = pow(sceneColor, vec3(1.)) * (0.6 + uLevel*0.9);
-
-    vec3 steamColor1 = vec3(.0, .4, .5);
-    vec3 rro = oro;
-
-    ro = tr.hit;
-
-    float distC = tr.dist, f = 0.;
-
-    for (float i = 0.; i < 24.; i++) {
-        rro = ro - rd * distC;
-        f += fbm(rro * vec3(.1, .1, .1) * .3) * .1;
-        distC -= 3.;
-        if (distC < 3.) break;
-    }
-
-    // Treble: brillo del vapor/niebla (reemplaza la textura FFT original).
-    steamColor1 *= 1.0 + uTreble*1.8;
-    sceneColor += steamColor1 * pow(abs(f * 1.5), 3.0) * uHTSteamAmt;
-
-    fragColor = vec4(clamp(sceneColor * (1. - length(uv) / 2.), 0.0, 1.0), 1.0);
-    fragColor = pow(abs(fragColor / tr.dist * 130.), vec4(.8));
-}
-
 void main(){
-    vec4 fragColor = vec4(0.0);
-    mainImage(fragColor, gl_FragCoord.xy);
-    outColor = fragColor;
+    vec4 FC = gl_FragCoord;
+    vec2 r = iResolution;
+    float t = iTime;
+    vec4 o = vec4(0.);
+
+    float i = 0., e = 0., R = 0., s = 0.;
+    float T = t + uBass * 2.;
+    vec3 q = vec3(0., -1., -1.);
+    vec3 p;
+    vec3 d = vec3(FC.xy / r + vec2(-.5, .5), uHTZoom);
+    float ph = uHTPhase + uTreble * 3.;
+
+    for (; i++ < 99.;) {
+        vec4 c = vec4(R * uHTRedGain, vec3(1. / exp(R)));
+        c.rgb *= uHTColor;
+        o += (uHTBias - exp(-e * uHTSharp) * .05 * c) * (1. + uLevel * 3.);
+
+        s = 2.;
+        q += d * e * R * uHTStep * (1. + uMid);
+        p = q;
+        R = length(p);
+        p = vec3(log2(R) - T, exp2(R - p.z / R), T - atan(p.x, p.y) * 2.);
+        e = --p.y;
+        for (; s < 6e2; s += s)
+            e += dot(cos(p.xz * s), sin(p.xx * s + R + ph)) / s;
+    }
+
+    // Paleta fuego: el canal "rojo" original pasa a naranja y el "cian" a amarillo.
+    vec3 oc = clamp(o.rgb, 0., 1.);
+    float a = oc.r;                 // antes: zonas rojas
+    float c = .5 * (oc.g + oc.b);   // antes: zonas cian
+    vec3 col = a * vec3(1., .45, .04) + c * vec3(1., .88, .12);
+    // Las zonas oscuras entre naranja y amarillo van en rojo (brasa), no negro.
+    float m = clamp(a + c, 0., 1.);
+    // Solo cerca de la flor: hacia los bordes el fondo se oscurece a casi negro.
+    vec2 vq = (FC.xy / r - vec2(.5, .38)) * vec2(1.1, 1.);
+    float near = 1. - smoothstep(.12, .62, length(vq));
+    col += vec3(.62, .035, .01) * (1. - m) * (1. - m) * (.06 + .94 * near);
+    outColor = vec4(clamp(col, 0., 1.), 1.);
 }
 `;
 
-// ---------- Escena 15: "Warp Speed" (David Hoskins, 2013) ----------
-const fragSrc15 = `#version 300 es
-precision highp float;
-out vec4 outColor;
-uniform vec2 iResolution;
-uniform float iTime;
-uniform float uBass, uMid, uTreble, uLevel;
-uniform vec3 uWSColorBias;
-uniform float uWSScale, uWSOffset, uWSDepth, uWSStep;
-
-// ==================== Créditos ====================
-// 'Warp Speed' by David Hoskins 2013.
-// Inspired by Kali: https://www.shadertoy.com/view/ltl3WS
-// Adaptación: sin cambios en la lógica original del fractal. El audio
-// (uBass/uMid/uTreble/uLevel) fue conectado a la velocidad de avance
-// (bass), la intensidad de la rotación "squiffy" (mid), el realce de
-// color (treble) y el brillo general (level). Extendido con sistema de
-// mutación (escala y offset del fractal, profundidad, paso de avance
-// y balance de color).
-// ====================================================
-
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
-{
-    // Bass: velocidad de avance ("warp speed").
-    float time = (iTime+29.) * 60.0 * (1.0 + uBass*0.8);
-
-    float s = 0.0, v = 0.0;
-    vec2 uv = (-iResolution.xy + 2.0 * fragCoord ) / iResolution.y;
-	float t = time*0.005;
-	uv.x += sin(t) * .3;
-	// Mid: intensidad de la rotación "squiffy".
-	float si = sin(t*1.5*(1.0 + uMid*0.5));
-	float co = cos(t);
-	uv *= mat2(co, si, -si, co);
-	vec3 col = vec3(0.0);
-	vec3 init = vec3(0.25, 0.25 + sin(time * 0.001) * .1, time * 0.0008);
-	for (int r = 0; r < 100; r++) 
-	{
-		vec3 p = init + s * vec3(uv, uWSDepth);
-		p.z = mod(p.z, 2.0);
-		for (int i=0; i < 10; i++)	p = abs(p * uWSScale) / dot(p, p) - uWSOffset;
-		v += length(p * p) * smoothstep(0.0, 0.5, 0.9 - s) * .002;
-		// Púrpura y cian, con balance de color mutable.
-		col +=  vec3(v * uWSColorBias.x, uWSColorBias.y - s * 0.5, uWSColorBias.z + v * 0.5) * v * 0.013;
-		s += uWSStep;
-	}
-	// Treble: realce de color. Level: brillo general.
-	col *= 1.0 + uTreble*1.2;
-	col *= 0.6 + uLevel*0.9;
-	fragColor = vec4(col, 1.0);
-}
-
-void main(){
-    vec4 fragColor = vec4(0.0);
-    mainImage(fragColor, gl_FragCoord.xy);
-    outColor = fragColor;
-}
-`;
-
-// ---------- Escena 16: "Saturday Weirdness" (Buffer A + Image) ----------
-// CC0. El autor vio un tweet de Kali, creyó entender el truco, no era así,
-// y terminó con esto: una esfera "cuártica" (sphere4) que gira y refleja
-// su propio render anterior (feedback de Buffer A sobre sí misma).
+// ---------- Escena 16: "Tunnel Trip" (Buffer A + Image) ----------
+// Buffer A dibuja el túnel; la pasada Image le aplica FXAA.
 const fragSrcSWA = `#version 300 es
 precision highp float;
 out vec4 outColor;
@@ -2510,230 +2137,64 @@ uniform vec2 iResolution;
 uniform float iTime;
 uniform sampler2D iChannel0;
 uniform float uBass, uMid, uTreble, uLevel;
-uniform vec3 uSWLight0HSV, uSWLight1HSV;
-uniform float uSWBottomHue, uSWTopHue, uSWRotSpeed, uSWTwist;
+uniform vec3 uTTColor;
+uniform float uTTBend, uTTBendFreq, uTTRoll, uTTThick, uTTBright;
 
 // ==================== Créditos ====================
-// CC0: "Saturday weirdness" — autor desconocido (comentario original:
-// "I saw a tweet from Kali where I thought I understood how he did
-// something cool. Turns out I didn't understand. Instead ended up
-// with weird stuff.")
-// Basado en técnicas de: sam hocevar (hsv2rgb, WTFPL,
-// https://stackoverflow.com/a/17897228/418488), Inigo Quilez (rot,
-// aces_approx origen desconocido/Matt Taylor, rayPlane, box — MIT,
-// https://iquilezles.org/articles/) y Kali (idea original de partida).
-// Adaptación: Buffer A (esta pasada) hace feedback leyendo su propio
-// frame anterior como iChannel0 para el reflejo tipo "espejo roto";
-// Image aplica FXAA (XorDev, https://github.com/XorDev/GM_FXAA) sobre
-// el resultado. Los colores HSV originalmente \`const\` ahora son
-// uniforms mutables. Audio: bass → velocidad de rotación del objeto,
-// mid → intensidad de las luces puntuales y el sol, treble →
-// intensidad de la reflexión, level → brillo general antes del tonemap.
+// Shader compacto estilo twigl (raymarch de un túnel con patrón
+// trigonométrico). Autor original: pendiente de acreditar.
+// Adaptación: variables de twigl expandidas (FC, r, t, o). Se agregó un
+// giro lento de la cámara (roll) y curvas en el eje del túnel, que viajan
+// junto con el patrón; la cámara siempre queda dentro y alineada con el túnel. Audio: bass → empuje hacia adelante, respiración
+// del radio y amplitud de las curvas, mid → giro y torsión del patrón, treble → detalle fino y brillo, level → brillo. Sistema de mutación: tinte,
+// curvatura, frecuencia de curvas, ángulo de giro, grosor y brillo.
+// El FXAA de la pasada Image es de XorDev (GM_FXAA).
 // ====================================================
 
-#define TIME iTime
-#define RESOLUTION iResolution
-#define PI 3.141592654
-#define TAU (2.0*PI)
-#define ROT(a) mat2(cos(a), sin(a), -sin(a), cos(a))
-
-vec3 hsv2rgb(vec3 c) {
-  vec4 K = vec4(1.0, 2.0/3.0, 1.0/3.0, 3.0);
-  vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
-  return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
-}
-
-#define TOLERANCE 0.0001
-#define MAX_RAY_LENGTH 10.0
-#define MAX_RAY_MARCHES 80
-#define NORM_OFF 0.005
-
-vec3 sunCol;
-vec3 lightCol0;
-vec3 lightCol1;
-vec3 bottomBoxCol;
-vec3 topBoxCol;
-
-const vec3 sunDir    = vec3(0.0, 0.0, 1.0);
-const vec3 lightPos0 = 4.0*vec3(1.0, 1.0, -2.0);
-const vec3 lightPos1 = 2.0*vec3(-1.0, -1.0, -2.0);
-
-mat3 rotM(vec3 d, vec3 z) {
-  vec3  v = cross( z, d );
-  float c = dot( z, d );
-  float k = 1.0/(1.0+c);
-  return mat3( v.x*v.x*k + c,     v.y*v.x*k - v.z,    v.z*v.x*k + v.y,
-               v.x*v.y*k + v.z,   v.y*v.y*k + c,      v.z*v.y*k - v.x,
-               v.x*v.z*k - v.y,   v.y*v.z*k + v.x,    v.z*v.z*k + c    );
-}
-
-vec3 aces_approx(vec3 v) {
-  v = max(v, 0.0);
-  v *= 0.6;
-  float a = 2.51;
-  float b = 0.03;
-  float c = 2.43;
-  float d = 0.59;
-  float e = 0.14;
-  return clamp((v*(a*v+b))/(v*(c*v+d)+e), 0.0, 1.0);
-}
-
-float rayPlane(vec3 ro, vec3 rd, vec4 p) {
-  return -(dot(ro,p.xyz)+p.w)/dot(rd,p.xyz);
-}
-
-float boxSDF(vec2 p, vec2 b) {
-  vec2 d = abs(p)-b;
-  return length(max(d,0.0)) + min(max(d.x,d.y),0.0);
-}
-
-mat3 g_rot;
-
-float sphere4(vec3 p, float r) {
-  p *= p;
-  return pow(dot(p,p), 0.25) - r;
-}
-
-float df(vec3 p) {
-  p *= g_rot;
-  return sphere4(p, 1.0);
-}
-
-float rayMarch(vec3 ro, vec3 rd, float tinit, out int iter) {
-  float t = tinit;
-  vec2 dti = vec2(1e10, 0.0);
-  int i = 0;
-  for (i = 0; i < MAX_RAY_MARCHES; ++i) {
-    float d = df(ro + rd*t);
-    if (d < dti.x) { dti = vec2(d,t); }
-    if (d < TOLERANCE || t > MAX_RAY_LENGTH) break;
-    t += d;
-  }
-  if (i == MAX_RAY_MARCHES) t = dti.y;
-  iter = i;
-  return t;
-}
-
-vec3 normalAt(vec3 pos) {
-  vec2  eps = vec2(NORM_OFF, 0.0);
-  vec3 nor;
-  nor.x = df(pos+eps.xyy) - df(pos-eps.xyy);
-  nor.y = df(pos+eps.yxy) - df(pos-eps.yxy);
-  nor.z = df(pos+eps.yyx) - df(pos-eps.yyx);
-  return normalize(nor);
-}
-
-vec3 render0(vec3 ro, vec3 rd) {
-  vec3 col = vec3(0.0);
-
-  vec3 ld0 = normalize(lightPos0-ro);
-  vec3 ld1 = normalize(lightPos1-ro);
-
-  float tp0  = rayPlane(ro, rd, vec4(vec3(0.0, -1.0, 0.0), -5.0));
-  float tp1  = rayPlane(ro, rd, vec4(vec3(0.0, -1.0, 0.0), 6.0));
-
-  if (tp0 > 0.0) {
-    col += bottomBoxCol*exp(-0.5*(length((ro + tp0*rd).xz)));
-  }
-
-  if (tp1 > 0.0) {
-    vec3 pos  = ro + tp1*rd;
-    vec2 pp = pos.xz;
-    float db = boxSDF(pp, vec2(5.0, 9.0))-3.0;
-
-    col += topBoxCol*rd.y*rd.y*smoothstep(0.25, 0.0, db);
-    col += 0.2*topBoxCol*exp(-0.5*max(db, 0.0));
-    col += 0.05*sqrt(topBoxCol)*max(-db, 0.0);
-  }
-
-  // Mid: intensidad de las luces puntuales y del sol.
-  float glowBoost = 1.0 + uMid*1.5;
-  col += glowBoost*1E-2*lightCol0/(1.002-dot(ld0, rd));
-  col += glowBoost*2E-2*lightCol1/(1.005-dot(ld1, rd));
-  col += glowBoost*sunCol/(1.001-dot(sunDir, rd));
-  return col;
-}
-
-vec3 render1(vec3 ro, vec3 rd) {
-
-  int ii;
-  float t = rayMarch(ro, rd, 0., ii);
-
-  vec3 col = render0(ro, rd);
-
-  if (t < MAX_RAY_LENGTH) {
-    vec3 p = ro+rd*t;
-    vec3 n = normalAt(p);
-    vec3 r = reflect(rd, n);
-    vec3 rcol = render0(p, r);
-    float fre = 1.0+dot(rd,n);
-    fre *= fre;
-    fre = mix(0.5, 1.0, fre);
-    vec3 ld0 = normalize(lightPos0-p);
-    vec3 ld1 = normalize(lightPos1-p);
-
-    float dif0 = pow(max(dot(ld0, n), 0.), 4.0)*0.5;
-    float dif1 = pow(max(dot(ld1, n), 0.), 4.0)*0.5;
-
-    col = vec3(0.);
-    col += dif0*lightCol0;
-    col += dif1*lightCol1;
-    // Treble: intensidad de la reflexión.
-    col += rcol*fre*(1.0 + uTreble*1.0);
-    vec2 p2 = p.xy*n.z+p.xz*n.y+p.zy*n.x;
-    p2 *= 1.-0.3;
-    p2 *= ROT(-uSWTwist*length(p2));
-    p2.x *= RESOLUTION.y/RESOLUTION.x;
-    vec2 tp = 0.5+0.5*p2;
-
-    vec4 pcol = texture(iChannel0, tp);
-    col += smoothstep(vec3(0.2, 0.25, 0.5), vec3(1.75, 1.6, 1.4), pcol.xyz);
-  }
-
-  return col;
-}
-
-void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
-  sunCol       = hsv2rgb(vec3(0.6, 0.95, 1E-2));
-  lightCol0    = hsv2rgb(uSWLight0HSV);
-  lightCol1    = hsv2rgb(uSWLight1HSV);
-  bottomBoxCol = hsv2rgb(vec3(uSWBottomHue, 0.80, 0.5));
-  topBoxCol    = hsv2rgb(vec3(uSWTopHue, 0.90, 1.0));
-
-  vec2 q = fragCoord/RESOLUTION.xy;
-  vec2 p = -1. + 2. * q;
-  p.x *= RESOLUTION.x/RESOLUTION.y;
-
-  // Bass: velocidad de rotación del objeto.
-  float a = TIME*uSWRotSpeed*(1.0 + uBass*1.2);
-  vec3 r0 = vec3(1.0, sin(vec2(sqrt(0.5), 1.0)*a));
-  vec3 r1 = vec3(cos(vec2(sqrt(0.5), 1.0)*a), 1.0);
-  g_rot = rotM(normalize(r0), normalize(r1));
-
-  const vec3 up = vec3(0., 1., 0.);
-  vec3 ro   = vec3(0.0, 0.5, -3.0);
-  vec3 la   = vec3(0.0);
-
-  vec3 ww = normalize(la-ro);
-  vec3 uu = normalize(cross(up, ww));
-  vec3 vv = cross(ww, uu);
-  vec3 rd = normalize(p.x*uu + p.y*vv + 2.*ww);
-
-  vec3 col = vec3(0.0);
-  col = render1(ro, rd);
-  col -= 4E-2*vec3(1.,2.,3.).zyx*(length(p)+0.25);
-  // Level: brillo general antes del tonemap.
-  col *= 1.0 + uLevel*0.5;
-  col = aces_approx(col);
-  col = sqrt(col);
-
-  fragColor = vec4(col, 1.0);
-}
-
 void main(){
-  vec4 fragColor = vec4(0.0);
-  mainImage(fragColor, gl_FragCoord.xy);
-  outColor = fragColor;
+    vec4 FC = gl_FragCoord;
+    vec2 r = iResolution;
+    float t = iTime;
+
+    // Dirección del rayo + giro suave de la cámara.
+    vec3 dir = normalize(FC.rgb * 2. - r.xyy);
+    float ang = t * .12 + uTTRoll + uMid * .5;
+    float ca = cos(ang), sa = sin(ang);
+    dir.xy = mat2(ca, sa, -sa, ca) * dir.xy;
+
+    float bass = min(uBass, 1.6), mid = min(uMid, 1.6), tre = min(uTreble, 1.6);
+    float bend = uTTBend * (1. + bass * 1.8);
+    float thick = uTTThick * (1. - min(bass, 1.) * .3);
+    float detail = .2 - min(tre, 1.) * .05;
+    vec3 acc = vec3(0.);
+    vec3 p, P;
+    float z = 0., d = 0., i = 0.;
+
+    for (; i++ < 5e1;) {
+        p = z * dir;
+        p.y -= 7.;
+
+        // Curvas: el eje del túnel serpentea con la profundidad, pero
+        // siempre relativo a la cámara: en z=0 el desplazamiento y su
+        // pendiente son cero, así la cámara va DENTRO del túnel y sigue
+        // su forma en vez de quedar fuera de él.
+        float ph  = p.z * uTTBendFreq - 1.75 * t;
+        float ph0 = -1.75 * t;
+        vec2 g  = vec2(sin(ph),  cos(ph  * .7 + 1.3));
+        vec2 g0 = vec2(sin(ph0), cos(ph0 * .7 + 1.3));
+        vec2 s0 = uTTBendFreq * vec2(cos(ph0), -.7 * sin(ph0 * .7 + 1.3));
+        p.xy += bend * (g - g0 - s0 * p.z);
+
+        P = vec3(atan(p.y, p.x) / .1 + t + mid * 2., p.z * .2 - 5. * t - bass * 2.5, length(p.xy) - 11. + bass * .8);
+        d = length(vec4(P.z, cos(P + cos(P / detail)) - 1.)) * .5 - thick;
+
+        z += d;
+        acc += (1.2 - cos(p.z / vec3(5., 1e8, 3.))) / d;
+    }
+
+    acc *= uTTColor * (1. + uLevel * 1.3) * (1. + tre * .9);
+    vec3 col = tanh(min(acc / uTTBright, 20.));
+    outColor = vec4(col, 1.);
 }
 `;
 
@@ -2746,7 +2207,7 @@ uniform sampler2D iChannel0;
 #define RESOLUTION iResolution
 
 // ==================== Créditos ====================
-// "Saturday weirdness" (Image) — ver Buffer A para créditos completos.
+// "Tunnel Trip" (Image) — ver Buffer A para créditos.
 // FXAA: XorDev — https://github.com/XorDev/GM_FXAA
 // ====================================================
 
@@ -2799,112 +2260,6 @@ void main() {
 }
 `;
 
-// ---------- Escena 17: "Smooth Voronoi Contours" ----------
-const fragSrc17 = `#version 300 es
-precision highp float;
-out vec4 outColor;
-uniform vec2 iResolution;
-uniform float iTime;
-uniform float uBass, uMid, uTreble, uLevel;
-uniform float uSVFreq, uSVSmoothK, uSVFalloff, uSVMix;
-uniform vec3 uSVColor2, uSVBandColor;
-
-// ==================== Créditos ====================
-// "Smooth Voronoi Contours" — autor de Shadertoy no identificado por
-// nombre en el código; el comentario original agradece a "drone1" por
-// ayuda con antialiasing, y referencia el método de estimación de
-// distancia de Inigo Quilez ("Ellipse - Distance Estimation",
-// https://www.shadertoy.com/view/MdfGWn, artículo:
-// https://iquilezles.org/articles/distance) y "2D Noise Contours" de
-// Shane (https://www.shadertoy.com/view/XdcGzB) como técnica hermana.
-// Adaptación: sin cambios en el método (Voronoi suave + contornos por
-// gradiente numérico); el modo GLOSSY original (desactivado por
-// defecto) no se incluyó. Frecuencia de contornos, suavizado, falloff
-// del Voronoi, mezcla de capas y ambas paletas de color pasaron de
-// constantes a uniforms mutables. Audio: bass → velocidad del
-// "hervor" de las células Voronoi, mid → frecuencia de contornos,
-// treble → nitidez/contraste de los contornos, level → brillo general.
-// ====================================================
-
-vec2 hash22(vec2 p) {
-    float n = sin(dot(p, vec2(41, 289)));
-    p = fract(vec2(2097152, 262144)*n);
-    // Bass: velocidad del "hervor" de las células.
-    return cos(p*6.283 + iTime*(1.0 + uBass*0.6))*.5;
-}
-
-float smoothVoronoi(vec2 p, float falloff) {
-
-    vec2 ip = floor(p); p -= ip;
-
-	float d = 1., res = 0.0;
-
-	for(int i = -1; i <= 2; i++) {
-		for(int j = -1; j <= 2; j++) {
-
-			vec2 b = vec2(i, j);
-
-			vec2 v = b - p + hash22(ip + b);
-
-			d = max(dot(v,v), 1e-4);
-
-			res += 1.0/pow( d, falloff );
-		}
-	}
-
-	return pow( 1./res, .5/falloff );
-}
-
-float func2D(vec2 p){
-    float d = smoothVoronoi(p*2., uSVFalloff)*(1.0-uSVMix) + smoothVoronoi(p*6., uSVFalloff)*uSVMix;
-    return sqrt(d);
-}
-
-float smoothFract(float x, float sf){
-    x = fract(x); return min(x, x*(1.-x)*sf);
-}
-
-void mainImage( out vec4 fragColor, in vec2 fragCoord )
-{
-    vec2 uv = (fragCoord.xy-iResolution.xy*.5) / iResolution.y;
-
-    vec2 e = vec2(0.001, 0);
-
-    float f = func2D(uv);
-
-    float g = length( vec2(f - func2D(uv-e.xy), f - func2D(uv-e.yx)) )/(e.x);
-
-    g = 1./max(g, 0.001);
-
-    // Mid: frecuencia de contornos.
-    float freq = uSVFreq*(1.0 + uMid*0.3);
-    // Treble: nitidez/contraste de los contornos.
-    float smoothFactor = iResolution.y*uSVSmoothK*(1.0 + uTreble*1.0);
-
-    float c = clamp(cos(f*freq*3.14159*2.)*g*smoothFactor, 0., 1.);
-
-    vec3 col = vec3(c);
-    vec3 col2 = vec3(c*uSVColor2.x, c*uSVColor2.y, c*c*uSVColor2.z);
-
-    col = mix(col, col2, -uv.y + clamp(cos(f*freq*3.14159)*2., 0., 1.0));
-
-    f = f*freq;
-
-    if(f>8.5 && f<9.5) col *= uSVBandColor;
-
-    // Level: brillo general.
-    col *= 0.6 + uLevel*0.9;
-
-	fragColor = vec4( sqrt(clamp(col, 0., 1.)), 1.0 );
-}
-
-void main(){
-  vec4 fragColor = vec4(0.0);
-  mainImage(fragColor, gl_FragCoord.xy);
-  outColor = fragColor;
-}
-`;
-
 function compile(type, src){
   const sh = gl.createShader(type);
   gl.shaderSource(sh, src);
@@ -2912,6 +2267,363 @@ function compile(type, src){
   if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(sh));
   return sh;
 }
+// ---------- Escena 18: "Log Fractal" (shader compacto estilo twigl, fractal log-polar) ----------
+const fragSrc18 = `#version 300 es
+precision highp float;
+out vec4 outColor;
+uniform vec2 iResolution;
+uniform float iTime;
+uniform float uBass, uMid, uTreble, uLevel;
+uniform vec3 uLFColor;
+uniform float uLFFold, uLFLimit, uLFWave, uLFDist, uLFPhase;
+
+// ==================== Créditos ====================
+// Shader compacto estilo twigl (raymarch sobre un plegado fractal en
+// coordenadas log-polares). Autor original: pendiente de acreditar.
+// Adaptación: se expandieron las variables de twigl (FC, r, t, o) y se
+// agregó reacción al audio EN LA ESTRUCTURA de la textura: las 6 pasadas
+// del ppliegue fractal se reparten el espectro — las dos primeras (forma
+// gruesa) laten con bass, las dos del medio con mid y las dos últimas
+// (filigrana fina) con treble — moviendo el desplazamiento de cada pliegue.
+// Además: bass → profundidad/pulso de la cámara, mid → matiz de la paleta,
+// treble → onda interna y contraste, level → brillo general.
+// Sistema de mutación: tinte, desplazamiento del pliegue, límite de
+// inversión, onda interna, distancia de cámara y fase.
+// ====================================================
+
+#define PI 3.14159265
+#define TAU 6.28318531
+mat2 rotate2D(float a){ float c = cos(a), s = sin(a); return mat2(c, s, -s, c); }
+const float LF_RB = 3.0, LF_RIN = 2.2;
+
+void main(){
+    vec4 FC = gl_FragCoord;
+    vec2 r = iResolution;
+    float t = iTime;
+    vec4 o = vec4(0.);
+
+    float i = 0., s = 0., e = 0.;
+    vec3 p = vec3(0.), q = vec3(0.);
+    vec3 d = vec3((FC.xy - .5 * r) / r.y, -1.);
+
+    // Energía por zona del espectro, acotada para que el fractal no colapse.
+    float bB = min(uBass, 1.5), bM = min(uMid, 1.5), bT = min(uTreble, 1.5);
+    float dist = uLFDist - bB * .35;
+    float wave = uLFWave * (1. + bT * .5);
+    float ang = t / 8.;
+
+    for (; i++ < 100.;) {
+        p = q += (i < 50.) ? d * e : vec3(1e-4 + e);
+        p.z += dist;
+        o += sqrt(min(e, 1.)) / 70. * (1. - smoothstep(LF_RB, LF_RB + 1.5, length(q - vec3(0., 0., -dist))) * .96);
+        p.xz *= rotate2D(ang);
+        s = length(p);
+        p = vec3(log(s), atan(p.y, p.x), sin(t / 4. + uLFPhase + p.z / s) * wave);
+        s = 1.;
+        for (int j = 0; j < 6; j++) {
+            float band = j < 2 ? bB : (j < 4 ? bM : bT);
+            // cada pasada tiene su propio desplazamiento: la textura "baila" por capas
+            float fold = uLFFold + band * .22 * (1. + .35 * float(j));
+            s *= e = PI / min(dot(p, p), uLFLimit);
+            p = abs(p) * e - fold;
+            // ripples: la banda desplaza los anillos (log-radio) y los hace ondular
+            p.x += band * .18 * sin(p.y * (2. + float(j)) + t * (1.5 + float(j)));
+            p.y -= round(p.y);
+        }
+        e = length(p) / s;
+        // Cáscara esférica: se recorta el fractal a UNA sola esfera (nada
+        // por fuera ni copias más chicas por dentro).
+        float rad = length(q - vec3(0., 0., -dist));
+        e = max(e, rad - LF_RB);
+        e = max(e, LF_RIN - rad);
+    }
+
+    float v = o.r;
+    vec3 tint = .5 + .5 * cos(TAU * (v * 1.2 + vec3(0., .33, .67) + uLFPhase * .16 + bM * .12));
+    vec3 col = v * mix(vec3(1.), tint * 1.6, .55) * uLFColor;
+    col *= 1. + uLevel * .6;
+    col = 1. - exp(-col * 3.2);
+    col = pow(col, vec3(1. - min(bT, 1.) * .15));
+    outColor = vec4(clamp(col, 0., 1.), 1.);
+}
+`;
+
+// ---------- Escena 20: "Hyper Fold" (shader compacto estilo twigl, plegado fractal iterado + glow HSV) ----------
+const fragSrc20 = `#version 300 es
+precision highp float;
+out vec4 outColor;
+uniform vec2 iResolution;
+uniform float iTime;
+uniform vec3 uFKColor;
+uniform float uFKHue, uFKGain, uFKPhase, uFKAmp, uFKPulse, uFKTAcc;
+
+// ==================== Créditos ====================
+// Shader compacto estilo twigl (raymarch sobre un relieve de ruido
+// log-polar, glow acumulado en HSV). Autor original: pendiente de acreditar.
+// Adaptación: se expandieron las variables de twigl (FC, r, t, o, hsv) y se
+// separó la asignación de R del constructor de p (el orden de evaluación de
+// argumentos no está garantizado en GLSL).
+// Audio: TODO el shader late con el beat. Cada beat pone uFKPulse en 1 al
+// instante (sin suavizado de subida) y decae exponencialmente en JS según el
+// tempo. Con el pulso: relieve más profundo, golpe de zoom, más brillo y un
+// empujón al giro/flujo.
+// Movimiento: NADA se mueve por sí solo. La rotación y la animación del
+// ruido avanzan con un reloj (uFKTAcc) que se integra en JS sólo mientras
+// hay música (y con un empujón extra en cada beat); en silencio queda quieta.
+// Mutación: sólo tinte, matiz y ganancia (fase y amplitud quedan fijas para
+// que la mutación no mueva el relieve por su cuenta).
+// ====================================================
+
+vec3 hsv(float h, float s, float v){
+    return ((clamp(abs(fract(h + vec3(0., 2., 1.) / 3.) * 6. - 3.) - 1., 0., 1.) - 1.) * s + 1.) * v;
+}
+
+void main(){
+    vec4 FC = gl_FragCoord;
+    vec2 r = iResolution;
+    // Reloj dirigido por la música (uFKTAcc): sin audio queda congelado.
+    float t = uFKTAcc + uFKPhase;
+    // uFKPulse: 1 en el instante del beat, decae rápido (calculado en JS).
+    float amp = .45 * uFKAmp * (1. + 1.2 * uFKPulse);
+
+    float e = 0., R = 0., s = 0.;
+    vec3 q = vec3(0., -1., -1.), p = vec3(0.), o = vec3(0.);
+    vec3 d = vec3(FC.xy / r * .8 - vec2(.4, -.6), 1.);
+    // Golpe de zoom con el beat (alrededor del centro de la imagen, (0,1)).
+    d.xy = (d.xy - vec2(0., 1.)) * (1. - .18 * uFKPulse) + vec2(0., 1.);
+
+    for (int i = 0; i < 80; i++) {
+        o += hsv(q.z + uFKHue, .5, min(e * s - .3, 1.) / 35.);
+        s = 5.;
+        q += d * e * R * .3;
+        p = q;
+        R = length(p * 1.3);
+        p = vec3(log(R), exp2(-p.z / R), atan(p.y, p.x) - t * .3);
+        p.y -= 1.;
+        e = p.y;
+        for (; s < 1e3; s += s) {
+            e += cos(dot(sin(p * s), cos(p.yyz * s + t * .9))) / s * amp;
+        }
+    }
+
+    vec3 col = clamp(o * uFKColor * uFKGain * (1. + .7 * uFKPulse), 0., 1.);
+    outColor = vec4(col, 1.);
+}
+`;
+
+// ---------- Escena 21: "Kaleido Orbit" (shader compacto estilo twigl, túnel caleidoscópico) ----------
+const fragSrc21 = `#version 300 es
+precision highp float;
+out vec4 outColor;
+uniform vec2 iResolution;
+uniform float iTime;
+uniform float uBass, uMid, uTreble;
+uniform vec2 uOrbR;     // x: radio base de la órbita, y: amplitud de la oscilación del radio
+uniform vec2 uOrbA;     // x: amplitud de elevación (rad), y: amplitud del vaivén del punto de mira
+uniform vec4 uOrbPh;    // fases acumuladas en JS: x azimut, y elevación, z radio, w mira
+uniform vec4 uGen;      // x: pliegues del caleidoscopio, y: frecuencia angular, z: radio de la superficie
+uniform vec3 uSeed;     // semilla de las figuras (cambia en cada beat)
+
+// ==================== Créditos ====================
+// Shader compacto estilo twigl (raymarch de un túnel caleidoscópico con
+// inversión log-polar y glow acumulado). Autor original: pendiente de acreditar.
+// Adaptación: se expandieron las variables de twigl (r, t, o), se separó la
+// declaración de W/U/D del resto (usa O, que se declara en el mismo statement)
+// y los números fijos de la cámara y de las figuras pasaron a uniforms:
+//  - Cámara: radio, elevación y mira vienen de fases acumuladas en JS (así la
+//    mutación puede cambiar velocidades/amplitudes sin que la cámara pegue saltos).
+//  - Figuras: cada beat se REGENERAN (nº de pliegues, frecuencia angular, grosor
+//    de la superficie y semilla del ruido cuantizado). Los graves además
+//    esculpen la figura de forma continua (desplazan el umbral del ceil()) y
+//    suben el brillo.
+//  - Medios: curvan la lente. Agudos: desplazan la fase del color.
+// El golpe de zoom/brillo del beat lo da el post-proceso global.
+// ====================================================
+
+void main(){
+    vec2 r = iResolution;
+    float t = iTime;
+    vec4 o = vec4(0.);
+
+    vec2 c = gl_FragCoord.xy;
+    vec2 p = (c + c - r) / r.y;
+    float R = uOrbR.x + uOrbR.y * sin(uOrbPh.z);
+    float a = uOrbPh.x;
+    float e = sin(uOrbPh.y) * uOrbA.x;
+    float S = fract(dot(c, sin(c)));   // dither por pixel (desplaza el inicio del rayo)
+    float d;
+
+    // lente: la curvan los medios
+    p *= 1. + dot(p, p) * (.5 + .4 * sin(t * 1.5) + .45 * uMid);
+
+    vec3 O = vec3(sin(a) * cos(e), sin(e), cos(a) * cos(e)) * R;
+    vec3 look = vec3(sin(uOrbPh.w * 1.25), cos(uOrbPh.w), 0.) * uOrbA.y;
+    vec3 W = normalize(look - O);
+    vec3 U = normalize(cross(W, vec3(0., 1., 0.)));
+    vec3 D = normalize(p.x * U + p.y * cross(U, W) + 1.2 * W);
+
+    vec4 ph = vec4(6., 2., 4., 0.) + uTreble * 2.5;
+    float seg = 6.2831853 / uGen.x;
+    vec3 sh = uSeed + uBass * .6;
+
+    for (float i = 0.; i < 100.; i++) {
+        vec3 P = O + S * D;
+        P.z -= 4.;
+        // +π: con pliegues impares la costura de atan() queda alineada con un borde de segmento
+        a = abs(mod(atan(P.y, P.x) + 3.14159265, seg) - seg * .5);
+        P.xy = length(P.xy) * vec2(cos(a), sin(a));
+        P.xy = vec2(log(length(P.xy) + 1e-3), cos(atan(P.y, P.x) * uGen.y));
+        for (float F = 1.; F < 9.; F /= .8) P += cos(ceil(P.yzx * F - t + sh)) / F;
+        d = .002 + abs(length(P) - uGen.z) / 40.;
+        o += (sin(S - t + ph) + .5) / (d * 350.);
+        S += d;
+    }
+
+    o = pow(tanh(o * (1. + .7 * uBass) / 8.), vec4(1.4));
+    outColor = vec4(o.rgb, 1.);
+}
+`;
+
+// ---------- Escena 19: "Prism Glow" — Pasada 1/2: estructura (shader compacto estilo twigl, inversión esférica + glow HSV) ----------
+const fragSrc19 = `#version 300 es
+precision highp float;
+out vec4 outColor;
+uniform vec2 iResolution;
+uniform float iTime;
+uniform vec3 uPGColor;
+uniform float uPGHue, uPGGain, uPGThick, uPGStep, uPGPhase;
+uniform float uPGTAcc, uPGRot;
+
+// ==================== Créditos ====================
+// Shader compacto estilo twigl (raymarch con inversión esférica y glow
+// acumulado en HSV). Autor original: pendiente de acreditar.
+// Adaptación: se expandieron las variables de twigl (FC, r, t, o, hsv) y se
+// quitó el término de realimentación del frame anterior (b1).
+// Audio: la ESTRUCTURA (planos entrelazados, ramas y brazos) ya NO reacciona
+// al sonido: paso del rayo, grosor y color son fijos. Lo único que mueve el
+// audio acá es la velocidad de generación (uPGTAcc: tiempo extra acumulado
+// en JS, aceleración sin saltos) y el giro de la cámara (uPGRot: ángulo de
+// roll acumulado en JS). La luz central y la neblina están en la pasada 2.
+// Mutación: tinte, matiz, ganancia, grosor, paso, fase, rayos y neblina.
+// ====================================================
+
+vec3 hsv(float h, float s, float v){
+    return ((clamp(abs(fract(h + vec3(0., 2., 1.) / 3.) * 6. - 3.) - 1., 0., 1.) - 1.) * s + 1.) * v;
+}
+
+void main(){
+    vec4 FC = gl_FragCoord;
+    vec2 r = iResolution;
+    float t = iTime;
+
+    float tt = t + uPGPhase + uPGTAcc;      // velocidad de generación
+    float h = .5 * uPGStep;
+    float thick = 1.4 + uPGThick;
+
+    vec2 uv = (FC.xy - .5 * r) / r.y;
+    float ca = cos(uPGRot), sa = sin(uPGRot);
+    uv = mat2(ca, sa, -sa, ca) * uv;        // giro (roll de cámara)
+
+    vec3 p = vec3(0.), q = vec3(0., 0., -.2);
+    float s = 0., e = 0.;
+    vec3 acc = vec3(0.);
+    vec3 sw = sin(vec3(1., 3., 5.) + tt) + tt;
+
+    for (int i = 0; i < 100; i++) {
+        p -= sw;
+        float k = dot(sin(p), cos(p.zxy)) + thick;
+        q += vec3(uv, 1.) * k * s * h;
+        p = q;
+        s = dot(p, p);
+        p /= s;
+        e = length(p) / 3e2;
+        acc += max(hsv(e + uPGHue, .06 / e, e * e), 0.);
+    }
+
+    vec3 col = acc * 2. * uPGColor * uPGGain;
+
+    // Salida HDR (sin clamp): la pasada 2 usa los valores >1 como fuentes de luz.
+    outColor = vec4(col, 1.);
+}
+`;
+
+// ---------- Escena 19: "Prism Glow" — Pasada 2/2: atmósfera (rayos de luz volumétricos + neblina) ----------
+const fragSrc19B = `#version 300 es
+precision highp float;
+out vec4 outColor;
+uniform vec2 iResolution;
+uniform float iTime;
+uniform sampler2D iChannel0;
+uniform float uBass, uMid, uTreble, uLevel;
+uniform float uPGHue, uPGRays, uPGHaze;
+
+// ==================== Créditos ====================
+// Pasada de atmósfera de "Prism Glow": rayos de luz volumétricos tipo
+// "god rays" (desenfoque radial con oclusión, técnica clásica de GPU Gems 3,
+// cap. 13, Mitchell) + neblina cálida. Las zonas brillantes de la estructura
+// son la fuente de luz y las paredes oscuras proyectan sombra.
+// Audio (sólo luz y aire, la estructura no se toca) — bass: intensidad de la
+// luz central (foco + exposición de los rayos); mid + level: intensidad de
+// la neblina. La posición de la luz, el umbral y el matiz son fijos.
+// ====================================================
+
+vec3 hsv(float h, float s, float v){
+    return ((clamp(abs(fract(h + vec3(0., 2., 1.) / 3.) * 6. - 3.) - 1., 0., 1.) - 1.) * s + 1.) * v;
+}
+float hash12(vec2 p){
+    vec3 p3 = fract(vec3(p.xyx) * .1031);
+    p3 += dot(p3, p3.yzx + 33.33);
+    return fract((p3.x + p3.y) * p3.z);
+}
+
+void main(){
+    vec2 res = iResolution;
+    float t = iTime;
+    vec2 uv = gl_FragCoord.xy / res;
+    vec3 base = texture(iChannel0, uv).rgb;
+
+    float bB = min(uBass, 1.4), bM = min(uMid, 1.4), lv = min(uLevel, 1.4);
+
+    // Fuente de luz: centro de la imagen, con deriva suave (sólo por tiempo).
+    vec2 L = vec2(.5, .47) + vec2(.035 * sin(t * .23), .03 * cos(t * .19));
+
+    // Desenfoque radial hacia la luz: cada pixel acumula el brillo que hay
+    // entre él y la fuente; lo oscuro (paredes) bloquea, lo brillante proyecta.
+    const int N = 96;
+    vec2 stp = (L - uv) * .94 / float(N);
+    vec2 suv = uv + stp * hash12(gl_FragCoord.xy + fract(t) * 91.7);
+    float decay = .972;
+    float thr = .48;
+    float w = 1.;
+    vec3 acc = vec3(0.);
+    for (int i = 0; i < N; i++) {
+        vec3 c = texture(iChannel0, suv).rgb;
+        float lum = dot(c, vec3(.299, .587, .114));
+        acc += min(c, vec3(1.6)) * smoothstep(thr, thr + .6, lum) * w;
+        w *= decay;
+        suv += stp;
+    }
+    acc /= 30.;
+    float expo = (.62 + bB * .55) * uPGRays;                 // luz central: rayos
+    vec3 warm = hsv(.05 + uPGHue, .75, 1.);
+    vec3 rays = acc * expo * mix(vec3(1.), warm, .55);
+
+    vec3 col = clamp(base, 0., 1.);
+    // neblina cálida: levanta los negros, más densa hacia la luz
+    float rad = length((uv - L) * vec2(res.x / res.y, 1.));
+    float fog = (.14 + .14 * exp(-rad * 2.3)) * uPGHaze * (1. + lv * 2. + bM * 1.1);
+    col = mix(col, warm * .5, clamp(fog, 0., .72));
+    // los rayos se suman con mezcla "screen"
+    col = 1. - (1. - col) * (1. - clamp(rays, 0., .8));
+    // foco central
+    col += vec3(1., .72, .38) * exp(-rad * rad * 30.) * (.12 + bB * .42) * uPGRays;
+
+    outColor = vec4(clamp(col, 0., 1.), 1.);
+}
+`;
+
+
+
 // --- Morph universal (todas las escenas salvo Cosmic Web, que tiene el suyo
 //     interno): se parchea el fragment shader para que lea gl_FragCoord a
 //     través de morphCoord(), una deformación de coordenadas = caleidoscopio
@@ -2920,7 +2632,7 @@ function compile(type, src){
 //     original). seg/fold los varía la mutación de la escena activa. ---
 const morphG = { amt: 0, seg: 6, fold: 1, twist: 0, twistK: 1, liquid: 0, liquidScale: 3,
                  color: 0, chroma: 0, hueOff: 0, pal0: 0, pal1: 0.33, pal2: 0.67, t: 0,
-                 zoom: 0, rot: 0, invert: 0, lens: 0, ripple: 0 };
+                 zoom: 0, rot: 0, invert: 0, lens: 0, ripple: 0, bloom: 0 };
 // Deformaciones de coordenadas, en este orden: LÍQUIDO (ruido que ondula) →
 // TORSIÓN (remolino que se afloja con la distancia) → PLEGADO (caleidoscopio
 // 0–50% + espejo de baldosas 50–100%). Todo en 0 = devuelve F intacto.
@@ -3026,17 +2738,18 @@ gl.useProgram = function(prog){
 const prog1 = makeProgram(fragSrc1, true);
 const prog3 = makeProgram(fragSrc3, true);
 const prog4 = makeProgram(fragSrc4, true, true);
-const prog5 = makeProgram(fragSrc5, true);
 const prog7 = makeProgram(fragSrc7, true);
 const prog11A = makeProgram(fragSrc11A);
 const prog11Img = makeProgram(fragSrc11, true);
 const prog12 = makeProgram(fragSrc12, true);
-const prog13 = makeProgram(fragSrc13, true);
 const prog14 = makeProgram(fragSrc14, true);
-const prog15 = makeProgram(fragSrc15, true);
 const progSWA = makeProgram(fragSrcSWA);
 const progSWImg = makeProgram(fragSrcSWImg, true);
-const prog17 = makeProgram(fragSrc17, true);
+const prog18 = makeProgram(fragSrc18, true);
+const prog19 = makeProgram(fragSrc19, true);
+const prog19B = makeProgram(fragSrc19B, false);
+const prog20 = makeProgram(fragSrc20, true);
+const prog21 = makeProgram(fragSrc21, true);
 
 // Uniforms escena Neural
 const uR = gl.getUniformLocation(prog1, 'r');
@@ -3090,21 +2803,6 @@ const uCWFoldOffLoc = gl.getUniformLocation(prog4, 'uCWFoldOff');
 const uCWPolarLoc = gl.getUniformLocation(prog4, 'uCWPolar');
 const uCWFoldItersLoc = gl.getUniformLocation(prog4, 'uCWFoldIters');
 const uCWMorphLoc = gl.getUniformLocation(prog4, 'uCWMorph');
-
-// Uniforms escena Ether
-const uRes5 = gl.getUniformLocation(prog5, 'iResolution');
-const uTime5 = gl.getUniformLocation(prog5, 'iTime');
-const uBass5 = gl.getUniformLocation(prog5, 'uBass');
-const uMid5 = gl.getUniformLocation(prog5, 'uMid');
-const uTreble5 = gl.getUniformLocation(prog5, 'uTreble');
-const uLevel5 = gl.getUniformLocation(prog5, 'uLevel');
-const uEthColorBaseLoc = gl.getUniformLocation(prog5, 'uEthColorBase');
-const uEthColorGlowLoc = gl.getUniformLocation(prog5, 'uEthColorGlow');
-const uEthRotALoc = gl.getUniformLocation(prog5, 'uEthRotA');
-const uEthRotBLoc = gl.getUniformLocation(prog5, 'uEthRotB');
-const uEthDStartLoc = gl.getUniformLocation(prog5, 'uEthDStart');
-const uEthGlowEdgeLoc = gl.getUniformLocation(prog5, 'uEthGlowEdge');
-const uEthFreqLoc = gl.getUniformLocation(prog5, 'uEthFreq');
 
 // Uniforms escena Supernova
 const uRes7 = gl.getUniformLocation(prog7, 'iResolution');
@@ -3192,23 +2890,7 @@ const uSatRotMulLoc = gl.getUniformLocation(prog12, 'uSatRotMul');
 const uSatNoiseAmtLoc = gl.getUniformLocation(prog12, 'uSatNoiseAmt');
 const uSatWidthLoc = gl.getUniformLocation(prog12, 'uSatWidth');
 
-// Uniforms escena Acid Zoomer (sin texturas: iChannel0/1 son ruido
-// procedural generado dentro del propio fragment shader, ver fragSrc13).
-const uRes13 = gl.getUniformLocation(prog13, 'iResolution');
-const uTime13 = gl.getUniformLocation(prog13, 'iTime');
-const uBass13 = gl.getUniformLocation(prog13, 'uBass');
-const uMid13 = gl.getUniformLocation(prog13, 'uMid');
-const uTreble13 = gl.getUniformLocation(prog13, 'uTreble');
-const uLevel13 = gl.getUniformLocation(prog13, 'uLevel');
-const uAcidZoomLoc = gl.getUniformLocation(prog13, 'uAcidZoom');
-const uAcidCellScaleLoc = gl.getUniformLocation(prog13, 'uMutCellScale');
-const uAcidFlowSpeedLoc = gl.getUniformLocation(prog13, 'uMutFlowSpeed');
-const uAcidMirrorAngle1Loc = gl.getUniformLocation(prog13, 'uMutMirrorAngle1');
-const uAcidMirrorAngle2Loc = gl.getUniformLocation(prog13, 'uMutMirrorAngle2');
-const uAcidNoiseScaleLoc = gl.getUniformLocation(prog13, 'uMutNoiseScale');
-const uAcidColorPhaseLoc = gl.getUniformLocation(prog13, 'uMutColorPhase');
-
-// Uniforms escena Hyper Tunnel
+// Uniforms escena Fire Lotto
 const uRes14 = gl.getUniformLocation(prog14, 'iResolution');
 const uTime14 = gl.getUniformLocation(prog14, 'iTime');
 const uBass14 = gl.getUniformLocation(prog14, 'uBass');
@@ -3216,27 +2898,14 @@ const uMid14 = gl.getUniformLocation(prog14, 'uMid');
 const uTreble14 = gl.getUniformLocation(prog14, 'uTreble');
 const uLevel14 = gl.getUniformLocation(prog14, 'uLevel');
 const uHTColorLoc = gl.getUniformLocation(prog14, 'uHTColor');
-const uHTNoiseAmtLoc = gl.getUniformLocation(prog14, 'uHTNoiseAmt');
-const uHTNoisePowLoc = gl.getUniformLocation(prog14, 'uHTNoisePow');
-const uHTRadius1Loc = gl.getUniformLocation(prog14, 'uHTRadius1');
-const uHTRadius2Loc = gl.getUniformLocation(prog14, 'uHTRadius2');
-const uHTWarpAmpLoc = gl.getUniformLocation(prog14, 'uHTWarpAmp');
-const uHTSteamAmtLoc = gl.getUniformLocation(prog14, 'uHTSteamAmt');
+const uHTSharpLoc = gl.getUniformLocation(prog14, 'uHTSharp');
+const uHTZoomLoc = gl.getUniformLocation(prog14, 'uHTZoom');
+const uHTStepLoc = gl.getUniformLocation(prog14, 'uHTStep');
+const uHTPhaseLoc = gl.getUniformLocation(prog14, 'uHTPhase');
+const uHTBiasLoc = gl.getUniformLocation(prog14, 'uHTBias');
+const uHTRedGainLoc = gl.getUniformLocation(prog14, 'uHTRedGain');
 
-// Uniforms escena Warp Speed
-const uRes15 = gl.getUniformLocation(prog15, 'iResolution');
-const uTime15 = gl.getUniformLocation(prog15, 'iTime');
-const uBass15 = gl.getUniformLocation(prog15, 'uBass');
-const uMid15 = gl.getUniformLocation(prog15, 'uMid');
-const uTreble15 = gl.getUniformLocation(prog15, 'uTreble');
-const uLevel15 = gl.getUniformLocation(prog15, 'uLevel');
-const uWSColorBiasLoc = gl.getUniformLocation(prog15, 'uWSColorBias');
-const uWSScaleLoc = gl.getUniformLocation(prog15, 'uWSScale');
-const uWSOffsetLoc = gl.getUniformLocation(prog15, 'uWSOffset');
-const uWSDepthLoc = gl.getUniformLocation(prog15, 'uWSDepth');
-const uWSStepLoc = gl.getUniformLocation(prog15, 'uWSStep');
-
-// Uniforms escena Saturday Weirdness (Buffer A)
+// Uniforms escena Tunnel Trip (Buffer A)
 const uResSWA = gl.getUniformLocation(progSWA, 'iResolution');
 const uTimeSWA = gl.getUniformLocation(progSWA, 'iTime');
 const uChan0SWA = gl.getUniformLocation(progSWA, 'iChannel0');
@@ -3244,30 +2913,76 @@ const uBassSWA = gl.getUniformLocation(progSWA, 'uBass');
 const uMidSWA = gl.getUniformLocation(progSWA, 'uMid');
 const uTrebleSWA = gl.getUniformLocation(progSWA, 'uTreble');
 const uLevelSWA = gl.getUniformLocation(progSWA, 'uLevel');
-const uSWLight0HSVLoc = gl.getUniformLocation(progSWA, 'uSWLight0HSV');
-const uSWLight1HSVLoc = gl.getUniformLocation(progSWA, 'uSWLight1HSV');
-const uSWBottomHueLoc = gl.getUniformLocation(progSWA, 'uSWBottomHue');
-const uSWTopHueLoc = gl.getUniformLocation(progSWA, 'uSWTopHue');
-const uSWRotSpeedLoc = gl.getUniformLocation(progSWA, 'uSWRotSpeed');
-const uSWTwistLoc = gl.getUniformLocation(progSWA, 'uSWTwist');
+const uTTColorLoc = gl.getUniformLocation(progSWA, 'uTTColor');
+const uTTBendLoc = gl.getUniformLocation(progSWA, 'uTTBend');
+const uTTBendFreqLoc = gl.getUniformLocation(progSWA, 'uTTBendFreq');
+const uTTRollLoc = gl.getUniformLocation(progSWA, 'uTTRoll');
+const uTTThickLoc = gl.getUniformLocation(progSWA, 'uTTThick');
+const uTTBrightLoc = gl.getUniformLocation(progSWA, 'uTTBright');
 
-// Uniforms escena Saturday Weirdness (Image)
+// Uniforms escena Tunnel Trip (Image)
 const uResSWImg = gl.getUniformLocation(progSWImg, 'iResolution');
 const uChan0SWImg = gl.getUniformLocation(progSWImg, 'iChannel0');
 
-// Uniforms escena Smooth Voronoi
-const uRes17 = gl.getUniformLocation(prog17, 'iResolution');
-const uTime17 = gl.getUniformLocation(prog17, 'iTime');
-const uBass17 = gl.getUniformLocation(prog17, 'uBass');
-const uMid17 = gl.getUniformLocation(prog17, 'uMid');
-const uTreble17 = gl.getUniformLocation(prog17, 'uTreble');
-const uLevel17 = gl.getUniformLocation(prog17, 'uLevel');
-const uSVFreqLoc = gl.getUniformLocation(prog17, 'uSVFreq');
-const uSVSmoothKLoc = gl.getUniformLocation(prog17, 'uSVSmoothK');
-const uSVFalloffLoc = gl.getUniformLocation(prog17, 'uSVFalloff');
-const uSVMixLoc = gl.getUniformLocation(prog17, 'uSVMix');
-const uSVColor2Loc = gl.getUniformLocation(prog17, 'uSVColor2');
-const uSVBandColorLoc = gl.getUniformLocation(prog17, 'uSVBandColor');
+// Uniforms escena Log Fractal
+const uRes18 = gl.getUniformLocation(prog18, 'iResolution');
+const uTime18 = gl.getUniformLocation(prog18, 'iTime');
+const uBass18 = gl.getUniformLocation(prog18, 'uBass');
+const uMid18 = gl.getUniformLocation(prog18, 'uMid');
+const uTreble18 = gl.getUniformLocation(prog18, 'uTreble');
+const uLevel18 = gl.getUniformLocation(prog18, 'uLevel');
+const uLFColorLoc = gl.getUniformLocation(prog18, 'uLFColor');
+const uLFFoldLoc = gl.getUniformLocation(prog18, 'uLFFold');
+const uLFLimitLoc = gl.getUniformLocation(prog18, 'uLFLimit');
+const uLFWaveLoc = gl.getUniformLocation(prog18, 'uLFWave');
+const uLFDistLoc = gl.getUniformLocation(prog18, 'uLFDist');
+const uLFPhaseLoc = gl.getUniformLocation(prog18, 'uLFPhase');
+
+// Uniforms escena Prism Glow
+const uRes19 = gl.getUniformLocation(prog19, 'iResolution');
+const uTime19 = gl.getUniformLocation(prog19, 'iTime');
+const uPGColorLoc = gl.getUniformLocation(prog19, 'uPGColor');
+const uPGHueLoc = gl.getUniformLocation(prog19, 'uPGHue');
+const uPGGainLoc = gl.getUniformLocation(prog19, 'uPGGain');
+const uPGThickLoc = gl.getUniformLocation(prog19, 'uPGThick');
+const uPGStepLoc = gl.getUniformLocation(prog19, 'uPGStep');
+const uPGPhaseLoc = gl.getUniformLocation(prog19, 'uPGPhase');
+const uPGTAccLoc = gl.getUniformLocation(prog19, 'uPGTAcc');
+const uPGRotLoc = gl.getUniformLocation(prog19, 'uPGRot');
+// Pasada 2 (atmósfera)
+const uRes19B = gl.getUniformLocation(prog19B, 'iResolution');
+const uTime19B = gl.getUniformLocation(prog19B, 'iTime');
+const uChan19B = gl.getUniformLocation(prog19B, 'iChannel0');
+const uBass19B = gl.getUniformLocation(prog19B, 'uBass');
+const uMid19B = gl.getUniformLocation(prog19B, 'uMid');
+const uTreble19B = gl.getUniformLocation(prog19B, 'uTreble');
+const uLevel19B = gl.getUniformLocation(prog19B, 'uLevel');
+const uPGHueBLoc = gl.getUniformLocation(prog19B, 'uPGHue');
+const uPGRaysLoc = gl.getUniformLocation(prog19B, 'uPGRays');
+const uPGHazeLoc = gl.getUniformLocation(prog19B, 'uPGHaze');
+
+// Uniforms escena Pulse Relief
+const uRes20 = gl.getUniformLocation(prog20, 'iResolution');
+const uTime20 = gl.getUniformLocation(prog20, 'iTime');
+const uFKColorLoc = gl.getUniformLocation(prog20, 'uFKColor');
+const uFKHueLoc = gl.getUniformLocation(prog20, 'uFKHue');
+const uFKGainLoc = gl.getUniformLocation(prog20, 'uFKGain');
+const uFKPhaseLoc = gl.getUniformLocation(prog20, 'uFKPhase');
+const uFKAmpLoc = gl.getUniformLocation(prog20, 'uFKAmp');
+const uFKPulseLoc = gl.getUniformLocation(prog20, 'uFKPulse');
+const uFKTAccLoc = gl.getUniformLocation(prog20, 'uFKTAcc');
+
+// Uniforms escena Kaleido Orbit
+const uRes21 = gl.getUniformLocation(prog21, 'iResolution');
+const uTime21 = gl.getUniformLocation(prog21, 'iTime');
+const uBass21 = gl.getUniformLocation(prog21, 'uBass');
+const uMid21 = gl.getUniformLocation(prog21, 'uMid');
+const uTreble21 = gl.getUniformLocation(prog21, 'uTreble');
+const uOrbR21 = gl.getUniformLocation(prog21, 'uOrbR');
+const uOrbA21 = gl.getUniformLocation(prog21, 'uOrbA');
+const uOrbPh21 = gl.getUniformLocation(prog21, 'uOrbPh');
+const uGen21 = gl.getUniformLocation(prog21, 'uGen');
+const uSeed21 = gl.getUniformLocation(prog21, 'uSeed');
 
 // Textura de audio para iChannel0 (equivalente al canal de audio/mic de
 // Shadertoy): fila 0 = espectro de frecuencia (FFT), fila 1 = forma de onda.
@@ -3356,11 +3071,11 @@ function updateAudioTexture(){
 // se rompe nada).
 const rainFloatExt = gl.getExtension('EXT_color_buffer_float');
 if (!rainFloatExt){
-  console.warn('EXT_color_buffer_float no disponible: la escena ⑪ Outrun puede no funcionar en este navegador/GPU.');
+  console.warn('EXT_color_buffer_float no disponible: la escena ⑤ Outrun puede no funcionar en este navegador/GPU.');
 }
 const rainLinearExt = gl.getExtension('OES_texture_float_linear');
 if (!rainLinearExt){
-  console.warn('OES_texture_float_linear no disponible: el blur de las gotas en ⑪ Outrun se verá menos suave (pixelado) en este navegador/GPU.');
+  console.warn('OES_texture_float_linear no disponible: el blur de las gotas en ⑤ Outrun se verá menos suave (pixelado) en este navegador/GPU.');
 }
 const RAIN_FILTER = rainLinearExt ? gl.LINEAR : gl.NEAREST;
 let rainFBOs = null; // { tex:[texA,texB], fbo:[fboA,fboB], w, h }
@@ -3400,7 +3115,7 @@ function setupRainFBOs(w, h){
   rainFrame = 0; // fuerza reinicialización de partículas (if iFrame==0 en el shader)
 }
 
-// --- FBOs de feedback para "Saturday Weirdness": Buffer A lee su propio
+// --- FBOs de feedback para "Tunnel Trip": Buffer A lee su propio
 //     frame anterior como iChannel0 (reflejo tipo espejo roto). Filtro
 //     Linear y wrap Repeat, según la config original de iChannel0. ---
 let swFBOs = null;
@@ -3436,6 +3151,30 @@ function setupSWFBOs(w, h){
   const texA = createSWTexture(w, h), texB = createSWTexture(w, h);
   swFBOs = { tex: [texA, texB], fbo: [createSWFBO(texA), createSWFBO(texB)], w, h };
   swCurrent = 0;
+}
+
+// --- Escena ⑩ Prism Glow: textura HDR intermedia (half-float: filtrable
+//     con LINEAR sin extensiones extra) para la pasada de rayos. ---
+let pgFBO = null; // { tex, fbo, w, h }
+function setupPGFBO(w, h){
+  w = Math.max(1, Math.floor(w));
+  h = Math.max(1, Math.floor(h));
+  if (pgFBO){ gl.deleteTexture(pgFBO.tex); gl.deleteFramebuffer(pgFBO.fbo); }
+  const tex = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, tex);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA16F, w, h, 0, gl.RGBA, gl.HALF_FLOAT, null);
+  gl.bindTexture(gl.TEXTURE_2D, null);
+  const fbo = gl.createFramebuffer();
+  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+  gl.clearColor(0,0,0,0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  pgFBO = { tex, fbo, w, h };
 }
 
 // --- Crossfade entre escenas: cada escena se renderiza a su propia textura
@@ -3497,6 +3236,11 @@ uniform sampler2D uTex;
 uniform vec2 uRes;
 uniform vec4 uPA;   // x aberración, y color, z offset de matiz
 uniform vec3 uPal;  // fases de la paleta del mapa de gradiente
+uniform vec3 uBP;   // punch de beat ya escalado: x zoom, y brillo, z aberración
+uniform sampler2D uBloomTex;  // halo de aristas desenfocado (cola corta, 1/4 de resolución)
+uniform sampler2D uBloomWide; // el mismo halo MUY desenfocado (cola larga, 1/8): suaviza la caída hasta 0
+uniform sampler2D uEdgeTex;   // trazos de aristas sin desenfocar (infusión)
+uniform vec2 uBlm;  // x: intensidad del halo (bloom), y: intensidad de los trazos (infusión); 0 = apagado
 vec3 hueRot(vec3 c, float a){
   const vec3 k = vec3(0.57735027);
   float ca = cos(a), sa = sin(a);
@@ -3504,9 +3248,11 @@ vec3 hueRot(vec3 c, float a){
 }
 void main(){
   vec2 uv = gl_FragCoord.xy / uRes;
+  uv = 0.5 + (uv - 0.5) * (1.0 - uBP.x);
   vec2 d = uv - 0.5;
-  vec2 off = d * uPA.x * 0.03 * (0.4 + length(d) * 2.0);
+  vec2 off = d * (uPA.x + uBP.z) * 0.03 * (0.4 + length(d) * 2.0);
   vec3 col = vec3(texture(uTex, uv + off).r, texture(uTex, uv).g, texture(uTex, uv - off).b);
+  if (uBlm.x > 0.0) col += texture(uEdgeTex, uv).rgb * uBlm.y + (texture(uBloomTex, uv).rgb * 0.5 + texture(uBloomWide, uv).rgb * 0.8) * uBlm.x;   // infusión + bloom (30 % más de halo), antes del color
   float amt = uPA.y;
   if (amt > 0.0){
     col = hueRot(col, amt * 6.2831853 + uPA.z * min(amt * 4.0, 1.0));
@@ -3515,6 +3261,7 @@ void main(){
     vec3 pal = 0.5 + 0.5 * cos(6.2831853 * (lum + uPal));
     col = mix(col, pal * (0.25 + 1.1 * lum), g);
   }
+  col *= 1.0 + uBP.y;
   outColor = vec4(col, 1.0);
 }`;
 const progPost = makeProgram(fragSrcPost);
@@ -3522,6 +3269,129 @@ const uPostTex = gl.getUniformLocation(progPost, 'uTex');
 const uPostRes = gl.getUniformLocation(progPost, 'uRes');
 const uPostA   = gl.getUniformLocation(progPost, 'uPA');
 const uPostPal = gl.getUniformLocation(progPost, 'uPal');
+const uPostBP  = gl.getUniformLocation(progPost, 'uBP');
+const uPostBloomTex = gl.getUniformLocation(progPost, 'uBloomTex');
+const uPostEdgeTex = gl.getUniformLocation(progPost, 'uEdgeTex');
+const uPostBloomWide = gl.getUniformLocation(progPost, 'uBloomWide');
+const uPostBlm = gl.getUniformLocation(progPost, 'uBlm');
+
+// --- INFUSIÓN + BLOOM de aristas (eje "Bloom" del morph, dos en uno) ---
+// 1) extracción (media resolución): Sobel multiescala sobre la luminancia
+//    (fino = aristas filosas, grueso = romas). El trazo NO depende de que ya
+//    haya blanco: es una versión clara (pastel) del mismo tono de la estructura
+//    y sólo se pone en el lado más claro de la arista → un brazo rojo recibe un
+//    borde rosado/blanco;
+// 2) desenfoque gaussiano separable ×2 a 1/4 de resolución (halo corto) y otra vez
+//    a 1/8 (halo largo, cola suave hasta 0) (= el halo);
+// 3) el post-proceso suma el trazo (infusión, nítido) y el halo (bloom) antes del color.
+const fragSrcBloomX = `#version 300 es
+precision highp float;
+out vec4 outColor;
+uniform sampler2D uTex;   // imagen de la escena (resolución completa)
+uniform vec2 uSrcRes;     // resolución de la imagen original
+uniform vec2 uOut;        // tamaño del destino (≈ media resolución)
+uniform vec2 uBL;         // x: cantidad de infusión/bloom (0-1)
+float L(vec3 c){ return dot(c, vec3(0.299, 0.587, 0.114)); }
+// Sobel sobre la luminancia a distancia px: x = fuerza RELATIVA de la arista, y = luminancia media de los vecinos
+vec2 edgeAt(vec2 uv, vec2 px, float l){
+  float a = L(texture(uTex, uv + px * vec2(-1.,  1.)).rgb), b = L(texture(uTex, uv + px * vec2(0.,  1.)).rgb), d = L(texture(uTex, uv + px * vec2(1.,  1.)).rgb);
+  float e = L(texture(uTex, uv + px * vec2(-1.,  0.)).rgb),                                                      f = L(texture(uTex, uv + px * vec2(1.,  0.)).rgb);
+  float g = L(texture(uTex, uv + px * vec2(-1., -1.)).rgb), h = L(texture(uTex, uv + px * vec2(0., -1.)).rgb), i = L(texture(uTex, uv + px * vec2(1., -1.)).rgb);
+  float sx = (d + 2.*f + i) - (a + 2.*e + g);
+  float sy = (a + 2.*b + d) - (g + 2.*h + i);
+  float mean8 = (a + b + d + e + f + g + h + i) * 0.125;
+  return vec2(length(vec2(sx, sy)) * 0.25 / (max(l, mean8) + 0.12), mean8);   // relativa: también en escenas oscuras
+}
+void main(){
+  // el destino es de media resolución: cada pixel cubre un bloque de 2x2 de la imagen
+  vec2 uv = gl_FragCoord.xy / uOut;
+  vec2 px = max(1.0, uSrcRes.y / 540.0) / uSrcRes;   // ancho del filtro (≈ 2 px a 1080p)
+  vec3 c = texture(uTex, uv).rgb;
+  float l = L(c);
+  vec2 fine = edgeAt(uv, px, l);          // aristas FILOSAS (cambio brusco)
+  vec2 blunt = edgeAt(uv, px * 3.0, l);   // aristas ROMAS (cambio gradual, curvas suaves)
+  float lo = mix(0.14, 0.03, uBL.x);      // más cantidad → se aceptan aristas más débiles
+  float edge = max(smoothstep(lo, lo + 0.22, fine.x), 0.6 * smoothstep(lo * 1.3, lo * 1.3 + 0.25, blunt.x));
+  float side = smoothstep(-0.03, 0.06, l - fine.y);   // el LADO MÁS CLARO de la arista
+  // INFUSIÓN: el trazo no depende de que ya haya blanco; es una versión clara
+  // (pastel) del mismo tono de la estructura, así un brazo rojo recibe un borde rosado/blanco.
+  float mx = max(max(c.r, c.g), c.b);
+  float present = smoothstep(0.02, 0.14, mx);          // no inventa luz donde no hay estructura
+  vec3 trace = mix(c / max(mx, 1e-3), vec3(1.0), 0.45);
+  float lumF = 0.35 + 0.65 * smoothstep(0.03, 0.5, mx);   // lo más brillante irradia más
+  outColor = vec4(trace * edge * (0.25 + 0.75 * side) * present * lumF * 1.5, 1.0);
+}`;
+const fragSrcBloomB = `#version 300 es
+precision highp float;
+out vec4 outColor;
+uniform sampler2D uTex;
+uniform vec2 uOut;   // tamaño del destino
+uniform vec2 uDir;   // paso del desenfoque, ya en unidades de UV (dirección × texel × radio)
+void main(){
+  vec2 uv = gl_FragCoord.xy / uOut;
+  vec3 col = texture(uTex, uv).rgb * 0.227027;
+  col += (texture(uTex, uv + uDir).rgb       + texture(uTex, uv - uDir).rgb)       * 0.1945946;
+  col += (texture(uTex, uv + uDir * 2.).rgb  + texture(uTex, uv - uDir * 2.).rgb)  * 0.1216216;
+  col += (texture(uTex, uv + uDir * 3.).rgb  + texture(uTex, uv - uDir * 3.).rgb)  * 0.054054;
+  col += (texture(uTex, uv + uDir * 4.).rgb  + texture(uTex, uv - uDir * 4.).rgb)  * 0.016216;
+  outColor = vec4(col, 1.0);
+}`;
+const progBloomX = makeProgram(fragSrcBloomX);
+const progBloomB = makeProgram(fragSrcBloomB);
+const uBXTex = gl.getUniformLocation(progBloomX, 'uTex');
+const uBXSrc = gl.getUniformLocation(progBloomX, 'uSrcRes');
+const uBXOut = gl.getUniformLocation(progBloomX, 'uOut');
+const uBXBL  = gl.getUniformLocation(progBloomX, 'uBL');
+const uBBTex = gl.getUniformLocation(progBloomB, 'uTex');
+const uBBOut = gl.getUniformLocation(progBloomB, 'uOut');
+const uBBDir = gl.getUniformLocation(progBloomB, 'uDir');
+let bloomFBO = null;
+function ensureBloomFBOs(w, h){
+  if (bloomFBO && bloomFBO.w === w && bloomFBO.h === h) return;
+  if (bloomFBO){ for (const k of ['e','b1','b2','c1','c2']){ gl.deleteTexture(bloomFBO[k].tex); gl.deleteFramebuffer(bloomFBO[k].fbo); } }
+  const mk = (ww, hh) => { ww = Math.max(1, ww | 0); hh = Math.max(1, hh | 0); const tex = createCFTexture(ww, hh); return { tex, fbo: createCFFBO(tex), w: ww, h: hh }; };
+  bloomFBO = { w, h, e: mk(w / 2, h / 2), b1: mk(w / 4, h / 4), b2: mk(w / 4, h / 4), c1: mk(w / 8, h / 8), c2: mk(w / 8, h / 8) };
+}
+// Devuelve { glow: halo corto, wide: halo largo, edge: trazos nítidos de las aristas }.
+function runBloom(){
+  const W = canvas.width, H = canvas.height, b = Math.min(1, morphG.bloom);
+  ensureBloomFBOs(W, H);
+  const f = bloomFBO;
+  // 1) extracción de aristas
+  gl.bindFramebuffer(gl.FRAMEBUFFER, f.e.fbo);
+  gl.viewport(0, 0, f.e.w, f.e.h);
+  gl.useProgram(progBloomX);
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, postFBO.tex);
+  gl.uniform1i(uBXTex, 0);
+  gl.uniform2f(uBXSrc, W, H);
+  gl.uniform2f(uBXOut, f.e.w, f.e.h);
+  gl.uniform2f(uBXBL, b, 0);
+  gl.drawArrays(gl.TRIANGLES, 0, 3);
+  // 2) desenfoque: halo corto = H (e→b1), V (b1→b2), H (b2→b1), V (b1→b2) a 1/4 de
+  //    resolución; halo largo = lo mismo sobre b2 a 1/8. Mezclados en el post-proceso,
+  //    el borde del halo cae suave hasta 0 (sin corte ni bandas). Más bloom = más ancho.
+  gl.useProgram(progBloomB);
+  gl.uniform1i(uBBTex, 0);
+  const pass = (src, dst, dx, dy, st) => {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, dst.fbo);
+    gl.viewport(0, 0, dst.w, dst.h);
+    gl.bindTexture(gl.TEXTURE_2D, src.tex);
+    gl.uniform2f(uBBOut, dst.w, dst.h);
+    gl.uniform2f(uBBDir, dx ? st / src.w : 0, dy ? st / src.h : 0);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  };
+  const step = 0.8 + 1.2 * b;
+  pass(f.e, f.b1, 1, 0, step);
+  pass(f.b1, f.b2, 0, 1, step);
+  pass(f.b2, f.b1, 1, 0, step);
+  pass(f.b1, f.b2, 0, 1, step);
+  const sw = step * 1.1;
+  pass(f.b2, f.c1, 1, 0, sw);
+  pass(f.c1, f.c2, 0, 1, sw);
+  pass(f.c2, f.c1, 1, 0, sw);
+  pass(f.c1, f.c2, 0, 1, sw);
+  return { glow: f.b2.tex, wide: f.c2.tex, edge: f.e.tex };
+}
 let postFBO = null;
 function ensurePostFBO(w, h){
   if (postFBO && postFBO.w === w && postFBO.h === h) return;
@@ -3529,8 +3399,25 @@ function ensurePostFBO(w, h){
   const tex = createCFTexture(w, h);
   postFBO = { tex, fbo: createCFFBO(tex), w, h };
 }
-function postActive(){ return morphG.chroma > 0.001 || morphG.color > 0.001; }
-function runPost(){
+// --- Pulso global de beat: lo calcula stepState (control) y viaja a la ventana
+//     de salida dentro de MUT_STATE. El post-proceso lo convierte en un golpe
+//     visual común a todas las escenas (zoom hacia dentro + brillo + una pizca
+//     de aberración cromática). Ajustá la intensidad acá:
+//       zoom   = cuánto se acerca la imagen en el golpe (0.05 = 5 %)
+//       bright = destello de brillo (0.28 = +28 %)
+//       chroma = aberración cromática en el golpe
+//       audio  = salto de graves/nivel que reciben los shaders de cada escena
+const beatFX = { pulse: 0 };
+const BEAT_FX_CFG = { zoom: 0.05, bright: 0.28, chroma: 0.6, audio: 0.4 };
+// Pulse Relief ya late dentro de su propio shader: no se le suma el punch.
+function beatPunchAmount(sceneVal, cfActive){
+  return (sceneVal === 20 && !cfActive) ? 0 : beatFX.pulse;
+}
+function postActive(){ return morphG.chroma > 0.001 || morphG.color > 0.001 || morphG.bloom > 0.001; }
+function runPost(bp){
+  bp = bp || 0;
+  const bloomOn = morphG.bloom > 0.001;
+  const bloomTex = bloomOn ? runBloom() : null;
   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
   gl.viewport(0, 0, canvas.width, canvas.height);
   gl.useProgram(progPost);
@@ -3539,6 +3426,20 @@ function runPost(){
   gl.uniform2f(uPostRes, canvas.width, canvas.height);
   gl.uniform4f(uPostA, morphG.chroma, morphG.color, morphG.hueOff, 0);
   gl.uniform3f(uPostPal, morphG.pal0, morphG.pal1, morphG.pal2);
+  if (bloomOn){
+    gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, bloomTex.glow);
+    gl.uniform1i(uPostBloomTex, 1);
+    gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, bloomTex.edge);
+    gl.uniform1i(uPostEdgeTex, 2);
+    gl.activeTexture(gl.TEXTURE3); gl.bindTexture(gl.TEXTURE_2D, bloomTex.wide);
+    gl.uniform1i(uPostBloomWide, 3);
+    gl.activeTexture(gl.TEXTURE0);
+  }
+  // un solo slider, dos efectos: la infusión (trazos) entra rápido con poco valor y
+  // el halo crece más despacio; con cada beat ambos se inflan un poco
+  const bl = Math.min(1, morphG.bloom);
+  gl.uniform2f(uPostBlm, bloomOn ? bl * 1.8 * (1 + 0.6 * bp) : 0, bloomOn ? 0.85 * Math.min(1, bl * 1.6) * (1 + 0.25 * bp) : 0);
+  gl.uniform3f(uPostBP, bp * BEAT_FX_CFG.zoom, bp * BEAT_FX_CFG.bright, bp * BEAT_FX_CFG.chroma);
   gl.drawArrays(gl.TRIANGLES, 0, 3);
 }
 const uCFTexA = gl.getUniformLocation(progCF, 'uTexA');
@@ -3666,65 +3567,21 @@ function updateMutationSat(){
   mutCurSat.width    += (mutTargetSat.width    - mutCurSat.width)*s;
 }
 
-// --- Mutación (Acid Zoomer) ---
-// Constantes internas de mainImage convertidas a uniforms mutables:
-// ángulos de los dos espejos circulares, escala de celda de los espejos
-// lineales, velocidad de flujo y frecuencia del ruido procedural, más una
-// fase de color. El zoom (uAcidZoom) NO forma parte de la mutación: es un
-// control manual aparte (slider 🔍 Zoom del panel), ver más abajo.
-const DEFAULT_MUT_ACID = {
-  cellScale: 1.0, flowSpeed: 1.0,
-  mirrorAngle1: Math.PI/6, mirrorAngle2: Math.PI/5,
-  noiseScale: 6.0, colorPhase: 0.0,
-};
-let mutOnAcid = false;
-let mutCurAcid = { ...DEFAULT_MUT_ACID };
-let mutTargetAcid = { ...DEFAULT_MUT_ACID };
-let mutTimerAcid = null;
-
-function rollNewMutationAcid(){
-  mutTargetAcid = {
-    cellScale: randRange(0.6, 1.6),
-    flowSpeed: randRange(0.3, 2.5),
-    mirrorAngle1: randRange(Math.PI/9, Math.PI/4),
-    mirrorAngle2: randRange(Math.PI/8, Math.PI/3),
-    noiseScale: randRange(3.0, 12.0),
-    colorPhase: randRange(0.0, 2*Math.PI),
-  };
-}
-
-function updateMutationAcid(){
-  const s = 0.01;
-  mutCurAcid.cellScale    += (mutTargetAcid.cellScale    - mutCurAcid.cellScale)*s;
-  mutCurAcid.flowSpeed    += (mutTargetAcid.flowSpeed    - mutCurAcid.flowSpeed)*s;
-  mutCurAcid.mirrorAngle1 += (mutTargetAcid.mirrorAngle1 - mutCurAcid.mirrorAngle1)*s;
-  mutCurAcid.mirrorAngle2 += (mutTargetAcid.mirrorAngle2 - mutCurAcid.mirrorAngle2)*s;
-  mutCurAcid.noiseScale   += (mutTargetAcid.noiseScale   - mutCurAcid.noiseScale)*s;
-  // colorPhase es un ángulo: interpolar por el camino más corto para no
-  // dar una vuelta larga cada vez que el objetivo cruza el límite 0/2π.
-  let dPhase = mutTargetAcid.colorPhase - mutCurAcid.colorPhase;
-  dPhase = ((dPhase + Math.PI) % (2*Math.PI) + 2*Math.PI) % (2*Math.PI) - Math.PI;
-  mutCurAcid.colorPhase += dPhase*s;
-}
-
-// --- Zoom manual (Acid Zoomer) — control aparte, no es mutación ---
-let acidZoom = 1.0;
-
 let scene = 1;
 function setScene(n){
   scene = n;
   document.getElementById('scene1Btn').classList.toggle('active', n===1);
   document.getElementById('scene3Btn').classList.toggle('active', n===3);
   document.getElementById('scene4Btn').classList.toggle('active', n===4);
-  document.getElementById('scene5Btn').classList.toggle('active', n===5);
   document.getElementById('scene7Btn').classList.toggle('active', n===7);
   document.getElementById('scene11Btn').classList.toggle('active', n===11);
   document.getElementById('scene12Btn').classList.toggle('active', n===12);
-  document.getElementById('scene13Btn').classList.toggle('active', n===13);
   document.getElementById('scene14Btn').classList.toggle('active', n===14);
-  document.getElementById('scene15Btn').classList.toggle('active', n===15);
   document.getElementById('scene16Btn').classList.toggle('active', n===16);
-  document.getElementById('scene17Btn').classList.toggle('active', n===17);
+  document.getElementById('scene18Btn').classList.toggle('active', n===18);
+  document.getElementById('scene19Btn').classList.toggle('active', n===19);
+  document.getElementById('scene20Btn').classList.toggle('active', n===20);
+  document.getElementById('scene21Btn').classList.toggle('active', n===21);
   // Sólo Outrun (11) necesita capturar el mouse/touch para "mirar
   // alrededor"; el resto del visualizador deja pointer-events:none para no
   // interferir con el panel.
@@ -3734,15 +3591,15 @@ function setScene(n){
 document.getElementById('scene1Btn').addEventListener('click', () => goToScene(1));
 document.getElementById('scene3Btn').addEventListener('click', () => goToScene(3));
 document.getElementById('scene4Btn').addEventListener('click', () => goToScene(4));
-document.getElementById('scene5Btn').addEventListener('click', () => goToScene(5));
 document.getElementById('scene7Btn').addEventListener('click', () => goToScene(7));
 document.getElementById('scene11Btn').addEventListener('click', () => goToScene(11));
 document.getElementById('scene12Btn').addEventListener('click', () => goToScene(12));
-document.getElementById('scene13Btn').addEventListener('click', () => goToScene(13));
 document.getElementById('scene14Btn').addEventListener('click', () => goToScene(14));
-document.getElementById('scene15Btn').addEventListener('click', () => goToScene(15));
 document.getElementById('scene16Btn').addEventListener('click', () => goToScene(16));
-document.getElementById('scene17Btn').addEventListener('click', () => goToScene(17));
+document.getElementById('scene18Btn').addEventListener('click', () => goToScene(18));
+document.getElementById('scene19Btn').addEventListener('click', () => goToScene(19));
+document.getElementById('scene20Btn').addEventListener('click', () => goToScene(20));
+document.getElementById('scene21Btn').addEventListener('click', () => goToScene(21));
 
 // --- Flechas ‹ › del navegador de escenas: paginan la tira (scroll
 // suave) para ir revelando los botones que no entran en el ancho
@@ -3768,6 +3625,7 @@ function resize(){
 let audioCtx, analyser, dataArray, waveArray, sourceNode, mediaEl;
 let currentStream = null;   // MediaStream activo (mic o captura de pestaña/sistema), para poder cortarlo
 let currentSourceType = null; // 'mic' | 'tab' | 'file' | null
+let hudSrcLabel = '';           // nombre del dispositivo / fuente capturada (para el cuadro de estado)
 let smBass=0, smMid=0, smTreble=0, smLevel=0;
 const smoothing = 0.35;
 
@@ -3899,7 +3757,8 @@ function disconnectCurrentSource(){
   if (currentStream) { currentStream.getTracks().forEach(t => { try { t.stop(); } catch(e){} }); currentStream = null; }
   if (mediaEl) { try { mediaEl.pause(); } catch(e){} }
   if (window.NP) window.NP.stopAll();
-  currentSourceType = null;
+  currentSourceType = null; hudSrcLabel = '';
+  try { resetBeatTracking(); } catch(e){}
   micBtn.classList.remove('active'); micBtn.textContent = '🎛 Entrada de audio';
   tabBtn.classList.remove('active'); tabBtn.textContent = '🖥️ Audio de pestaña';
   document.getElementById('status').textContent = 'Sin audio — moviéndose en modo ambiente';
@@ -3981,6 +3840,7 @@ async function startInput(){
   connectSource(node, 'mic');
   const track = stream.getAudioTracks()[0];
   const label = (track && track.label) || 'Entrada de audio';
+  hudSrcLabel = label;
   micBtn.classList.add('active'); micBtn.textContent = '⏹ Apagar entrada';
   document.getElementById('status').textContent = 'Escuchando: ' + label + (fellBack ? ' (el dispositivo elegido no estaba disponible)' : '');
   updateTrackName('🎛 ' + label + ' (en vivo)');
@@ -4034,8 +3894,12 @@ tabBtn.addEventListener('click', async () => {
       document.getElementById('status').textContent = '⚠ Esa fuente no compartió audio — probá tildar "Compartir audio" en el diálogo';
       return;
     }
+    // Mejor esfuerzo: algunos navegadores ponen el título de la ventana/pestaña
+    // en la etiqueta del video capturado; otros ponen un id técnico (se descarta).
+    const vLabel = (stream.getVideoTracks()[0] && stream.getVideoTracks()[0].label) || '';
     stream.getVideoTracks().forEach(t => t.stop());
     disconnectCurrentSource();
+    hudSrcLabel = (vLabel && !/^(screen|window|web-contents-media-stream|monitor|tab|browser)\b/i.test(vLabel) && !/^[\w-]+:\d+(:\d+)?$/.test(vLabel)) ? vLabel : '';
     currentStream = stream;
     const node = audioCtx.createMediaStreamSource(stream);
     connectSource(node, 'tab');
@@ -4540,7 +4404,7 @@ function drawTrackAnalyzer(){
   }
 
   const bpmEl = document.getElementById('bpmReadout');
-  if (bpmEl) bpmEl.textContent = '♩ ' + (estimatedBPM > 0 ? Math.round(estimatedBPM) : '--') + ' BPM';
+  if (bpmEl){ const b = currentBPM(); bpmEl.textContent = '♩ ' + (b > 0 ? Math.round(b) : '--') + ' BPM'; }
   requestAnimationFrame(drawTrackAnalyzer);
 }
 if (!IS_OUTPUT_MODE) requestAnimationFrame(drawTrackAnalyzer);
@@ -4863,39 +4727,6 @@ function updateMutationCW(){
   mutCurCW.foldIters += (mutTargetCW.foldIters - mutCurCW.foldIters)*s;
 }
 
-// --- Mutación (Ether) ---
-const DEFAULT_MUT_ETH = {
-  colorBase: [0.1, 0.3, 0.4], colorGlow: [5.0, 2.5, 3.0],
-  rotA: 0.4, rotB: 0.3, dStart: 2.5, glowEdge: 2.5, freq: 2.0,
-};
-let mutOnEth = false;
-let mutCurEth = { ...DEFAULT_MUT_ETH, colorBase: [...DEFAULT_MUT_ETH.colorBase], colorGlow: [...DEFAULT_MUT_ETH.colorGlow] };
-let mutTargetEth = { ...DEFAULT_MUT_ETH, colorBase: [...DEFAULT_MUT_ETH.colorBase], colorGlow: [...DEFAULT_MUT_ETH.colorGlow] };
-let mutTimerEth = null;
-
-function rollNewMutationEth(){
-  mutTargetEth = {
-    colorBase: [randRange(0.0, 0.5), randRange(0.0, 0.5), randRange(0.0, 0.6)],
-    colorGlow: [randRange(1.0, 7.0), randRange(1.0, 6.0), randRange(1.0, 6.0)],
-    rotA: randRange(0.1, 0.8),
-    rotB: randRange(0.1, 0.7),
-    dStart: randRange(1.5, 3.5),
-    glowEdge: randRange(1.5, 3.5),
-    freq: randRange(1.0, 3.5),
-  };
-}
-
-function updateMutationEth(){
-  const s = 0.01;
-  for (let i=0;i<3;i++) mutCurEth.colorBase[i] += (mutTargetEth.colorBase[i]-mutCurEth.colorBase[i])*s;
-  for (let i=0;i<3;i++) mutCurEth.colorGlow[i] += (mutTargetEth.colorGlow[i]-mutCurEth.colorGlow[i])*s;
-  mutCurEth.rotA     += (mutTargetEth.rotA     - mutCurEth.rotA)*s;
-  mutCurEth.rotB     += (mutTargetEth.rotB     - mutCurEth.rotB)*s;
-  mutCurEth.dStart   += (mutTargetEth.dStart   - mutCurEth.dStart)*s;
-  mutCurEth.glowEdge += (mutTargetEth.glowEdge - mutCurEth.glowEdge)*s;
-  mutCurEth.freq     += (mutTargetEth.freq     - mutCurEth.freq)*s;
-}
-
 // --- Mutación (Supernova Remnant) ---
 const DEFAULT_MUT_SN = {
   colorCenter: [5.6, 7.0, 7.0], colorEdge: [0.72, 0.795, 0.75],
@@ -4927,12 +4758,12 @@ function updateMutationSN(){
   mutCurSN.spiralAmt += (mutTargetSN.spiralAmt - mutCurSN.spiralAmt)*s;
 }
 
-// --- Mutación (Hyper Tunnel) ---
+// --- Mutación (Fire Lotto) ---
 const DEFAULT_MUT_HT = {
-  color: [1.0, 0.5, 0.4],
-  noiseAmt: 12.0, noisePow: 1.3,
-  radius1: 18.0, radius2: 28.0,
-  warpAmp: 15.0, steamAmt: 4.0,
+  color: [1.0, 1.0, 1.0],
+  sharp: 400.0, zoom: 1.0,
+  step: 0.1, phase: 0.8,
+  bias: 0.02, redGain: 2.0,
 };
 let mutOnHT = false;
 let mutCurHT = { ...DEFAULT_MUT_HT, color: [...DEFAULT_MUT_HT.color] };
@@ -4941,118 +4772,221 @@ let mutTimerHT = null;
 
 function rollNewMutationHT(){
   mutTargetHT = {
-    color: [randRange(0.3, 1.6), randRange(0.3, 1.6), randRange(0.3, 1.6)],
-    noiseAmt: randRange(6.0, 20.0),
-    noisePow: randRange(1.0, 1.8),
-    radius1: randRange(10.0, 26.0),
-    radius2: randRange(20.0, 40.0),
-    warpAmp: randRange(5.0, 30.0),
-    steamAmt: randRange(1.5, 8.0),
+    color: [randRange(0.4, 1.8), randRange(0.4, 1.8), randRange(0.4, 1.8)],
+    sharp: randRange(200.0, 800.0),
+    zoom: randRange(0.7, 1.8),
+    step: randRange(0.07, 0.13),
+    phase: randRange(0.0, 6.2832),
+    bias: randRange(0.015, 0.026),
+    redGain: randRange(0.8, 3.5),
   };
 }
 
 function updateMutationHT(){
   const s = 0.01;
   for (let i=0;i<3;i++) mutCurHT.color[i] += (mutTargetHT.color[i]-mutCurHT.color[i])*s;
-  mutCurHT.noiseAmt += (mutTargetHT.noiseAmt - mutCurHT.noiseAmt)*s;
-  mutCurHT.noisePow += (mutTargetHT.noisePow - mutCurHT.noisePow)*s;
-  mutCurHT.radius1  += (mutTargetHT.radius1  - mutCurHT.radius1)*s;
-  mutCurHT.radius2  += (mutTargetHT.radius2  - mutCurHT.radius2)*s;
-  mutCurHT.warpAmp  += (mutTargetHT.warpAmp  - mutCurHT.warpAmp)*s;
-  mutCurHT.steamAmt += (mutTargetHT.steamAmt - mutCurHT.steamAmt)*s;
+  mutCurHT.sharp   += (mutTargetHT.sharp   - mutCurHT.sharp)*s;
+  mutCurHT.zoom    += (mutTargetHT.zoom    - mutCurHT.zoom)*s;
+  mutCurHT.step    += (mutTargetHT.step    - mutCurHT.step)*s;
+  mutCurHT.phase   += (mutTargetHT.phase   - mutCurHT.phase)*s;
+  mutCurHT.bias    += (mutTargetHT.bias    - mutCurHT.bias)*s;
+  mutCurHT.redGain += (mutTargetHT.redGain - mutCurHT.redGain)*s;
 }
 
-// --- Mutación (Warp Speed) ---
-const DEFAULT_MUT_WS = {
-  colorBias: [0.8, 1.1, 0.7],
-  scale: 2.04, offset: 0.75, depth: 0.143, step: 0.01,
-};
-let mutOnWS = false;
-let mutCurWS = { ...DEFAULT_MUT_WS, colorBias: [...DEFAULT_MUT_WS.colorBias] };
-let mutTargetWS = { ...DEFAULT_MUT_WS, colorBias: [...DEFAULT_MUT_WS.colorBias] };
-let mutTimerWS = null;
-
-function rollNewMutationWS(){
-  mutTargetWS = {
-    colorBias: [randRange(0.4, 1.4), randRange(0.7, 1.6), randRange(0.3, 1.2)],
-    scale: randRange(1.85, 2.2),
-    offset: randRange(0.55, 0.95),
-    depth: randRange(0.06, 0.3),
-    step: randRange(0.006, 0.016),
-  };
-}
-
-function updateMutationWS(){
-  const s = 0.01;
-  for (let i=0;i<3;i++) mutCurWS.colorBias[i] += (mutTargetWS.colorBias[i]-mutCurWS.colorBias[i])*s;
-  mutCurWS.scale  += (mutTargetWS.scale  - mutCurWS.scale)*s;
-  mutCurWS.offset += (mutTargetWS.offset - mutCurWS.offset)*s;
-  mutCurWS.depth  += (mutTargetWS.depth  - mutCurWS.depth)*s;
-  mutCurWS.step   += (mutTargetWS.step   - mutCurWS.step)*s;
-}
-
-// --- Mutación (Saturday Weirdness) ---
+// --- Mutación (Tunnel Trip) ---
 const DEFAULT_MUT_SW = {
-  light0HSV: [0.7, 0.85, 1.0],
-  light1HSV: [0.8, 0.75, 1.0],
-  bottomHue: 0.7, topHue: 0.57,
-  rotSpeed: 0.25, twist: 20.0,
+  color: [1.0, 1.0, 1.0],
+  bend: 5.0, bendFreq: 0.07,
+  roll: 0.0, thick: 0.1, bright: 200.0,
 };
 let mutOnSW = false;
-let mutCurSW = { ...DEFAULT_MUT_SW, light0HSV: [...DEFAULT_MUT_SW.light0HSV], light1HSV: [...DEFAULT_MUT_SW.light1HSV] };
-let mutTargetSW = { ...DEFAULT_MUT_SW, light0HSV: [...DEFAULT_MUT_SW.light0HSV], light1HSV: [...DEFAULT_MUT_SW.light1HSV] };
+let mutCurSW = { ...DEFAULT_MUT_SW, color: [...DEFAULT_MUT_SW.color] };
+let mutTargetSW = { ...DEFAULT_MUT_SW, color: [...DEFAULT_MUT_SW.color] };
 let mutTimerSW = null;
 
 function rollNewMutationSW(){
   mutTargetSW = {
-    light0HSV: [randRange(0.0, 1.0), randRange(0.6, 1.0), randRange(0.7, 1.0)],
-    light1HSV: [randRange(0.0, 1.0), randRange(0.6, 1.0), randRange(0.7, 1.0)],
-    bottomHue: randRange(0.0, 1.0),
-    topHue: randRange(0.0, 1.0),
-    rotSpeed: randRange(0.1, 0.5),
-    twist: randRange(5.0, 40.0),
+    color: [randRange(0.5, 1.7), randRange(0.5, 1.7), randRange(0.5, 1.7)],
+    bend: randRange(3.0, 9.0),
+    bendFreq: randRange(0.04, 0.11),
+    roll: randRange(-0.6, 0.6),
+    thick: randRange(0.07, 0.14),
+    bright: randRange(140.0, 280.0),
   };
 }
 
 function updateMutationSW(){
   const s = 0.01;
-  for (let i=0;i<3;i++) mutCurSW.light0HSV[i] += (mutTargetSW.light0HSV[i]-mutCurSW.light0HSV[i])*s;
-  for (let i=0;i<3;i++) mutCurSW.light1HSV[i] += (mutTargetSW.light1HSV[i]-mutCurSW.light1HSV[i])*s;
-  mutCurSW.bottomHue += (mutTargetSW.bottomHue - mutCurSW.bottomHue)*s;
-  mutCurSW.topHue    += (mutTargetSW.topHue    - mutCurSW.topHue)*s;
-  mutCurSW.rotSpeed  += (mutTargetSW.rotSpeed  - mutCurSW.rotSpeed)*s;
-  mutCurSW.twist     += (mutTargetSW.twist     - mutCurSW.twist)*s;
+  for (let i=0;i<3;i++) mutCurSW.color[i] += (mutTargetSW.color[i]-mutCurSW.color[i])*s;
+  mutCurSW.bend     += (mutTargetSW.bend     - mutCurSW.bend)*s;
+  mutCurSW.bendFreq += (mutTargetSW.bendFreq - mutCurSW.bendFreq)*s;
+  mutCurSW.roll     += (mutTargetSW.roll     - mutCurSW.roll)*s;
+  mutCurSW.thick    += (mutTargetSW.thick    - mutCurSW.thick)*s;
+  mutCurSW.bright   += (mutTargetSW.bright   - mutCurSW.bright)*s;
 }
 
-// --- Mutación (Smooth Voronoi) ---
-const DEFAULT_MUT_SV = {
-  freq: 12.0, smoothK: 0.0125, falloff: 4.0, mix: 0.34,
-  color2: [0.64, 1.0, 0.1], bandColor: [1.0, 0.0, 0.1],
+// --- Mutación (Log Fractal) ---
+const DEFAULT_MUT_LF = {
+  color: [1.0, 1.0, 1.0],
+  fold: 3.0, limit: 0.8, wave: 1.0, dist: 7.0, phase: 0.0,
 };
-let mutOnSV = false;
-let mutCurSV = { ...DEFAULT_MUT_SV, color2: [...DEFAULT_MUT_SV.color2], bandColor: [...DEFAULT_MUT_SV.bandColor] };
-let mutTargetSV = { ...DEFAULT_MUT_SV, color2: [...DEFAULT_MUT_SV.color2], bandColor: [...DEFAULT_MUT_SV.bandColor] };
-let mutTimerSV = null;
+let mutOnLF = false;
+let mutCurLF = { ...DEFAULT_MUT_LF, color: [...DEFAULT_MUT_LF.color] };
+let mutTargetLF = { ...DEFAULT_MUT_LF, color: [...DEFAULT_MUT_LF.color] };
+let mutTimerLF = null;
 
-function rollNewMutationSV(){
-  mutTargetSV = {
-    freq: randRange(6.0, 20.0),
-    smoothK: randRange(0.006, 0.022),
-    falloff: randRange(2.0, 7.0),
-    mix: randRange(0.15, 0.5),
-    color2: [randRange(0.2, 1.2), randRange(0.4, 1.2), randRange(0.0, 0.6)],
-    bandColor: [randRange(0.3, 1.5), randRange(0.0, 1.0), randRange(0.0, 1.0)],
+function rollNewMutationLF(){
+  mutTargetLF = {
+    color: [randRange(0.6, 1.5), randRange(0.6, 1.5), randRange(0.6, 1.5)],
+    fold: randRange(2.6, 3.4),
+    limit: randRange(0.6, 1.0),
+    wave: randRange(0.6, 1.4),
+    dist: randRange(6.2, 8.0),
+    phase: randRange(0.0, 6.2832),
   };
 }
 
-function updateMutationSV(){
+function updateMutationLF(){
   const s = 0.01;
-  mutCurSV.freq    += (mutTargetSV.freq    - mutCurSV.freq)*s;
-  mutCurSV.smoothK += (mutTargetSV.smoothK - mutCurSV.smoothK)*s;
-  mutCurSV.falloff += (mutTargetSV.falloff - mutCurSV.falloff)*s;
-  mutCurSV.mix     += (mutTargetSV.mix     - mutCurSV.mix)*s;
-  for (let i=0;i<3;i++) mutCurSV.color2[i] += (mutTargetSV.color2[i]-mutCurSV.color2[i])*s;
-  for (let i=0;i<3;i++) mutCurSV.bandColor[i] += (mutTargetSV.bandColor[i]-mutCurSV.bandColor[i])*s;
+  for (let i=0;i<3;i++) mutCurLF.color[i] += (mutTargetLF.color[i]-mutCurLF.color[i])*s;
+  mutCurLF.fold  += (mutTargetLF.fold  - mutCurLF.fold)*s;
+  mutCurLF.limit += (mutTargetLF.limit - mutCurLF.limit)*s;
+  mutCurLF.wave  += (mutTargetLF.wave  - mutCurLF.wave)*s;
+  mutCurLF.dist  += (mutTargetLF.dist  - mutCurLF.dist)*s;
+  mutCurLF.phase += (mutTargetLF.phase - mutCurLF.phase)*s;
+}
+
+// --- Mutación (Prism Glow) ---
+const DEFAULT_MUT_PG = {
+  color: [1.0, 1.0, 1.0],
+  hue: 0.0, gain: 1.0, thick: 0.0, step: 1.0, phase: 0.0, rays: 1.0, haze: 1.0,
+  // estado dirigido por el audio (se acumula en stepState, no se muta):
+  tAcc: 0.0, rot: 0.0,
+};
+let mutOnPG = false;
+let mutCurPG = { ...DEFAULT_MUT_PG, color: [...DEFAULT_MUT_PG.color] };
+let mutTargetPG = { ...DEFAULT_MUT_PG, color: [...DEFAULT_MUT_PG.color] };
+let mutTimerPG = null;
+
+function rollNewMutationPG(){
+  mutTargetPG = {
+    color: [randRange(0.7, 1.4), randRange(0.7, 1.4), randRange(0.7, 1.4)],
+    hue: randRange(0.0, 1.0),
+    gain: randRange(0.85, 1.3),
+    thick: randRange(-0.12, 0.2),
+    step: randRange(0.85, 1.2),
+    phase: randRange(0.0, 6.2832),
+    rays: randRange(0.7, 1.5),
+    haze: randRange(0.7, 1.4),
+  };
+}
+
+function updateMutationPG(){
+  const s = 0.01;
+  for (let i=0;i<3;i++) mutCurPG.color[i] += (mutTargetPG.color[i]-mutCurPG.color[i])*s;
+  mutCurPG.hue   += (mutTargetPG.hue   - mutCurPG.hue)*s;
+  mutCurPG.gain  += (mutTargetPG.gain  - mutCurPG.gain)*s;
+  mutCurPG.thick += (mutTargetPG.thick - mutCurPG.thick)*s;
+  mutCurPG.step  += (mutTargetPG.step  - mutCurPG.step)*s;
+  mutCurPG.phase += (mutTargetPG.phase - mutCurPG.phase)*s;
+  mutCurPG.rays  += (mutTargetPG.rays  - mutCurPG.rays)*s;
+  mutCurPG.haze  += (mutTargetPG.haze  - mutCurPG.haze)*s;
+}
+
+// --- Mutación (Pulse Relief) ---
+const DEFAULT_MUT_FK = {
+  color: [1.0, 1.0, 1.0],
+  hue: 0.0, gain: 1.0, phase: 0.0, amp: 1.0,
+  // estado dirigido por el audio (se calcula en stepState): pulse salta a 1 en
+  // cada beat y decae exponencialmente.
+  pulse: 0.0,
+  // reloj de movimiento: avanza sólo con la música (ver stepState)
+  tAcc: 0.0,
+};
+let mutOnFK = false;
+let mutCurFK = { ...DEFAULT_MUT_FK, color: [...DEFAULT_MUT_FK.color] };
+let mutTargetFK = { ...DEFAULT_MUT_FK, color: [...DEFAULT_MUT_FK.color] };
+let mutTimerFK = null;
+
+function rollNewMutationFK(){
+  mutTargetFK = {
+    color: [randRange(0.7, 1.4), randRange(0.7, 1.4), randRange(0.7, 1.4)],
+    hue: randRange(0.0, 1.0),
+    gain: randRange(0.85, 1.3),
+    phase: 0.0,   // fija: cambiarla desplazaría el relieve sin música
+    amp: 1.0,     // fija: cambiarla deformaría el relieve sin música
+  };
+}
+
+function updateMutationFK(){
+  const s = 0.01;
+  for (let i=0;i<3;i++) mutCurFK.color[i] += (mutTargetFK.color[i]-mutCurFK.color[i])*s;
+  mutCurFK.hue   += (mutTargetFK.hue   - mutCurFK.hue)*s;
+  mutCurFK.gain  += (mutTargetFK.gain  - mutCurFK.gain)*s;
+  mutCurFK.phase += (mutTargetFK.phase - mutCurFK.phase)*s;
+  mutCurFK.amp   += (mutTargetFK.amp   - mutCurFK.amp)*s;
+}
+
+// --- Mutación (Kaleido Orbit): ÓRBITA DE LA CÁMARA ---
+// r0/rv = radio base y oscilación; azSpd/elSpd/rdSpd/lkSpd = velocidades de
+// azimut, elevación, radio y mira (pueden ser negativas); elAmp/lkAmp =
+// amplitud de elevación y del vaivén del punto de mira. Los valores por
+// defecto reproducen la cámara original del shader.
+const DEFAULT_MUT_KO = {
+  r0: 3.5, rv: 0.5, azSpd: 0.3, elSpd: 0.25, rdSpd: 0.4, lkSpd: 0.4, elAmp: 0.6, lkAmp: 0.3,
+};
+let mutOnKO = false;
+let mutTargetKO = { ...DEFAULT_MUT_KO };
+let mutTimerKO = null;
+// Estado de la escena (viaja a la ventana de salida dentro de MUT_STATE):
+//  az/el/rd/lk = fases acumuladas de la cámara (se integran en stepState; así
+//                cambiar velocidades no da saltos)
+//  folds/freq/rad/sx.. = figuras: se REGENERAN en cada beat (koRegen)
+let mutCurKO = { ...DEFAULT_MUT_KO,
+  az: 0, el: 0, rd: 0, lk: 0,
+  folds: 8, freq: 2.0, rad: 0.5, radTgt: 0.5, freqTgt: 2.0, sx: 0, sy: 0, sz: 0,
+};
+
+function rollNewMutationKO(){
+  const sign = () => Math.random() < 0.5 ? -1 : 1;
+  const rv = randRange(0.2, 1.0);
+  mutTargetKO = {
+    r0: randRange(2.7 + rv, 4.8),                 // radio mínimo ≥ 2.7: la cámara nunca se come la figura
+    rv,
+    azSpd: sign() * randRange(0.12, 0.6),
+    elSpd: sign() * randRange(0.10, 0.45),
+    rdSpd: randRange(0.2, 0.7),
+    lkSpd: sign() * randRange(0.2, 0.7),
+    elAmp: randRange(0.25, 0.9),                  // < π/2: evita mirar justo vertical
+    lkAmp: randRange(0.1, 0.7),
+  };
+}
+
+function updateMutationKO(){
+  const s = 1 - Math.exp(-dt / 1.6);              // ≈ 1.6 s para alcanzar el objetivo
+  for (const k in DEFAULT_MUT_KO) mutCurKO[k] += (mutTargetKO[k] - mutCurKO[k]) * s;
+  // integrar las fases con el reloj de la escena (respeta el control de velocidad)
+  const adv = dt * speedMul;
+  mutCurKO.az += adv * mutCurKO.azSpd;
+  mutCurKO.el += adv * mutCurKO.elSpd;
+  mutCurKO.rd += adv * mutCurKO.rdSpd;
+  mutCurKO.lk += adv * mutCurKO.lkSpd;
+  // grosor y frecuencia angular llegan rápido a su nuevo valor (≈ 70 ms); los
+  // pliegues y la semilla saltan al instante en el beat
+  const f = 1 - Math.exp(-dt / 0.07);
+  mutCurKO.rad  += (mutCurKO.radTgt  - mutCurKO.rad)  * f;
+  mutCurKO.freq += (mutCurKO.freqTgt - mutCurKO.freq) * f;
+}
+
+// Regenera las figuras: se llama en CADA beat (pares e impares).
+const KO_FOLDS = [5, 6, 7, 8, 9, 10, 12];
+function koRegen(){
+  const k = mutCurKO;
+  let f; do { f = KO_FOLDS[(Math.random() * KO_FOLDS.length) | 0]; } while (f === k.folds);
+  k.folds = f;
+  k.freqTgt = randRange(1.0, 5.0);
+  k.radTgt  = randRange(0.36, 0.64);
+  k.sx = randRange(-6, 6); k.sy = randRange(-6, 6); k.sz = randRange(-6, 6);
 }
 
 // --- Registro genérico de mutación: el botón 🧬 del panel controla la
@@ -5104,21 +5038,6 @@ const mutationRegistry = {
       return mutOnCW;
     }
   },
-  5: {
-    name: 'Ether',
-    get on(){ return mutOnEth; },
-    toggle(){
-      mutOnEth = !mutOnEth;
-      if (mutOnEth){
-        rollNewMutationEth();
-        mutTimerEth = setInterval(rollNewMutationEth, 9000);
-      } else {
-        clearInterval(mutTimerEth);
-        mutTargetEth = { ...DEFAULT_MUT_ETH, colorBase: [...DEFAULT_MUT_ETH.colorBase], colorGlow: [...DEFAULT_MUT_ETH.colorGlow] };
-      }
-      return mutOnEth;
-    }
-  },
   7: {
     name: 'Supernova',
     get on(){ return mutOnSN; },
@@ -5164,23 +5083,8 @@ const mutationRegistry = {
       return mutOnSat;
     }
   },
-  13: {
-    name: 'Acid Zoomer',
-    get on(){ return mutOnAcid; },
-    toggle(){
-      mutOnAcid = !mutOnAcid;
-      if (mutOnAcid){
-        rollNewMutationAcid();
-        mutTimerAcid = setInterval(rollNewMutationAcid, 9000);
-      } else {
-        clearInterval(mutTimerAcid);
-        mutTargetAcid = { ...DEFAULT_MUT_ACID };
-      }
-      return mutOnAcid;
-    }
-  },
   14: {
-    name: 'Hyper Tunnel',
+    name: 'Fire Lotto',
     get on(){ return mutOnHT; },
     toggle(){
       mutOnHT = !mutOnHT;
@@ -5194,23 +5098,8 @@ const mutationRegistry = {
       return mutOnHT;
     }
   },
-  15: {
-    name: 'Warp Speed',
-    get on(){ return mutOnWS; },
-    toggle(){
-      mutOnWS = !mutOnWS;
-      if (mutOnWS){
-        rollNewMutationWS();
-        mutTimerWS = setInterval(rollNewMutationWS, 9000);
-      } else {
-        clearInterval(mutTimerWS);
-        mutTargetWS = { ...DEFAULT_MUT_WS, colorBias: [...DEFAULT_MUT_WS.colorBias] };
-      }
-      return mutOnWS;
-    }
-  },
   16: {
-    name: 'Saturday Weirdness',
+    name: 'Tunnel Trip',
     get on(){ return mutOnSW; },
     toggle(){
       mutOnSW = !mutOnSW;
@@ -5219,24 +5108,69 @@ const mutationRegistry = {
         mutTimerSW = setInterval(rollNewMutationSW, 9000);
       } else {
         clearInterval(mutTimerSW);
-        mutTargetSW = { ...DEFAULT_MUT_SW, light0HSV: [...DEFAULT_MUT_SW.light0HSV], light1HSV: [...DEFAULT_MUT_SW.light1HSV] };
+        mutTargetSW = { ...DEFAULT_MUT_SW, color: [...DEFAULT_MUT_SW.color] };
       }
       return mutOnSW;
     }
   },
-  17: {
-    name: 'Smooth Voronoi',
-    get on(){ return mutOnSV; },
+  18: {
+    name: 'Log Fractal',
+    get on(){ return mutOnLF; },
     toggle(){
-      mutOnSV = !mutOnSV;
-      if (mutOnSV){
-        rollNewMutationSV();
-        mutTimerSV = setInterval(rollNewMutationSV, 9000);
+      mutOnLF = !mutOnLF;
+      if (mutOnLF){
+        rollNewMutationLF();
+        mutTimerLF = setInterval(rollNewMutationLF, 9000);
       } else {
-        clearInterval(mutTimerSV);
-        mutTargetSV = { ...DEFAULT_MUT_SV, color2: [...DEFAULT_MUT_SV.color2], bandColor: [...DEFAULT_MUT_SV.bandColor] };
+        clearInterval(mutTimerLF);
+        mutTargetLF = { ...DEFAULT_MUT_LF, color: [...DEFAULT_MUT_LF.color] };
       }
-      return mutOnSV;
+      return mutOnLF;
+    }
+  },
+  19: {
+    name: 'Prism Glow',
+    get on(){ return mutOnPG; },
+    toggle(){
+      mutOnPG = !mutOnPG;
+      if (mutOnPG){
+        rollNewMutationPG();
+        mutTimerPG = setInterval(rollNewMutationPG, 9000);
+      } else {
+        clearInterval(mutTimerPG);
+        mutTargetPG = { ...DEFAULT_MUT_PG, color: [...DEFAULT_MUT_PG.color] };
+      }
+      return mutOnPG;
+    }
+  },
+  20: {
+    name: 'Pulse Relief',
+    get on(){ return mutOnFK; },
+    toggle(){
+      mutOnFK = !mutOnFK;
+      if (mutOnFK){
+        rollNewMutationFK();
+        mutTimerFK = setInterval(rollNewMutationFK, 9000);
+      } else {
+        clearInterval(mutTimerFK);
+        mutTargetFK = { ...DEFAULT_MUT_FK, color: [...DEFAULT_MUT_FK.color] };
+      }
+      return mutOnFK;
+    }
+  },
+  21: {
+    name: 'Kaleido Orbit',
+    get on(){ return mutOnKO; },
+    toggle(){
+      mutOnKO = !mutOnKO;
+      if (mutOnKO){
+        rollNewMutationKO();
+        mutTimerKO = setInterval(rollNewMutationKO, 9000);
+      } else {
+        clearInterval(mutTimerKO);
+        mutTargetKO = { ...DEFAULT_MUT_KO };
+      }
+      return mutOnKO;
     }
   }
 };
@@ -5263,10 +5197,10 @@ document.getElementById('mutBtn').addEventListener('click', () => {
 // --- Morph: 5 ejes. Cada slider fija el máximo (0–1); si el eje está atado a
 //     una banda, el efecto real = slider × energía de esa banda. ---
 const MORPH_AXES = { fold:'morphSlider', twist:'morphTwist', liquid:'morphLiquid', color:'morphColor', chroma:'morphChroma',
-  zoom:'morphZoom', rot:'morphRot', invert:'morphInvert', lens:'morphLens', ripple:'morphRipple' };
-const morphUI   = { fold:0, twist:0, liquid:0, color:0, chroma:0, zoom:0, rot:0, invert:0, lens:0, ripple:0 };
-const morphBand = { fold:-1, twist:-1, liquid:-1, color:-1, chroma:-1, zoom:-1, rot:-1, invert:-1, lens:-1, ripple:-1 };
-const morphEff  = { fold:0, twist:0, liquid:0, color:0, chroma:0, zoom:0, rot:0, invert:0, lens:0, ripple:0 };
+  zoom:'morphZoom', rot:'morphRot', invert:'morphInvert', lens:'morphLens', ripple:'morphRipple', bloom:'morphBloom' };
+const morphUI   = { fold:0, twist:0, liquid:0, color:0, chroma:0, zoom:0, rot:0, invert:0, lens:0, ripple:0, bloom:0 };
+const morphBand = { fold:-1, twist:-1, liquid:-1, color:-1, chroma:-1, zoom:-1, rot:-1, invert:-1, lens:-1, ripple:-1, bloom:-1 };
+const morphEff  = { fold:0, twist:0, liquid:0, color:0, chroma:0, zoom:0, rot:0, invert:0, lens:0, ripple:0, bloom:0 };
 for (const ax in MORPH_AXES){
   const el = document.getElementById(MORPH_AXES[ax]);
   const valEl = document.getElementById(MORPH_AXES[ax] === 'morphSlider' ? 'morphVal' : MORPH_AXES[ax] + 'Val');
@@ -5292,10 +5226,6 @@ document.getElementById('speedSlider').addEventListener('input', (e) => {
     : '÷' + (1/speedMul).toFixed(2);
 });
 
-// Nota: el control manual de zoom de "Acid Zoomer" (⑧) se quitó del panel;
-// la escena sigue funcionando con acidZoom en su valor por defecto (1.0),
-// ver declaración de "let acidZoom" más arriba.
-
 // --- Sensibilidad de audio: multiplica bass/mid/treble/level (y la
 //     textura de audio de Cosmic Web) antes de mandarlos a los shaders.
 //     Slider 1–20 → factor 0.1x–2.0x (10 = ×1.0, el comportamiento normal). ---
@@ -5312,7 +5242,7 @@ let lastNow = start;
 // Delta de tiempo del frame actual, en segundos. OJO: tiene que ser una
 // variable de módulo (no "const dt" adentro de frame()) porque
 // renderSceneBody() -que vive fuera de frame()- también la necesita para
-// la escena ⑪ Outrun (uTimeDelta del Buffer A). Antes vivía como "const dt"
+// la escena ⑤ Outrun (uTimeDelta del Buffer A). Antes vivía como "const dt"
 // local a frame() y renderSceneBody() la leía igual por estar en el mismo
 // archivo; en JS real eso es un ReferenceError (dt no existe en ese scope),
 // así que en cuanto se entraba a la escena Outrun el shader tiraba una
@@ -5326,7 +5256,8 @@ let dt = 0;
 // ventana de control como la ventana de salida (misma lógica, distinto
 // origen de los datos).
 function renderComposite(sceneVal, cfActive, cfFrom, cfTo, cfProgress, sBass, sMid, sTreble, sLevel){
-  const usePost = postActive();
+  const bp = beatPunchAmount(sceneVal, cfActive);
+  const usePost = postActive() || bp > 0.004;
   if (usePost) ensurePostFBO(canvas.width, canvas.height);
   const outFBO = usePost ? postFBO.fbo : null;
   if (cfActive){
@@ -5352,17 +5283,19 @@ function renderComposite(sceneVal, cfActive, cfFrom, cfTo, cfProgress, sBass, sM
     renderTargetFBO = outFBO;
     renderSceneBody(sceneVal, sBass, sMid, sTreble, sLevel);
   }
-  if (usePost) runPost();
+  if (usePost) runPost(bp);
 }
 
 // Todos los objetos de mutación, para sincronizar la ventana de salida
 // (mismo nombre de variable global que su clave, para poder iterar).
 const MUT_STATE = {
-  mutCur, mutCurST, mutCurCW, mutCurEth, mutCurSN, mutCurRain,
-  mutCurSat, mutCurAcid, mutCurHT, mutCurWS, mutCurSW, mutCurSV
+  mutCur, mutCurST, mutCurCW, mutCurSN, mutCurRain,
+  mutCurSat, mutCurHT, mutCurSW, mutCurLF, mutCurPG, mutCurFK, mutCurKO, beatFX
 };
 
 function frame(now){
+  fpsTick(now);
+  if (IS_MARQUEE){ marqueeFrame(now); requestAnimationFrame(frame); return; }
   if (IS_OUTPUT_MODE){
     resize();
     // dt local de ESTA ventana (necesario para que Outrun/Buffer A pueda
@@ -5374,7 +5307,6 @@ function frame(now){
     const st = latestSyncState;
     if (st){
       scene = st.scene;
-      acidZoom = st.acidZoom;
       if (st.audioTex) audioTexData.set(st.audioTex);
       if (st.morph) Object.assign(morphG, st.morph);
       for (const k in MUT_STATE){ if (st.mut[k]) Object.assign(MUT_STATE[k], st.mut[k]); }
@@ -5416,6 +5348,7 @@ function frame(now){
       morphG.t = simTime;
       const s = latestSyncState; // último estado conocido (recién llegado o no)
       renderComposite(scene, s.cfActive, s.cfFrom, s.cfTo, s.cfProgress, s.sBass, s.sMid, s.sTreble, s.sLevel);
+      outHudUpdate(now, s);
     }
     requestAnimationFrame(frame);
     return;
@@ -5441,6 +5374,77 @@ function frame(now){
 // throttlean en 2do plano), así la proyección sigue viva aunque la
 // ventana de control esté oculta. En primer plano sigue mandando rAF.
 let frameSnap = null;
+const FPS = { n: 0, t: 0, v: 0 };   // fps de ESTA ventana (se mide en rAF)
+function fpsTick(now){
+  FPS.n++;
+  if (!FPS.t) FPS.t = now;
+  if (now - FPS.t >= 500){ FPS.v = FPS.n * 1000 / (now - FPS.t); FPS.n = 0; FPS.t = now; }
+}
+let beatSeenMs = 0;
+const BD = { m: 0, v: 0, prev: 0, last: 0 };   // último onset ya consumido por stepState (ver beatNow)
+// --- Detector de beat de baja latencia ---
+// Lee la forma de onda más reciente del analizador (getByteTimeDomainData no
+// pasa por el suavizado del FFT), filtra graves (~160 Hz) y mide la energía de
+// los últimos ~12-18 ms. Dispara en el flanco ascendente cuando supera un
+// promedio lento adaptativo. Latencia ≈ un frame, no decenas de ms.
+// Para no perder golpes: con un tempo estimado, el umbral baja (×1.12 en vez
+// de ×1.25) justo donde se espera el siguiente golpe (a 1 o 2 períodos del
+// último). No inventa golpes: sigue haciendo falta un transitorio real.
+const BF = { slow: 0, prev: 0, last: 0, lastReal: 0, wave: null, iv: [], bpm: 0 };
+function currentBPM(){ return BF.bpm > 0 ? BF.bpm : estimatedBPM; }
+function resetBeatTracking(){ BF.iv.length = 0; BF.bpm = 0; BF.lastReal = 0; BF.slow = 0; BF.prev = 0; }
+function beatPeriodMs(){
+  const b = BF.bpm || estimatedBPM;
+  return b > 0 ? 60000 / b : 0;
+}
+function beatMinGapMs(){
+  const p = beatPeriodMs();
+  return p > 0 ? Math.min(240, Math.max(110, p * 0.38)) : 170;
+}
+function detectBeatFast(now){
+  if (!analyser || !audioCtx) return false;
+  if (!BF.wave || BF.wave.length !== analyser.fftSize) BF.wave = new Uint8Array(analyser.fftSize);
+  analyser.getByteTimeDomainData(BF.wave);
+  const w = BF.wave, N = w.length;
+  const sr = audioCtx.sampleRate || 44100;
+  const a = 1 - Math.exp(-2 * Math.PI * 160 / sr);
+  const dtS = Math.max(0.001, Math.min(dt, 0.1));
+  const W = Math.min(Math.round(N * 0.75), Math.round(sr * Math.max(0.012, dtS * 1.1)));
+  let lp = (w[0] - 128) / 128, eLow = 0, eAll = 0;
+  for (let i = 0; i < N; i++){
+    const x = (w[i] - 128) / 128;
+    lp += (x - lp) * a;
+    if (i >= N - W){ eLow += lp * lp; eAll += x * x; }
+  }
+  const o = Math.sqrt(eLow / W) + 0.5 * Math.sqrt(eAll / W);
+  BF.slow += (o - BF.slow) * (1 - Math.exp(-dtS / 0.35));
+  const rising = o > BF.prev * 1.01;
+  BF.prev = o;
+  const period = beatPeriodMs();
+  let thr = 1.25;
+  if (BF.lastReal > 0 && period > 0){
+    const ph = (now - BF.lastReal) / period, k = Math.round(ph);
+    if (k >= 1 && k <= 2 && Math.abs(ph - k) < 0.14) thr = 1.12;
+  }
+  if (rising && o > BF.slow * thr + 0.006 && (now - BF.last) > beatMinGapMs()){
+    if (BF.lastReal > 0){
+      const iv = now - BF.lastReal;
+      if (iv >= 200 && iv <= 1500){
+        BF.iv.push(iv); if (BF.iv.length > 16) BF.iv.shift();
+        if (BF.iv.length >= 4){
+          const s = [...BF.iv].sort((x, y) => x - y), m = s.length >> 1;
+          let bpm = 60000 / (s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2);
+          while (bpm < 70) bpm *= 2;
+          while (bpm > 180) bpm /= 2;
+          BF.bpm = BF.bpm ? BF.bpm + (bpm - BF.bpm) * 0.2 : bpm;
+        }
+      }
+    }
+    BF.lastReal = now; BF.last = now;
+    return true;
+  }
+  return false;
+}
 let lastStepMs = 0;
 // Con la mutación ON de la escena activa, la estructura del morph deriva sola
 // cada 9 s (sectores, baldosa, giro, escala del líquido, matiz y paleta).
@@ -5472,7 +5476,7 @@ function updateMorphG(now){
   }
   morphG.amt = morphEff.fold; morphG.twist = morphEff.twist; morphG.liquid = morphEff.liquid;
   morphG.color = morphEff.color; morphG.chroma = morphEff.chroma;
-  for (const k of ['zoom','rot','invert','lens','ripple']) morphG[k] = morphEff[k];
+  for (const k of ['zoom','rot','invert','lens','ripple','bloom']) morphG[k] = morphEff[k];
   mutCurCW.morph = morphEff.fold;   // Cosmic Web: operador interno
   morphG.t = simTime;
 }
@@ -5486,22 +5490,64 @@ function stepState(now){
   updateMutation();
   updateMutationST();
   updateMutationCW();
-  updateMutationEth();
   updateMutationSN();
   updateMutationRain();
   updateMutationSat();
-  updateMutationAcid();
   updateMutationHT();
-  updateMutationWS();
   updateMutationSW();
-  updateMutationSV();
+  updateMutationLF();
+  updateMutationPG();
+  updateMutationFK();
+  updateMutationKO();
   updateMorphG(now);
 
   // Audio ya suavizado + sensibilidad aplicada (control 🎚 del panel)
-  const sBass = smBass * audioSensitivity;
-  const sMid = smMid * audioSensitivity;
-  const sTreble = smTreble * audioSensitivity;
-  const sLevel = smLevel * audioSensitivity;
+  let sBass = smBass * audioSensitivity;
+  let sMid = smMid * audioSensitivity;
+  let sTreble = smTreble * audioSensitivity;
+  let sLevel = smLevel * audioSensitivity;
+
+  // --- Estado dirigido por audio (vive dentro de los objetos de mutación,
+  //     así viaja solo a la ventana de salida con MUT_STATE) ---
+  // Prism Glow: el audio sólo acelera la generación y hace girar la cámara
+  // (acumuladores: la velocidad cambia sin saltos de la imagen).
+  mutCurPG.tAcc += dt * speedMul * (sMid * 1.6 + sBass * 0.8);
+  mutCurPG.rot  += dt * speedMul * (sTreble * 0.5 + sBass * 0.15);
+
+  // Beat: detector de BAJA LATENCIA sobre la forma de onda cruda (sin el
+  // suavizado del FFT, que retrasaba ~50-100 ms). Además acepta el onset del
+  // detector de BPM / el espectral como respaldo si el rápido no lo vio.
+  let beatNow = detectBeatFast(now);
+  {
+    // Respaldo: el onset de graves del detector de BPM (más lento, ~50-100 ms,
+    // pero rescata golpes que el rápido no vio). El hueco mínimo evita dobles.
+    const bpmOnset = (lastOnsetMs !== beatSeenMs);
+    beatSeenMs = lastOnsetMs;
+    if (!beatNow && bpmOnset && (now - BF.last) > beatMinGapMs()){
+      beatNow = true; BF.last = now;
+    }
+  }
+
+  // PULSO GLOBAL DE BEAT (lo usan TODAS las escenas): salta a 1 EN EL INSTANTE
+  // del beat (sin rampa de subida) y decae exponencialmente; la constante de
+  // decaimiento sigue al tempo (≈18 % del período) para que el golpe termine
+  // antes del siguiente.
+  {
+    if (beatNow){ beatFX.pulse = 1; koRegen(); }
+    const periodS = beatPeriodMs() / 1000 || 0.5;
+    const tau = Math.min(0.22, Math.max(0.06, periodS * 0.18));
+    beatFX.pulse *= Math.exp(-dt / tau);
+    if (beatFX.pulse < 0.002) beatFX.pulse = 0;
+    mutCurFK.pulse = beatFX.pulse;   // Pulse Relief lo usa dentro de su shader
+    // Pulse Relief: reloj de movimiento, sólo avanza con la música (compuerta
+    // de ruido) y recibe un empujón con cada beat.
+    const gate = (v) => Math.max(0, v - 0.02);
+    mutCurFK.tAcc += dt * speedMul * (gate(sBass) * 0.5 + gate(sMid) * 0.5 + gate(sTreble) * 0.25 + beatFX.pulse * 5.0);
+    // Las demás escenas reciben el golpe como un salto instantáneo de graves y
+    // nivel (se suma a lo suavizado), además del punch visual del post-proceso.
+    sBass  += beatFX.pulse * BEAT_FX_CFG.audio;
+    sLevel += beatFX.pulse * BEAT_FX_CFG.audio * 0.6;
+  }
 
   const cfActive = crossfadeActive;
   const cfProgress = cfActive ? Math.min((now - crossfadeStartMs) / CROSSFADE_MS, 1) : 0;
@@ -5512,8 +5558,11 @@ function stepState(now){
   // si no hay ninguna abierta escuchando en el canal).
   if (bcSync){
     fillAudioTexData();
+    let hudPayload = null;
+    if (now - hudLastMs > 250){ hudLastMs = now; hudPayload = buildHud(); }
     bcSync.postMessage({
-      scene, simTime, acidZoom, sBass, sMid, sTreble, sLevel, speedMul,
+      hud: hudPayload,
+      scene, simTime, sBass, sMid, sTreble, sLevel, speedMul,
       audioTex: audioTexData.slice(),
       morph: morphG,
       rain: [rainMouseX/canvas.width, rainMouseY/canvas.height, rainClickX/canvas.width, rainClickY/canvas.height, rainMouseDown ? 1 : 0],
@@ -5606,21 +5655,6 @@ function renderSceneBody(scene, sBass, sMid, sTreble, sLevel){
     gl.uniform1f(uCWPolarLoc, mutCurCW.polar);
     gl.uniform1f(uCWFoldItersLoc, mutCurCW.foldIters);
     gl.uniform1f(uCWMorphLoc, mutCurCW.morph);
-  } else if (scene === 5){
-    gl.useProgram(prog5);
-    gl.uniform2f(uRes5, canvas.width, canvas.height);
-    gl.uniform1f(uTime5, simTime);
-    gl.uniform1f(uBass5, sBass);
-    gl.uniform1f(uMid5, sMid);
-    gl.uniform1f(uTreble5, sTreble);
-    gl.uniform1f(uLevel5, sLevel);
-    gl.uniform3f(uEthColorBaseLoc, mutCurEth.colorBase[0], mutCurEth.colorBase[1], mutCurEth.colorBase[2]);
-    gl.uniform3f(uEthColorGlowLoc, mutCurEth.colorGlow[0], mutCurEth.colorGlow[1], mutCurEth.colorGlow[2]);
-    gl.uniform1f(uEthRotALoc, mutCurEth.rotA);
-    gl.uniform1f(uEthRotBLoc, mutCurEth.rotB);
-    gl.uniform1f(uEthDStartLoc, mutCurEth.dStart);
-    gl.uniform1f(uEthGlowEdgeLoc, mutCurEth.glowEdge);
-    gl.uniform1f(uEthFreqLoc, mutCurEth.freq);
   } else if (scene === 7){
     gl.useProgram(prog7);
     gl.activeTexture(gl.TEXTURE0);
@@ -5702,21 +5736,6 @@ function renderSceneBody(scene, sBass, sMid, sTreble, sLevel){
     gl.uniform1f(uSatRotMulLoc, mutCurSat.rotMul);
     gl.uniform1f(uSatNoiseAmtLoc, mutCurSat.noiseAmt);
     gl.uniform1f(uSatWidthLoc, mutCurSat.width);
-  } else if (scene === 13){
-    gl.useProgram(prog13);
-    gl.uniform2f(uRes13, canvas.width, canvas.height);
-    gl.uniform1f(uTime13, simTime);
-    gl.uniform1f(uBass13, sBass);
-    gl.uniform1f(uMid13, sMid);
-    gl.uniform1f(uTreble13, sTreble);
-    gl.uniform1f(uLevel13, sLevel);
-    gl.uniform1f(uAcidZoomLoc, acidZoom);
-    gl.uniform1f(uAcidCellScaleLoc, mutCurAcid.cellScale);
-    gl.uniform1f(uAcidFlowSpeedLoc, mutCurAcid.flowSpeed);
-    gl.uniform1f(uAcidMirrorAngle1Loc, mutCurAcid.mirrorAngle1);
-    gl.uniform1f(uAcidMirrorAngle2Loc, mutCurAcid.mirrorAngle2);
-    gl.uniform1f(uAcidNoiseScaleLoc, mutCurAcid.noiseScale);
-    gl.uniform1f(uAcidColorPhaseLoc, mutCurAcid.colorPhase);
   } else if (scene === 14){
     gl.useProgram(prog14);
     gl.uniform2f(uRes14, canvas.width, canvas.height);
@@ -5726,25 +5745,12 @@ function renderSceneBody(scene, sBass, sMid, sTreble, sLevel){
     gl.uniform1f(uTreble14, sTreble);
     gl.uniform1f(uLevel14, sLevel);
     gl.uniform3f(uHTColorLoc, mutCurHT.color[0], mutCurHT.color[1], mutCurHT.color[2]);
-    gl.uniform1f(uHTNoiseAmtLoc, mutCurHT.noiseAmt);
-    gl.uniform1f(uHTNoisePowLoc, mutCurHT.noisePow);
-    gl.uniform1f(uHTRadius1Loc, mutCurHT.radius1);
-    gl.uniform1f(uHTRadius2Loc, mutCurHT.radius2);
-    gl.uniform1f(uHTWarpAmpLoc, mutCurHT.warpAmp);
-    gl.uniform1f(uHTSteamAmtLoc, mutCurHT.steamAmt);
-  } else if (scene === 15){
-    gl.useProgram(prog15);
-    gl.uniform2f(uRes15, canvas.width, canvas.height);
-    gl.uniform1f(uTime15, simTime);
-    gl.uniform1f(uBass15, sBass);
-    gl.uniform1f(uMid15, sMid);
-    gl.uniform1f(uTreble15, sTreble);
-    gl.uniform1f(uLevel15, sLevel);
-    gl.uniform3f(uWSColorBiasLoc, mutCurWS.colorBias[0], mutCurWS.colorBias[1], mutCurWS.colorBias[2]);
-    gl.uniform1f(uWSScaleLoc, mutCurWS.scale);
-    gl.uniform1f(uWSOffsetLoc, mutCurWS.offset);
-    gl.uniform1f(uWSDepthLoc, mutCurWS.depth);
-    gl.uniform1f(uWSStepLoc, mutCurWS.step);
+    gl.uniform1f(uHTSharpLoc, mutCurHT.sharp);
+    gl.uniform1f(uHTZoomLoc, mutCurHT.zoom);
+    gl.uniform1f(uHTStepLoc, mutCurHT.step);
+    gl.uniform1f(uHTPhaseLoc, mutCurHT.phase);
+    gl.uniform1f(uHTBiasLoc, mutCurHT.bias);
+    gl.uniform1f(uHTRedGainLoc, mutCurHT.redGain);
   } else if (scene === 16){
     // Dos pasadas: Buffer A (feedback sobre sí misma) → Image (FXAA)
     if (!swFBOs || swFBOs.w !== canvas.width || swFBOs.h !== canvas.height){
@@ -5765,12 +5771,12 @@ function renderSceneBody(scene, sBass, sMid, sTreble, sLevel){
     gl.uniform1f(uMidSWA, sMid);
     gl.uniform1f(uTrebleSWA, sTreble);
     gl.uniform1f(uLevelSWA, sLevel);
-    gl.uniform3f(uSWLight0HSVLoc, mutCurSW.light0HSV[0], mutCurSW.light0HSV[1], mutCurSW.light0HSV[2]);
-    gl.uniform3f(uSWLight1HSVLoc, mutCurSW.light1HSV[0], mutCurSW.light1HSV[1], mutCurSW.light1HSV[2]);
-    gl.uniform1f(uSWBottomHueLoc, mutCurSW.bottomHue);
-    gl.uniform1f(uSWTopHueLoc, mutCurSW.topHue);
-    gl.uniform1f(uSWRotSpeedLoc, mutCurSW.rotSpeed);
-    gl.uniform1f(uSWTwistLoc, mutCurSW.twist);
+    gl.uniform3f(uTTColorLoc, mutCurSW.color[0], mutCurSW.color[1], mutCurSW.color[2]);
+    gl.uniform1f(uTTBendLoc, mutCurSW.bend);
+    gl.uniform1f(uTTBendFreqLoc, mutCurSW.bendFreq);
+    gl.uniform1f(uTTRollLoc, mutCurSW.roll);
+    gl.uniform1f(uTTThickLoc, mutCurSW.thick);
+    gl.uniform1f(uTTBrightLoc, mutCurSW.bright);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     swCurrent = dstIdxSW;
 
@@ -5782,20 +5788,80 @@ function renderSceneBody(scene, sBass, sMid, sTreble, sLevel){
     gl.bindTexture(gl.TEXTURE_2D, swFBOs.tex[swCurrent]);
     gl.uniform1i(uChan0SWImg, 0);
     gl.uniform2f(uResSWImg, canvas.width, canvas.height);
-  } else if (scene === 17){
-    gl.useProgram(prog17);
-    gl.uniform2f(uRes17, canvas.width, canvas.height);
-    gl.uniform1f(uTime17, simTime);
-    gl.uniform1f(uBass17, sBass);
-    gl.uniform1f(uMid17, sMid);
-    gl.uniform1f(uTreble17, sTreble);
-    gl.uniform1f(uLevel17, sLevel);
-    gl.uniform1f(uSVFreqLoc, mutCurSV.freq);
-    gl.uniform1f(uSVSmoothKLoc, mutCurSV.smoothK);
-    gl.uniform1f(uSVFalloffLoc, mutCurSV.falloff);
-    gl.uniform1f(uSVMixLoc, mutCurSV.mix);
-    gl.uniform3f(uSVColor2Loc, mutCurSV.color2[0], mutCurSV.color2[1], mutCurSV.color2[2]);
-    gl.uniform3f(uSVBandColorLoc, mutCurSV.bandColor[0], mutCurSV.bandColor[1], mutCurSV.bandColor[2]);
+  } else if (scene === 18){
+    gl.useProgram(prog18);
+    gl.uniform2f(uRes18, canvas.width, canvas.height);
+    gl.uniform1f(uTime18, simTime);
+    gl.uniform1f(uBass18, sBass);
+    gl.uniform1f(uMid18, sMid);
+    gl.uniform1f(uTreble18, sTreble);
+    gl.uniform1f(uLevel18, sLevel);
+    gl.uniform3f(uLFColorLoc, mutCurLF.color[0], mutCurLF.color[1], mutCurLF.color[2]);
+    gl.uniform1f(uLFFoldLoc, mutCurLF.fold);
+    gl.uniform1f(uLFLimitLoc, mutCurLF.limit);
+    gl.uniform1f(uLFWaveLoc, mutCurLF.wave);
+    gl.uniform1f(uLFDistLoc, mutCurLF.dist);
+    gl.uniform1f(uLFPhaseLoc, mutCurLF.phase);
+  } else if (scene === 19){
+    // Dos pasadas: estructura (HDR) → atmósfera (rayos de luz + neblina)
+    if (!pgFBO || pgFBO.w !== canvas.width || pgFBO.h !== canvas.height){
+      setupPGFBO(canvas.width, canvas.height);
+    }
+    // --- Pasada 1: estructura ---
+    gl.bindFramebuffer(gl.FRAMEBUFFER, pgFBO.fbo);
+    gl.viewport(0, 0, pgFBO.w, pgFBO.h);
+    gl.useProgram(prog19);
+    gl.uniform2f(uRes19, pgFBO.w, pgFBO.h);
+    gl.uniform1f(uTime19, simTime);
+    gl.uniform3f(uPGColorLoc, mutCurPG.color[0], mutCurPG.color[1], mutCurPG.color[2]);
+    gl.uniform1f(uPGHueLoc, mutCurPG.hue);
+    gl.uniform1f(uPGGainLoc, mutCurPG.gain);
+    gl.uniform1f(uPGThickLoc, mutCurPG.thick);
+    gl.uniform1f(uPGStepLoc, mutCurPG.step);
+    gl.uniform1f(uPGPhaseLoc, mutCurPG.phase);
+    gl.uniform1f(uPGTAccLoc, mutCurPG.tAcc);
+    gl.uniform1f(uPGRotLoc, mutCurPG.rot);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+    // --- Pasada 2: atmósfera ---
+    gl.bindFramebuffer(gl.FRAMEBUFFER, renderTargetFBO);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.useProgram(prog19B);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, pgFBO.tex);
+    gl.uniform1i(uChan19B, 0);
+    gl.uniform2f(uRes19B, canvas.width, canvas.height);
+    gl.uniform1f(uTime19B, simTime);
+    gl.uniform1f(uBass19B, sBass);
+    gl.uniform1f(uMid19B, sMid);
+    gl.uniform1f(uTreble19B, sTreble);
+    gl.uniform1f(uLevel19B, sLevel);
+    gl.uniform1f(uPGHueBLoc, mutCurPG.hue);
+    gl.uniform1f(uPGRaysLoc, mutCurPG.rays);
+    gl.uniform1f(uPGHazeLoc, mutCurPG.haze);
+  } else if (scene === 20){
+    gl.useProgram(prog20);
+    gl.uniform2f(uRes20, canvas.width, canvas.height);
+    gl.uniform1f(uTime20, simTime);
+    gl.uniform3f(uFKColorLoc, mutCurFK.color[0], mutCurFK.color[1], mutCurFK.color[2]);
+    gl.uniform1f(uFKHueLoc, mutCurFK.hue);
+    gl.uniform1f(uFKGainLoc, mutCurFK.gain);
+    gl.uniform1f(uFKPhaseLoc, mutCurFK.phase);
+    gl.uniform1f(uFKAmpLoc, mutCurFK.amp);
+    gl.uniform1f(uFKPulseLoc, mutCurFK.pulse);
+    gl.uniform1f(uFKTAccLoc, mutCurFK.tAcc);
+  } else if (scene === 21){
+    gl.useProgram(prog21);
+    gl.uniform2f(uRes21, canvas.width, canvas.height);
+    gl.uniform1f(uTime21, simTime);
+    gl.uniform1f(uBass21, sBass);
+    gl.uniform1f(uMid21, sMid);
+    gl.uniform1f(uTreble21, sTreble);
+    gl.uniform2f(uOrbR21, mutCurKO.r0, mutCurKO.rv);
+    gl.uniform2f(uOrbA21, mutCurKO.elAmp, mutCurKO.lkAmp);
+    gl.uniform4f(uOrbPh21, mutCurKO.az, mutCurKO.el, mutCurKO.rd, mutCurKO.lk);
+    gl.uniform4f(uGen21, mutCurKO.folds, mutCurKO.freq, mutCurKO.rad, 0);
+    gl.uniform3f(uSeed21, mutCurKO.sx, mutCurKO.sy, mutCurKO.sz);
   }
 
   gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -5821,15 +5887,32 @@ creditsOverlay.addEventListener('click', (e) => {
 // ============================================================================
 // --- Salida / proyección: ventana de salida sincronizada + pantalla completa
 // ============================================================================
-document.getElementById('outputBtn').addEventListener('click', () => {
+function openOutput(role){
+  outWinsPrune();
+  const n = ++outSeq[role];
   const url = new URL(location.href);
+  url.search = '';
   url.searchParams.set('output', '1');
-  const w = window.open(url.toString(), 'stemsmag_output', 'width=1280,height=720,menubar=no,toolbar=no,location=no,status=no');
-  if (!w){
-    document.getElementById('status').textContent = 'El navegador bloqueó el popup — permitilo e intentá de nuevo';
-  } else {
-    document.getElementById('status').textContent = 'Ventana de salida abierta — arrastrala al proyector y doble click (o tecla F) para pantalla completa';
-  }
+  url.searchParams.set('out', String(n));
+  if (role === 'marquee') url.searchParams.set('role', 'marquee');
+  const off = 36 * (outWins.length % 8);
+  const size = role === 'marquee' ? 'width=1280,height=360' : 'width=1280,height=720';
+  const w = window.open(url.toString(), 'stemsmag_output_' + role + '_' + n,
+    size + ',left=' + (80 + off) + ',top=' + (60 + off) + ',menubar=no,toolbar=no,location=no,status=no');
+  const st = document.getElementById('status');
+  if (!w){ st.textContent = 'El navegador bloqueó el popup — permitilo e intentá de nuevo'; return; }
+  outWins.push({ win: w, role });
+  const mains = outMains(), marqs = outWins.length - mains;
+  st.textContent = (role === 'marquee' ? 'Marquesina' : 'Salida principal #' + n) + ' abierta (' + mains + ' principal' + (mains === 1 ? '' : 'es') + ', ' + marqs + ' marquesina' + (marqs === 1 ? '' : 's') + ') — arrastrala a su pantalla y doble click (o tecla F) para pantalla completa';
+}
+document.getElementById('outputBtn').addEventListener('click', () => openOutput('main'));
+document.getElementById('marqueeBtn').addEventListener('click', () => openOutput('marquee'));
+document.getElementById('outputCloseBtn').addEventListener('click', () => {
+  outWinsPrune();
+  const k = outWins.length;
+  outWins.forEach(o => { try { o.win.close(); } catch(e){} });
+  outWins.length = 0;
+  document.getElementById('status').textContent = k ? ('Cerradas ' + k + ' ventana' + (k > 1 ? 's' : '') + ' de salida') : 'No hay ventanas de salida abiertas desde acá';
 });
 
 document.getElementById('fullscreenBtn').addEventListener('click', () => {
@@ -5838,6 +5921,230 @@ document.getElementById('fullscreenBtn').addEventListener('click', () => {
 document.addEventListener('fullscreenchange', () => {
   document.getElementById('fullscreenBtn').classList.toggle('active', !!document.fullscreenElement);
 });
+
+
+// ============================================================================
+// --- Ventana de salida: info de pista (abajo) + cuadro de estado (esquina)
+// ============================================================================
+let hudLastMs = 0;
+const HUD_AXES = [['morphSlider','Plegado'], ['morphTwist','Torsión'], ['morphLiquid','Líquido'],
+  ['morphColor','Color'], ['morphChroma','Aberración'], ['morphZoom','Pulso'],
+  ['morphRot','Carrusel'], ['morphInvert','Túnel'], ['morphLens','Burbuja'], ['morphRipple','Eco'], ['morphBloom','Bloom']];
+function sceneLabel(n){
+  const b = document.getElementById('scene' + n + 'Btn');
+  return b ? b.textContent.trim() : ('Escena ' + n);
+}
+
+// Qué mostrar como "pista": nombre del archivo del reproductor local, o la
+// fuente de audio (dispositivo de entrada / captura de pestaña o sistema).
+function hudNowPlaying(){
+  if (currentSourceType === 'file'){
+    const n = (document.getElementById('trackName').textContent || '')
+      .replace(/^[^\p{L}\p{N}]+/u, '').replace(/\.[a-z0-9]{2,5}$/i, '').trim();
+    const m = n.split(/\s[-–—]\s/);               // convención "Artista - Título"
+    if (m.length === 2) return { t1: m[1].trim(), t2: m[0].trim(), src: 'archivo' };
+    return { t1: n, t2: '', src: 'archivo' };
+  }
+  if (currentSourceType === 'mic') return { t1: hudSrcLabel || 'Entrada de audio', t2: 'en vivo', src: 'mic' };
+  if (currentSourceType === 'tab') return { t1: hudSrcLabel || 'Audio de pestaña / sistema', t2: 'en vivo', src: 'tab' };
+  return { t1: '', t2: '', src: '' };
+}
+
+function buildHud(){
+  const $ = (id) => document.getElementById(id);
+  const isOn = (id) => { const el = $(id); return !!el && el.classList.contains('active'); };
+  const morph = [];
+  for (const [id, name] of HUD_AXES){
+    const el = $(id); const v = el ? parseFloat(el.value) : 0;
+    if (v > 0) morph.push(name + ' ' + Math.round(v) + '%');
+  }
+  const srcName = { mic: 'Entrada', tab: 'Pestaña/sistema', file: 'Archivo (reproductor)' }[currentSourceType] || 'Ninguno (ambiente)';
+  const mutCfg = mutationRegistry[scene];
+  outWinsPrune();
+  return {
+    np: hudNowPlaying(),
+    show: { track: $('outShowTrack').checked, info: $('outShowInfo').checked, corner: $('outCorner').value },
+    scene: scene,
+    sceneName: sceneLabel(scene),
+    fps: Math.round(FPS.v),
+    bpm: Math.round(currentBPM()) || 0,
+    src: srcName, srcLabel: currentSourceType === 'mic' ? hudSrcLabel : '',
+    sens: audioSensitivity,
+    speed: speedMul,
+    morph: morph,
+    mut: mutCfg ? { name: mutCfg.name, on: !!mutCfg.on } : null,
+    auto: { scenes: isOn('sceneAutoBtn'), every: $('sceneAutoSel').value, mods: isOn('modAutoBtn'), status: ($('autoStatus').textContent || '').trim() },
+    midi: isOn('midiBtn'),
+    bands: bandEnabled.map(b => b ? 1 : 0).join(''),
+    wins: outMains()
+  };
+}
+
+// --- Dibujo en la ventana de salida (DOM creado una sola vez) ---
+const outLocal = { track: null, info: null };   // teclas T / I: ocultar sólo en ESTA ventana
+let outEls = null, outHudLastMs = 0, outHudSig = '', outTrackSig = '';
+const OUT_ID = parseInt(new URLSearchParams(location.search).get('out') || '1', 10) || 1;
+function outHudInit(){
+  if (outEls) return;
+  const tr = document.createElement('div'); tr.id = 'outTrack'; tr.className = 'hidden';
+  tr.innerHTML = '<div class="t1"></div><div class="t2"></div>';
+  const inf = document.createElement('div'); inf.id = 'outInfo'; inf.className = 'tl hidden';
+  document.body.appendChild(tr); document.body.appendChild(inf);
+  outEls = { tr, t1: tr.firstChild, t2: tr.lastChild, inf, bars: null, dot: null };
+}
+const escHtml = (t) => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function outHudUpdate(now, st){
+  outHudInit();
+  const h = latestHud;
+  // medidores y punto de beat: cada frame (baratos)
+  if (outEls.bars){
+    const lv = [st.sBass, st.sMid, st.sTreble];
+    for (let i = 0; i < 3; i++) outEls.bars[i].style.transform = 'scaleY(' + Math.max(0.05, Math.min(1, lv[i] * 0.8)).toFixed(2) + ')';
+  }
+  if (outEls.dot) outEls.dot.style.opacity = (0.15 + 0.85 * beatFX.pulse).toFixed(2);
+  if (!h || now - outHudLastMs < 200) return;
+  outHudLastMs = now;
+
+  const showTrack = (outLocal.track !== null ? outLocal.track : h.show.track);
+  const showInfo = (outLocal.info !== null ? outLocal.info : h.show.info);
+
+  // --- barra de pista ---
+  const np = h.np || { t1: '', t2: '' };
+  const trSig = np.t1 + '\u0001' + np.t2;
+  outEls.tr.classList.toggle('hidden', !(showTrack && np.t1));
+  if (trSig !== outTrackSig){
+    outTrackSig = trSig;
+    outEls.t1.textContent = np.t1; outEls.t2.textContent = np.t2;
+    outEls.t2.style.display = np.t2 ? '' : 'none';
+    outEls.tr.classList.toggle('solo', !np.t2);
+    outEls.tr.classList.remove('chg'); void outEls.tr.offsetWidth; outEls.tr.classList.add('chg');
+  }
+
+  // --- cuadro de estado ---
+  outEls.inf.className = h.show.corner + (showInfo ? '' : ' hidden');
+  if (!showInfo) return;
+  const fpsOut = Math.round(FPS.v);
+  const sceneTxt = st.cfActive ? (sceneLabel(st.cfFrom) + ' → ' + sceneLabel(st.cfTo)) : sceneLabel(scene);
+  const sig = JSON.stringify([h, fpsOut, sceneTxt, canvas.width, canvas.height]);
+  if (sig === outHudSig) return;
+  outHudSig = sig;
+  const row = (k, v) => '<div class="r"><b>' + k + '</b><span>' + v + '</span></div>';
+  const tag = (on) => on ? '<span class="on">ON</span>' : '<span class="off">OFF</span>';
+  const autoTxt = h.auto.scenes ? ('<span class="on">ON</span> · ' + escHtml(h.auto.every) + ' s') : '<span class="off">OFF</span>';
+  const bandsTxt = h.bands.split('').map(c => c === '1' ? '●' : '○').join('');
+  outEls.inf.innerHTML =
+    '<div class="h">NEUROPULSE · salida #' + OUT_ID + (h.wins > 1 ? ' / ' + h.wins : '') + '</div>' +
+    row('Shader', escHtml(sceneTxt)) +
+    row('FPS', fpsOut + ' salida · ' + h.fps + ' control · ' + canvas.width + '×' + canvas.height) +
+    row('BPM', (h.bpm || '--') + '<i class="dot"></i>') +
+    row('Audio', escHtml(h.src) + (h.srcLabel ? ' · ' + escHtml(h.srcLabel) : '')) +
+    row('Nivel', '<span class="bars"><i></i><i></i><i></i></span>') +
+    row('Sens. / vel.', '×' + (h.sens).toFixed(1) + ' / ×' + (h.speed).toFixed(2)) +
+    row('Bandas', bandsTxt) +
+    row('Morph', h.morph.length ? escHtml(h.morph.join(' · ')) : '<span class="off">—</span>') +
+    row('Mutación', h.mut ? tag(h.mut.on) : '<span class="off">n/d</span>') +
+    row('Escenas auto', autoTxt) +
+    row('Ciclar modif.', tag(h.auto.mods)) +
+    (h.auto.status ? row('', escHtml(h.auto.status)) : '') +
+    row('MIDI', tag(h.midi));
+  const bars = outEls.inf.querySelectorAll('.bars i');
+  outEls.bars = bars.length === 3 ? bars : null;
+  outEls.dot = outEls.inf.querySelector('.dot');
+}
+window.addEventListener('keydown', (e) => {
+  if (!IS_OUTPUT_MODE || e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = (e.key || '').toLowerCase();
+  const cur = (v, remote) => v !== null ? v : remote;
+  if (k === 't'){ outLocal.track = !cur(outLocal.track, !!(latestHud && latestHud.show.track)); outHudLastMs = 0; }
+  else if (k === 'i'){ outLocal.info = !cur(outLocal.info, !!(latestHud && latestHud.show.info)); outHudLastMs = 0; outHudSig = ''; }
+});
+
+
+// ============================================================================
+// --- Ventana secundaria "Marquesina": el nombre de la pista corre de derecha a
+//     izquierda; la velocidad "late" con cada beat y el brillo/halo también.
+//     No dibuja WebGL (el canvas está oculto): sólo DOM, casi no cuesta GPU.
+// ============================================================================
+const mq = { el: null, track: null, chip: null, segW: 0, off: 0, last: 0, sig: '',
+             mode: 'scroll', size: 1, speed: 1, info: false };
+function mqSave(){ try { localStorage.setItem('np.mq', JSON.stringify({ mode: mq.mode, size: mq.size, speed: mq.speed, info: mq.info })); } catch(e){} }
+function marqueeInit(){
+  if (mq.el) return;
+  try { const v = JSON.parse(localStorage.getItem('np.mq') || 'null'); if (v) Object.assign(mq, v); } catch(e){}
+  const d = document.createElement('div'); d.id = 'marq';
+  d.innerHTML = '<div class="mq-track"></div><div class="mq-chip"></div>';
+  document.body.appendChild(d);
+  mq.el = d; mq.track = d.firstChild; mq.chip = d.lastChild;
+}
+function mqBuild(text){
+  const seg = '<span class="mq-seg">' + escHtml(text) + '<i class="mq-sep">✦</i></span>';
+  mq.track.className = 'mq-track' + (mq.mode === 'fixed' ? ' fixed' : '');
+  mq.track.style.transform = '';
+  mq.track.innerHTML = seg;
+  const w = mq.track.firstChild.offsetWidth || 0;
+  mq.segW = w; mq.off = 0;
+  if (mq.mode === 'scroll'){
+    // repetir lo justo para que siempre haya texto cubriendo toda la ventana
+    if (w > 0) mq.track.innerHTML = seg.repeat(Math.max(2, Math.ceil(innerWidth / w) + 1));
+  } else {
+    // modo fijo: una sola línea centrada, achicada si no entra en el ancho
+    mq.track.innerHTML = '<span class="mq-seg">' + escHtml(text) + '</span>';
+    const tw = mq.track.firstChild.offsetWidth || 1;
+    const k = Math.min(1, innerWidth * 0.94 / tw);
+    mq.track.style.transform = 'translate(-50%,-50%) scale(' + k.toFixed(4) + ')';
+  }
+}
+function marqueeFrame(now){
+  marqueeInit();
+  const st = latestSyncState;
+  if (st && st.mut && st.mut.beatFX) Object.assign(beatFX, st.mut.beatFX);   // pulso de beat
+  const h = latestHud;
+  mq.el.classList.toggle('chip', !!mq.info);
+  mq.el.style.setProperty('--sz', mq.size.toFixed(3));
+  if (h){
+    const np = h.np || { t1: '', t2: '' };
+    const text = np.t1 ? (np.t1 + (np.t2 ? '  —  ' + np.t2 : '')) : 'NEUROPULSE';
+    const sig = [text, mq.mode, innerWidth, innerHeight, mq.size.toFixed(3)].join('|');
+    if (sig !== mq.sig){ mq.sig = sig; mqBuild(text); }
+    mq.el.style.setProperty('--h', String((h.scene * 47) % 360));     // un tono por escena
+    if (mq.info) mq.chip.textContent = '♩ ' + (h.bpm || '--') + ' BPM · ' + h.sceneName;
+  }
+  const dt = mq.last ? Math.min(0.1, (now - mq.last) / 1000) : 0.016;
+  mq.last = now;
+  const p = beatFX.pulse || 0;
+  mq.el.style.setProperty('--p', p.toFixed(3));
+  if (mq.mode === 'scroll' && mq.segW > 0){
+    const base = innerWidth / 12 * mq.speed;                          // ≈ 12 s en cruzar la pantalla
+    mq.off = (mq.off + base * (1 + 1.4 * p) * dt) % mq.segW;          // el beat empuja el texto
+    mq.track.style.transform = 'translate3d(' + (-mq.off).toFixed(1) + 'px,0,0)';
+  }
+}
+if (IS_MARQUEE){
+  window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+    let used = true;
+    switch (e.key){
+      case 'ArrowRight': mq.speed = clamp(mq.speed * 1.15, 0.2, 4); break;
+      case 'ArrowLeft':  mq.speed = clamp(mq.speed / 1.15, 0.2, 4); break;
+      case 'ArrowUp':    mq.size  = clamp(mq.size * 1.08, 0.25, 2.4); break;
+      case 'ArrowDown':  mq.size  = clamp(mq.size / 1.08, 0.25, 2.4); break;
+      case 'm': case 'M': mq.mode = mq.mode === 'scroll' ? 'fixed' : 'scroll'; mq.sig = ''; break;
+      case 'i': case 'I': mq.info = !mq.info; break;
+      default: used = false;
+    }
+    if (used){ e.preventDefault(); mqSave(); }
+  });
+}
+
+// ============================================================================
+// --- Varias ventanas de salida: cada click abre una nueva (todas reciben el
+//     mismo estado por BroadcastChannel y dibujan a su propio tamaño).
+// ============================================================================
+const outWins = [];                     // [{ win, role: 'main' | 'marquee' }]
+const outSeq = { main: 0, marquee: 0 };
+function outWinsPrune(){ for (let i = outWins.length - 1; i >= 0; i--) if (outWins[i].win.closed) outWins.splice(i, 1); }
+const outMains = () => outWins.filter(o => o.role === 'main').length;
 
 // ============================================================================
 // --- Web MIDI: modo "asignación" — activás, hacés click en un control del
@@ -5855,10 +6162,10 @@ let midiArmedTarget = null;
 let midiMap = { cc: {}, note: {} }; // number -> target descriptor
 
 const SCENE_BTN_IDS = {
-  scene1Btn:1, scene3Btn:3, scene4Btn:4, scene5Btn:5, scene7Btn:7, scene11Btn:11,
-  scene12Btn:12, scene13Btn:13, scene14Btn:14, scene15Btn:15, scene16Btn:16, scene17Btn:17
+  scene1Btn:1, scene3Btn:3, scene4Btn:4, scene7Btn:7, scene11Btn:11,
+  scene12Btn:12, scene14Btn:14, scene16Btn:16, scene18Btn:18, scene19Btn:19, scene20Btn:20, scene21Btn:21
 };
-const MIDI_LEARNABLE_SLIDERS = ['sensSlider', 'speedSlider', 'morphSlider', 'morphTwist', 'morphLiquid', 'morphColor', 'morphChroma', 'morphZoom', 'morphRot', 'morphInvert', 'morphLens', 'morphRipple'];
+const MIDI_LEARNABLE_SLIDERS = ['sensSlider', 'speedSlider', 'morphSlider', 'morphTwist', 'morphLiquid', 'morphColor', 'morphChroma', 'morphZoom', 'morphRot', 'morphInvert', 'morphLens', 'morphRipple', 'morphBloom'];
 const MIDI_LEARNABLE_BUTTONS = { mutBtn: 'Mutación ON/OFF', trackPlayBtn: 'Pausa/Reanudar', npPrevBtn: 'Pista anterior', npNextBtn: 'Pista siguiente' };
 
 function describeTarget(t){
@@ -5982,13 +6289,10 @@ midiClearBtn.addEventListener('click', () => {
     neural:'<circle cx="5" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="7" r="2"/><circle cx="19" cy="17" r="2"/><path d="M7 6.8l3.2 4M7 17.2l3.2-4M14 11l3.4-3M14 13l3.4 3"/>',
     trip:'<path d="M3 21L21 3M3 14L14 3M10 21L21 10"/><circle cx="18" cy="18" r=".7"/><circle cx="6" cy="6" r=".7"/>',
     web:'<circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M3.5 12h17M6 6l12 12M18 6L6 18"/>',
-    ether:'<path d="M3 7c3-3 5 3 9 0s6-3 9 0M3 13c3-3 5 3 9 0s6-3 9 0M3 19c3-3 5 3 9 0s6-3 9 0"/>',
     nova:'<circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/>',
     road:'<path d="M12 4L5 20M12 4l7 16M12 4v3M12 10v3M12 16v4M3 20h18"/>',
     rings:'<circle cx="12" cy="12" r="2"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="10"/>',
-    spiral:'<path d="M12 12a2 2 0 1 1 2 2 4 4 0 1 1-4-4 6 6 0 1 1 6 6"/><path d="M16 18a8 8 0 1 1 4-6"/>',
     tunnel:'<rect x="3" y="3" width="18" height="18" rx="1"/><rect x="7" y="7" width="10" height="10"/><rect x="10" y="10" width="4" height="4"/>',
-    warp:'<path d="M12 12L3 5M12 12l9-7M12 12L3 19M12 12l9 7M12 12V3M12 12v9"/>',
     cube:'<path d="M12 3l8 5v8l-8 5-8-5V8z"/><path d="M12 3v18M4 8l16 8M20 8L4 16"/>',
     cells:'<path d="M4 4h16v16H4zM4 11l6 2 3-9M10 13l-2 7M13 4l1 8 6-2M14 12l-1 8"/>',
     mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',
@@ -6016,8 +6320,8 @@ midiClearBtn.addEventListener('click', () => {
       if (txt) { const sp = document.createElement('span'); sp.textContent = txt; el.append(sp); } busy = false; };
     run(); new MutationObserver(() => { if (!busy && !el.querySelector(':scope > svg.np-i')) run(); }).observe(el, { childList: true });
   };
-  [['scene1Btn','neural'],['scene3Btn','trip'],['scene4Btn','web'],['scene5Btn','ether'],['scene7Btn','nova'],['scene11Btn','road'],
-   ['scene12Btn','rings'],['scene13Btn','spiral'],['scene14Btn','tunnel'],['scene15Btn','warp'],['scene16Btn','cube'],['scene17Btn','cells'],
+  [['scene1Btn','neural'],['scene3Btn','trip'],['scene4Btn','web'],['scene7Btn','nova'],['scene11Btn','road'],
+   ['scene12Btn','rings'],['scene14Btn','tunnel'],['scene16Btn','cube'],['scene18Btn','web'],['scene19Btn','cells'],['scene20Btn','tunnel'],['scene21Btn','cells'],
    ['micBtn','mic'],['tabBtn','tab'],['mutBtn','dna'],['midiBtn','midi'],['midiLearnBtn','target'],['midiClearBtn','trash'],
    ['outputBtn','win'],['fullscreenBtn','full'],['trackPlayBtn',(t) => /[⏸⏹]/.test(t) ? 'pause' : 'play'],
    ['npPrevBtn','prev'],['npNextBtn','next'],['npShuffleBtn','shuffle'],['npPlNew','plus'],['npPlRen','edit'],['npPlDel','trash'],
@@ -6232,7 +6536,7 @@ midiClearBtn.addEventListener('click', () => {
 /* =====================================================================
    Automatización: rotación de escenas + ciclado de modificadores.
    - Escenas auto: llama a goToScene() cada N segundos (crossfade normal).
-   - Ciclar modificadores: recorre Plegado → Eco. Cada slider hace
+   - Ciclar modificadores: recorre Plegado → Bloom. Cada slider hace
      0 → 50% → 0 (curva suave) y luego pasa al siguiente. La vuelta
      completa dura lo elegido en el selector (1 min por defecto).
    Los sliders se mueven disparando 'input', igual que el mouse o el
@@ -6240,12 +6544,12 @@ midiClearBtn.addEventListener('click', () => {
    ===================================================================== */
 (function(){
   'use strict';
-  const SCENES = [1,3,4,5,7,11,12,13,14,15,16,17];
+  const SCENES = [1,3,4,7,11,12,14,16,18,19,20,21];
   const AXES = [
     ['morphSlider','Plegado'], ['morphTwist','Torsión'], ['morphLiquid','Líquido'],
     ['morphColor','Color'], ['morphChroma','Aberración'], ['morphZoom','Pulso'],
     ['morphRot','Carrusel'], ['morphInvert','Túnel'], ['morphLens','Burbuja'],
-    ['morphRipple','Eco']
+    ['morphRipple','Eco'], ['morphBloom','Bloom']
   ];
   const PEAK = 50;                       // máximo de cada slider durante el ciclo (%)
   const $ = (id) => document.getElementById(id);
