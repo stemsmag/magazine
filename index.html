@@ -210,6 +210,43 @@
   .subnav-track .subnav-soon{font-family:'JetBrains Mono',monospace; font-size:8px; letter-spacing:0.5px; opacity:0.7; text-transform:uppercase;}
   .subnav-track a:hover{color:var(--cream); border-color:var(--orange);}
   .subnav-track .soon-item{color:var(--muted); border-style:dashed; opacity:0.75; cursor:default;}
+
+  /* --- Píldoras de artifacts con color propio (--c lo asigna el JS) + hover --- */
+  .subnav-track a{
+    --c:var(--orange);
+    position:relative; overflow:hidden;
+    color:var(--cream);
+    border-color:color-mix(in srgb, var(--c) 60%, transparent);
+    background:color-mix(in srgb, var(--c) 13%, transparent);
+    transition:color .25s, background .25s, border-color .25s, transform .25s, box-shadow .25s;
+  }
+  .subnav-track a::before{
+    content:''; flex:0 0 auto; width:6px; height:6px; border-radius:50%;
+    background:var(--c); box-shadow:0 0 7px var(--c);
+    transition:background .25s, box-shadow .25s, transform .25s;
+  }
+  /* destello que cruza la píldora al pasar el mouse */
+  .subnav-track a::after{
+    content:''; position:absolute; top:0; bottom:0; left:-70%; width:45%;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform:skewX(-20deg); pointer-events:none;
+    transition:left .55s ease;
+  }
+  .subnav-track a:hover, .subnav-track a:focus-visible{
+    background:var(--c); border-color:var(--c); color:var(--bg);
+    transform:translateY(-1px) scale(1.04);
+    box-shadow:0 3px 12px color-mix(in srgb, var(--c) 60%, transparent);
+    outline:none;
+  }
+  .subnav-track a:hover::before, .subnav-track a:focus-visible::before{
+    background:var(--bg); box-shadow:none; transform:scale(1.25);
+  }
+  .subnav-track a:hover::after, .subnav-track a:focus-visible::after{left:125%;}
+  .subnav-track a:hover .subnav-new, .subnav-track a:focus-visible .subnav-new{background:var(--bg); color:var(--c);}
+  @media (prefers-reduced-motion: reduce){
+    .subnav-track a, .subnav-track a::before, .subnav-track a::after{transition:none;}
+    .subnav-track a:hover{transform:none;}
+  }
   @media (max-width:640px){
     .subnav-arrow{flex-basis:28px;}
     .subnav-pin{padding:0 12px; font-size:12px;}
@@ -1057,6 +1094,8 @@
   /* Un artifact es "nuevo" durante NEW_ARTIFACT_DAYS días desde su fecha de publicación.
      Campo en artifacts.json: "date": "2026-10-08" (también acepta "fecha" o "added"). */
   const NEW_ARTIFACT_DAYS = 15;
+  /* Colores que se reparten en orden entre las píldoras del submenú (en loop). */
+  const SUBNAV_COLORS = ['var(--magenta)', 'var(--orange)', 'var(--amber)', 'var(--teal)'];
   function isNewArtifact(a){
     const raw = a && (a.date || a.fecha || a.added);
     if(!raw || a.status !== 'live') return false;
@@ -1108,7 +1147,7 @@
     fetch('artifacts.json' + '?_=' + Date.now())
       .then(r => r.json())
       .then(artifacts => {
-        artifacts.forEach(a=>{
+        artifacts.forEach((a, i)=>{
           const hasLink = a.status === 'live' && !!a.link;
           const item = document.createElement(hasLink ? 'a' : 'span');
           if(hasLink){
@@ -1121,6 +1160,7 @@
           item.innerHTML = a.name
             + (a.status !== 'live' ? ' <span class="subnav-soon">(próx.)</span>' : '')
             + (isNewArtifact(a) ? ' <span class="subnav-new">Nuevo</span>' : '');
+          item.style.setProperty('--c', SUBNAV_COLORS[i % SUBNAV_COLORS.length]);
           track.appendChild(item);
         });
         checkOverflow();
