@@ -1796,13 +1796,13 @@ fetch('articles.json')
    - Cuenta regresiva cuando faltan COUNTDOWN_DAYS días o menos
      (eventos y lanzamientos). Campo opcional "time" (HH:MM) en
      events.json; sin hora, cuenta hasta las 00:00 del día.
-   - Botón "Consigue tu entrada" en eventos tipo "toque" que
+   - Botón "Comprar boletos" en eventos tipo "toque" que
      tengan "ticketUrl" en events.json.
    ========================================================= */
 const RELEASE_TYPE_LABEL = {single:'Sencillo', album:'Álbum', video:'Video oficial', promo:'Próximamente'};
 const EVENTOS_JSON_PATH = 'events.json'; // ajusta la ruta si eventos.html/events.json viven en otra carpeta
 const MONTHS_SHORT = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
-const COUNTDOWN_DAYS = 7; // mostrar cuenta regresiva cuando falten 7 días o menos
+const COUNTDOWN_DAYS = 10; // mostrar cuenta regresiva cuando falten 10 días o menos
 
 function pad2(n){ return String(n).padStart(2,'0'); }
 
@@ -1875,7 +1875,7 @@ function renderEventItems(containerId, items){
       btn.href = it.ticket;
       btn.target = '_blank';
       btn.rel = 'noopener noreferrer';
-      btn.textContent = 'Consigue tu entrada →';
+      btn.textContent = 'Comprar boletos';
       item.appendChild(btn);
     }
 
@@ -1911,7 +1911,7 @@ fetch(EVENTOS_JSON_PATH + '?_=' + Date.now())
     // "Eventos" = toques en vivo. "Lanzamientos" = sencillos/álbumes/videos/promo.
     // "link" es opcional en events.json: si el evento/lanzamiento lo trae, la imagen
     // y el texto se vuelven clicables y abren esa URL en pestaña nueva.
-    // "ticketUrl" (solo toques) agrega el botón "Consigue tu entrada".
+    // "ticketUrl" (solo toques) agrega el botón "Comprar boletos" debajo del toque.
     const eventos = all
       .filter(e => e.type === 'toque')
       .slice(0, 3)
