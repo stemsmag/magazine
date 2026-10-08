@@ -1898,15 +1898,31 @@ fetch(EVENTOS_JSON_PATH + '?_=' + Date.now())
     const toDayLabel = d => `${String(d.getDate()).padStart(2,'0')} ${MONTHS_SHORT[d.getMonth()]}`;
     const isToday = d => d.getTime() === today.getTime();
 
-    // Momento exacto del evento: usa "time" (HH:MM) si existe en el JSON, si no, 00:00 del día.
+    // Momento exacto del evento: toma la PRIMERA hora del campo "time" (soporta
+    // "9:00 PM - 4:00 AM CT", "5:00 PM", "14:30"). Sin hora, cuenta hasta las 00:00 del día.
     const eventTarget = e => {
       const d = new Date(e.date + 'T00:00:00');
-      if(e.time){
-        const [h, m] = e.time.split(':');
-        d.setHours(Number(h) || 0, Number(m) || 0, 0, 0);
+      const m = (e.time || '').match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/i);
+      if(m){
+        let h = Number(m[1]);
+        const min = Number(m[2]);
+        const ap = (m[3] || '').toUpperCase();
+        if(ap === 'PM' && h < 12) h += 12;
+        if(ap === 'AM' && h === 12) h = 0;
+        d.setHours(h, min, 0, 0);
       }
       return d.getTime();
     };
+
+    // Asegura que el link tenga protocolo (ej. "thelastdj.com" -> "https://thelastdj.com")
+    const normalizeUrl = u => {
+      u = (u || '').trim();
+      if(!u) return '';
+      return /^https?:\/\//i.test(u) ? u : 'https://' + u.replace(/^\/+/, '');
+    };
+
+    // URL de venta de boletos (solo toques): "ticketUrl" si existe; si no, el "link" del evento.
+    const ticketOf = e => normalizeUrl(e.ticketUrl || e.link);
 
     // "Eventos" = toques en vivo. "Lanzamientos" = sencillos/álbumes/videos/promo.
     // "link" es opcional en events.json: si el evento/lanzamiento lo trae, la imagen
@@ -1918,9 +1934,9 @@ fetch(EVENTOS_JSON_PATH + '?_=' + Date.now())
       .map(e => ({
         day:toDayLabel(e.dateObj), title:e.title, meta:e.venue || '',
         who:e.dj ? `🎧 ${e.dj}` : '', img:e.image || '',
-        isToday:isToday(e.dateObj), link:e.link || '',
+        isToday:isToday(e.dateObj), link:normalizeUrl(e.link),
         target:eventTarget(e), countdownLabel:'Empieza en',
-        ticket:e.ticketUrl || ''
+        ticket:ticketOf(e)
       }));
 
     const lanzamientos = all
@@ -1929,7 +1945,7 @@ fetch(EVENTOS_JSON_PATH + '?_=' + Date.now())
       .map(e => ({
         day:toDayLabel(e.dateObj), title:e.title, meta:RELEASE_TYPE_LABEL[e.type] || e.type,
         who:e.productor ? `Prod. ${e.productor}` : '', img:e.image || '',
-        isToday:isToday(e.dateObj), link:e.link || '',
+        isToday:isToday(e.dateObj), link:normalizeUrl(e.link),
         target:eventTarget(e), countdownLabel:'Sale en',
         ticket:''
       }));
