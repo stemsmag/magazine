@@ -9,6 +9,7 @@
   "specs": ["VJ", "AUDIO-REACTIVO", "DJ SETS"],
   "cta": "PLAY IT!",
   "img": "img/NEUROPULSE.jpg",
+  "date": "2026-10-05",
   "link": "https://stemsmag.fyi/artifacts/neuropulsev1.html"
 },
   {
@@ -21,6 +22,7 @@
     "specs": ["FOCUS", "RELAX", "ESTUDIAR"],
     "cta": "TIME OUT!",
     "img": "img/CHUNK2.jpg",
+    "date": "2026-10-01",
     "link": "https://stemsmag.fyi/artifacts/relaxthechunkv2.html"
   },
   {
@@ -33,6 +35,7 @@
     "specs": ["IDEA", "PROYECTOS", "LANZAMIENTOS"],
     "cta": "CREA TU PRIMER PROYECTO",
     "img": "img/kanban.jpg",
+    "date": "2026-09-28",
     "link": "https://stemsmag.fyi/artifacts/kanbanv1.html"
   },
   {
