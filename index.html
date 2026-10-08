@@ -814,6 +814,24 @@
   .status-live .artifact-status{background:var(--teal); color:var(--bg);}
   .status-soon .artifact-status{border:1px solid var(--muted); color:var(--muted);}
   .artifact-id{font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--muted);}
+  .artifact-status-wrap{display:flex; align-items:center; gap:6px; min-width:0;}
+  /* Etiqueta NUEVO: artifacts publicados hace NEW_ARTIFACT_DAYS días o menos */
+  .artifact-new-badge{
+    display:inline-flex; align-items:center; gap:5px;
+    font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700; letter-spacing:1.2px;
+    color:var(--bg); background:var(--magenta); padding:2px 6px; border-radius:3px;
+    text-transform:uppercase; white-space:nowrap;
+  }
+  .artifact-new-badge::before{
+    content:''; width:5px; height:5px; border-radius:50%; background:var(--bg);
+    animation:newDotPulse 1.4s ease-in-out infinite;
+  }
+  @keyframes newDotPulse{0%,100%{opacity:1; transform:scale(1);} 50%{opacity:0.35; transform:scale(0.7);}}
+  .subnav-track .subnav-new{
+    font-family:'JetBrains Mono',monospace; font-size:8px; font-weight:700; letter-spacing:0.8px;
+    color:var(--bg); background:var(--magenta); padding:2px 5px; border-radius:3px; text-transform:uppercase;
+  }
+  @media (prefers-reduced-motion: reduce){ .artifact-new-badge::before{animation:none;} }
   .artifact-name{font-family:'Anton',sans-serif; font-size:15px; letter-spacing:0.5px; margin-bottom:4px; line-height:1.1;}
   .artifact-desc{
     font-family:'Inter',sans-serif; font-size:11.5px; color:var(--muted); line-height:1.4; margin-bottom:6px;
@@ -1036,6 +1054,18 @@
      - Cada item dinámico abre el link real del artifact (a.link) en pestaña
        nueva. Si no tiene link (ej. status "soon"), se muestra sin click.
      ========================================================= */
+  /* Un artifact es "nuevo" durante NEW_ARTIFACT_DAYS días desde su fecha de publicación.
+     Campo en artifacts.json: "date": "2026-10-08" (también acepta "fecha" o "added"). */
+  const NEW_ARTIFACT_DAYS = 15;
+  function isNewArtifact(a){
+    const raw = a && (a.date || a.fecha || a.added);
+    if(!raw || a.status !== 'live') return false;
+    const d = new Date(String(raw).slice(0,10) + 'T00:00:00');
+    if(isNaN(d)) return false;
+    const days = (Date.now() - d.getTime()) / 86400000;
+    return days >= 0 && days <= NEW_ARTIFACT_DAYS;
+  }
+
   (function(){
     const subnav = document.getElementById('artifacts-subnav');
     const track  = document.getElementById('subnav-track');
@@ -1088,7 +1118,9 @@
           } else {
             item.className = 'soon-item';
           }
-          item.innerHTML = a.name + (a.status !== 'live' ? ' <span class="subnav-soon">(próx.)</span>' : '');
+          item.innerHTML = a.name
+            + (a.status !== 'live' ? ' <span class="subnav-soon">(próx.)</span>' : '')
+            + (isNewArtifact(a) ? ' <span class="subnav-new">Nuevo</span>' : '');
           track.appendChild(item);
         });
         checkOverflow();
@@ -1975,7 +2007,10 @@ fetch('artifacts.json' + '?_=' + Date.now())
         <div class="artifact-preview">${a.img ? `<img src="${a.img}" alt="${a.name}">` : '<canvas></canvas>'}</div>
         <div class="artifact-body">
           <div class="artifact-top">
-            <span class="artifact-status">${a.status === 'live' ? 'DISPONIBLE' : 'PRÓXIMAMENTE'}</span>
+            <span class="artifact-status-wrap">
+              <span class="artifact-status">${a.status === 'live' ? 'DISPONIBLE' : 'PRÓXIMAMENTE'}</span>
+              ${isNewArtifact(a) ? '<span class="artifact-new-badge">NUEVO</span>' : ''}
+            </span>
             <span class="artifact-id mono">${a.id}</span>
           </div>
           <div class="artifact-name">${a.name}</div>
