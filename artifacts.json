@@ -10,6 +10,7 @@
   "cta": "PLAY IT!",
   "img": "img/NEUROPULSE.jpg",
   "date": "2026-10-05",
+  "hot": true,
   "link": "https://stemsmag.fyi/artifacts/neuropulsev1.html"
 },
   {
@@ -36,6 +37,7 @@
     "cta": "CREA TU PRIMER PROYECTO",
     "img": "img/kanban.jpg",
     "date": "2026-09-28",
+    "hot": true,
     "link": "https://stemsmag.fyi/artifacts/kanbanv1.html"
   },
   {
@@ -48,6 +50,7 @@
     "specs": ["DUAL OSC", "MIDI IN", "SECUENCIADOR"],
     "cta": "ABRIR INSTRUMENTO",
     "img": "img/tetra.jpg",
+    "hot": true,
     "link": "https://stemsmag.fyi/artifacts/tetrawavev1.html"
   },
   {
@@ -60,6 +63,7 @@
     "specs": ["LUFS METER", "EQ", "COMPRESOR"],
     "cta": "ABRIR INSTRUMENTO",
     "img": "img/laquer.jpg",
+    "hot": true,
     "link": "https://stemsmag.fyi/artifacts/lacquer-cut-v1.html"
   },
      {
