@@ -549,7 +549,6 @@
 /* ===== Interfaz modular (mosaicos) — inspirada en tableros tipo dashboard oscuro con acento naranja ===== */
 #panel{max-width:1180px;padding:10px 12px 8px;border-radius:22px;background:rgba(12,12,12,.8);border:1px solid rgba(255,255,255,.08);
   font:11px/1.4 ui-monospace,"SF Mono",Menlo,Consolas,monospace;color:#e6e6e6;transition:opacity .2s,transform .15s}
-body.np-ghost #panel:not(:hover){opacity:.16}
 #panelHeader{background:none;border:none;padding:2px 4px 10px}
 #panelHeader .title{font-size:11px;letter-spacing:.28em;font-weight:600}
 #panelHeader .title small{margin-left:10px;color:#777;letter-spacing:.2em;font-weight:400}
@@ -581,14 +580,11 @@ body #panel .np-tile.panel-section{border-left:1px solid rgba(255,255,255,.06);b
 .scene-grid button{flex-direction:column;height:66px;gap:6px;font-size:9px;text-align:center;white-space:normal;line-height:1.15}
 .scene-grid button .np-i{width:24px;height:24px;stroke-width:1.4}
 /* preview */
-#npPrevTile{position:sticky;top:0;z-index:3;align-self:start;padding:10px}
-/* preview en modo fantasma por defecto: casi invisible hasta que pasas el mouse */
-#npPrevTile{opacity:.16;transition:opacity .2s}
-#npPrevTile:hover{opacity:1}
-body.np-ghost #npPrevTile{opacity:1}  /* si el panel entero está en fantasma, ya hereda su transparencia */
+#npPrevTile{position:relative;z-index:3;align-self:start;padding:10px}  /* queda en su módulo: no sigue el scroll */
+/* preview siempre visible (sin efecto fantasma) */
+#npPrevTile{opacity:1}
 .np-prev-wrap{position:relative;border-radius:12px;overflow:hidden;background:#000}
 #npPrev{display:block;width:100%;height:auto}
-.np-prev-wrap::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(rgba(0,0,0,.5) .9px,transparent 1.3px) 0 0/4px 4px}
 .np-prev-meta{position:absolute;left:8px;bottom:8px;z-index:2;display:flex;align-items:center;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.55);padding:3px 8px;border-radius:20px}
 .np-prev-meta .np-dot{width:5px;height:5px;margin-right:6px}
 #trackCanvas{height:56px;background:#0e0e0e;border-radius:10px}
@@ -849,6 +845,101 @@ body.np-ghost #npPrevTile{opacity:1}  /* si el panel entero está en fantasma, y
               <option value="bl">Abajo izq.</option><option value="br">Abajo der.</option>
             </select>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section-row">
+      <div class="panel-section logo-section">
+        <div class="panel-section-label">Logo / Marca</div>
+        <div class="panel-section-body">
+          <label class="filebtn" for="logoInput" title="Cargar un PNG (idealmente con fondo transparente) para que quede siempre encima de todas las escenas. También podés arrastrar la imagen a la ventana.">Cargar logo PNG</label>
+          <input type="file" id="logoInput" accept="image/png,image/webp,image/svg+xml,image/jpeg">
+          <button id="logoShowBtn" class="active" disabled title="Mostrar/ocultar el logo (tecla L)">Logo: ON</button>
+          <button id="logoClearBtn" disabled title="Quitar el logo cargado">Quitar logo</button>
+          <button id="logoAnimBtn" class="active" title="Activar/desactivar el movimiento reactivo a la música. Apagado = el logo queda quieto.">Animación: ON</button>
+          <div class="speed-box" title="Estilo de movimiento del logo, independiente de las escenas y reactivo a la música. Nunca se deforma: sólo escala pareja, desplazamiento y una leve inclinación.">
+            <span class="ctrl-label">Movimiento</span>
+            <select id="logoMode">
+              <option value="combo" selected>Combinado</option>
+              <option value="pulse">Pulso (beat)</option>
+              <option value="float">Flotar</option>
+              <option value="bounce">Rebote</option>
+              <option value="orbit">Órbita</option>
+              <option value="sway">Balanceo</option>
+            </select>
+          </div>
+          <div class="speed-box" title="Cuánto se mueve el logo. Doble click = valor por defecto.">
+            <span class="ctrl-label">Intensidad</span>
+            <input type="range" id="logoIntensity" min="0" max="100" step="1" value="60">
+            <span id="logoIntensityVal">60%</span>
+          </div>
+          <div class="speed-box" title="Tamaño del logo como % del ancho/alto de la pantalla (mantiene la proporción). Doble click = valor por defecto.">
+            <span class="ctrl-label">Tamaño</span>
+            <input type="range" id="logoSize" min="5" max="90" step="1" value="30">
+            <span id="logoSizeVal">30%</span>
+          </div>
+          <div class="speed-box" title="Opacidad del logo. Doble click = 100%.">
+            <span class="ctrl-label">Opacidad</span>
+            <input type="range" id="logoOpacity" min="5" max="100" step="1" value="100">
+            <span id="logoOpacityVal">100%</span>
+          </div>
+          <div class="speed-box" title="Dónde se ubica el logo en pantalla.">
+            <span class="ctrl-label">Posición</span>
+            <select id="logoPos">
+              <option value="c" selected>Centro</option>
+              <option value="tl">Arriba izq.</option><option value="tc">Arriba centro</option><option value="tr">Arriba der.</option>
+              <option value="bl">Abajo izq.</option><option value="bc">Abajo centro</option><option value="br">Abajo der.</option>
+            </select>
+          </div>
+          <div class="speed-box" title="Halo luminoso que sigue la silueta del PNG (útil para que se lea sobre escenas muy claras). Late con la música.">
+            <label><input type="checkbox" id="logoHalo"> Halo</label>
+            <input type="color" id="logoHaloColor" value="#ffffff" title="Color del halo">
+          </div>
+          <div class="speed-box" title="Animación con la que APARECE el logo (al cargarlo, al activar Logo: ON o en el ciclo automático).">
+            <span class="ctrl-label">Entrada</span>
+            <select id="logoIn">
+              <option value="cut">Corte (sin animación)</option>
+              <option value="fade">Fundido</option>
+              <option value="zoom">Zoom</option>
+              <option value="up">Deslizar ↑</option><option value="down">Deslizar ↓</option>
+              <option value="left">Deslizar ←</option><option value="right">Deslizar →</option>
+              <option value="drop">Caída</option>
+              <option value="spin">Giro</option>
+              <option value="blur">Desenfoque</option>
+              <option value="flash">Destello</option>
+              <option value="glitch">Glitch RGB</option>
+            </select>
+          </div>
+          <div class="speed-box" title="Animación con la que DESAPARECE el logo (al apagarlo con Logo: OFF / tecla L o en el ciclo automático).">
+            <span class="ctrl-label">Salida</span>
+            <select id="logoOut">
+              <option value="cut">Corte (sin animación)</option>
+              <option value="fade">Fundido</option>
+              <option value="zoom">Zoom</option>
+              <option value="up">Deslizar ↑</option><option value="down">Deslizar ↓</option>
+              <option value="left">Deslizar ←</option><option value="right">Deslizar →</option>
+              <option value="drop">Caída</option>
+              <option value="spin">Giro</option>
+              <option value="blur">Desenfoque</option>
+              <option value="flash">Destello</option>
+              <option value="glitch">Glitch RGB</option>
+            </select>
+          </div>
+          <div class="speed-box" title="Duración de la entrada y de la salida. Doble click = 1.0 s.">
+            <span class="ctrl-label">Duración</span>
+            <input type="range" id="logoDur" min="2" max="30" step="1" value="10" data-default="10">
+            <span id="logoDurVal">1.0 s</span>
+          </div>
+          <button id="logoPreviewBtn" disabled title="Reproduce la salida y vuelve a entrar para ver las animaciones elegidas.">Probar entrada/salida</button>
+          <button id="logoAutoBtn" title="El logo entra, se queda un rato, sale, espera y vuelve a entrar, en bucle (sin tocar el botón Logo: ON/OFF).">Auto in/out: OFF</button>
+          <div class="speed-box" title="Cuánto tiempo se ve el logo y cuánto tiempo queda oculto en cada vuelta del ciclo automático.">
+            <span class="ctrl-label">Visible</span>
+            <select id="logoAutoOn"><option value="10">10 s</option><option value="20" selected>20 s</option><option value="30">30 s</option><option value="60">1 min</option></select>
+            <span class="ctrl-label">Oculto</span>
+            <select id="logoAutoOff"><option value="5">5 s</option><option value="10" selected>10 s</option><option value="20">20 s</option><option value="30">30 s</option></select>
+          </div>
+          <div id="logoStatus" class="ctrl-label">Sin logo cargado</div>
         </div>
       </div>
     </div>
@@ -2095,7 +2186,12 @@ void main(){
     float T = t + uBass * 2.;
     vec3 q = vec3(0., -1., -1.);
     vec3 p;
-    vec3 d = vec3(FC.xy / r + vec2(-.5, .5), uHTZoom);
+    // Pantallas verticales: el cuadro se RECORTA a los costados en vez de estirarse
+    // (en horizontal queda idéntico: la corrección sólo actúa si ancho < alto).
+    float fitX = min(1., r.x / r.y);
+    vec2 u0 = FC.xy / r - .5;
+    u0.x *= fitX;
+    vec3 d = vec3(u0.x, u0.y + 1., uHTZoom);
     float ph = uHTPhase + uTreble * 3.;
 
     for (; i++ < 99.;) {
@@ -2121,7 +2217,9 @@ void main(){
     // Las zonas oscuras entre naranja y amarillo van en rojo (brasa), no negro.
     float m = clamp(a + c, 0., 1.);
     // Solo cerca de la flor: hacia los bordes el fondo se oscurece a casi negro.
-    vec2 vq = (FC.xy / r - vec2(.5, .38)) * vec2(1.1, 1.);
+    vec2 vq = (FC.xy / r - vec2(.5, .38));
+    vq.x *= fitX;                   // viñeta en las mismas coordenadas recortadas (no se ovala)
+    vq *= vec2(1.1, 1.);
     float near = 1. - smoothstep(.12, .62, length(vq));
     col += vec3(.62, .035, .01) * (1. - m) * (1. - m) * (.06 + .94 * near);
     outColor = vec4(clamp(col, 0., 1.), 1.);
@@ -2388,7 +2486,10 @@ void main(){
 
     float e = 0., R = 0., s = 0.;
     vec3 q = vec3(0., -1., -1.), p = vec3(0.), o = vec3(0.);
-    vec3 d = vec3(FC.xy / r * .8 - vec2(.4, -.6), 1.);
+    // Pantallas verticales: se recorta a los costados en vez de estirar (horizontal sin cambios).
+    vec2 u0 = FC.xy / r - .5;
+    u0.x *= min(1., r.x / r.y);
+    vec3 d = vec3(u0 * .8 + vec2(0., 1.), 1.);
     // Golpe de zoom con el beat (alrededor del centro de la imagen, (0,1)).
     d.xy = (d.xy - vec2(0., 1.)) * (1. - .18 * uFKPulse) + vec2(0., 1.);
 
@@ -6331,9 +6432,6 @@ midiClearBtn.addEventListener('click', () => {
   // Cabecera
   const title = panel.querySelector('#panelHeader .title');
   if (title) title.innerHTML = '<i class="np-dot"></i>NEUROPULSE<small>VISUALIZER</small>';
-  const ghost = document.createElement('button'); ghost.id = 'npGhostBtn'; ghost.title = 'Modo fantasma: el panel se vuelve casi invisible hasta que pasas el mouse';
-  ghost.append(svg('ghost')); $('panelHeaderBtns').prepend(ghost);
-  ghost.addEventListener('click', () => { document.body.classList.toggle('np-ghost'); ghost.classList.toggle('active'); });
 
   // Mosaicos
   const grid = document.createElement('div'); grid.id = 'npTiles';
@@ -6352,7 +6450,7 @@ midiClearBtn.addEventListener('click', () => {
   if (ta && ph) ph.after(ta);
   const parts = [sec('.scene-section', 'np-w2'), wrap('', 'Bandas', $('freqAnalyzer')),
     sec('.audio-section', ''), sec('.sim-section', ''), sec('.morph-section', 'np-w2'), sec('#playerSection', 'np-wf'),
-    sec('.midi-section', ''), sec('.output-section', '')];
+    sec('.midi-section', ''), sec('.output-section', ''), sec('.logo-section', '')];
   parts.forEach((p) => p && grid.append(p));
   const body = $('panelBody'), row = $('analyzerRow'), foot = $('panelFooter');
   panel.insertBefore(grid, foot);
@@ -6632,6 +6730,402 @@ midiClearBtn.addEventListener('click', () => {
   // Si el usuario elige una escena a mano, se reinicia la cuenta regresiva
   const grid = $('sceneGrid');
   if (grid) grid.addEventListener('click', () => { if (sceneOn) sceneNext = performance.now() + sceneMs(); });
+})();
+</script>
+
+<style id="npLogoCSS">
+  #brandLogo {
+    position: fixed; left: 0; top: 0; z-index: 5;      /* sobre el canvas, bajo el panel (10) y la intro (15) */
+    display: none; pointer-events: none; user-select: none; -webkit-user-drag: none;
+    transform-origin: 50% 50%; will-change: transform, opacity;
+    max-width: none; max-height: none;
+  }
+  html.marquee-mode #brandLogo { display: none !important; }
+  .logo-section { border-left: 3px solid rgba(255,214,90,0.55); background: rgba(255,214,90,0.05); }
+  .logo-section .panel-section-label { color: rgba(255,226,150,0.85); }
+  #logoMode, #logoPos, #logoIn, #logoOut, #logoAutoOn, #logoAutoOff {
+    background: rgba(255,255,255,0.08); color: #fff; font: inherit; font-size: 11px;
+    border: 1px solid rgba(255,255,255,0.18); border-radius: 5px; padding: 3px 5px; cursor: pointer; max-width: 150px;
+  }
+  #logoMode option, #logoPos option, #logoIn option, #logoOut option, #logoAutoOn option, #logoAutoOff option { background: #1b1b22; color: #fff; }
+  #logoHaloColor { width: 26px; height: 20px; padding: 0; border: 0; background: none; cursor: pointer; }
+  #logoStatus { width: 100%; white-space: normal; overflow-wrap: anywhere; }
+  body.np-dropping::after {
+    content: "Soltá el PNG para usarlo como logo"; position: fixed; inset: 0; z-index: 40;
+    display: flex; align-items: center; justify-content: center; pointer-events: none;
+    background: rgba(0,0,0,.55); color: #fff; font: 600 18px/1.3 system-ui, sans-serif;
+    border: 2px dashed rgba(255,214,90,.8); margin: 12px;
+  }
+  @media (max-width: 640px) { #panel #npTiles > .logo-section { order: 9; } }
+</style>
+<script id="npLogoJS">
+/* =====================================================================
+   Logo / marca sobre todas las escenas.
+   - Capa <img> propia (conserva la transparencia del PNG) por encima del
+     canvas WebGL; no toca el render de las escenas.
+   - Movimiento propio, independiente de las escenas, dirigido por el audio
+     ya analizado (graves/medios/agudos/nivel + pulso de beat) con resortes
+     amortiguados. Sólo escala pareja, desplazamiento y una leve inclinación
+     (máx. ±8°): la imagen nunca se deforma.
+   - Se sincroniza con las ventanas de salida (canal propio) y se recuerda
+     entre sesiones (localStorage, si el navegador lo permite).
+   ===================================================================== */
+(() => {
+  const OUT  = (typeof IS_OUTPUT_MODE !== 'undefined') && IS_OUTPUT_MODE;
+  const MARQ = (typeof IS_MARQUEE !== 'undefined') && IS_MARQUEE;
+  if (MARQ) return;
+  const $ = (id) => document.getElementById(id);
+  const KEY_CFG = 'np.logo.cfg', KEY_IMG = 'np.logo.img', KEY_NAME = 'np.logo.name';
+  const DEF = { show: true, anim: true, mode: 'combo', intensity: 60, size: 30, opacity: 100, pos: 'c', halo: false, haloColor: '#ffffff',
+                inFx: 'zoom', outFx: 'fade', dur: 1, auto: false, autoOn: 20, autoOff: 10 };
+  const cfg = Object.assign({}, DEF);
+  let src = '', fname = '', W = 0, H = 0, baseX = 0, baseY = 0;
+
+  const img = document.createElement('img');
+  img.id = 'brandLogo'; img.alt = ''; img.draggable = false;
+  document.body.appendChild(img);
+
+  let ch = null;
+  try { ch = new BroadcastChannel('stemsmag-viz-logo'); } catch (e) { ch = null; }
+  const send = (m) => { if (ch) { try { ch.postMessage(m); } catch (e) {} } };
+
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const status = (t) => { const el = $('logoStatus'); if (el) el.textContent = t; };
+
+  // ---------- layout: tamaño y posición base (px) ----------
+  function layout() {
+    const nw = img.naturalWidth || 0, nh = img.naturalHeight || 0;
+    if (!src || !nw || !nh) return;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    const k = Math.min(vw * cfg.size / 100 / nw, vh * cfg.size / 100 / nh);
+    W = nw * k; H = nh * k;
+    img.style.width = W + 'px'; img.style.height = H + 'px';
+    const m = Math.min(vw, vh) * 0.035;
+    const v = cfg.pos === 'c' ? 'm' : cfg.pos[0];
+    const h = cfg.pos === 'c' ? 'c' : cfg.pos[1];
+    const cx = h === 'l' ? m + W / 2 : h === 'r' ? vw - m - W / 2 : vw / 2;
+    const cy = v === 't' ? m + H / 2 : v === 'b' ? vh - m - H / 2 : vh / 2;
+    baseX = cx - W / 2; baseY = cy - H / 2;
+  }
+  // ---------- estado de entrada / salida ----------
+  // ph.n: 'off' (oculto) | 'in' (entrando) | 'on' (visible) | 'out' (saliendo); ph.p = progreso 0..1
+  const ph = { n: 'off', p: 0 };
+  let prevEff = false, previewQ = false, lastOp = '', lastFilt = '';
+  function rendering() { return !!src && ph.n !== 'off'; }
+  // ¿Debería estar visible ahora? (botón/tecla L + ciclo automático). El ciclo usa el reloj del
+  // sistema, así la ventana de control y las de salida quedan sincronizadas sin mensajes extra.
+  function effVisible() {
+    if (!src || !cfg.show) return false;
+    if (cfg.auto) { const tot = cfg.autoOn + cfg.autoOff; if (((Date.now() / 1000) % tot) >= cfg.autoOn) return false; }
+    return true;
+  }
+  function startIn()  { if (cfg.inFx === 'cut')  { ph.n = 'on';  ph.p = 1; } else { ph.n = 'in';  ph.p = 0; } }
+  function startOut() { if (cfg.outFx === 'cut') { ph.n = 'off'; ph.p = 0; } else { ph.n = 'out'; ph.p = 0; } }
+  function preview() {
+    if (!src) return;
+    if (ph.n === 'off') { if (cfg.show) { prevEff = true; startIn(); } return; }
+    previewQ = true; startOut();
+    if (ph.n === 'off') { previewQ = false; startIn(); }
+  }
+  function applyVisual() {
+    img.style.display = rendering() ? 'block' : 'none';
+    lastOp = ''; lastFilt = '';
+    layout();
+  }
+
+  // ---------- UI ----------
+  function syncUI() {
+    if (OUT) return;
+    const set = (id, v) => { const e = $(id); if (e) e.value = v; };
+    set('logoMode', cfg.mode); set('logoIntensity', cfg.intensity); set('logoSize', cfg.size);
+    set('logoOpacity', cfg.opacity); set('logoPos', cfg.pos); set('logoHaloColor', cfg.haloColor);
+    const txt = (id, t) => { const e = $(id); if (e) e.textContent = t; };
+    txt('logoIntensityVal', cfg.intensity + '%'); txt('logoSizeVal', cfg.size + '%'); txt('logoOpacityVal', cfg.opacity + '%');
+    const halo = $('logoHalo'); if (halo) halo.checked = cfg.halo;
+    const sb = $('logoShowBtn'); if (sb) { sb.disabled = !src; sb.classList.toggle('active', cfg.show); sb.textContent = 'Logo: ' + (cfg.show ? 'ON' : 'OFF'); }
+    const cb = $('logoClearBtn'); if (cb) cb.disabled = !src;
+    set('logoIn', cfg.inFx); set('logoOut', cfg.outFx); set('logoDur', Math.round(cfg.dur * 10));
+    set('logoAutoOn', cfg.autoOn); set('logoAutoOff', cfg.autoOff);
+    txt('logoDurVal', cfg.dur.toFixed(1) + ' s');
+    const pv = $('logoPreviewBtn'); if (pv) pv.disabled = !src;
+    const au = $('logoAutoBtn'); if (au) { au.classList.toggle('active', cfg.auto); au.textContent = 'Auto in/out: ' + (cfg.auto ? 'ON' : 'OFF'); }
+    const ab = $('logoAnimBtn'); if (ab) { ab.classList.toggle('active', cfg.anim); ab.textContent = 'Animación: ' + (cfg.anim ? 'ON' : 'OFF'); }
+  }
+  function saveCfg() { try { localStorage.setItem(KEY_CFG, JSON.stringify(cfg)); } catch (e) {} }
+  function cfgChanged() { applyVisual(); syncUI(); if (!OUT) { saveCfg(); send({ type: 'cfg', cfg }); } }
+
+  // ---------- imagen ----------
+  function setSrc(s, name) {
+    src = s || ''; fname = name || '';
+    if (!src) {
+      img.removeAttribute('src'); W = H = 0; ph.n = 'off'; prevEff = false; applyVisual(); syncUI();
+      status('Sin logo cargado'); return;
+    }
+    img.onload = () => {
+      prevEff = false;                       // fuerza a repetir la animación de entrada con el logo nuevo
+      ph.n = 'off'; layout(); syncUI();
+      status((fname || 'Logo') + ' · ' + img.naturalWidth + '×' + img.naturalHeight + ' px');
+    };
+    img.src = src;
+  }
+  function persistImg() {
+    try {
+      if (src) { localStorage.setItem(KEY_IMG, src); localStorage.setItem(KEY_NAME, fname); }
+      else { localStorage.removeItem(KEY_IMG); localStorage.removeItem(KEY_NAME); }
+    } catch (e) { if (src) status((fname || 'Logo') + ' cargado (no se pudo recordar para la próxima sesión: imagen muy pesada)'); }
+  }
+  function loadFile(f) {
+    if (!f || !/^image\//.test(f.type)) { status('Ese archivo no es una imagen. Usá un PNG.'); return; }
+    const fr = new FileReader();
+    fr.onerror = () => status('No se pudo leer el archivo.');
+    fr.onload = () => {
+      const im = new Image();
+      im.onerror = () => status('No se pudo abrir la imagen.');
+      im.onload = () => {
+        // Se limita a 1024 px de lado mayor (peso y suavidad); el canal alfa se conserva.
+        let w = im.naturalWidth || 512, h = im.naturalHeight || 512;
+        const k = Math.min(1, 1024 / Math.max(w, h));
+        w = Math.max(1, Math.round(w * k)); h = Math.max(1, Math.round(h * k));
+        let out = fr.result;
+        try {
+          const c = document.createElement('canvas'); c.width = w; c.height = h;
+          c.getContext('2d').drawImage(im, 0, 0, w, h);
+          out = c.toDataURL('image/png');
+        } catch (e) {}
+        cfg.show = true;
+        setSrc(out, f.name); persistImg(); saveCfg();
+        send({ type: 'img', src, name: fname }); send({ type: 'cfg', cfg });
+      };
+      im.src = fr.result;
+    };
+    fr.readAsDataURL(f);
+  }
+
+  // ---------- movimiento reactivo ----------
+  const S = { sc: { p: 1, v: 0 }, x: { p: 0, v: 0 }, y: { p: 0, v: 0 }, r: { p: 0, v: 0 } };
+  const spr = (o, t, dt, k, d) => { o.v += ((t - o.p) * k - o.v * d) * dt; o.p += o.v * dt; };
+  let lt = 0, lastT = performance.now(), seedT = 0, g1 = 0, g2 = 0, g3 = 0;
+
+  function readAudio() {
+    let a = null, pulse = 0;
+    try { a = OUT ? latestSyncState : frameSnap; pulse = (beatFX && beatFX.pulse) || 0; } catch (e) {}
+    if (!a) return { b: 0, m: 0, t: 0, l: 0, p: clamp(pulse, 0, 1) };
+    const c = (v) => clamp(+v || 0, 0, 1.5);
+    return { b: c(a.sBass), m: c(a.sMid), t: c(a.sTreble), l: c(a.sLevel), p: clamp(pulse, 0, 1) };
+  }
+  function hexRGB(hx) {
+    const m = /^#?([0-9a-f]{6})$/i.exec(hx || ''); const n = m ? parseInt(m[1], 16) : 0xffffff;
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+
+  // ---------- animaciones de entrada / salida ----------
+  // "a" = cuánto está "ausente" el logo: 0 = completamente presente, 1 = completamente ido.
+  // Entrada: a baja de 1 a 0 (con rebote / overshoot en Zoom y Caída). Salida: a sube de 0 a 1.
+  const easeOutBack = (x) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+  const easeOutBounce = (x) => {
+    const n = 7.5625, d = 2.75;
+    if (x < 1 / d) return n * x * x;
+    if (x < 2 / d) return n * (x -= 1.5 / d) * x + 0.75;
+    if (x < 2.5 / d) return n * (x -= 2.25 / d) * x + 0.9375;
+    return n * (x -= 2.625 / d) * x + 0.984375;
+  };
+  function absence(name, p, isIn) {
+    if (name === 'glitch') return isIn ? 1 - p : p;                 // lineal: el parpadeo se calma / se agrava
+    if (isIn) {
+      let e;
+      if (name === 'zoom') e = easeOutBack(p);
+      else if (name === 'drop') e = easeOutBounce(p);
+      else e = 1 - Math.pow(1 - p, 3);
+      return 1 - e;
+    }
+    return p * p;                                                   // salida: arranca suave y acelera
+  }
+  function fxState(name, a, isIn) {
+    const o = { o: 1, s: 1, x: 0, y: 0, r: 0, blur: 0, br: 1, gl: 0 };
+    const dist = Math.max(window.innerWidth, window.innerHeight) * 0.28 + Math.max(W, H) * 0.3;
+    const fade = clamp(1 - a, 0, 1);
+    switch (name) {
+      case 'fade':  o.o = fade; break;
+      case 'zoom':  o.s = 1 - 0.65 * a; o.o = clamp(1 - a * 1.4, 0, 1); break;
+      case 'up': case 'down': case 'left': case 'right': case 'drop': {
+        // dirección = hacia dónde se MUEVE el logo (entra desde el lado opuesto / sale hacia ese lado)
+        const d = name === 'up' ? [0, -1] : name === 'left' ? [-1, 0] : name === 'right' ? [1, 0] : [0, 1];
+        const sg = isIn ? -1 : 1;
+        o.x = sg * d[0] * a * dist; o.y = sg * d[1] * a * dist; o.o = clamp(1 - a * 1.2, 0, 1); break;
+      }
+      case 'spin':  o.r = (isIn ? -1 : 1) * a * 120; o.s = 1 - 0.45 * a; o.o = fade; break;
+      case 'blur':  o.blur = Math.max(0, a) * 26; o.o = clamp(1 - a * 0.9, 0, 1); o.s = 1 + 0.12 * a; break;
+      case 'flash': o.br = 1 + Math.max(0, a) * 5; o.o = clamp(1 - a * 0.8, 0, 1); o.s = 1 + 0.06 * a; break;
+      case 'glitch': {
+        const am = Math.max(0, a);
+        o.o = am > 0.01 ? (g1 > am ? 1 : 0.12) : 1;                // parpadeo duro (sin fundido suave)
+        o.x = (g2 - 0.5) * am * 70; o.y = (g3 - 0.5) * am * 18;
+        o.gl = am; break;                                          // desregistro RGB magenta / cian
+      }
+    }
+    return o;
+  }
+
+  function tick(now) {
+    requestAnimationFrame(tick);
+    const dt = Math.min((now - lastT) / 1000, 0.05); lastT = now;
+    if (dt <= 0) return;
+
+    // 1) ¿hay que entrar o salir?
+    const e = effVisible();
+    if (e !== prevEff) { prevEff = e; if (e) startIn(); else startOut(); }
+    // 2) avanzar la transición
+    if (ph.n === 'in' || ph.n === 'out') {
+      ph.p += dt / Math.max(0.05, cfg.dur);
+      if (ph.p >= 1) {
+        if (ph.n === 'in') { ph.n = 'on'; ph.p = 1; }
+        else { ph.n = 'off'; ph.p = 0; if (previewQ) { previewQ = false; startIn(); } }
+      }
+    }
+    if (!rendering()) { if (img.style.display !== 'none') img.style.display = 'none'; return; }
+    if (img.style.display !== 'block') { layout(); img.style.display = 'block'; }
+
+    // semillas del glitch (≈18 Hz, para que parpadee a saltos y no suavemente)
+    if (now - seedT > 55) { seedT = now; g1 = Math.random(); g2 = Math.random(); g3 = Math.random(); }
+
+    const a = readAudio();
+    const L = Math.min(1, a.l), B = Math.min(1, a.b * 0.8), M = Math.min(1, a.m), T = Math.min(1, a.t), P = a.p;
+    const I = cfg.intensity / 100;
+    const amp = Math.min(window.innerWidth, window.innerHeight) * 0.03 * I;
+    let ts = 1, tx = 0, ty = 0, tr = 0;
+    let kp = 60, dp = 9, ky = 60, dy = 9;          // resortes de posición (suaves)
+
+    if (cfg.anim) {
+      lt += dt * (0.5 + 0.9 * L);                  // reloj propio, independiente de las escenas
+      const sn = Math.sin, cs = Math.cos;
+      switch (cfg.mode) {
+        case 'pulse':
+          ts = 1 + I * (0.11 * P + 0.06 * B); break;
+        case 'float':
+          tx = sn(lt * 0.9) * amp * (0.4 + L); ty = cs(lt * 0.65) * amp * (0.4 + L);
+          tr = sn(lt * 0.55) * 3 * I * (0.4 + M); ts = 1 + I * 0.03 * B; break;
+        case 'bounce':
+          ty = -P * amp * 3.4; ts = 1 + I * 0.05 * P; ky = 150; dy = 8; break;   // sub-amortiguado = rebota
+        case 'orbit': {
+          const R = amp * (0.6 + L * 1.4);
+          tx = cs(lt * 1.3) * R; ty = sn(lt * 1.3) * R; tr = cs(lt * 1.3) * 2 * I;
+          ts = 1 + I * (0.07 * P + 0.03 * B); break;
+        }
+        case 'sway':
+          tr = sn(lt * 1.6) * 5 * I * (0.3 + M + B * 0.5); tx = sn(lt * 0.8) * amp * 0.6 * (0.3 + L);
+          ts = 1 + I * (0.06 * P + 0.03 * B); break;
+        default: // combo
+          ts = 1 + I * (0.09 * P + 0.05 * B);
+          tx = sn(lt * 0.8) * amp * (0.35 + L * 0.8);
+          ty = cs(lt * 0.6) * amp * (0.35 + L * 0.8) - P * amp * 1.4;
+          tr = sn(lt * 1.1) * 3.5 * I * (0.3 + M + T * 0.4);
+      }
+    }
+    tr = clamp(tr, -8, 8);
+
+    spr(S.sc, ts, dt, 300, 24);
+    spr(S.x, tx, dt, kp, dp);
+    spr(S.y, ty, dt, ky, dy);
+    spr(S.r, tr, dt, 90, 12);
+    const sc0 = clamp(S.sc.p, 0.6, 1.5);
+
+    // 3) efecto de entrada/salida (se suma al movimiento reactivo)
+    let fx = null;
+    if (ph.n === 'in' || ph.n === 'out') {
+      const isIn = ph.n === 'in';
+      const name = isIn ? cfg.inFx : cfg.outFx;
+      fx = fxState(name, absence(name, ph.p, isIn), isIn);
+    }
+    const X = baseX + S.x.p + (fx ? fx.x : 0), Y = baseY + S.y.p + (fx ? fx.y : 0);
+    const R = S.r.p + (fx ? fx.r : 0), SC = Math.max(0.02, sc0 * (fx ? fx.s : 1));
+    img.style.transform = 'translate3d(' + X.toFixed(2) + 'px,' + Y.toFixed(2) + 'px,0) rotate(' + R.toFixed(2) + 'deg) scale(' + SC.toFixed(4) + ')';
+
+    const op = (cfg.opacity / 100 * (fx ? fx.o : 1)).toFixed(3);
+    if (op !== lastOp) { lastOp = op; img.style.opacity = op; }
+
+    // 4) filtros: halo reactivo + (desenfoque | destello | desregistro RGB) de las transiciones
+    const f = [];
+    if (cfg.halo) {
+      const g = cfg.anim ? (0.4 * B + 0.6 * P) : 0.2;
+      const r = Math.round(8 + 22 * g), al = (0.55 + 0.35 * g).toFixed(2), c = hexRGB(cfg.haloColor);
+      f.push('drop-shadow(0 0 ' + r + 'px rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + al + '))');
+    }
+    if (fx) {
+      if (fx.blur > 0.3) f.push('blur(' + fx.blur.toFixed(1) + 'px)');
+      if (fx.br > 1.02) f.push('brightness(' + fx.br.toFixed(2) + ')');
+      if (fx.gl > 0.01) {
+        const d = (2 + fx.gl * 16).toFixed(1);
+        f.push('drop-shadow(' + d + 'px 0 0 rgba(255,31,209,.85))', 'drop-shadow(-' + d + 'px 0 0 rgba(18,232,255,.85))');
+      }
+    }
+    const fs = f.length ? f.join(' ') : 'none';
+    if (fs !== lastFilt) { lastFilt = fs; img.style.filter = fs; }
+  }
+
+  // ---------- eventos ----------
+  window.addEventListener('resize', layout);
+  if (ch) ch.onmessage = (e) => {
+    const m = e.data || {};
+    if (OUT) {
+      if (m.type === 'cfg') { Object.assign(cfg, m.cfg); layout(); }
+      else if (m.type === 'img') { setSrc(m.src, m.name); }
+      else if (m.type === 'preview') { preview(); }
+    } else if (m.type === 'req') {
+      send({ type: 'img', src, name: fname }); send({ type: 'cfg', cfg });
+    }
+  };
+
+  if (!OUT) {
+    try { Object.assign(cfg, JSON.parse(localStorage.getItem(KEY_CFG) || 'null') || {}); } catch (e) {}
+    const on = (id, ev, fn) => { const e = $(id); if (e) e.addEventListener(ev, fn); };
+    on('logoInput', 'change', (e) => { loadFile(e.target.files && e.target.files[0]); e.target.value = ''; });
+    on('logoShowBtn', 'click', () => { cfg.show = !cfg.show; cfgChanged(); });
+    on('logoAnimBtn', 'click', () => { cfg.anim = !cfg.anim; cfgChanged(); });
+    on('logoClearBtn', 'click', () => { setSrc('', ''); persistImg(); send({ type: 'img', src: '', name: '' }); });
+    on('logoMode', 'change', (e) => { cfg.mode = e.target.value; cfgChanged(); });
+    on('logoPos', 'change', (e) => { cfg.pos = e.target.value; cfgChanged(); });
+    on('logoIntensity', 'input', (e) => { cfg.intensity = +e.target.value; cfgChanged(); });
+    on('logoSize', 'input', (e) => { cfg.size = +e.target.value; cfgChanged(); });
+    on('logoOpacity', 'input', (e) => { cfg.opacity = +e.target.value; cfgChanged(); });
+    on('logoIn', 'change', (e) => { cfg.inFx = e.target.value; cfgChanged(); });
+    on('logoOut', 'change', (e) => { cfg.outFx = e.target.value; cfgChanged(); });
+    on('logoDur', 'input', (e) => { cfg.dur = (+e.target.value) / 10; cfgChanged(); });
+    on('logoAutoBtn', 'click', () => { cfg.auto = !cfg.auto; cfgChanged(); });
+    on('logoAutoOn', 'change', (e) => { cfg.autoOn = +e.target.value; cfgChanged(); });
+    on('logoAutoOff', 'change', (e) => { cfg.autoOff = +e.target.value; cfgChanged(); });
+    on('logoPreviewBtn', 'click', () => { preview(); send({ type: 'preview' }); });
+    on('logoHalo', 'change', (e) => { cfg.halo = e.target.checked; cfgChanged(); });
+    on('logoHaloColor', 'input', (e) => { cfg.haloColor = e.target.value; cfgChanged(); });
+
+    // Tecla L = mostrar/ocultar logo
+    window.addEventListener('keydown', (e) => {
+      const tag = (document.activeElement && document.activeElement.tagName) || '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if ((e.key === 'l' || e.key === 'L') && src) { cfg.show = !cfg.show; cfgChanged(); }
+    });
+    // Arrastrar y soltar una imagen sobre la ventana
+    const hasFiles = (e) => e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], 'Files') >= 0;
+    let dragN = 0;
+    window.addEventListener('dragenter', (e) => { if (hasFiles(e)) { dragN++; document.body.classList.add('np-dropping'); } });
+    window.addEventListener('dragleave', (e) => { if (hasFiles(e) && --dragN <= 0) { dragN = 0; document.body.classList.remove('np-dropping'); } });
+    window.addEventListener('dragover', (e) => { if (hasFiles(e)) e.preventDefault(); });
+    window.addEventListener('drop', (e) => {
+      dragN = 0; document.body.classList.remove('np-dropping');
+      const fs = e.dataTransfer && e.dataTransfer.files; if (!fs) return;
+      for (const f of fs) if (/^image\//.test(f.type)) { e.preventDefault(); loadFile(f); break; }
+    });
+
+    // Restaurar el logo de la sesión anterior
+    try {
+      const s0 = localStorage.getItem(KEY_IMG);
+      if (s0) setSrc(s0, localStorage.getItem(KEY_NAME) || '');
+    } catch (e) {}
+    syncUI(); applyVisual();
+  } else {
+    send({ type: 'req' });                       // la ventana de salida pide el logo a la de control
+  }
+  requestAnimationFrame(tick);
 })();
 </script>
 </body>
