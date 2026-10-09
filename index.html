@@ -960,9 +960,11 @@
   }
 
 
-  /* ============ HALLOWEEN (se activa solo del 15 oct al 2 nov; ?halloween=1 / =0 para forzar) ============ */
-  /* Logo neón con parpadeo de luz mala */
-  .halloween .header-signature::after{
+  /* ============ TEMPORADAS (Halloween, Día de Muertos, Acción de Gracias, Navidad, Año Nuevo) ============ */
+  /* Se activan solas por fecha. Para probar: ?tema=halloween | muertos | gracias | navidad | anonuevo | off */
+
+  /* --- Logo con brillo propio por temporada --- */
+  html[data-tema="halloween"] .header-signature::after{
     color:#FFB36B;
     text-shadow:0 0 3px #FFF3E0, 0 0 9px #FF7A2E, 0 0 20px #FF7A2E, 0 0 40px #E8236B, 0 0 68px #8A2BE2;
     animation:neonFlicker 5.2s linear infinite;
@@ -972,19 +974,64 @@
       opacity:1;
       text-shadow:0 0 3px #FFF3E0, 0 0 9px #FF7A2E, 0 0 20px #FF7A2E, 0 0 40px #E8236B, 0 0 68px #8A2BE2;
     }
-    19%,23%,54%{
-      opacity:0.4;
-      text-shadow:0 0 2px #FF7A2E, 0 0 6px #FF7A2E;
-    }
+    19%,23%,54%{opacity:0.4; text-shadow:0 0 2px #FF7A2E, 0 0 6px #FF7A2E;}
   }
-  .hw-layer{position:fixed; inset:0; pointer-events:none;}
-  .hw-bats{z-index:135;}
-  .hw-ghosts{z-index:90;}
-  /* Murciélagos */
-  .hw-bat{position:fixed; left:0; top:0; will-change:transform;}
-  .hw-bat-body{width:100%;}
-  .hw-bat.flip .hw-bat-body{transform:scaleX(-1);}
-  .hw-bat svg{
+
+  html[data-tema="muertos"] .header-signature::after{
+    color:#FFC966;
+    text-shadow:0 0 4px #FFF1C9, 0 0 12px #FF9A1F, 0 0 28px #FF7A2E, 0 0 52px #E8236B;
+    animation:candleFlicker 3.4s ease-in-out infinite;
+  }
+  @keyframes candleFlicker{
+    0%,100%{opacity:1; text-shadow:0 0 4px #FFF1C9, 0 0 12px #FF9A1F, 0 0 28px #FF7A2E, 0 0 52px #E8236B;}
+    22%{opacity:0.88; text-shadow:0 0 3px #FFF1C9, 0 0 9px #FF9A1F, 0 0 20px #FF7A2E, 0 0 40px #E8236B;}
+    47%{opacity:1; text-shadow:0 0 5px #FFF1C9, 0 0 15px #FFB43A, 0 0 34px #FF7A2E, 0 0 60px #E8236B;}
+    71%{opacity:0.93; text-shadow:0 0 3px #FFF1C9, 0 0 11px #FF9A1F, 0 0 24px #FF7A2E, 0 0 46px #E8236B;}
+  }
+
+  html[data-tema="gracias"] .header-signature::after{
+    color:#F7B84B;
+    text-shadow:0 0 8px rgba(247,184,75,0.7), 0 0 24px rgba(214,120,40,0.65), 0 0 48px rgba(139,90,52,0.85);
+    animation:warmPulse 5s ease-in-out infinite alternate;
+  }
+  @keyframes warmPulse{
+    from{opacity:0.93; text-shadow:0 0 6px rgba(247,184,75,0.55), 0 0 18px rgba(214,120,40,0.5), 0 0 36px rgba(139,90,52,0.7);}
+    to{opacity:1; text-shadow:0 0 10px rgba(247,184,75,0.85), 0 0 30px rgba(214,120,40,0.75), 0 0 56px rgba(139,90,52,0.9);}
+  }
+
+  html[data-tema="navidad"] .header-signature::after{
+    color:#FFF4E6;
+    text-shadow:0 0 4px #fff, 0 0 12px #ff3b5c, 0 0 28px #ff3b5c, 0 0 50px #1fa35b;
+    animation:xmasGlow 4s ease-in-out infinite alternate;
+  }
+  @keyframes xmasGlow{
+    from{text-shadow:0 0 4px #fff, 0 0 12px #ff3b5c, 0 0 28px #ff3b5c, 0 0 50px #1fa35b;}
+    to{text-shadow:0 0 4px #fff, 0 0 12px #2ee287, 0 0 28px #2ee287, 0 0 50px #ff3b5c;}
+  }
+
+  html[data-tema="anonuevo"] .header-signature::after{
+    color:#FFD770;
+    text-shadow:0 0 4px #FFF6D6, 0 0 12px #FFC23D, 0 0 28px #FFB347, 0 0 52px rgba(232,35,107,0.8);
+    animation:goldShimmer 3s ease-in-out infinite alternate;
+  }
+  @keyframes goldShimmer{
+    from{opacity:0.92; text-shadow:0 0 3px #FFF6D6, 0 0 9px #FFC23D, 0 0 20px #FFB347, 0 0 40px rgba(232,35,107,0.6);}
+    to{opacity:1; text-shadow:0 0 6px #FFF6D6, 0 0 16px #FFD770, 0 0 34px #FFB347, 0 0 60px rgba(232,35,107,0.9);}
+  }
+
+  /* --- Capas de efectos --- */
+  .fx-layer{position:fixed; inset:0; pointer-events:none;}
+  .fx-bats{z-index:135;}
+  .fx-risers{z-index:90;}
+  .fx-fall{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:92;}
+  .fx-trail{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:999;}
+  .fx-cd{font-variant-numeric:tabular-nums;}
+
+  /* Murciélagos (Halloween) */
+  .fx-bat{position:fixed; left:0; top:0; will-change:transform;}
+  .fx-bat-body{width:100%;}
+  .fx-bat.flip .fx-bat-body{transform:scaleX(-1);}
+  .fx-bat svg{
     display:block; width:100%; height:auto;
     fill:#160A26; stroke:rgba(255,122,46,0.8); stroke-width:0.8; stroke-linejoin:round;
     filter:drop-shadow(0 0 5px rgba(255,122,46,0.55));
@@ -992,17 +1039,43 @@
     animation:batFlap .26s ease-in-out infinite alternate;
   }
   @keyframes batFlap{from{transform:scaleY(1);} to{transform:scaleY(0.42);}}
-  /* Fantasmas flotando (muy tenues) */
-  .hw-ghost{
+
+  /* Emojis que suben despacio y tenues (fantasmas, calaveritas, regalos, etc.) */
+  .fx-riser{
     position:fixed; left:0; top:0; line-height:1; opacity:0; user-select:none;
     will-change:transform, opacity;
-    filter:drop-shadow(0 0 8px rgba(183,124,255,0.75));
   }
-  /* Rastro del cursor */
-  .hw-trail{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:999;}
+
+  /* Decoraciones fijas bajo el submenú */
+  .fx-deco{position:fixed; top:var(--stack-h); left:0; right:0; z-index:110; pointer-events:none;}
+  .fx-papel{height:40px; overflow:hidden;}
+  .fx-papel::before{content:''; position:absolute; top:0; left:0; right:0; height:2px; background:rgba(244,232,211,0.55);}
+  .fx-flag{
+    position:absolute; top:1px; height:36px;
+    transform-origin:50% 0;
+    animation:flagSway 3.2s ease-in-out infinite alternate;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,0.35));
+  }
+  .fx-flag svg{display:block; width:100%; height:100%;}
+  @keyframes flagSway{
+    from{transform:rotate(-5deg) skewX(-3deg);}
+    to{transform:rotate(5deg) skewX(3deg);}
+  }
+  .fx-lights{height:34px;}
+  .fx-lights svg{display:block; width:100%; height:100%; overflow:visible;}
+  .fx-bulb{animation:bulbTwinkle 1.8s ease-in-out infinite; filter:drop-shadow(0 0 5px currentColor);}
+  .fx-bulb.b1{animation-delay:.45s;}
+  .fx-bulb.b2{animation-delay:.9s;}
+  .fx-bulb.b3{animation-delay:1.35s;}
+  @keyframes bulbTwinkle{
+    0%,100%{opacity:1; filter:drop-shadow(0 0 5px currentColor);}
+    50%{opacity:0.35; filter:drop-shadow(0 0 1px currentColor);}
+  }
   @media (prefers-reduced-motion: reduce){
-    .halloween .header-signature::after{animation:none;}
+    html[data-tema] .header-signature::after{animation:none;}
+    .fx-flag, .fx-bulb{animation:none;}
   }
+
   @media (prefers-reduced-motion: reduce){
     .grain{animation:none;}
   }
@@ -1076,10 +1149,18 @@
       });
     }
 
+    // Items extra opcionales (los pone el motor de temporadas: cuentas regresivas, etc.)
+    let baseItems = null;
+    function render(){
+      const extra = (typeof window.stemsTickerExtra === 'function') ? window.stemsTickerExtra() : [];
+      start(extra.concat(baseItems || []));
+    }
+    window.stemsTickerRefresh = function(){ if(baseItems) render(); };
+
     fetch('ticker.json' + '?_=' + Date.now())
       .then(r => r.json())
-      .then(items => start(Array.isArray(items) ? items : FALLBACK))
-      .catch(() => start(FALLBACK));
+      .then(items => { baseItems = Array.isArray(items) ? items : []; render(); })
+      .catch(() => { baseItems = []; render(); });
   })();
 </script>
 
@@ -2138,160 +2219,453 @@ fetch('artifacts.json' + '?_=' + Date.now())
 
 <script>
 /* =========================================================
-   HALLOWEEN — murciélagos, logo neón, rastro del cursor y fantasmas
-   - Se activa solo entre HW_START y HW_END (cada año).
-   - Para probar fuera de fechas: agrega ?halloween=1 a la URL.
-     Para apagarlo aunque esté en fechas: ?halloween=0
-   - Respeta "reducir movimiento": en ese caso solo queda el logo neón estático.
+   TEMPORADAS — motor de temas por fecha
+   Halloween · Día de Muertos · Acción de Gracias · Navidad · Año Nuevo
+
+   - Cada temporada se activa sola entre sus fechas (SEASONS). Fuera de ellas no pasa nada.
+   - Para probar desde la URL:  ?tema=halloween | muertos | gracias | navidad | anonuevo | off
+   - Cambiar fechas: edita SEASONS ([mes, día], inclusive). Año Nuevo cruza de diciembre a enero.
+   - Respeta "reducir movimiento": quedan solo las decoraciones fijas y el brillo del logo estático.
    ========================================================= */
 (function(){
-  const HW_START = {month:10, day:15};  // 15 de octubre
-  const HW_END   = {month:11, day:2};   // 2 de noviembre (inclusive)
+  /* @@DATES-START */
+  const SEASONS = {
+    halloween:{start:[10,15], end:[10,31]},
+    muertos:  {start:[11,1],  end:[11,3]},
+    gracias:  {start:[11,20], end:[11,28]},
+    navidad:  {start:[12,1],  end:[12,25]},
+    anonuevo: {start:[12,26], end:[1,6]}
+  };
+  const ALIASES = {
+    'halloween':'halloween',
+    'muertos':'muertos', 'dia-de-muertos':'muertos', 'diademuertos':'muertos', 'catrina':'muertos',
+    'gracias':'gracias', 'accion-de-gracias':'gracias', 'acciondegracias':'gracias', 'thanksgiving':'gracias',
+    'navidad':'navidad', 'christmas':'navidad',
+    'anonuevo':'anonuevo', 'ano-nuevo':'anonuevo', 'nochevieja':'anonuevo', 'newyear':'anonuevo'
+  };
 
-  function halloweenActive(){
-    const q = new URLSearchParams(location.search).get('halloween');
-    if(q === '1' || q === 'true')  return true;
-    if(q === '0' || q === 'false') return false;
-    const now = new Date(), y = now.getFullYear();
-    const start = new Date(y, HW_START.month - 1, HW_START.day, 0, 0, 0);
-    const end   = new Date(y, HW_END.month - 1, HW_END.day, 23, 59, 59);
-    return now >= start && now <= end;
+  function pickSeason(search, now){
+    const params = new URLSearchParams(search);
+    const t = params.get('tema');
+    if(t !== null){
+      const k = t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().replace(/\s+/g, '-');
+      return ALIASES[k] || null;                       // "off", vacío o desconocido = sin tema
+    }
+    const h = params.get('halloween');                 // compatibilidad con la versión anterior
+    if(h === '1' || h === 'true') return 'halloween';
+    if(h === '0' || h === 'false') return null;
+    const md = (now.getMonth() + 1) * 100 + now.getDate();
+    for(const name in SEASONS){
+      const s = SEASONS[name].start[0] * 100 + SEASONS[name].start[1];
+      const e = SEASONS[name].end[0] * 100 + SEASONS[name].end[1];
+      const on = s <= e ? (md >= s && md <= e) : (md >= s || md <= e);
+      if(on) return name;
+    }
+    return null;
   }
-  if(!halloweenActive()) return;
 
-  document.documentElement.classList.add('halloween');
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  // Acción de Gracias (EE. UU.): 4.º jueves de noviembre
+  function thanksgiving(y){
+    const dow = new Date(y, 10, 1).getDay();
+    return new Date(y, 10, 1 + ((4 - dow + 7) % 7) + 21, 0, 0, 0, 0);
+  }
+  /* @@DATES-END */
 
+  const tema = pickSeason(location.search, new Date());
+  if(!tema) return;
+  document.documentElement.setAttribute('data-tema', tema);
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const small = window.innerWidth < 700;
   const rand = (a, b) => a + Math.random() * (b - a);
-
-  /* ---------- MURCIÉLAGOS ---------- */
-  const BAT_SVG = '<svg viewBox="0 0 64 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M32 9 L34.5 4 L35.5 10 C40 8 48 6 62 10 C58 13 57 16 58 20 C54 17 50 18 47 21 C45 18 41 18 38 21 C36 20 34 21 32 27 C30 21 28 20 26 21 C23 18 19 18 17 21 C14 18 10 17 6 20 C7 16 6 13 2 10 C16 6 24 8 28.5 10 L29.5 4 Z"/></svg>';
-  const batLayer = document.createElement('div');
-  batLayer.className = 'hw-layer hw-bats';
-  document.body.appendChild(batLayer);
-
-  function spawnBat(){
-    if(document.hidden || batLayer.children.length >= 3) return;
-    const W = window.innerWidth, H = window.innerHeight;
-    const size = rand(30, 58);
-    const dir = Math.random() < 0.5 ? 1 : -1;           // 1: izq→der, -1: der→izq
-    const el = document.createElement('div');
-    el.className = 'hw-bat' + (dir < 0 ? ' flip' : '');
-    el.style.width = size + 'px';
-    el.innerHTML = '<div class="hw-bat-body">' + BAT_SVG + '</div>';
-    batLayer.appendChild(el);
-
-    const baseY = rand(H * 0.06, H * 0.6);
-    const amp = rand(18, 55), freq = rand(1.5, 3.2), phase = rand(0, Math.PI * 2);
-    const span = W + size * 2 + 40, pts = 9, frames = [];
-    for(let i = 0; i < pts; i++){
-      const t = i / (pts - 1);
-      const x = dir > 0 ? (-size - 20 + t * span) : (W + 20 - t * span);
-      const y = baseY + Math.sin(t * Math.PI * 2 * freq + phase) * amp;
-      const tilt = Math.cos(t * Math.PI * 2 * freq + phase) * 9;
-      frames.push({transform:`translate(${x}px,${y}px) rotate(${tilt}deg)`, offset:t});
-    }
-    const dur = rand(6500, 11000) * (W < 700 ? 0.7 : 1);
-    const anim = el.animate(frames, {duration:dur, easing:'linear'});
-    anim.onfinish = () => el.remove();
+  const pick = arr => arr[(Math.random() * arr.length) | 0];
+  const pad = n => String(n).padStart(2, '0');
+  function mkLayer(cls){
+    const d = document.createElement('div');
+    d.className = 'fx-layer ' + cls;
+    document.body.appendChild(d);
+    return d;
   }
-  (function batLoop(){ spawnBat(); setTimeout(batLoop, rand(3500, 8000)); })();
-
-  /* ---------- FANTASMAS FLOTANDO (muy tenues) ---------- */
-  const ghostLayer = document.createElement('div');
-  ghostLayer.className = 'hw-layer hw-ghosts';
-  document.body.appendChild(ghostLayer);
-
-  function spawnGhost(){
-    if(document.hidden || ghostLayer.children.length >= 4) return;
-    const W = window.innerWidth, H = window.innerHeight;
-    const el = document.createElement('div');
-    el.className = 'hw-ghost';
-    el.textContent = Math.random() < 0.85 ? '👻' : '🎃';
-    el.style.fontSize = rand(26, 52) + 'px';
-    ghostLayer.appendChild(el);
-
-    const x0 = rand(W * 0.05, W * 0.9), amp = rand(20, 70), phase = rand(0, Math.PI * 2);
-    const peak = 0.22, pts = 8, frames = [];
-    for(let i = 0; i < pts; i++){
-      const t = i / (pts - 1);
-      const x = x0 + Math.sin(t * Math.PI * 3 + phase) * amp;
-      const y = (H + 60) - t * (H + 180);
-      const opacity = t < 0.12 ? (t / 0.12) * peak : (t > 0.8 ? ((1 - t) / 0.2) * peak : peak);
-      const rot = Math.sin(t * 6 + phase) * 10;
-      frames.push({transform:`translate(${x}px,${y}px) rotate(${rot}deg)`, opacity:opacity, offset:t});
-    }
-    const anim = el.animate(frames, {duration:rand(14000, 24000), easing:'linear'});
-    anim.onfinish = () => el.remove();
+  function onResize(fn){
+    let t;
+    window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(fn, 200); });
   }
-  setTimeout(function ghostLoop(){ spawnGhost(); setTimeout(ghostLoop, rand(4000, 9000)); }, 2500);
 
-  /* ---------- RASTRO DEL CURSOR (chispas; mouse y dedo) ---------- */
-  const cv = document.createElement('canvas');
-  cv.className = 'hw-trail';
-  document.body.appendChild(cv);
-  const ctx = cv.getContext('2d');
-  const COLORS = ['#FF7A2E', '#F2A93C', '#E8236B', '#B77CFF'];
-  let dpr = 1, particles = [], running = false, lastX = -999, lastY = -999;
+  /* ---------- CUENTA REGRESIVA EN LA MARQUESINA ---------- */
+  const NOW = new Date(), Y = NOW.getFullYear();
+  const TICKERS = {
+    halloween:{icon:'🎃', label:'HALLOWEEN',         target:() => new Date(Y, 9, 31),  after:() => '¡HAPPY HALLOWEEN! 🎃', afterDays:1},
+    gracias:  {icon:'🦃', label:'ACCIÓN DE GRACIAS', target:() => thanksgiving(Y),     after:() => '¡FELIZ ACCIÓN DE GRACIAS! 🦃', afterDays:1},
+    navidad:  {icon:'🎄', label:'NAVIDAD',           target:() => new Date(Y, 11, 25), after:() => '¡FELIZ NAVIDAD! 🎄', afterDays:1},
+    anonuevo: {icon:'🎆', label:'AÑO NUEVO',         target:() => new Date(NOW.getMonth() >= 6 ? Y + 1 : Y, 0, 1), after:t => '¡FELIZ ' + t.getFullYear() + '! 🎆', afterDays:6}
+  };
+  function cdText(){
+    const spec = TICKERS[tema];
+    if(!spec) return '';
+    const target = spec.target().getTime(), left = target - Date.now();
+    if(left > 0){
+      const s = Math.floor(left / 1000);
+      const d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), sec = s % 60;
+      return spec.icon + ' FALTAN ' + d + 'D ' + pad(h) + 'H ' + pad(m) + 'M ' + pad(sec) + 'S PARA ' + spec.label;
+    }
+    if(-left < spec.afterDays * 86400000) return spec.after(new Date(target));
+    return '';
+  }
+  if(cdText()){
+    window.stemsTickerExtra = () => { const t = cdText(); return t ? ['<span class="fx-cd">' + t + '</span>'] : []; };
+    if(window.stemsTickerRefresh) window.stemsTickerRefresh();
+    setInterval(() => {
+      const t = cdText();
+      document.querySelectorAll('.fx-cd').forEach(el => { el.textContent = t; });
+    }, 1000);
+  }
 
-  function sizeCanvas(){
+  /* ---------- DECORACIONES FIJAS ---------- */
+  // Papel picado colgando bajo el submenú (Día de Muertos)
+  function buildPapel(){
+    const wrap = document.createElement('div');
+    wrap.className = 'fx-deco fx-papel';
+    document.body.appendChild(wrap);
+    const COLORS = ['#E8236B', '#FF7A2E', '#F2A93C', '#2FB6A8', '#B77CFF', '#FF5D8F'];
+    const PATH = 'M0 0H40V26L35 32L30 26L25 32L20 26L15 32L10 26L5 32L0 26Z M20 6L24 10L20 14L16 10Z M6 7h6v5h-6Z M28 7h6v5h-6Z M17 18h6v3h-6Z';
+    function render(){
+      const step = window.innerWidth < 700 ? 38 : 48, n = Math.ceil(window.innerWidth / step) + 1;
+      let html = '';
+      for(let i = 0; i < n; i++){
+        const delay = (-(i * 0.37) % 3.2).toFixed(2);
+        html += '<div class="fx-flag" style="left:' + (i * step) + 'px;width:' + (step - 4) + 'px;animation-delay:' + delay + 's">'
+              + '<svg viewBox="0 0 40 34" preserveAspectRatio="none" aria-hidden="true"><path fill="' + COLORS[i % COLORS.length] + '" fill-opacity="0.94" fill-rule="evenodd" d="' + PATH + '"/></svg></div>';
+      }
+      wrap.innerHTML = html;
+    }
+    render(); onResize(render);
+  }
+
+  // Luces navideñas parpadeando (Navidad)
+  function buildLights(){
+    const wrap = document.createElement('div');
+    wrap.className = 'fx-deco fx-lights';
+    document.body.appendChild(wrap);
+    const COLORS = ['#ff3b5c', '#2ee287', '#ffd34d', '#4cc9ff'];
+    function render(){
+      const W = window.innerWidth, H = 34;
+      const n = Math.max(3, Math.round(W / (small ? 110 : 150))), seg = W / n;
+      let wire = '', bulbs = '', k = 0;
+      for(let i = 0; i < n; i++){
+        const x0 = i * seg, x2 = (i + 1) * seg, xm = (x0 + x2) / 2, y0 = 3, ym = 24;
+        wire += (i === 0 ? 'M' + x0 + ' ' + y0 : '') + ' Q' + xm + ' ' + ym + ' ' + x2 + ' ' + y0;
+        [0.14, 0.32, 0.5, 0.68, 0.86].forEach(t => {
+          const u = 1 - t;
+          const bx = u * u * x0 + 2 * u * t * xm + t * t * x2;
+          const by = u * u * y0 + 2 * u * t * ym + t * t * y0;
+          bulbs += '<g class="fx-bulb b' + (k % 4) + '" style="color:' + COLORS[k % 4] + '">'
+                 + '<rect x="' + (bx - 1.6).toFixed(1) + '" y="' + by.toFixed(1) + '" width="3.2" height="3" fill="#2a3a30"/>'
+                 + '<ellipse cx="' + bx.toFixed(1) + '" cy="' + (by + 7).toFixed(1) + '" rx="3.2" ry="4.4" fill="currentColor"/></g>';
+          k++;
+        });
+      }
+      wrap.innerHTML = '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+                     + '<path d="' + wire + '" fill="none" stroke="rgba(150,210,170,0.55)" stroke-width="1.2"/>' + bulbs + '</svg>';
+    }
+    render(); onResize(render);
+  }
+
+  /* ---------- EMOJIS QUE SUBEN DESPACIO (tenues) ---------- */
+  function startRisers(cfg){
+    const layer = mkLayer('fx-risers');
+    function spawn(){
+      if(document.hidden || layer.children.length >= cfg.max) return;
+      const W = window.innerWidth, H = window.innerHeight;
+      const el = document.createElement('div');
+      el.className = 'fx-riser';
+      el.textContent = pick(cfg.list);
+      el.style.fontSize = rand(cfg.size[0], cfg.size[1]) + 'px';
+      el.style.filter = 'drop-shadow(0 0 8px ' + cfg.glow + ')';
+      layer.appendChild(el);
+
+      const x0 = rand(W * 0.05, W * 0.9), amp = rand(20, 70), phase = rand(0, Math.PI * 2);
+      const pts = 8, frames = [];
+      for(let i = 0; i < pts; i++){
+        const t = i / (pts - 1);
+        const x = x0 + Math.sin(t * Math.PI * 3 + phase) * amp;
+        const y = (H + 60) - t * (H + 180);
+        const opacity = t < 0.12 ? (t / 0.12) * cfg.peak : (t > 0.8 ? ((1 - t) / 0.2) * cfg.peak : cfg.peak);
+        const rot = Math.sin(t * 6 + phase) * 10;
+        frames.push({transform:'translate(' + x + 'px,' + y + 'px) rotate(' + rot + 'deg)', opacity:opacity, offset:t});
+      }
+      const anim = el.animate(frames, {duration:rand(14000, 24000), easing:'linear'});
+      anim.onfinish = () => el.remove();
+    }
+    setTimeout(function loop(){ spawn(); setTimeout(loop, rand(cfg.every[0], cfg.every[1])); }, cfg.first);
+  }
+
+  /* ---------- MURCIÉLAGOS (Halloween) ---------- */
+  function startBats(){
+    const BAT_SVG = '<svg viewBox="0 0 64 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M32 9 L34.5 4 L35.5 10 C40 8 48 6 62 10 C58 13 57 16 58 20 C54 17 50 18 47 21 C45 18 41 18 38 21 C36 20 34 21 32 27 C30 21 28 20 26 21 C23 18 19 18 17 21 C14 18 10 17 6 20 C7 16 6 13 2 10 C16 6 24 8 28.5 10 L29.5 4 Z"/></svg>';
+    const layer = mkLayer('fx-bats');
+    function spawn(){
+      if(document.hidden || layer.children.length >= 3) return;
+      const W = window.innerWidth, H = window.innerHeight;
+      const size = rand(30, 58), dir = Math.random() < 0.5 ? 1 : -1;
+      const el = document.createElement('div');
+      el.className = 'fx-bat' + (dir < 0 ? ' flip' : '');
+      el.style.width = size + 'px';
+      el.innerHTML = '<div class="fx-bat-body">' + BAT_SVG + '</div>';
+      layer.appendChild(el);
+
+      const baseY = rand(H * 0.06, H * 0.6);
+      const amp = rand(18, 55), freq = rand(1.5, 3.2), phase = rand(0, Math.PI * 2);
+      const span = W + size * 2 + 40, pts = 9, frames = [];
+      for(let i = 0; i < pts; i++){
+        const t = i / (pts - 1);
+        const x = dir > 0 ? (-size - 20 + t * span) : (W + 20 - t * span);
+        const y = baseY + Math.sin(t * Math.PI * 2 * freq + phase) * amp;
+        const tilt = Math.cos(t * Math.PI * 2 * freq + phase) * 9;
+        frames.push({transform:'translate(' + x + 'px,' + y + 'px) rotate(' + tilt + 'deg)', offset:t});
+      }
+      const anim = el.animate(frames, {duration:rand(6500, 11000) * (W < 700 ? 0.7 : 1), easing:'linear'});
+      anim.onfinish = () => el.remove();
+    }
+    setTimeout(function loop(){ spawn(); setTimeout(loop, rand(3500, 8000)); }, 1500);
+  }
+
+  /* ---------- CANVAS COMPARTIDO: caída ambiental + rastro/explosiones ---------- */
+  let W = window.innerWidth, H = window.innerHeight, dpr = 1;
+  let fallCv = null, fctx = null, trailCv = null, tctx = null;
+  let fall = [], trail = [], fallCfg = null, trailDirty = false, loopOn = false, last = 0;
+
+  function sizeCanvases(){
+    W = window.innerWidth; H = window.innerHeight;
     dpr = Math.min(window.devicePixelRatio || 1, 2);
-    cv.width = Math.floor(window.innerWidth * dpr);
-    cv.height = Math.floor(window.innerHeight * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    [[fallCv, fctx], [trailCv, tctx]].forEach(pair => {
+      if(!pair[0]) return;
+      pair[0].width = Math.floor(W * dpr);
+      pair[0].height = Math.floor(H * dpr);
+      pair[1].setTransform(dpr, 0, 0, dpr, 0, 0);
+    });
   }
-  sizeCanvas();
-  window.addEventListener('resize', sizeCanvas);
+  window.addEventListener('resize', sizeCanvases);
 
-  function emit(x, y){
-    if(particles.length > 160) return;
-    const n = 2;
+  function startLoop(){
+    if(loopOn) return;
+    loopOn = true; last = performance.now();
+    requestAnimationFrame(function frame(now){
+      requestAnimationFrame(frame);
+      if(document.hidden){ last = now; return; }
+      const dt = Math.min(3, (now - last) / 16.667); last = now;
+      if(fctx && fall.length) stepFall(dt);
+      stepTrail(dt);
+    });
+  }
+
+  // Partículas que caen por toda la pantalla: pétalos, hojas, nieve
+  const FALL = {
+    muertos:{n:55, make:() => ({type:'petal', size:rand(5, 9), color:pick(['#FF9A1F', '#FFB52E', '#FFC857', '#FF7A2E', '#F28C28']),
+      vy:rand(0.5, 1.3), vx:rand(-0.2, 0.2), sway:rand(0.5, 1.4), swayAmp:rand(0.4, 1.1), vr:rand(-0.04, 0.04), alpha:rand(0.55, 0.9)})},
+    gracias:{n:34, make:() => ({type:'glyph', glyph:pick(['🍂', '🍂', '🍁']), size:rand(14, 26),
+      vy:rand(0.5, 1.2), vx:rand(-0.3, 0.3), sway:rand(0.4, 1.2), swayAmp:rand(0.5, 1.3), vr:rand(-0.03, 0.03), alpha:rand(0.6, 0.9)})},
+    navidad:{n:90, make:() => { const big = Math.random() < 0.3, size = big ? rand(2.2, 3.6) : rand(1, 2.2);
+      return {type:'snow', size:size, vy:0.4 + size * 0.35, vx:rand(-0.15, 0.15), sway:rand(0.3, 1), swayAmp:rand(0.2, 0.7), vr:0, alpha:rand(0.5, 0.95)}; }}
+  };
+  function startFall(cfg){
+    fallCfg = cfg;
+    fallCv = document.createElement('canvas');
+    fallCv.className = 'fx-fall';
+    document.body.appendChild(fallCv);
+    fctx = fallCv.getContext('2d');
+    sizeCanvases();
+    const n = Math.round(cfg.n * (small ? 0.55 : 1));
     for(let i = 0; i < n; i++){
-      const pumpkin = Math.random() < 0.04;
-      particles.push({
-        x:x + rand(-4, 4), y:y + rand(-4, 4),
-        vx:rand(-0.7, 0.7), vy:pumpkin ? rand(0.2, 0.7) : rand(-1.1, -0.2),
-        size:pumpkin ? rand(11, 16) : rand(1.6, 4),
-        life:1, decay:pumpkin ? 0.014 : rand(0.016, 0.03),
-        color:COLORS[(Math.random() * COLORS.length) | 0],
-        emoji:pumpkin ? '🎃' : null
-      });
+      const p = cfg.make();
+      p.x = rand(0, W); p.y = rand(-H * 0.1, H); p.rot = rand(0, Math.PI * 2); p.t = rand(0, Math.PI * 2);
+      fall.push(p);
     }
-    if(!running){ running = true; requestAnimationFrame(tick); }
+    startLoop();
   }
-
-  function tick(){
-    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    for(let i = particles.length - 1; i >= 0; i--){
-      const p = particles[i];
-      p.x += p.vx; p.y += p.vy; p.life -= p.decay;
-      if(p.life <= 0){ particles.splice(i, 1); continue; }
-      ctx.globalAlpha = Math.max(0, p.life);
-      if(p.emoji){
-        ctx.font = p.size + 'px serif';
-        ctx.fillText(p.emoji, p.x, p.y);
+  function stepFall(dt){
+    fctx.clearRect(0, 0, W, H);
+    for(let i = 0; i < fall.length; i++){
+      const p = fall[i];
+      p.t += dt * 0.03 * p.sway;
+      p.x += (p.vx + Math.sin(p.t * 6) * p.swayAmp) * dt;
+      p.y += p.vy * dt;
+      p.rot += p.vr * dt * 6;
+      if(p.y > H + 30){ p.y = -30; p.x = rand(0, W); }
+      if(p.x < -30) p.x = W + 30; else if(p.x > W + 30) p.x = -30;
+      fctx.globalAlpha = p.alpha;
+      if(p.type === 'snow'){
+        fctx.fillStyle = '#FFFFFF';
+        fctx.beginPath(); fctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); fctx.fill();
+      } else if(p.type === 'petal'){
+        fctx.save(); fctx.translate(p.x, p.y); fctx.rotate(p.rot);
+        fctx.scale(1, Math.abs(Math.cos(p.t * 8)) * 0.6 + 0.4);
+        fctx.fillStyle = p.color;
+        fctx.beginPath(); fctx.ellipse(0, 0, p.size, p.size * 0.55, 0, 0, Math.PI * 2); fctx.fill();
+        fctx.restore();
       } else {
-        ctx.shadowColor = p.color; ctx.shadowBlur = 8;
-        ctx.fillStyle = p.color;
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.size * p.life + 0.4, 0, Math.PI * 2); ctx.fill();
-        ctx.shadowBlur = 0;
+        fctx.save(); fctx.translate(p.x, p.y); fctx.rotate(p.rot);
+        fctx.font = p.size + 'px serif'; fctx.textAlign = 'center'; fctx.textBaseline = 'middle';
+        fctx.fillText(p.glyph, 0, 0);
+        fctx.restore();
       }
     }
-    ctx.globalAlpha = 1;
-    if(particles.length){ requestAnimationFrame(tick); }
-    else { running = false; ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); }
+    fctx.globalAlpha = 1;
   }
 
-  function onMove(x, y){
-    const dx = x - lastX, dy = y - lastY;
-    if(dx * dx + dy * dy < 100) return;       // emite cada ~10px de movimiento
-    lastX = x; lastY = y;
-    emit(x, y);
+  // Rastro del cursor / dedo y explosiones
+  const P = (x, y, o) => Object.assign({x:x, y:y, vx:0, vy:0, g:0, drag:1, life:1, decay:0.02, type:'spark', size:3, color:'#FFFFFF', glyph:'', rot:0, vr:0}, o);
+  const TRAILS = {
+    halloween:(x, y) => {
+      if(Math.random() < 0.04) return P(x, y, {type:'glyph', glyph:'🎃', size:rand(11, 16), vx:rand(-0.7, 0.7), vy:rand(0.2, 0.7), decay:0.014});
+      return P(x, y, {vx:rand(-0.7, 0.7), vy:rand(-1.1, -0.2), size:rand(1.6, 4), decay:rand(0.016, 0.03), color:pick(['#FF7A2E', '#F2A93C', '#E8236B', '#B77CFF'])});
+    },
+    muertos:(x, y) => {
+      const r = Math.random();
+      if(r < 0.55) return P(x, y, {type:'petal', size:rand(3.5, 6.5), color:pick(['#FF9A1F', '#FFB52E', '#FFC857', '#FF7A2E']), vx:rand(-0.6, 0.6), vy:rand(-0.2, 0.6), g:0.012, vr:rand(-0.15, 0.15), decay:rand(0.012, 0.02)});
+      if(r < 0.62) return P(x, y, {type:'glyph', glyph:'💀', size:rand(11, 15), vx:rand(-0.4, 0.4), vy:rand(0.2, 0.6), decay:0.014});
+      return P(x, y, {vx:rand(-0.7, 0.7), vy:rand(-1.1, -0.2), size:rand(1.6, 3.6), decay:rand(0.016, 0.03), color:pick(['#FFC857', '#FF9A1F', '#E8236B', '#B77CFF'])});
+    },
+    gracias:(x, y) => {
+      if(Math.random() < 0.5) return P(x, y, {type:'glyph', glyph:pick(['🍂', '🍁']), size:rand(11, 16), vx:rand(-0.5, 0.5), vy:rand(0.1, 0.7), vr:rand(-0.1, 0.1), decay:0.014});
+      return P(x, y, {vx:rand(-0.7, 0.7), vy:rand(-1, -0.2), size:rand(1.6, 3.6), decay:rand(0.016, 0.03), color:pick(['#F2A93C', '#D9822B', '#8B5A34', '#FFD9A0'])});
+    },
+    navidad:(x, y) => {
+      const r = Math.random();
+      if(r < 0.35) return P(x, y, {type:'glyph', glyph:'✦', color:pick(['#FFFFFF', '#FFD34D', '#FF5A73', '#5BE39A']), size:rand(9, 15), vx:rand(-0.5, 0.5), vy:rand(0.1, 0.5), decay:0.02});
+      if(r < 0.5) return P(x, y, {type:'glyph', glyph:'❄', color:'#CDEBFF', size:rand(9, 14), vx:rand(-0.4, 0.4), vy:rand(0.2, 0.6), vr:rand(-0.1, 0.1), decay:0.016});
+      return P(x, y, {vx:rand(-0.7, 0.7), vy:rand(-1, -0.2), size:rand(1.6, 3.4), decay:rand(0.016, 0.03), color:pick(['#FFFFFF', '#CDEBFF', '#ff3b5c', '#2ee287'])});
+    },
+    anonuevo:(x, y) => {
+      if(Math.random() < 0.08) return P(x, y, {type:'glyph', glyph:'✨', size:rand(11, 16), vx:rand(-0.5, 0.5), vy:rand(-0.6, 0.2), decay:0.016});
+      return P(x, y, {vx:rand(-0.8, 0.8), vy:rand(-1.2, -0.2), g:0.01, size:rand(1.6, 4), decay:rand(0.016, 0.03), color:pick(['#FFD770', '#FFF3C4', '#FFB347', '#FFFFFF'])});
+    }
+  };
+
+  function startTrail(){
+    trailCv = document.createElement('canvas');
+    trailCv.className = 'fx-trail';
+    document.body.appendChild(trailCv);
+    tctx = trailCv.getContext('2d');
+    sizeCanvases();
+    let lastX = -999, lastY = -999;
+    function onMove(x, y){
+      const dx = x - lastX, dy = y - lastY;
+      if(dx * dx + dy * dy < 100) return;              // emite cada ~10px de movimiento
+      lastX = x; lastY = y;
+      if(trail.length > 220) return;
+      for(let i = 0; i < 2; i++) trail.push(TRAILS[tema](x + rand(-4, 4), y + rand(-4, 4)));
+    }
+    window.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+    window.addEventListener('touchmove', e => { if(e.touches && e.touches[0]) onMove(e.touches[0].clientX, e.touches[0].clientY); }, {passive:true});
+    startLoop();
   }
-  window.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
-  window.addEventListener('touchmove', e => {
-    if(e.touches && e.touches[0]) onMove(e.touches[0].clientX, e.touches[0].clientY);
-  }, {passive:true});
+
+  function stepTrail(dt){
+    if(!tctx) return;
+    if(!trail.length){
+      if(trailDirty){ tctx.clearRect(0, 0, W, H); trailDirty = false; }
+      return;
+    }
+    trailDirty = true;
+    tctx.clearRect(0, 0, W, H);
+    for(let i = trail.length - 1; i >= 0; i--){
+      const p = trail[i];
+      p.vx *= p.drag; p.vy = p.vy * p.drag + p.g * dt;
+      p.x += p.vx * dt; p.y += p.vy * dt; p.rot += p.vr * dt;
+      p.life -= p.decay * dt;
+      if(p.life <= 0){ trail.splice(i, 1); continue; }
+      tctx.globalAlpha = Math.max(0, p.life);
+      if(p.type === 'spark'){
+        tctx.shadowColor = p.color; tctx.shadowBlur = 8;
+        tctx.fillStyle = p.color;
+        tctx.beginPath(); tctx.arc(p.x, p.y, p.size * p.life + 0.4, 0, Math.PI * 2); tctx.fill();
+        tctx.shadowBlur = 0;
+      } else if(p.type === 'petal'){
+        tctx.save(); tctx.translate(p.x, p.y); tctx.rotate(p.rot);
+        tctx.fillStyle = p.color;
+        tctx.beginPath(); tctx.ellipse(0, 0, p.size, p.size * 0.55, 0, 0, Math.PI * 2); tctx.fill();
+        tctx.restore();
+      } else if(p.type === 'confetti'){
+        tctx.save(); tctx.translate(p.x, p.y); tctx.rotate(p.rot);
+        tctx.scale(1, Math.abs(Math.cos(p.rot * 2)) * 0.8 + 0.2);
+        tctx.fillStyle = p.color;
+        tctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+        tctx.restore();
+      } else {
+        tctx.save(); tctx.translate(p.x, p.y); tctx.rotate(p.rot);
+        tctx.font = p.size + 'px serif'; tctx.textAlign = 'center'; tctx.textBaseline = 'middle';
+        tctx.fillStyle = p.color;
+        tctx.fillText(p.glyph, 0, 0);
+        tctx.restore();
+      }
+    }
+    tctx.globalAlpha = 1;
+  }
+
+  // Fuegos artificiales + confeti (Año Nuevo): al hacer clic o tocar, y algunos solitos
+  function startFireworks(){
+    const COLORS = ['#FFD770', '#FFF3C4', '#FF5A73', '#4CC9FF', '#7CFFB2', '#FFFFFF', '#B77CFF'];
+    function burst(x, y, big){
+      if(trail.length > 500) return;
+      const c1 = pick(COLORS), c2 = pick(COLORS), n = big ? 46 : 30;
+      for(let i = 0; i < n; i++){
+        const a = (i / n) * Math.PI * 2 + rand(-0.06, 0.06), sp = rand(1.4, 4.2) * (big ? 1 : 0.85);
+        trail.push(P(x, y, {vx:Math.cos(a) * sp, vy:Math.sin(a) * sp, drag:0.975, g:0.035, size:rand(1.8, 3.2), color:i % 2 ? c1 : c2, decay:rand(0.011, 0.018)}));
+      }
+      if(big){
+        for(let i = 0; i < 26; i++){
+          trail.push(P(x, y, {type:'confetti', vx:rand(-3, 3), vy:rand(-5, -1.5), drag:0.985, g:0.09, size:rand(4, 8), color:pick(COLORS), rot:rand(0, 6.28), vr:rand(-0.3, 0.3), decay:rand(0.007, 0.012)}));
+        }
+      }
+    }
+    window.addEventListener('pointerdown', e => burst(e.clientX, e.clientY, true));
+    setTimeout(function loop(){
+      if(!document.hidden) burst(rand(W * 0.1, W * 0.9), rand(H * 0.1, H * 0.5), false);
+      setTimeout(loop, rand(5000, 9000));
+    }, 3000);
+  }
+
+  /* ---------- ARMADO POR TEMPORADA ---------- */
+  const SETUP = {
+    halloween:{
+      fx:() => {
+        startBats();
+        startRisers({list:['👻', '👻', '👻', '🎃'], size:[26, 52], peak:0.22, glow:'rgba(183,124,255,0.75)', every:[4000, 9000], max:4, first:2500});
+      }
+    },
+    muertos:{
+      deco:buildPapel,
+      fx:() => {
+        startFall(FALL.muertos);
+        startRisers({list:['💀', '💀', '🌼', '🕯️'], size:[24, 46], peak:0.26, glow:'rgba(255,154,31,0.8)', every:[4500, 9000], max:4, first:2500});
+      }
+    },
+    gracias:{
+      fx:() => {
+        startFall(FALL.gracias);
+        startRisers({list:['🦃', '🥧', '🌽'], size:[26, 44], peak:0.24, glow:'rgba(247,184,75,0.7)', every:[9000, 16000], max:2, first:4000});
+      }
+    },
+    navidad:{
+      deco:buildLights,
+      fx:() => {
+        startFall(FALL.navidad);
+        startRisers({list:['🎄', '🎁', '⭐', '🔔'], size:[24, 44], peak:0.24, glow:'rgba(255,211,77,0.75)', every:[5000, 10000], max:3, first:3000});
+      }
+    },
+    anonuevo:{
+      fx:() => {
+        startRisers({list:['🎉', '🥂', '🎆', '✨', '🎊'], size:[24, 46], peak:0.26, glow:'rgba(255,215,112,0.8)', every:[4500, 9000], max:4, first:2500});
+        startFireworks();
+      }
+    }
+  };
+
+  const setup = SETUP[tema];
+  if(setup.deco) setup.deco();            // decoraciones fijas (también con "reducir movimiento")
+  if(reduce) return;
+  setup.fx();
+  startTrail();
 })();
 </script>
 </body>
