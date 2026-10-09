@@ -852,6 +852,20 @@
   .status-soon .artifact-status{border:1px solid var(--muted); color:var(--muted);}
   .artifact-id{font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--muted);}
   .artifact-status-wrap{display:flex; align-items:center; gap:6px; min-width:0;}
+  /* 🔥 animado para items con "hot": true (eventos y artifacts) */
+  .hot-fire{
+    display:inline-block; margin-left:5px; font-style:normal; line-height:1;
+    transform-origin:50% 90%;
+    filter:drop-shadow(0 0 4px rgba(255,122,46,0.85));
+    animation:hotFlicker 1.1s ease-in-out infinite;
+  }
+  @keyframes hotFlicker{
+    0%,100%{transform:scale(1) rotate(-4deg);}
+    25%{transform:scale(1.18,1.1) rotate(3deg);}
+    50%{transform:scale(0.94,1.22) rotate(-2deg);}
+    75%{transform:scale(1.12,0.98) rotate(4deg);}
+  }
+  @media (prefers-reduced-motion: reduce){ .hot-fire{animation:none;} }
   /* Etiqueta NUEVO: artifacts publicados hace NEW_ARTIFACT_DAYS días o menos */
   .artifact-new-badge{
     display:inline-flex; align-items:center; gap:5px;
@@ -1096,6 +1110,13 @@
   const NEW_ARTIFACT_DAYS = 15;
   /* Colores que se reparten en orden entre las píldoras del submenú (en loop). */
   const SUBNAV_COLORS = ['var(--magenta)', 'var(--orange)', 'var(--amber)', 'var(--teal)'];
+
+  /* "hot": true / false (también acepta "true"/"false" como texto) en events.json y artifacts.json
+     muestra un 🔥 animado junto al nombre. */
+  function isHot(o){
+    return !!o && (o.hot === true || String(o.hot).trim().toLowerCase() === 'true');
+  }
+  const HOT_HTML = '<span class="hot-fire" role="img" aria-label="Hot">🔥</span>';
   function isNewArtifact(a){
     const raw = a && (a.date || a.fecha || a.added);
     if(!raw || a.status !== 'live') return false;
@@ -1157,7 +1178,7 @@
           } else {
             item.className = 'soon-item';
           }
-          item.innerHTML = a.name
+          item.innerHTML = a.name + (isHot(a) ? HOT_HTML : '')
             + (a.status !== 'live' ? ' <span class="subnav-soon">(próx.)</span>' : '')
             + (isNewArtifact(a) ? ' <span class="subnav-new">Nuevo</span>' : '');
           item.style.setProperty('--c', SUBNAV_COLORS[i % SUBNAV_COLORS.length]);
@@ -1923,7 +1944,7 @@ function renderEventItems(containerId, items){
       <div class="event-thumb"><img src="${it.img}" alt="" onerror="this.parentElement.style.visibility='hidden'"></div>
       <div class="event-body">
         <span class="event-chip mono">${it.day}${it.isToday ? '<span class="event-hoy-badge">HOY</span>' : ''}</span>
-        <h4>${it.title}</h4>
+        <h4>${it.title}${it.hot ? HOT_HTML : ''}</h4>
         <span class="meta-line">${it.meta}</span>
         ${it.who ? `<span class="meta-line event-who">${it.who}</span>` : ''}
       </div>
@@ -2007,7 +2028,7 @@ fetch(EVENTOS_JSON_PATH + '?_=' + Date.now())
         day:toDayLabel(e.dateObj), title:e.title, meta:e.venue || '',
         who:e.dj ? `🎧 ${e.dj}` : '', img:e.image || '',
         isToday:isToday(e.dateObj), link:normalizeUrl(e.link),
-        target:eventTarget(e), countdownLabel:'Empieza en',
+        target:eventTarget(e), countdownLabel:'Empieza en', hot:isHot(e),
         ticket:ticketOf(e)
       }));
 
@@ -2018,7 +2039,7 @@ fetch(EVENTOS_JSON_PATH + '?_=' + Date.now())
         day:toDayLabel(e.dateObj), title:e.title, meta:RELEASE_TYPE_LABEL[e.type] || e.type,
         who:e.productor ? `Prod. ${e.productor}` : '', img:e.image || '',
         isToday:isToday(e.dateObj), link:normalizeUrl(e.link),
-        target:eventTarget(e), countdownLabel:'Sale en',
+        target:eventTarget(e), countdownLabel:'Sale en', hot:isHot(e),
         ticket:''
       }));
 
@@ -2053,7 +2074,7 @@ fetch('artifacts.json' + '?_=' + Date.now())
             </span>
             <span class="artifact-id mono">${a.id}</span>
           </div>
-          <div class="artifact-name">${a.name}</div>
+          <div class="artifact-name">${a.name}${isHot(a) ? HOT_HTML : ''}</div>
           <p class="artifact-desc">${a.desc}</p>
           <div class="artifact-specs">${a.specs.map(s=>`<span>${s}</span>`).join('')}</div>
           <${ctaTag} class="artifact-cta" ${ctaHref}>${a.cta} →</${ctaTag}>
