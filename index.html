@@ -959,6 +959,50 @@
     color:rgba(244,232,211,0.28);
   }
 
+
+  /* ============ HALLOWEEN (se activa solo del 15 oct al 2 nov; ?halloween=1 / =0 para forzar) ============ */
+  /* Logo neón con parpadeo de luz mala */
+  .halloween .header-signature::after{
+    color:#FFB36B;
+    text-shadow:0 0 3px #FFF3E0, 0 0 9px #FF7A2E, 0 0 20px #FF7A2E, 0 0 40px #E8236B, 0 0 68px #8A2BE2;
+    animation:neonFlicker 5.2s linear infinite;
+  }
+  @keyframes neonFlicker{
+    0%,17%,21%,24%,52%,56%,100%{
+      opacity:1;
+      text-shadow:0 0 3px #FFF3E0, 0 0 9px #FF7A2E, 0 0 20px #FF7A2E, 0 0 40px #E8236B, 0 0 68px #8A2BE2;
+    }
+    19%,23%,54%{
+      opacity:0.4;
+      text-shadow:0 0 2px #FF7A2E, 0 0 6px #FF7A2E;
+    }
+  }
+  .hw-layer{position:fixed; inset:0; pointer-events:none;}
+  .hw-bats{z-index:135;}
+  .hw-ghosts{z-index:90;}
+  /* Murciélagos */
+  .hw-bat{position:fixed; left:0; top:0; will-change:transform;}
+  .hw-bat-body{width:100%;}
+  .hw-bat.flip .hw-bat-body{transform:scaleX(-1);}
+  .hw-bat svg{
+    display:block; width:100%; height:auto;
+    fill:#160A26; stroke:rgba(255,122,46,0.8); stroke-width:0.8; stroke-linejoin:round;
+    filter:drop-shadow(0 0 5px rgba(255,122,46,0.55));
+    transform-origin:50% 35%;
+    animation:batFlap .26s ease-in-out infinite alternate;
+  }
+  @keyframes batFlap{from{transform:scaleY(1);} to{transform:scaleY(0.42);}}
+  /* Fantasmas flotando (muy tenues) */
+  .hw-ghost{
+    position:fixed; left:0; top:0; line-height:1; opacity:0; user-select:none;
+    will-change:transform, opacity;
+    filter:drop-shadow(0 0 8px rgba(183,124,255,0.75));
+  }
+  /* Rastro del cursor */
+  .hw-trail{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:999;}
+  @media (prefers-reduced-motion: reduce){
+    .halloween .header-signature::after{animation:none;}
+  }
   @media (prefers-reduced-motion: reduce){
     .grain{animation:none;}
   }
@@ -2090,6 +2134,165 @@ fetch('artifacts.json' + '?_=' + Date.now())
     console.error('No se pudo cargar artifacts.json', err);
     artifactsGrid.insertAdjacentHTML('beforeend', `<p class="meta-line" style="padding:14px 0;">No se pudieron cargar los artifacts.</p>`);
   });
+</script>
+
+<script>
+/* =========================================================
+   HALLOWEEN — murciélagos, logo neón, rastro del cursor y fantasmas
+   - Se activa solo entre HW_START y HW_END (cada año).
+   - Para probar fuera de fechas: agrega ?halloween=1 a la URL.
+     Para apagarlo aunque esté en fechas: ?halloween=0
+   - Respeta "reducir movimiento": en ese caso solo queda el logo neón estático.
+   ========================================================= */
+(function(){
+  const HW_START = {month:10, day:15};  // 15 de octubre
+  const HW_END   = {month:11, day:2};   // 2 de noviembre (inclusive)
+
+  function halloweenActive(){
+    const q = new URLSearchParams(location.search).get('halloween');
+    if(q === '1' || q === 'true')  return true;
+    if(q === '0' || q === 'false') return false;
+    const now = new Date(), y = now.getFullYear();
+    const start = new Date(y, HW_START.month - 1, HW_START.day, 0, 0, 0);
+    const end   = new Date(y, HW_END.month - 1, HW_END.day, 23, 59, 59);
+    return now >= start && now <= end;
+  }
+  if(!halloweenActive()) return;
+
+  document.documentElement.classList.add('halloween');
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const rand = (a, b) => a + Math.random() * (b - a);
+
+  /* ---------- MURCIÉLAGOS ---------- */
+  const BAT_SVG = '<svg viewBox="0 0 64 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M32 9 L34.5 4 L35.5 10 C40 8 48 6 62 10 C58 13 57 16 58 20 C54 17 50 18 47 21 C45 18 41 18 38 21 C36 20 34 21 32 27 C30 21 28 20 26 21 C23 18 19 18 17 21 C14 18 10 17 6 20 C7 16 6 13 2 10 C16 6 24 8 28.5 10 L29.5 4 Z"/></svg>';
+  const batLayer = document.createElement('div');
+  batLayer.className = 'hw-layer hw-bats';
+  document.body.appendChild(batLayer);
+
+  function spawnBat(){
+    if(document.hidden || batLayer.children.length >= 3) return;
+    const W = window.innerWidth, H = window.innerHeight;
+    const size = rand(30, 58);
+    const dir = Math.random() < 0.5 ? 1 : -1;           // 1: izq→der, -1: der→izq
+    const el = document.createElement('div');
+    el.className = 'hw-bat' + (dir < 0 ? ' flip' : '');
+    el.style.width = size + 'px';
+    el.innerHTML = '<div class="hw-bat-body">' + BAT_SVG + '</div>';
+    batLayer.appendChild(el);
+
+    const baseY = rand(H * 0.06, H * 0.6);
+    const amp = rand(18, 55), freq = rand(1.5, 3.2), phase = rand(0, Math.PI * 2);
+    const span = W + size * 2 + 40, pts = 9, frames = [];
+    for(let i = 0; i < pts; i++){
+      const t = i / (pts - 1);
+      const x = dir > 0 ? (-size - 20 + t * span) : (W + 20 - t * span);
+      const y = baseY + Math.sin(t * Math.PI * 2 * freq + phase) * amp;
+      const tilt = Math.cos(t * Math.PI * 2 * freq + phase) * 9;
+      frames.push({transform:`translate(${x}px,${y}px) rotate(${tilt}deg)`, offset:t});
+    }
+    const dur = rand(6500, 11000) * (W < 700 ? 0.7 : 1);
+    const anim = el.animate(frames, {duration:dur, easing:'linear'});
+    anim.onfinish = () => el.remove();
+  }
+  (function batLoop(){ spawnBat(); setTimeout(batLoop, rand(3500, 8000)); })();
+
+  /* ---------- FANTASMAS FLOTANDO (muy tenues) ---------- */
+  const ghostLayer = document.createElement('div');
+  ghostLayer.className = 'hw-layer hw-ghosts';
+  document.body.appendChild(ghostLayer);
+
+  function spawnGhost(){
+    if(document.hidden || ghostLayer.children.length >= 4) return;
+    const W = window.innerWidth, H = window.innerHeight;
+    const el = document.createElement('div');
+    el.className = 'hw-ghost';
+    el.textContent = Math.random() < 0.85 ? '👻' : '🎃';
+    el.style.fontSize = rand(26, 52) + 'px';
+    ghostLayer.appendChild(el);
+
+    const x0 = rand(W * 0.05, W * 0.9), amp = rand(20, 70), phase = rand(0, Math.PI * 2);
+    const peak = 0.22, pts = 8, frames = [];
+    for(let i = 0; i < pts; i++){
+      const t = i / (pts - 1);
+      const x = x0 + Math.sin(t * Math.PI * 3 + phase) * amp;
+      const y = (H + 60) - t * (H + 180);
+      const opacity = t < 0.12 ? (t / 0.12) * peak : (t > 0.8 ? ((1 - t) / 0.2) * peak : peak);
+      const rot = Math.sin(t * 6 + phase) * 10;
+      frames.push({transform:`translate(${x}px,${y}px) rotate(${rot}deg)`, opacity:opacity, offset:t});
+    }
+    const anim = el.animate(frames, {duration:rand(14000, 24000), easing:'linear'});
+    anim.onfinish = () => el.remove();
+  }
+  setTimeout(function ghostLoop(){ spawnGhost(); setTimeout(ghostLoop, rand(4000, 9000)); }, 2500);
+
+  /* ---------- RASTRO DEL CURSOR (chispas; mouse y dedo) ---------- */
+  const cv = document.createElement('canvas');
+  cv.className = 'hw-trail';
+  document.body.appendChild(cv);
+  const ctx = cv.getContext('2d');
+  const COLORS = ['#FF7A2E', '#F2A93C', '#E8236B', '#B77CFF'];
+  let dpr = 1, particles = [], running = false, lastX = -999, lastY = -999;
+
+  function sizeCanvas(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.floor(window.innerWidth * dpr);
+    cv.height = Math.floor(window.innerHeight * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  sizeCanvas();
+  window.addEventListener('resize', sizeCanvas);
+
+  function emit(x, y){
+    if(particles.length > 160) return;
+    const n = 2;
+    for(let i = 0; i < n; i++){
+      const pumpkin = Math.random() < 0.04;
+      particles.push({
+        x:x + rand(-4, 4), y:y + rand(-4, 4),
+        vx:rand(-0.7, 0.7), vy:pumpkin ? rand(0.2, 0.7) : rand(-1.1, -0.2),
+        size:pumpkin ? rand(11, 16) : rand(1.6, 4),
+        life:1, decay:pumpkin ? 0.014 : rand(0.016, 0.03),
+        color:COLORS[(Math.random() * COLORS.length) | 0],
+        emoji:pumpkin ? '🎃' : null
+      });
+    }
+    if(!running){ running = true; requestAnimationFrame(tick); }
+  }
+
+  function tick(){
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    for(let i = particles.length - 1; i >= 0; i--){
+      const p = particles[i];
+      p.x += p.vx; p.y += p.vy; p.life -= p.decay;
+      if(p.life <= 0){ particles.splice(i, 1); continue; }
+      ctx.globalAlpha = Math.max(0, p.life);
+      if(p.emoji){
+        ctx.font = p.size + 'px serif';
+        ctx.fillText(p.emoji, p.x, p.y);
+      } else {
+        ctx.shadowColor = p.color; ctx.shadowBlur = 8;
+        ctx.fillStyle = p.color;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.size * p.life + 0.4, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+    ctx.globalAlpha = 1;
+    if(particles.length){ requestAnimationFrame(tick); }
+    else { running = false; ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); }
+  }
+
+  function onMove(x, y){
+    const dx = x - lastX, dy = y - lastY;
+    if(dx * dx + dy * dy < 100) return;       // emite cada ~10px de movimiento
+    lastX = x; lastY = y;
+    emit(x, y);
+  }
+  window.addEventListener('mousemove', e => onMove(e.clientX, e.clientY));
+  window.addEventListener('touchmove', e => {
+    if(e.touches && e.touches[0]) onMove(e.touches[0].clientX, e.touches[0].clientY);
+  }, {passive:true});
+})();
 </script>
 </body>
 </html>
