@@ -489,6 +489,15 @@
                   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   #outTrack .t2 { font-size: 2vh; font-weight: 400; line-height: 1.2; opacity: 0.82; max-width: 100%;
                   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* Marquesina: si el nombre no entra en la barra, se desplaza en bucle para poder leerlo completo */
+  #outTrack .mq { display: inline-block; white-space: nowrap; will-change: transform; }
+  #outTrack .mq > i { font-style: normal; display: inline-block; }
+  #outTrack .scroll { text-overflow: clip;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
+            mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%); }
+  #outTrack .scroll > .mq { animation: npMq var(--mq-dur, 12s) linear infinite; }
+  #outTrack .scroll > .mq > i { padding-right: 6vh; }
+  @keyframes npMq { 0%, 10% { transform: translateX(0); } 100% { transform: translateX(calc(-1 * var(--mq-shift, 0px))); } }
   #outTrack.solo .t1 { font-size: 3.5vh; }
   #outTrack.chg { animation: npTrackIn .6s ease-out; }
   @keyframes npTrackIn { from { opacity: 0; transform: translateX(-50%) translateY(1.5vh); } to { opacity: 1; transform: translateX(-50%); } }
@@ -6083,7 +6092,7 @@ function buildHud(){
 
 // --- Dibujo en la ventana de salida (DOM creado una sola vez) ---
 const outLocal = { track: null, info: null };   // teclas T / I: ocultar sólo en ESTA ventana
-let outEls = null, outHudLastMs = 0, outHudSig = '', outTrackSig = '';
+let outEls = null, outHudLastMs = 0, outHudSig = '', outTrackSig = '', outTrackFit = false;
 const OUT_ID = parseInt(new URLSearchParams(location.search).get('out') || '1', 10) || 1;
 function outHudInit(){
   if (outEls) return;
@@ -6092,6 +6101,29 @@ function outHudInit(){
   const inf = document.createElement('div'); inf.id = 'outInfo'; inf.className = 'tl hidden';
   document.body.appendChild(tr); document.body.appendChild(inf);
   outEls = { tr, t1: tr.firstChild, t2: tr.lastChild, inf, bars: null, dot: null };
+  window.addEventListener('resize', () => { outTrackFit = false; });
+}
+// Marquesina del nombre de pista: el texto va dentro de un <span class="mq">; si no entra en el ancho
+// disponible se duplica (con un hueco) y se anima en bucle; si entra, queda quieto y centrado.
+function outSetMq(el, text){
+  el.textContent = ''; el.classList.remove('scroll'); el.dataset.txt = text;
+  const sp = document.createElement('span'); sp.className = 'mq';
+  const i = document.createElement('i'); i.textContent = text;
+  sp.appendChild(i); el.appendChild(sp);
+}
+function outFitMq(el){
+  const sp = el.firstChild;
+  if (!sp || !el.offsetWidth) return;              // oculto (display:none): se mide cuando se vea
+  el.classList.remove('scroll');
+  while (sp.childNodes.length > 1) sp.removeChild(sp.lastChild);
+  const natural = sp.firstChild.offsetWidth, avail = el.clientWidth;
+  if (natural > avail + 1){
+    const c = document.createElement('i'); c.textContent = el.dataset.txt || ''; sp.appendChild(c);
+    el.classList.add('scroll');
+    const shift = natural + window.innerHeight * 0.06;   // ancho del texto + hueco (6vh)
+    sp.style.setProperty('--mq-shift', shift.toFixed(1) + 'px');
+    sp.style.setProperty('--mq-dur', Math.max(6, shift / (window.innerHeight * 0.12)).toFixed(1) + 's');
+  }
 }
 const escHtml = (t) => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 function outHudUpdate(now, st){
@@ -6115,11 +6147,12 @@ function outHudUpdate(now, st){
   outEls.tr.classList.toggle('hidden', !(showTrack && np.t1));
   if (trSig !== outTrackSig){
     outTrackSig = trSig;
-    outEls.t1.textContent = np.t1; outEls.t2.textContent = np.t2;
+    outSetMq(outEls.t1, np.t1); outSetMq(outEls.t2, np.t2); outTrackFit = false;
     outEls.t2.style.display = np.t2 ? '' : 'none';
     outEls.tr.classList.toggle('solo', !np.t2);
     outEls.tr.classList.remove('chg'); void outEls.tr.offsetWidth; outEls.tr.classList.add('chg');
   }
+  if (!outTrackFit && !outEls.tr.classList.contains('hidden')){ outFitMq(outEls.t1); outFitMq(outEls.t2); outTrackFit = true; }
 
   // --- cuadro de estado ---
   outEls.inf.className = h.show.corner + (showInfo ? '' : ' hidden');
@@ -6448,7 +6481,7 @@ midiClearBtn.addEventListener('click', () => {
   // entre la fila de controles y las playlists/EQ.
   const ta = $('trackAnalyzer'), ph = document.querySelector('#playerSection .np-head');
   if (ta && ph) ph.after(ta);
-  const parts = [sec('.scene-section', 'np-w2'), wrap('', 'Bandas', $('freqAnalyzer')),
+  const parts = [sec('.scene-section', 'np-w2'), wrap('np-bands', 'Bandas', $('freqAnalyzer')),
     sec('.audio-section', ''), sec('.sim-section', ''), sec('.morph-section', 'np-w2'), sec('#playerSection', 'np-wf'),
     sec('.midi-section', ''), sec('.output-section', ''), sec('.logo-section', '')];
   parts.forEach((p) => p && grid.append(p));
@@ -6512,6 +6545,7 @@ midiClearBtn.addEventListener('click', () => {
   const layout = () => {
     pend = false;
     if (!grid.offsetWidth) return;
+    const keepScroll = panel.scrollTop;   // el re-acomodo colapsa la grilla un instante y el navegador "sube" el scroll
     const N = Math.max(1, getComputedStyle(grid).gridTemplateColumns.split(' ').length);
     // 1) medir cada mosaico en su alto natural y a su ancho real
     tiles.forEach((t) => { t.style.alignSelf = 'start'; t.style.gridRow = 'auto'; t.style.gridColumn = 'span ' + spanOf(t, N); });
@@ -6530,6 +6564,7 @@ midiClearBtn.addEventListener('click', () => {
     lastBest.pl.filter((p) => tiles[p.i].id !== 'npPrevTile').sort((a, b) => (a.y - b.y) || (a.c - b.c))
       .forEach((p, k) => { const l = tiles[p.i].querySelector(':scope > .np-label, :scope > .panel-section-label');
         if (l) l.dataset.n = String(k + 1).padStart(2, '0'); });
+    if (panel.scrollTop !== keepScroll) panel.scrollTop = keepScroll;   // se restaura en el mismo frame (sin parpadeo)
   };
   const sched = () => { if (!pend) { pend = true; requestAnimationFrame(layout); } };
   const ro = new ResizeObserver(sched); tiles.forEach((t) => ro.observe(t)); ro.observe(panel);
@@ -6741,8 +6776,6 @@ midiClearBtn.addEventListener('click', () => {
     max-width: none; max-height: none;
   }
   html.marquee-mode #brandLogo { display: none !important; }
-  .logo-section { border-left: 3px solid rgba(255,214,90,0.55); background: rgba(255,214,90,0.05); }
-  .logo-section .panel-section-label { color: rgba(255,226,150,0.85); }
   #logoMode, #logoPos, #logoIn, #logoOut, #logoAutoOn, #logoAutoOff {
     background: rgba(255,255,255,0.08); color: #fff; font: inherit; font-size: 11px;
     border: 1px solid rgba(255,255,255,0.18); border-radius: 5px; padding: 3px 5px; cursor: pointer; max-width: 150px;
@@ -7128,5 +7161,33 @@ midiClearBtn.addEventListener('click', () => {
   requestAnimationFrame(tick);
 })();
 </script>
+
+<style id="npColorsCSS">
+/* Cada módulo del panel tiene su propio color (borde, número, brillo superior, botones activos y sliders). */
+#panel .scene-section  { --ac:#38bdf8; --acrgb:56,189,248; }   /* Escena       · celeste  */
+#panel .np-bands       { --ac:#a3e635; --acrgb:163,230,53; }   /* Bandas       · lima     */
+#panel .audio-section  { --ac:#fbbf24; --acrgb:251,191,36; }   /* Audio        · ámbar    */
+#panel .sim-section    { --ac:#a78bfa; --acrgb:167,139,250; }  /* Simulación   · violeta  */
+#panel .morph-section  { --ac:#fb7185; --acrgb:251,113,133; }  /* Morph        · rosa     */
+#panel #playerSection  { --ac:#2dd4bf; --acrgb:45,212,191; }   /* Reproductor  · turquesa */
+#panel .midi-section   { --ac:#60a5fa; --acrgb:96,165,250; }   /* MIDI         · azul     */
+#panel .output-section { --ac:#fb923c; --acrgb:251,146,60; }   /* Salida       · naranja  */
+#panel .logo-section   { --ac:#e879f9; --acrgb:232,121,249; }  /* Logo / Marca · fucsia   */
+
+body #panel .np-tile:not(#npPrevTile){
+  border:1px solid rgba(var(--acrgb),.30); border-top:2px solid var(--ac);
+  background:
+    radial-gradient(rgba(var(--acrgb),.10) 1px,transparent 1.2px) 0 0/10px 10px,
+    linear-gradient(180deg,rgba(var(--acrgb),.10),rgba(var(--acrgb),0) 55%),
+    #151515;
+  box-shadow:0 10px 24px rgba(0,0,0,.45),0 0 18px rgba(var(--acrgb),.06),inset 0 1px 0 rgba(var(--acrgb),.20);
+}
+body #panel .np-tile .np-label::before, body #panel .np-tile .panel-section-label::before { color:var(--ac); }
+body #panel .np-tile .np-label, body #panel .np-tile .panel-section-label { color:#c9c9c9; }
+#panel .np-tile button:hover, #panel .np-tile label.filebtn:hover { border-color:rgba(var(--acrgb),.75); }
+#panel .np-tile button.active { border-color:var(--ac); background:rgba(var(--acrgb),.17); }
+#panel .np-tile input[type=range] { accent-color:var(--ac); }
+#panel .np-tile .speed-box { border-color:rgba(var(--acrgb),.14); }
+</style>
 </body>
 </html>
