@@ -81,6 +81,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://stemsmag.fyi/artifacts/affx.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://stemsmag.fyi/artifacts/kanbanv1.html</loc>
     <lastmod>2026-09-29</lastmod>
     <priority>0.6</priority>
