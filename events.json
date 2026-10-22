@@ -1,5 +1,17 @@
 { "events": [
   {
+  "id": "single-artemis-pre-save",
+  "type": "single",
+  "title": "ARTEMIS (PRE-SAVE)",
+  "date": "2026-11-20",
+  "time": "00:00  CT",
+  "description": "Disponible en todas las plataformas.",
+  "image": "img-ev/artemis.jpg",
+  "link": "https://share.amuse.io/track/ijgatu-dj-artemis?fbclid=PAZXh0bgNhZW0CMTEAcGRvZgRzcnRjBmFwcF9pZAwyNTYyODEwNDA1NTgAAadY8AUQ-NqNNRmVwaAHyGo0dqJIE_hcHuvpjW1KdwhwZBBojRYHyFg-R9VbtQ_aem_Rcd0E-hxhvAbVxSYxCjAdg",
+  "status": "confirmado",
+  "productor": "I J G A T U"
+},
+  {
   "id": "toque-umbral",
   "type": "toque",
   "title": "UMBRAL",
