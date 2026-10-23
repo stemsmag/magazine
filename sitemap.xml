@@ -21,6 +21,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://stemsmag.fyi/articulos/articulo-chop-n-drop-review.html</loc>
+    <lastmod>2026-10-23</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://stemsmag.fyi/articulos/articulo-diamond-hm.html</loc>
     <lastmod>2026-08-11</lastmod>
     <priority>0.6</priority>
@@ -83,6 +88,11 @@
   <url>
     <loc>https://stemsmag.fyi/artifacts/affx.html</loc>
     <lastmod>2026-10-22</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://stemsmag.fyi/artifacts/chop-n-drop.html</loc>
+    <lastmod>2026-10-23</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
