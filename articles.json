@@ -1,5 +1,25 @@
 [
   {
+    "featured": true,
+    "pinned": false,
+    "date": "2026-10-23",
+    "category": "Review",
+    "categoryPill": "Herramientas de video",
+    "titleLines": [
+      "CHOP·N·DROP"
+    ],
+    "title": "Chop·n·Drop // stemsmag — a prueba: videoclips que se cortan solos al ritmo",
+    "artistLine": "STEMS LAB",
+    "dek": "Una app que corta, glitchea y renderiza videoclips al compás de cualquier pista. Abrimos cada panel, medimos lo que se puede medir y anotamos dónde se queda corta.",
+    "tag": "Review",
+    "tagColor": "lime",
+    "meta": "Review · 8 min",
+    "image": "articulos/images/chop-hero.jpg",
+    "seed": 5,
+    "slug": "articulos/articulo-chop-n-drop-review.html",
+    "comingSoon": false
+  },
+  {
     "featured": false,
     "pinned": true,
     "date": "2026-09-28",
