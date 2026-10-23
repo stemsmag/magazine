@@ -1,7 +1,21 @@
 [
+   {
+  "status": "live",
+  "kind": "live-performance",
+  "seed": 35,
+  "id": "ART.07",
+  "name": "//CHOP·N·DROP v1",
+  "desc": "Auto video chop mixer.",
+  "specs": ["VJ", "AUDIO-REACTIVO", "DJ SETS"],
+  "cta": "CHOP IT! & DROP IT!",
+  "img": "articulos/images/chop-hero.jpg",
+  "date": "2026-10-23",
+  "hot": true,
+  "link": "https://stemsmag.fyi/artifacts/chop-n-drop.html"
+},
   {
   "status": "live",
-  "kind": "widget",
+  "kind": "live-performance",
   "seed": 31,
   "id": "ART.06",
   "name": "//NEUROPULSE v1",
