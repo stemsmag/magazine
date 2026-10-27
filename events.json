@@ -76,19 +76,7 @@
   "status": "confirmado",
   "productor": "DJ DIAMOND HM & HelMat"
 },
-  {
-  "id": "album-chill-hop-coffee-session",
-  "type": "album",
-  "title": "Chill-Hop Coffee Session",
-  "date": "2026-10-31",
-  "time": "",
-  "description": "Trece mundos sonoros distintos estilo chill-hop — flamenco, bolero, bossa nova, marimba, cumbia salvadporeña, andina, lounge, moroccan groove — todos pasados por el mismo filtro: beats lentos, texturas cálidas para acompañar tu café, tu tarde de relax o estudio.\nDisponible en todas las plataformas.",
-  "image": "img-ev/chill.jpg",
-  "link": "",
-  "status": "pendiente",
-  "productor": "TheGeco"
-},
-  {
+   {
   "id": "toque-a-l-t-i-t-u-d-e",
   "type": "toque",
   "title": "A L T I T U D E",
@@ -142,19 +130,7 @@
       "time": "2:00 PM",
        "dj": "RUDO"
     },
-   
-{
-  "id": "single-dia-a-dia-caminamos",
-  "type": "single",
-  "title": "Día a Día Caminamos",
-  "date": "2026-10-31",
-  "time": "",
-  "description": "Día a Día Caminamos (basado en Di-Ba-Ya Di-Ba-Yo) es una reinterpretación contemporánea inspirada en un canto tradicional de una comunidad indígena de Papúa Nueva Guinea. La canción fusiona Afro-Latin House y Organic House con una letra que habla del camino que recorremos, la memoria que habita en la tierra y la conexión con quienes nos precedieron. A través de una producción envolvente con percusión orgánica, bajos profundos y atmósferas hipnóticas, el tema invita a honrar nuestras raíces y a reconocer el vínculo entre la naturaleza, la comunidad y la Madre Tierra. Es una experiencia sonora que une tradición e innovación, llevando un mensaje de gratitud, identidad y esperanza.\nDisponible en todas las plataformas.",
-  "image": "img-ev/tributo.jpg",
-  "link": "",
-  "status": "pendiente",
-  "productor": "TheGeco"
-},
+  
    {
   "id": "album-sunset-deep-house-session",
   "type": "album",
