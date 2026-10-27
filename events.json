@@ -1,4 +1,17 @@
 { "events": [
+
+  {
+  "id": "video-quedate-conmigo",
+  "type": "video",
+  "title": "Quédate conmigo",
+  "date": "2026-10-30",
+  "time": "00:00",
+  "description": "Video clip oficial de Quédate Conmigo. Una prosa hecha canción que recoge los sentimientos más desinteresados y honestos que una persona puede tener hacia otra: sin controlar, sin acaparar, sin intoxicar. Hecha con chop·n·drop (https://stemsmag.fyi/artifacts/chop-n-drop.html)\nDisponible en: YouTube Music.",
+  "image": "img-ev/quedate_hor.jpg",
+  "link": "https://www.youtube.com/@TheGeco_sv?sub_confirmation=1",
+  "status": "confirmado",
+  "productor": "TheGeco"
+},
   {
   "id": "single-artemis-pre-save",
   "type": "single",
