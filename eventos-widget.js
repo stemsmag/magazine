@@ -28,8 +28,8 @@
  *   entre dominios distintos funciona sin configuración extra).
  */
 
-const TYPE_LABEL = {toque:'Toque', single:'Sencillo', album:'Álbum', video:'Video oficial', promo:'Promo'};
-const TYPE_ACCENT = {toque:'--magenta', single:'--teal', album:'--amber', video:'--orange', promo:'--cream-dim'};
+const TYPE_LABEL = {toque:'Toque', single:'Sencillo', album:'Álbum', video:'Video oficial', promo:'Promo', concurso:'Concurso'};
+const TYPE_ACCENT = {toque:'--magenta', single:'--teal', album:'--amber', video:'--orange', promo:'--cream-dim', concurso:'--violet'};
 
 async function renderEventosWidget(opts){
   const {
@@ -73,7 +73,8 @@ async function renderEventosWidget(opts){
     <div style="display:flex;flex-direction:column;gap:10px;">
       ${latest.map(e => {
         const dateObj = new Date(e.date + 'T00:00:00');
-        const accent = `var(${TYPE_ACCENT[e.type] || '--cream-dim'})`;
+        const accent = `var(${TYPE_ACCENT[e.type] || '--cream-dim'}${e.type === 'concurso' ? ',#9B7BFF' : ''})`;
+        const prefix = e.type === 'concurso' ? 'Cierra ' : '';
         return `
         <a href="${calendarPath}" style="
           display:flex; gap:12px; align-items:center; text-decoration:none;
@@ -83,7 +84,7 @@ async function renderEventosWidget(opts){
           ${e.image ? `<img src="${e.image}" alt="" style="width:44px;height:44px;object-fit:cover;border-radius:6px;flex:0 0 44px;background:var(--brown-light,#052A3D);" onerror="this.style.display='none'">` : ''}
           <div style="min-width:0;">
             <div style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:${accent};margin-bottom:2px;">
-              ${TYPE_LABEL[e.type] || e.type} · ${fmt.format(dateObj)}
+              ${TYPE_LABEL[e.type] || e.type} · ${prefix}${fmt.format(dateObj)}
             </div>
             <div style="font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--cream,#F4E8D3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
               ${escapeHtml(e.title)}

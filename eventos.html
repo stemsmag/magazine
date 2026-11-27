@@ -28,6 +28,7 @@
     --orange:#FF7A2E;
     --amber:#F2A93C;
     --teal:#2FB6A8;
+    --violet:#9B7BFF;
     --brown:#8B5A34;
     --brown-light:#052A3D;
     --line:rgba(244,232,211,0.14);
@@ -275,6 +276,7 @@
   .t-album{--accent:var(--amber);}
   .t-video{--accent:var(--orange);}
   .t-promo{--accent:var(--cream-dim);}
+  .t-concurso{--accent:var(--violet);}
 
   .wrap{max-width:1080px; margin:0 auto; padding:calc(var(--stack-h) + 32px) 24px 100px;}
 
@@ -429,6 +431,25 @@
   .poster-card .poster-status{
     margin-top:10px; font-family:'JetBrains Mono',monospace; font-size:10px;
     text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
+  }
+
+  /* ---- Concursos y convocatorias: botón "Más información", premio y cierre ---- */
+  .poster-card .card-more-btn{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    margin-top:14px; padding:11px 14px; border-radius:8px;
+    background:var(--accent); color:#10061F; text-decoration:none; cursor:pointer;
+    font-family:'JetBrains Mono',monospace; font-weight:700; font-size:11px;
+    letter-spacing:.08em; text-transform:uppercase;
+    transition:transform .15s ease, filter .15s ease;
+  }
+  .poster-card .card-more-btn:hover{transform:translateY(-2px); filter:brightness(1.1);}
+  .poster-card .prize-line{
+    font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
+    color:var(--accent); margin:-2px 0 12px;
+  }
+  .archive-card .closed-tag{
+    margin-top:10px; font-family:'JetBrains Mono',monospace; font-size:10px;
+    text-transform:uppercase; letter-spacing:.08em; color:var(--accent);
   }
 
   .empty{
@@ -700,7 +721,7 @@
     <div class="submit-cta-text">
       <p class="eyebrow mono"><span data-i18n="cta_eyebrow">// ¿tienes algo que anunciar?</span><button type="button" class="lang-toggle mono lang-toggle-1">EN</button></p>
       <h2 class="display" data-i18n="cta_h2">Mándanos tu evento o lanzamiento</h2>
-      <p data-i18n="cta_p">Toques, sencillos, álbumes y EPs, videos oficiales o promos y teasers: llena el formulario con fecha, lugar o plataformas, flyer y links, y lo sumamos al calendario de STEMS.</p>
+      <p data-i18n="cta_p">Toques, sencillos, álbumes y EPs, videos oficiales, promos y teasers, o concursos y convocatorias: llena el formulario con fecha, lugar o plataformas, flyer y links, y lo sumamos al calendario de STEMS.</p>
     </div>
     <a class="submit-cta-btn mono" href="#enviar">
       <span data-i18n="cta_btn">Enviar mi evento</span> <span>↓</span>
@@ -714,6 +735,7 @@
     <button class="chip" data-type="album" data-i18n="chip_album">Álbumes</button>
     <button class="chip" data-type="video" data-i18n="chip_video">Videos</button>
     <button class="chip" data-type="promo" data-i18n="chip_promo">Promo</button>
+    <button class="chip" data-type="concurso" data-i18n="chip_concurso">Concursos</button>
   </div>
 
   <p class="month-label" id="monthLabel"></p>
@@ -748,6 +770,7 @@
             <option value="Álbum / EP" data-i18n="opt_album">Álbum / EP</option>
             <option value="Video oficial" data-i18n="opt_video">Video oficial</option>
             <option value="Promo / Teaser" data-i18n="opt_promo">Promo / Teaser</option>
+            <option value="Concurso / Convocatoria" data-i18n="opt_concurso">Concurso / Convocatoria</option>
           </select>
         </div>
         <div>
@@ -764,12 +787,17 @@
         </div>
 
         <div>
-          <label class="flabel" for="f-date" data-i18n="lbl_date">Fecha *</label>
+          <label class="flabel" for="f-date" id="dateLabel" data-i18n="lbl_date">Fecha *</label>
           <input id="f-date" name="Fecha" type="date" required>
         </div>
         <div>
           <label class="flabel" for="f-time" data-i18n="lbl_time">Hora</label>
           <input id="f-time" name="Hora" type="text" data-i18n-ph="ph_time" placeholder="Ej: 9:00 PM">
+        </div>
+
+        <div class="field-full" id="prizeField" style="display:none">
+          <label class="flabel" for="f-prize" data-i18n="lbl_prize">Premio (opcional)</label>
+          <input id="f-prize" name="Premio" type="text" data-i18n-ph="ph_prize" placeholder="Ej: $500, residencia, mentoría">
         </div>
 
         <div class="field-full" id="venueField">
@@ -923,24 +951,24 @@ const I18N = {
     back_link:'← Volver a portada',
     cta_eyebrow:'// ¿tienes algo que anunciar?',
     cta_h2:'Mándanos tu evento o lanzamiento',
-    cta_p:'Toques, sencillos, álbumes y EPs, videos oficiales o promos y teasers: llena el formulario con fecha, lugar o plataformas, flyer y links, y lo sumamos al calendario de STEMS.',
+    cta_p:'Toques, sencillos, álbumes y EPs, videos oficiales, promos y teasers, o concursos y convocatorias: llena el formulario con fecha, lugar o plataformas, flyer y links, y lo sumamos al calendario de STEMS.',
     cta_btn:'Enviar mi evento',
-    chip_all:'Todos', chip_toque:'Toques', chip_single:'Sencillos', chip_album:'Álbumes', chip_video:'Videos', chip_promo:'Promo',
+    chip_all:'Todos', chip_concurso:'Concursos', chip_toque:'Toques', chip_single:'Sencillos', chip_album:'Álbumes', chip_video:'Videos', chip_promo:'Promo',
     archive_label:'Archivo — eventos pasados',
     form_eyebrow:'// envíos abiertos',
     form_h2:'Publica tu evento en STEMS',
-    form_intro:'Llena los campos según lo que quieras anunciar: <strong>toque</strong> (evento en vivo), <strong>sencillo</strong>, <strong>álbum o EP</strong>, <strong>video oficial</strong> o <strong>promo / teaser</strong>. Revisamos cada envío antes de publicarlo; si falta algo te escribimos.',
+    form_intro:'Llena los campos según lo que quieras anunciar: <strong>toque</strong> (evento en vivo), <strong>sencillo</strong>, <strong>álbum o EP</strong>, <strong>video oficial</strong>, <strong>promo / teaser</strong> o <strong>concurso / convocatoria</strong>. Revisamos cada envío antes de publicarlo; si falta algo te escribimos.',
     lbl_name:'Tu nombre o proyecto *', ph_name:'Ej: Colectivo Almacén 7',
     lbl_email:'Tu correo *', ph_email:'tucorreo@ejemplo.com',
-    lbl_type:'Tipo de envío *',
+    lbl_type:'Tipo de envío *', opt_concurso:'Concurso / Convocatoria',
     opt_toque:'Toque (evento en vivo)', opt_single:'Sencillo', opt_album:'Álbum / EP', opt_video:'Video oficial', opt_promo:'Promo / Teaser',
     lbl_status:'Estado', opt_confirmado:'Confirmado', opt_pendiente:'Pendiente',
     lbl_title:'Título *', ph_title:'Ej: Nocturno, Sesión en Almacén 7...',
-    lbl_date:'Fecha *',
+    lbl_date:'Fecha *', lbl_date_concurso:'Fecha límite *', lbl_prize:'Premio (opcional)', ph_prize:'Ej: $500, residencia, mentoría',
     lbl_time:'Hora', ph_time:'Ej: 9:00 PM',
     lbl_venue:'Venue / lugar', ph_venue:'Ej: Almacén 7, San Salvador',
     lbl_artist_toque:'DJ que se presenta', ph_artist_toque:'Ej: DJ Nombre',
-    lbl_artist_release:'Productor', ph_artist_release:'Ej: Nombre del productor',
+    lbl_artist_concurso:'Organiza', ph_artist_concurso:'Ej: Ministerio de Cultura, Sello X', lbl_artist_release:'Productor', ph_artist_release:'Ej: Nombre del productor',
     lbl_dist:'Distribución', dist_all:'Todas las plataformas', dist_selected:'Plataformas seleccionadas',
     lbl_desc:'Descripción *', ph_desc:'Detalles cortos del evento o lanzamiento: line-up, sello, concepto, precio de entrada...',
     lbl_image:'Link del flyer / portada', ph_image:'https://drive.google.com/...',
@@ -957,15 +985,15 @@ const I18N = {
     modal_close:'Cerrar',
     empty:'No hay eventos próximos para este filtro por ahora.',
     pendiente:'Pendiente de confirmar',
-    ver_mas:'Ver más',
+    ver_mas:'Ver más', mas_info:'Más información', deadline:'Fecha límite', organiza:'Organiza', premio:'Premio', cerrado:'Convocatoria cerrada',
     send_sending:'Enviando...',
     send_ok:'¡Listo! Recibimos tu envío. Te escribimos si necesitamos algo más.',
     send_err:'No pudimos enviar el formulario. Escríbenos a stemsmagazine@gmail.com.',
     send_conn_err:'Hubo un problema de conexión. Intenta de nuevo o escríbenos a stemsmagazine@gmail.com.',
     dist_available_all:'Disponible en todas las plataformas.',
     dist_available_sel:'Disponible en: ',
-    TYPE_LABEL:{toque:'Toque', single:'Sencillo', album:'Álbum', video:'Video oficial', promo:'Promo'},
-    LINK_LABEL:{toque:'Comprar boletos', single:'Escuchar', album:'Escuchar álbum', video:'Ver video', promo:'Más información'},
+    TYPE_LABEL:{toque:'Toque', single:'Sencillo', album:'Álbum', video:'Video oficial', promo:'Promo', concurso:'Concurso / Convocatoria'},
+    LINK_LABEL:{toque:'Comprar boletos', single:'Escuchar', album:'Escuchar álbum', video:'Ver video', promo:'Más información', concurso:'Más información'},
     MONTHS:['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'],
     locale:'es-ES'
   },
@@ -975,24 +1003,24 @@ const I18N = {
     back_link:'← Back to home',
     cta_eyebrow:'// got something to announce?',
     cta_h2:'Send us your event or release',
-    cta_p:'Live shows, singles, albums and EPs, official videos or promos and teasers: fill out the form with date, venue or platforms, flyer and links, and we\'ll add it to the STEMS calendar.',
+    cta_p:'Live shows, singles, albums and EPs, official videos, promos and teasers, or contests and open calls: fill out the form with date, venue or platforms, flyer and links, and we\'ll add it to the STEMS calendar.',
     cta_btn:'Submit my event',
-    chip_all:'All', chip_toque:'Live shows', chip_single:'Singles', chip_album:'Albums', chip_video:'Videos', chip_promo:'Promo',
+    chip_all:'All', chip_concurso:'Contests', chip_toque:'Live shows', chip_single:'Singles', chip_album:'Albums', chip_video:'Videos', chip_promo:'Promo',
     archive_label:'Archive — past events',
     form_eyebrow:'// submissions open',
     form_h2:'Publish your event on STEMS',
-    form_intro:'Fill out the fields based on what you want to announce: <strong>live show</strong>, <strong>single</strong>, <strong>album or EP</strong>, <strong>official video</strong>, or <strong>promo / teaser</strong>. We review every submission before publishing it; if something\'s missing, we\'ll reach out.',
+    form_intro:'Fill out the fields based on what you want to announce: <strong>live show</strong>, <strong>single</strong>, <strong>album or EP</strong>, <strong>official video</strong>, <strong>promo / teaser</strong>, or <strong>contest / open call</strong>. We review every submission before publishing it; if something\'s missing, we\'ll reach out.',
     lbl_name:'Your name or project *', ph_name:'E.g.: Almacén 7 Collective',
     lbl_email:'Your email *', ph_email:'youremail@example.com',
-    lbl_type:'Submission type *',
+    lbl_type:'Submission type *', opt_concurso:'Contest / Open call',
     opt_toque:'Live show', opt_single:'Single', opt_album:'Album / EP', opt_video:'Official video', opt_promo:'Promo / Teaser',
     lbl_status:'Status', opt_confirmado:'Confirmed', opt_pendiente:'Pending',
     lbl_title:'Title *', ph_title:'E.g.: Nocturno, Session at Almacén 7...',
-    lbl_date:'Date *',
+    lbl_date:'Date *', lbl_date_concurso:'Deadline *', lbl_prize:'Prize (optional)', ph_prize:'E.g.: $500, residency, mentorship',
     lbl_time:'Time', ph_time:'E.g.: 9:00 PM',
     lbl_venue:'Venue / location', ph_venue:'E.g.: Almacén 7, San Salvador',
     lbl_artist_toque:'Performing DJ', ph_artist_toque:'E.g.: DJ Name',
-    lbl_artist_release:'Producer', ph_artist_release:'E.g.: Producer name',
+    lbl_artist_concurso:'Organized by', ph_artist_concurso:'E.g.: Ministry of Culture, Label X', lbl_artist_release:'Producer', ph_artist_release:'E.g.: Producer name',
     lbl_dist:'Distribution', dist_all:'All platforms', dist_selected:'Selected platforms',
     lbl_desc:'Description *', ph_desc:'Short details about the event or release: line-up, label, concept, ticket price...',
     lbl_image:'Flyer / cover link', ph_image:'https://drive.google.com/...',
@@ -1009,15 +1037,15 @@ const I18N = {
     modal_close:'Close',
     empty:'No upcoming events for this filter right now.',
     pendiente:'Pending confirmation',
-    ver_mas:'More info',
+    ver_mas:'More info', mas_info:'More information', deadline:'Deadline', organiza:'Organized by', premio:'Prize', cerrado:'Call closed',
     send_sending:'Sending...',
     send_ok:'Done! We received your submission. We\'ll reach out if we need anything else.',
     send_err:'We couldn\'t send the form. Write to us at stemsmagazine@gmail.com.',
     send_conn_err:'There was a connection problem. Try again or write to us at stemsmagazine@gmail.com.',
     dist_available_all:'Available on all platforms.',
     dist_available_sel:'Available on: ',
-    TYPE_LABEL:{toque:'Live show', single:'Single', album:'Album', video:'Official video', promo:'Promo'},
-    LINK_LABEL:{toque:'Buy tickets', single:'Listen', album:'Listen to album', video:'Watch video', promo:'More info'},
+    TYPE_LABEL:{toque:'Live show', single:'Single', album:'Album', video:'Official video', promo:'Promo', concurso:'Contest / Open call'},
+    LINK_LABEL:{toque:'Buy tickets', single:'Listen', album:'Listen to album', video:'Watch video', promo:'More info', concurso:'More info'},
     MONTHS:['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'],
     locale:'en-US'
   }
@@ -1170,11 +1198,16 @@ function cardTemplate(e){
   const TYPE_LABEL = t('TYPE_LABEL');
   const day = e.dateObj.getDate();
   const monthShort = MONTHS[e.dateObj.getMonth()].slice(0,3);
-  const timeStr = e.time || '';
+  const isC = e.type === 'concurso';
+  const timeStr = isC ? (t('deadline') + (e.time ? ' · ' + e.time : '')) : (e.time || '');
   const title = escapeHtml(e.title);
-  const venue = e.venue ? escapeHtml(e.venue) : '';
+  const venue = isC ? (e.organiza ? escapeHtml(e.organiza) : '') : (e.venue ? escapeHtml(e.venue) : '');
   const desc = e.description ? escapeHtml(truncateText(stripMarkdown(e.description), 130)) : '';
   const status = e.status === 'pendiente' ? `<p class="poster-status">${t('pendiente')}</p>` : '';
+  const prize = (isC && e.premio) ? `<p class="prize-line">🏆 ${escapeHtml(e.premio)}</p>` : '';
+  const moreBtn = !isC ? '' : (e.link
+    ? `<a class="card-more-btn" href="${escapeHtml(safeUrl(e.link))}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${t('mas_info')} →</a>`
+    : `<span class="card-more-btn">${t('mas_info')} →</span>`);
 
   return `
     ${e.image ? `<img class="poster-bg-img" src="${e.image}" alt="" onerror="this.style.display='none'">` : ''}
@@ -1185,10 +1218,12 @@ function cardTemplate(e){
       <p class="poster-tag script">${TYPE_LABEL[e.type] || e.type}</p>
       <h3 class="poster-title">${title}</h3>
       ${desc ? `<p class="poster-desc-inline">${desc}</p>` : ''}
+      ${prize}
       <div class="toque-meta">
         ${venue ? `<p class="poster-venue">${venue}</p>` : '<span></span>'}
         ${timeStr ? `<div class="time-pill">${timeStr}</div>` : ''}
       </div>
+      ${moreBtn}
       ${status}
     </div>`;
 }
@@ -1199,11 +1234,14 @@ function archiveCardTemplate(e){
   const TYPE_LABEL = t('TYPE_LABEL');
   const day = e.dateObj.getDate();
   const monthShort = MONTHS[e.dateObj.getMonth()].slice(0,3);
+  const isC = e.type === 'concurso';
   const timeStr = e.time || '';
   const title = escapeHtml(e.title);
-  const venue = e.venue ? escapeHtml(e.venue) : '';
+  const venue = isC ? (e.organiza ? escapeHtml(e.organiza) : '') : (e.venue ? escapeHtml(e.venue) : '');
   const desc = e.description ? escapeHtml(truncateText(stripMarkdown(e.description), 160)) : '';
-  const status = e.status === 'pendiente' ? `<p class="poster-status">${t('pendiente')}</p>` : '';
+  const status = isC
+    ? `<p class="closed-tag">${t('cerrado')}</p>`
+    : (e.status === 'pendiente' ? `<p class="poster-status">${t('pendiente')}</p>` : '');
   const thumb = e.image ? `<img class="archive-thumb" src="${e.image}" alt="" onerror="this.style.display='none'">` : '';
 
   return `
@@ -1223,7 +1261,7 @@ function openModal(e){
   lastOpenedEvent = e;
   const TYPE_LABEL = t('TYPE_LABEL');
   const LINK_LABEL = t('LINK_LABEL');
-  const accentMap = {toque:'magenta', single:'teal', album:'amber', video:'orange', promo:'cream-dim'};
+  const accentMap = {toque:'magenta', single:'teal', album:'amber', video:'orange', promo:'cream-dim', concurso:'violet'};
   document.getElementById('modal').style.setProperty('--accent', `var(--${accentMap[e.type] || 'cream-dim'})`);
   document.getElementById('modalImg').src = e.image || '';
   document.getElementById('modalMedia').style.display = e.image ? 'flex' : 'none';
@@ -1231,12 +1269,15 @@ function openModal(e){
   document.getElementById('modalTitle').textContent = e.title;
 
   const fmt = new Intl.DateTimeFormat(t('locale'), {weekday:'long', day:'numeric', month:'long', year:'numeric'});
-  let dateLine = fmt.format(e.dateObj);
+  const isC = e.type === 'concurso';
+  let dateLine = (isC ? t('deadline') + ': ' : '') + fmt.format(e.dateObj);
   if(e.time) dateLine += ' · ' + e.time;
-  if(e.venue) dateLine += ' · ' + e.venue;
+  if(isC){ if(e.organiza) dateLine += ' · ' + t('organiza') + ' ' + e.organiza; }
+  else if(e.venue) dateLine += ' · ' + e.venue;
   document.getElementById('modalDate').textContent = dateLine;
 
-  document.getElementById('modalDesc').innerHTML = formatDescriptionHtml(e.description || '');
+  document.getElementById('modalDesc').innerHTML = formatDescriptionHtml(e.description || '')
+    + ((isC && e.premio) ? `<p><strong>🏆 ${escapeHtml(t('premio'))}:</strong> ${escapeHtml(e.premio)}</p>` : '');
 
   const statusEl = document.getElementById('modalStatus');
   if(e.status === 'pendiente'){
@@ -1248,7 +1289,7 @@ function openModal(e){
 
   const linkEl = document.getElementById('modalLink');
   if(e.link){
-    linkEl.href = e.link;
+    linkEl.href = safeUrl(e.link);
     linkEl.textContent = (LINK_LABEL[e.type] || t('ver_mas')) + ' →';
     linkEl.style.display = 'inline-flex';
   }else{
@@ -1268,6 +1309,13 @@ document.getElementById('filters').addEventListener('click', ev => {
   activeFilter = btn.dataset.type;
   render();
 });
+
+/* Asegura protocolo en los links ("sitio.com" -> "https://sitio.com") */
+function safeUrl(u){
+  u = String(u || '').trim();
+  if(!u) return '';
+  return /^https?:\/\//i.test(u) ? u : 'https://' + u.replace(/^\/+/, '');
+}
 
 function escapeHtml(str){
   const div = document.createElement('div');
@@ -1317,13 +1365,23 @@ loadEvents();
   const statusBox = document.getElementById('formStatus');
   const sendBtn   = document.getElementById('formSend');
 
+  const prizeField= document.getElementById('prizeField');
+  const dateLbl   = document.getElementById('dateLabel');
   function isToque(){ return typeSel.selectedIndex === 0; }
+  function isConcurso(){ return typeSel.value === 'Concurso / Convocatoria'; }
 
   window.syncType = function syncType(){
+    dateLbl.textContent = isConcurso() ? t('lbl_date_concurso') : t('lbl_date');
+    prizeField.style.display = isConcurso() ? '' : 'none';
     if(isToque()){
       artistLbl.textContent = t('lbl_artist_toque');
       artistIn.placeholder = t('ph_artist_toque');
       venueField.style.display = '';
+      distBlock.style.display = 'none';
+    } else if(isConcurso()){
+      artistLbl.textContent = t('lbl_artist_concurso');
+      artistIn.placeholder = t('ph_artist_concurso');
+      venueField.style.display = 'none';
       distBlock.style.display = 'none';
     } else {
       artistLbl.textContent = t('lbl_artist_release');
@@ -1343,7 +1401,7 @@ loadEvents();
   togglePlatforms();
 
   function distributionText(){
-    if(isToque()) return '';
+    if(isToque() || isConcurso()) return '';
     const mode = form.querySelector('input[name="distMode"]:checked').value;
     if(mode === 'all') return t('dist_available_all');
     const sel = Array.from(platList.querySelectorAll('input:checked')).map(c => c.value);
@@ -1362,8 +1420,9 @@ loadEvents();
 
     const data = new FormData(form);
     data.delete('distMode');
-    if(isToque()) data.delete('Distribución');
-    else data.delete('Venue');
+    if(isToque() || isConcurso()) data.delete('Distribución');
+    if(!isToque()) data.delete('Venue');
+    if(!isConcurso()) data.delete('Premio');
 
     sendBtn.disabled = true;
     const original = sendBtn.innerHTML;
