@@ -1,4 +1,31 @@
 { "events": [
+{
+  "id": "toque-panama-crossroads-5th-edition-festival-m",
+  "type": "toque",
+  "title": "Panama Crossroads 5th Edition (Festival Musical)",
+  "date": "2027-01-28",
+  "time": "08:00 pm",
+  "description": "Panama Crossroads, el festival donde se encuentran la\nmúsica, la cultura, el arte y la gastronomía en el corazón de Panamá,",
+  "image": "img-ev/Crossroads.jpg",
+  "link": "https://www.panamacrossroads.net/entradas/",
+  "status": "confirmado",
+  "venue": "Amador - Panama,  Panama City",
+  "dj": "MILO J"
+},
+  
+  {
+  "id": "toque-panama-crossroads-remix-competition",
+  "type": "toque",
+  "title": "Panama Crossroads Remix Competition,",
+  "date": "2027-01-06",
+  "time": "11:59 pm",
+  "description": "¿Eres productor? Tu próximo escenario puede ser Panama Crossroads. 🇵🇦\n\nPanama Crossroads y Beatport abren el Remix Competition para productores de Latinoamérica y el mundo.\n\n🎛️ El reto: remixear \"Unstoppable\" de KEENE & EMMANUEL JAL\n🎶 Género: Afro House\n🎹 Tonalidad y tempo: F#m / 121 BPM\n⏰ Cierre: 6 de enero de 2027, 11:59 p. m. (EST)\n\nMás información en el enlace del post original",
+  "image": "img-ev/PC-battle.jpg",
+  "link": "https://www.instagram.com/p/Df0fLShxUFq/",
+  "status": "confirmado",
+  "venue": "Amador - Panama,  Panama City",
+  "dj": "BEAT BATTLE 2nd Edition"
+},
 
   {
   "id": "video-quedate-conmigo",
